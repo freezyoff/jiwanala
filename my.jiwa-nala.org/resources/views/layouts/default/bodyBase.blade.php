@@ -27,7 +27,7 @@
 				<div class="m-content">
 					<!--[section: html.body.page.content]/-->
 					@section('html.body.page.content')
-					@endSection
+					@show
 					<!--[endsection: html.body.page.content]/-->
 				</div>
 				

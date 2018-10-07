@@ -1,14 +1,26 @@
 <?php return[
+
+	/* --------------------------- */
+	/*	Dashboard
+	/* --------------------------- */
+	'dashboard'=>[],
 	
-	'menuItems'=>[
-		
-		/* --------------------------- */
-		/*	HUMAN RESOURCES
-		/* --------------------------- */
-		['type'=>1,'caption'=>'Human Resources'],
-		['type'=>2,'caption'=>'Menejemen Karyawan','icon'=>'flaticon-users-1','action'=>''],
+	/* --------------------------- */
+	/*	BAUK
+	/* --------------------------- */
+	'bauk'=>[
+		['type'=>1,'caption'=>'Adm. Umum & Kepegawaian'],
 		[
-			'type'=>0,
+			'type'=>2,
+			'caption'=>'Daftar Karyawan',
+			'icon'=>'flaticon-users-1',
+			'routeAction'=>'bauk.mnjkaryawan',
+			'breadcrumb'=>[
+				['class'=>'m-nav__separator', 'caption'=>'', 'routeAction'=>'dashboard.landing'],
+				['class'=>'m-nav__item', 'caption'=>'', 'routeAction'=>'dashboard.landing']
+			],
+		],
+		['type'=>0,
 			'label'=>[
 				'caption'=>'Presensi',
 				'icon'=>'fa fa-archive'
@@ -16,7 +28,7 @@
 			'items'=>[
 				[
 					'caption'=>'Hellooo',
-					'action'=>''
+					'routeAction'=>''
 				]
 			]
 		],

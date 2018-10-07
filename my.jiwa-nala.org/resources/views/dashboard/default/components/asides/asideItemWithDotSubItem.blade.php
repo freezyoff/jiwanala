@@ -18,11 +18,11 @@
 {{----	ITEM
 {{----	@param $caption
 {{----	@param $icon
-{{----	@param $action
+{{----	@param $routeAction
 {{----------------------------------------------------}}
 	<!-- BEGIN: Aside Menu Item	-->
 	<li class="m-menu__item " aria-haspopup="true"  m-menu-link-redirect="1">
-		<a  href="{{$action}}" class="m-menu__link ">
+		<a  href="{{route($routeAction)}}" class="m-menu__link ">
 			<i class="m-menu__link-icon {{$icon}}"></i>
 			<span class="m-menu__link-text">{{$caption}}</span>
 		</a>
@@ -34,7 +34,7 @@
 {{----------------------------------------------------}}
 {{----	ITEM & SUB-ITEM
 {{----	@param $label => ['caption','icon']
-{{----	@param $items[] => array['caption','action']
+{{----	@param $items[] => array['caption','routeAction']
 {{----------------------------------------------------}}
 	<!-- BEGIN: Aside Menu Item	with Sub-Menu	-->
 	<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  m-menu-submenu-toggle="hover">
@@ -48,15 +48,9 @@
 		<div class="m-menu__submenu ">
 			<span class="m-menu__arrow"></span>
 			<ul class="m-menu__subnav">
-				<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
-					<span class="m-menu__link">
-						<span class="m-menu__link-text">Resources</span>
-					</span>
-				</li>
-
 				@foreach($items as $ii)
 					<li class="m-menu__item " aria-haspopup="true" >
-						<a  href="{{$ii['action']}}" class="m-menu__link ">
+						<a  href="{{$ii['routeAction']}}" class="m-menu__link ">
 							<i class="m-menu__link-bullet m-menu__link-bullet--dot">
 								<span></span>
 							</i>
