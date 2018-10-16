@@ -61,21 +61,34 @@ if (! function_exists('getCurrentSubHeaderTitle')) {
 
 if (! function_exists('currentSubHeaderHasBreadcrumb')) {
 	function currentSubHeaderHasBreadcrumb(){
-		$subHeader = getCurrentSubHeaderConfig();
-		if (isset($subHeader['breadcrumb'])){
-			return count($subHeader['breadcrumb'])>0;
-		}
-		return false;
+		$subHeader = getCurrentSubHeaderBreadcrumbList();
+		return count($subHeader)>1;
 	}
 }; 
 
 if (! function_exists('getCurrentSubHeaderBreadcrumbList')) {
 	function getCurrentSubHeaderBreadcrumbList(){
-		if (currentSubHeaderHasBreadcrumb()){
-			$subHeader = getCurrentSubHeaderConfig();
-			return $subHeader['breadcrumb'];
+		$subHeader = Request::route()->getName();
+		$exp = explode('.',$subHeader);
+		$loop = count($exp);
+		$brc = [];
+		$currentKey = null;
+		for($i=0; $i<$loop; $i++){
+			if ($currentKey === null){
+				$currentKey = $exp[$i];
+			}
+			else{
+				$currentKey .= '.'.$exp[$i];
+				$brc[] = ['type'=>'separator'];
+			}
+			
+			$currentBrc = config('jn.subHeader.'.$currentKey.'.breadcrumb');
+			if ( !isset($currentBrc['caption']) ){
+				$currentBrc['caption'] = config('jn.subHeader.'.$currentKey.'.caption');
+			}
+			$brc[] = $currentBrc;
 		}
-		return [];
+		return $brc;
 	}
 }
 

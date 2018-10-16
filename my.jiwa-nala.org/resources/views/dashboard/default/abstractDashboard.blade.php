@@ -39,6 +39,12 @@
 {{----	@param (optional) $html_body_page_subHeader_title_breadcrumb
 {{----------------------------------------------------}}
 
+@section('html.head.metas')
+	@parent
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+@endSection
+
+
 @section('html.body.page.aside')
 	@if (isset($html_body_page_aside_visible))
 		@if ($html_body_page_aside_visible)

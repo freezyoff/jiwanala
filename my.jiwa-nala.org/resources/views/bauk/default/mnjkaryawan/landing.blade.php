@@ -3,6 +3,10 @@
 @section('html.body.page.subHeader.quickAction')
 @endSection
 
+@section('html.body.scripts.page')
+	
+@endSection
+
 @section('html.body.page.content')
 <div class="row">
 	<div class="col-lg-12">
@@ -10,7 +14,7 @@
 			<div class="m-portlet__body">
 				<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
 					<div class="btn-group" role="group" aria-label="First group">
-						<button type="button" class="m-btn m-btn m-btn--square btn btn-primary">
+						<button type="button" class="m-btn m-btn m-btn--square btn btn-primary" onClick="document.location='{{route('bauk.mnjkaryawan.tambah')}}'">
 							<i class="la la-user"></i> 
 							Karyawan Baru
 						</button>

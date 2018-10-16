@@ -4,17 +4,16 @@
 	<!--[section: html.body.page.subHeader.title.breadcrumb]/-->
 	@section('html.body.page.subHeader.title.breadcrumb')
 		<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-			<li class="m-nav__item m-nav__item--home">
-				<a href="{{route('dashboard.landing')}}" class="m-nav__link m-nav__link--icon">
-				   <i class="m-nav__link-icon la la-home"></i>
-				</a>
-			</li>
-			
 			@foreach(getCurrentSubHeaderBreadcrumbList() as $ii)
-				@if ($ii['type'] === "separator")
+				@if ($ii['type'] === "home")
+					<li class="m-nav__item m-nav__item--home">
+						<a href="{{route($ii['routeAction'])}}" class="m-nav__link m-nav__link--icon">
+						   <i class="m-nav__link-icon la la-home"></i>
+						</a>
+					</li>
+				@elseif ($ii['type'] === "separator")
 				
 					<li class="m-nav__separator">-</li>
-				
 				@elseif ($ii['type'] === "item")
 					
 					<li class="m-nav__item">

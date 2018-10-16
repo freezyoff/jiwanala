@@ -4,7 +4,8 @@
 </button>
 <div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-light ">
 	<!-- BEGIN: Aside Menu -->
-	<div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-light m-aside-menu--submenu-skin-light " m-menu-vertical="1" m-menu-scrollable="0" m-menu-dropdown-timeout="500">
+	<div id="m_ver_menu" class="m-aside-menu m-aside-menu--skin-light m-aside-menu--submenu-skin-light m-scroller ps ps--active-y" m-menu-vertical="1" m-menu-scrollable="1" m-menu-dropdown-timeout="500" style="height: 100px; overflow: hidden;">	
+		 
 		<ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow">
 		
 			<!--[section: html.body.page.aside.items]/-->
@@ -296,8 +297,9 @@
 			</li>
 			@show
 			<!--[endsection: html.body.page.aside.items]/-->
-			
 		</ul>
+		<!--<div class="ps__rail-x" style="left: 0px; bottom: -689px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>-->
+		<!--<div class="ps__rail-y" style="top: 689px; height: 264px; right: 4px;"><div class="ps__thumb-y" tabindex="0" style="top: 133px; height: 51px;"></div></div>-->
 	</div>
 	<!-- END: Aside Menu -->
 </div>

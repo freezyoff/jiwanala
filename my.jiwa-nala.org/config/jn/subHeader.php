@@ -1,23 +1,24 @@
 <?php return [
 	'dashboard'=>[
-		'landing'=>[
-			'caption'=>'Dashboard',
-		]
+		'breadcrumb'=>['type'=>'home', 'routeAction'=>'dashboard'],
+		'caption'=>'Dashboard',
 	],
 	
 	'bauk'=>[
-		'landing'=> [
-			'caption'=> 'Dashboard (Adm. Umum & Kepegawaian)',
-		],
+		'breadcrumb'=>['type'=>'home', 'routeAction'=>'bauk'],
+		'caption'=> 'Dashboard (Adm. Umum & Kepegawaian)',
+		
+		// bauk.mnjkaryawan
 		'mnjkaryawan'=> [
+			'breadcrumb'=>['type'=>'item', 'routeAction'=>'bauk.mnjkaryawan'],
 			'caption'=> 'Daftar Karyawan',
-			'breadcrumb'=>[
-				['type'=>'separator'],
-				['type'=>'item','caption'=>'Adm. Umum & Kepegawaian', 'routeAction'=>'bauk.landing'],
-				['type'=>'separator'],
-				['type'=>'item','caption'=>'Daftar Karyawan', 'routeAction'=>'bauk.mnjkaryawan']
-			],
-			'quickAction'=>['type'=>'default','view'=>'']
+			'quickAction'=>['type'=>'default','view'=>''],
+			
+			// bauk.mnjkaryawan.add
+			'tambah'=>[
+				'breadcrumb'=>['type'=>'item', 'routeAction'=>'bauk.mnjkaryawan'],
+				'caption'=> 'Tambah Data Karyawan Baru',
+			]
 		]
 	]
 	

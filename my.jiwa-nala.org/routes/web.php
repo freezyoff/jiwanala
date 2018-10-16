@@ -1,6 +1,15 @@
 <?php
 
 /*
+\Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
+    echo'<pre>';
+    var_dump($query->sql);
+    var_dump($query->bindings);
+    var_dump($query->time);
+    echo'</pre>';
+});
+
+/*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -24,22 +33,35 @@ Route::domain('my.'.$domain)->group(function () {
 		return view('layouts.default.defaultLayout');
 	});
 	
-	Route::name('dashboard.')->group(function(){
+	Route::name('dashboard')->group(function(){
 		Route::get('/', function () { 
 			return view('dashboard.default.defaultDashboard'); 
-		})->name('landing');
+		});
 	});
 	
-	Route::name('bauk.')
-		->prefix('bauk')->group(function(){
+	Route::name('bauk')->prefix('bauk')
+		->group(function(){
 		
 		Route::get('/',function(){	
 			return view('bauk.default.landing'); 
-		})->name('landing');
+		});
 		
-		Route::get('/mnjkaryawan', function(){ 
-			return view('bauk.default.mnjkaryawan.landing'); 
-		})->name('mnjkaryawan');
+		Route::name('.mnjkaryawan')->prefix('mnjkaryawan')
+			->group(function(){
+				
+			Route::get('/', function(){ 
+				return view('bauk.default.mnjkaryawan.landing'); 
+			});
+			
+			Route::name('.tambah')->prefix('tambah')->group(function(){
+				Route::get('/', function(){ return view('bauk.default.mnjkaryawan.tambah'); });
+				Route::post('/', '\App\Http\Controllers\BAUK\MnjKaryawanController@save');
+			});
+			
+			Route::name('.uniqueNIP')->prefix('isUniqueNIP')->group(function(){
+				Route::post('/', '\App\Http\Controllers\BAUK\MnjKaryawanController@isUniqueNIP');
+			});
+		});
 		
 	});
 	

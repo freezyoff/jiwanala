@@ -33,17 +33,22 @@
 @endSection
 
 @section('html.body.scripts')
-	<!-- begin::Base Scripts -->            	    	
-	<script src="{{ asset('vendors/metronic/vendors/base/vendors.bundle.js') }}" type="text/javascript"></script>
-	<script src="{{ asset('vendors/metronic/demo/demo11/base/scripts.bundle.js') }}" type="text/javascript"></script>
-	<!-- end::Base Scripts -->                    
-
-	<!-- begin::Page Vendors Scripts -->
-	<script src="{{ asset('vendors/metronic/vendors/custom/fullcalendar/fullcalendar.bundle.js') }}" type="text/javascript"></script>
-	<!-- end::Page Vendors Scripts -->
-
+	<!-- begin:: Vendor Scripts -->
+	<!--[section: html.body.scripts.vendor]/-->
+	@section('html.body.scripts.vendor')
+		<!-- begin:: Vendor Base Scripts -->
+		<script src="{{ asset('vendors/metronic/vendors/base/vendors.bundle.js') }}" type="text/javascript"></script>
+		<script src="{{ asset('vendors/metronic/demo/demo11/base/scripts.bundle.js') }}" type="text/javascript"></script>
+		<!-- end:: Vendor Base Scripts -->                    
+	@show
+	<!--[end section: html.body.scripts.vendor]/-->
+	<!-- end:: Vendor Scripts -->
+	
 	<!-- begin::Page Snippets -->
-	<script src="{{ asset('vendors/metronic/app/js/dashboard.js') }}" type="text/javascript"></script>
+	<!--[section: html.body.scripts.page]/-->
+	@section('html.body.scripts.page')
+	@show
+	<!--[end section: html.body.scripts.page]/-->
 	<!-- end::Page Snippets -->
 @endSection
 

@@ -7,3 +7,7 @@
 @section('html.body.page.footer')
 	@include('dashboard.default.components.footerBase')
 @endSection
+
+@section('html.body.scripts.page')
+	@parent
+@endSection

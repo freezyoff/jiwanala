@@ -62,6 +62,7 @@ return [
             'engine' => null,
         ],
 		
+		/*
 		'jn_accounting' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -76,6 +77,7 @@ return [
             'strict' => true,
             'engine' => null,
         ],
+		*/
     ],
 
     /*
