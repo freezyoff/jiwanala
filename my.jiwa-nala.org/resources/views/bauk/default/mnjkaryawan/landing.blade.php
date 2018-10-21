@@ -3,8 +3,26 @@
 @section('html.body.page.subHeader.quickAction')
 @endSection
 
+@section('html.head.styles')
+	@parent
+	<link href="{{asset('vendors/metronic/vendors/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"></link>
+@endSection
+
+@section('html.body.scripts.vendor')
+	@parent
+	<script src="{{asset('vendors/metronic/vendors/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
+	<!--<script src="./assets/demo/default/custom/crud/datatables/basic/paginations.js" type="text/javascript"></script>-->
+@endSection
+
+
 @section('html.body.scripts.page')
-	
+	<script src="{{asset('js/bauk/default/mnjkaryawan/landing.js')}}" type="text/javascript"></script>
+@endSection
+
+@section('html.head.metas')
+	@parent
+	<meta name="dropdown-hapus-url" content="{{route('bauk.mnjkaryawan.hapus')}}" />
+	<meta name="dropdown-rubah-url" content="{{route('bauk.mnjkaryawan.rubah')}}" />
 @endSection
 
 @section('html.body.page.content')
@@ -27,40 +45,11 @@
 				</div>
 				<div class="m-portlet__body-progress">Loading</div>
 				<div style="padding: 10px 0;"></div>
-				<div class="table-responsive">
-					<table class="table m-table m-table--head-bg-info">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Jhon</td>
-								<td>Stone</td>
-								<td>@jhon</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Lisa</td>
-								<td>Nilson</td>
-								<td>@lisa</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				
+				<div id="table1" sourceUrl="{{route('bauk.mnjkaryawan.layanan.getTableDataKarayawan')}}"></div>
 			</div>
 		</div>
 	</div>
 </div>
+<div id="modal-container"></div>
 @endSection

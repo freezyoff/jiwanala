@@ -46,8 +46,7 @@ Route::domain('my.'.$domain)->group(function () {
 			return view('bauk.default.landing'); 
 		});
 		
-		Route::name('.mnjkaryawan')->prefix('mnjkaryawan')
-			->group(function(){
+		Route::name('.mnjkaryawan')->prefix('mnjkaryawan')->group(function(){
 				
 			Route::get('/', function(){ 
 				return view('bauk.default.mnjkaryawan.landing'); 
@@ -58,8 +57,12 @@ Route::domain('my.'.$domain)->group(function () {
 				Route::post('/', '\App\Http\Controllers\BAUK\MnjKaryawanController@save');
 			});
 			
-			Route::name('.uniqueNIP')->prefix('isUniqueNIP')->group(function(){
-				Route::post('/', '\App\Http\Controllers\BAUK\MnjKaryawanController@isUniqueNIP');
+			Route::put('/rubah', '\App\Http\Controllers\BAUK\MnjKaryawanController@update')->name('.rubah');
+			Route::delete('/hapus', '\App\Http\Controllers\BAUK\MnjKaryawanController@delete')->name('.hapus');
+			
+			Route::name('.layanan')->prefix('layanan')->group(function(){
+				Route::post('/isUniqueNIP', '\App\Http\Controllers\BAUK\MnjKaryawanController@isUniqueNIP')->name('.uniqueNIP');				
+				Route::post('/getTableDataKarayawan', '\App\Http\Controllers\BAUK\MnjKaryawanController@getTableDataKarayawan')->name('.getTableDataKarayawan');
 			});
 		});
 		

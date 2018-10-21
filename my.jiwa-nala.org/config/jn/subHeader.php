@@ -18,6 +18,10 @@
 			'tambah'=>[
 				'breadcrumb'=>['type'=>'item', 'routeAction'=>'bauk.mnjkaryawan'],
 				'caption'=> 'Tambah Data Karyawan Baru',
+			],
+			'rubah'=>[
+				'breadcrumb'=>['type'=>'item', 'routeAction'=>'bauk.mnjkaryawan'],
+				'caption'=> 'Rubah Data Karyawan',
 			]
 		]
 	]

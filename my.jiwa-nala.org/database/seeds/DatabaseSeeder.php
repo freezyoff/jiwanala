@@ -13,5 +13,11 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         //$this->call(UsersTableSeeder::class);
+		
+		$this->BAUKSeeder();
     }
+	
+	protected function BAUKSeeder(){
+		$this->call(BAUK_KaryawanTableSeeder::class);
+	}
 }

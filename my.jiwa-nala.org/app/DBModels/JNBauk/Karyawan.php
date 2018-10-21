@@ -27,5 +27,6 @@ class Karyawan extends Model
 		'tlp2',
 		'status_pernikahan',
 		'tanggal_masuk',
+		'aktif'
 	];
 }
