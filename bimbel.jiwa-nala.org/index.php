@@ -35,7 +35,11 @@ require __DIR__.'/../system/vendor/autoload.php';
 |
 */
 
+<<<<<<< HEAD
 $app = require_once __DIR__.'/../system/bootstrap/app.php';
+=======
+$app = require_once __DIR__.'/../bootstrap/app.php';
+>>>>>>> 1e937c97b0fd2c35cd67f9cb375be51be512cb95
 
 /*
 |--------------------------------------------------------------------------
