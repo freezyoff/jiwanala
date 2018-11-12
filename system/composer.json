@@ -21,7 +21,7 @@
     },
     "autoload": {
 		"files": [
-			"resources/views/dashboard/default/LayoutHelpers.php"
+			"resources/views/my/dashboard/default/LayoutHelpers.php"
 		],
         "classmap": [
             "database/seeds",
