@@ -21,7 +21,6 @@ class Student extends Model
 			$time = time();
 			$this->token_key = $time. str_replace(['0.',' '],['.',''],microtime());
 			$this->token_expired = $time + (60*15);
-			
 			if ($autoCommit) $this->save();
 		}
 		return $this;
