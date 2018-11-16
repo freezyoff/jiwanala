@@ -17,8 +17,39 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::domain('bimbel.jiwa-nala.org')->group(function () {
-    Route::get('/getToken', function ($account, $id) {
-        return json_encode(['token'=> time() + microtime()]);
-    });
+$domain = 'jiwa-nala';
+if (App::environment('local')){
+	$domain .= '.local';
+}
+else{
+	$domain .= '.org';
+}
+
+Route::domain('bimbel.'.$domain)->group(function () {
+	Route::post('signin', function( Request $req ){
+		$username = $req->input('username', false);
+		$password = $req->input('password', false);
+		
+		$student = \App\DBModels\JNBimbel\Student::where('username','=',$username)->first();
+		if (!$student) return response()->json(['signin'=>false]);
+		return response()->json( $student->signin($username, $password) );
+	});
+});
+
+/*
+|--------------------------------------------------------------------------
+| LOCAL DEVELOPMENT ONLY - Remove on deployment
+|--------------------------------------------------------------------------
+|
+*/
+//192.168.0.4
+Route::domain('202.80.216.163')->group(function(){
+	Route::post('signin', function( Request $req ){
+		$username = $req->input('username', false);
+		$password = $req->input('password', false);
+		
+		$student = \App\DBModels\JNBimbel\Student::where('username','=',$username)->first();
+		if (!$student) return response()->json(['signin'=>false]);
+		return response()->json( $student->signin($username, $password) );
+	});
 });

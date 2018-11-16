@@ -14,10 +14,14 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         //$this->call(UsersTableSeeder::class);
 		
-		$this->BAUKSeeder();
+		//$this->BAUKSeeder();
     }
 	
 	protected function BAUKSeeder(){
 		$this->call(BAUK_KaryawanTableSeeder::class);
+	}
+	
+	protected function JNBimbelSeeder(){
+		$this->call(JNBimbel_StudentSeeder::class);
 	}
 }

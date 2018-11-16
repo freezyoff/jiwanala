@@ -4,13 +4,13 @@ APP_ENV=local
 APP_LOCALE=id
 APP_KEY=base64:wJHBWo8gTVAyk9KLvoY2yiuK6SesrDStuTqJGAOQSiM=
 APP_DEBUG=true
-APP_URL=http://my.jiwa-nala.local
+APP_URL=http://jiwa-nala.org
 APP_THEME=default
 
 LOG_CHANNEL=stack
 
 DB_CONNECTION=jn_core
-DB_HOST_CORE=jiwa-nala.org
+DB_HOST=jiwa-nala.org
 DB_PORT=3306
 DB_CHARSET=utf8
 DB_COLLATION=utf8_unicode_ci
