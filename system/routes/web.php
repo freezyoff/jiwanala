@@ -25,8 +25,14 @@ if (App::environment('local')){
 	$domain .= '.local';
 }
 else{
-	$domain .= '.'. App::environment();
+	$domain .= '.org';
 }
+
+Route::domain('bimbel.'.$domain)->group(function () {
+	Route::get('/', function(){
+		return "bimbel.jiwa-nala.local";
+	});
+});
 
 Route::domain('my.'.$domain)->group(function () {
     
