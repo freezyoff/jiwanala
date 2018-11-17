@@ -25,6 +25,8 @@ else{
 	$domain .= '.org';
 }
 
+$appversion = str_replace('.','',config('app.version'));
+
 Route::domain('bimbel.'.$domain)->group(function () {
 	Route::post('signin', function( Request $req ){
 		$username = $req->input('username', false);
@@ -43,7 +45,7 @@ Route::domain('bimbel.'.$domain)->group(function () {
 |
 */
 //192.168.0.4
-Route::domain('202.80.216.163')->group(function(){
+Route::domain('192.168.0.4')->group(function(){
 	Route::post('signin', function( Request $req ){
 		$username = $req->input('username', false);
 		$password = $req->input('password', false);

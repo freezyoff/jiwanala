@@ -56,9 +56,10 @@ class Student extends Model
 	public function signin($username, $password){
 		if (!Hash::check($password, $this->password) ||
 			$this->username != $username){
-			return ['signin'=>false];
+			return false;
 		}
 		
+		$this->updateToken(false, true);
 		$token = $this->getToken(false, true);
 		return [
 			'signin'=>true, 
