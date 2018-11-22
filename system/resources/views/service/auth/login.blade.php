@@ -13,7 +13,6 @@
 			.w3-card.loginContainer{box-shadow: none !important;}
 			.w3-input {color:#fefefe}
 		}
-
 		
 		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 		@media only screen and (min-width: 768px),			/* Medium devices (landscape tablets, 768px and up) */
@@ -31,6 +30,9 @@
 			padding: 16px 32px 16px 32px;
 			box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)
 		}
+		.w3-panel.error{
+			padding: 16px 0 16px 0 ;
+		}
 	</style>
 @endSection
 
@@ -46,16 +48,31 @@
 				<h1 class="brand-title">JIWANALA</h1>
 				<div class="brand-subtitle">Learn . Explore . Lead</div>
 			</div>
-			<div class="w3-center">ERROR</div>
+			@if ($errors->any())
+			<div class="w3-panel w3-red w3-center error" style="margin-top:32px">
+				<p>@lang('service/auth/login.error.login')</p>	
+			</div>
+			@endif
 			<form method="POST" action="{{route('service.auth.login')}}">
 				@csrf
 				<div class="w3-padding-16">
-					<input class="w3-input" type="text" placeholder="Nomor Induk Siswa / Nomor Induk Pegawai" 
-						name="name" 
-						value="{{Request::old('name')}}"/>
+					<input name="name" 
+						value="{{Request::old('name')}}"
+						class="w3-input
+						@if ($errors->any())
+							error
+						@endif"
+						type="text" 
+						placeholder="@lang('service/auth/login.hints.name')" />
 				</div>
 				<div class="w3-padding-16">
-					<input name="password" class="w3-input" type="password" placeholder="Kata Sandi" />
+					<input name="password" 
+						class="w3-input
+						@if ($errors->any())
+							error
+						@endif" 
+						type="password" 
+						placeholder="@lang('service/auth/login.hints.password')" />
 				</div>
 				<div class="w3-padding-16">
 					<button class="w3-block w3-button w3-blue w3-hover-indigo">Masuk</button>

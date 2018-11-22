@@ -22,3 +22,6 @@ div,span,pre,p{ margin:0; font-family:roboto;}
 
 input.w3-input { background-color:transparent; }
 input.w3-input:hover{border-bottom:1px solid #2196F3; }
+input.w3-input:focus{border-bottom:1px solid #2196F3; }
+input.w3-input.error{border-bottom:1px solid #f44336; }
+input.w3-input.error{border-bottom:1px solid #f44336; }
