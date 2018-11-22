@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
@@ -25,15 +26,55 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected static $redirectTo = 'service.plugins.list';
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('guest')->except('logout');
+    }
+	
+	/**
+     * @override
+     * @return void
+     */
+	public function username(){
+		return "name";
+	}
+	
+	/**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm(){
+        return view('service.auth.login');
+    }
+	
+	/**
+     * @override
+     * @return Full Url where to redirect
+     */
+	public static function redirectTo(){
+		if (Request::server('HTTP_REFERER')) {
+			if (Request::server('HTTP_REFERER') != url()->current()){
+				return Request::server('HTTP_REFERER');
+			}
+		}
+		return route(LoginController::$redirectTo);
+	}
+	
+	/**
+     * The user has logged out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    protected function loggedOut(\Illuminate\Http\Request $request)
+    {
+        return redirect(LoginController::redirectTo());
     }
 }

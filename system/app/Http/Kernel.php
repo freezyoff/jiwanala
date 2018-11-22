@@ -51,7 +51,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+		//override default auth middleware
+        //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+		'auth' => \App\Http\Middleware\JNAuth::class,
+		
+		
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

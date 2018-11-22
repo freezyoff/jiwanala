@@ -28,60 +28,35 @@ else{
 	$domain .= '.org';
 }
 
-Route::domain('bimbel.'.$domain)->group(function () {
-	Route::get('/', function(){
-		return "bimbel.jiwa-nala.local";
-	});
+Route::domain($domain)->group(function(){
+	Route::name('web')->get('/web', function () { 
+			return view('web.landing'); 
+		})->name('web');
+});
+
+Route::domain('service.'.$domain)->group(function(){
+	if (App::environment('local')){
+		require_once "../system/routes/web_service.php";
+	}
+	else{
+		throw new Exception('TODO: path Route file for service.jiwa-nala.org');
+	}
+});
+
+Route::domain('tutor.'.$domain)->group(function(){
+	if (App::environment('local')){
+		require_once "../system/routes/web_tutor.php";
+	}
+	else{
+		throw new Exception('TODO: path Route file for tutor.jiwa-nala.org');
+	}
 });
 
 Route::domain('my.'.$domain)->group(function () {
-    
-	/*
-	Route::get('/layout', function(){
-		return view('layouts.default.defaultLayout');
-	});
-	*/
-	Route::name('web')->group(function(){
-		Route::get('/web', function () { 
-			return view('web.landing'); 
-		});
-	});
-	
-	Route::name('dashboard')->group(function(){
-		Route::get('/', function () { 
-			return view('dashboard.default.defaultDashboard'); 
-		});
-	});
-	
-	Route::name('bauk')->prefix('bauk')
-		->group(function(){
-		
-		Route::get('/',function(){	
-			return view('bauk.default.landing'); 
-		});
-		
-		Route::name('.mnjkaryawan')->prefix('mnjkaryawan')->group(function(){
-				
-			Route::get('/', function(){ 
-				return view('bauk.default.mnjkaryawan.landing'); 
-			});
-			
-			Route::name('.tambah')->prefix('tambah')->group(function(){
-				Route::get('/', function(){ return view('bauk.default.mnjkaryawan.tambah'); });
-				Route::post('/', '\App\Http\Controllers\BAUK\MnjKaryawanController@save');
-			});
-			
-			Route::put('/rubah', '\App\Http\Controllers\BAUK\MnjKaryawanController@update')->name('.rubah');
-			Route::delete('/hapus', '\App\Http\Controllers\BAUK\MnjKaryawanController@delete')->name('.hapus');
-			Route::get('/unggah', '\App\Http\Controllers\BAUK\MnjKaryawanController@upload')->name('.unggah');
-			Route::post('/ekspor', '\App\Http\Controllers\BAUK\MnjKaryawanController@export')->name('.ekspor');
-			
-			Route::name('.layanan')->prefix('layanan')->group(function(){
-				Route::post('/isUniqueNIP', '\App\Http\Controllers\BAUK\MnjKaryawanController@isUniqueNIP')->name('.uniqueNIP');				
-				Route::post('/getTableDataKarayawan', '\App\Http\Controllers\BAUK\MnjKaryawanController@getTableDataKarayawan')->name('.getTableDataKarayawan');
-			});
-		});
-		
-	});
-	
+	if (App::environment('local')){
+		require_once "../system/routes/web_my.php";
+	}
+	else{
+		throw new Exception('TODO: path Route file for my.jiwa-nala.org');
+	}
 });

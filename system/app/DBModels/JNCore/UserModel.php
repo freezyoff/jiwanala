@@ -2,7 +2,7 @@
 
 namespace App\DBModels\JNCore;
 
-use App\Models\UserModel as BaseUserModel;
+use App\User as BaseUserModel;
 
 class UserModel extends BaseUserModel{
 	protected $table = 'users';

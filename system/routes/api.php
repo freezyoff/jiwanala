@@ -38,6 +38,12 @@ Route::domain('bimbel.'.$domain)->group(function () {
 	});
 });
 
+Route::domain('my.'.$domain)->group(function () {
+	Route::get('/', function(){
+		return 'my.jiwa-nala.local|org/api/';
+	});
+});
+
 /*
 |--------------------------------------------------------------------------
 | LOCAL DEVELOPMENT ONLY - Remove on deployment

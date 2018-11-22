@@ -21,15 +21,15 @@ if (! function_exists('getCurrentHeaderBrandDropdownKey')) {
 
 if (! function_exists('getHeaderBrandDropdownList')) {
 	function getHeaderBrandDropdownList($key=null){
-		if ($key === null) return config('jn.brandDropdown');
-		return config('jn.brandDropdown.'.$key);
+		if ($key === null) return config('jn.my.brandDropdown');
+		return config('jn.my.brandDropdown.'.$key);
 	}
 };
 
 if (! function_exists('getAsideList')) {
 	function getAsideList($key=null){
-		if ($key === null) return config('jn.aside');
-		return config('jn.aside.'.$key);
+		if ($key === null) return config('jn.my.aside');
+		return config('jn.my.aside.'.$key);
 	}
 };
 
@@ -48,7 +48,7 @@ if (! function_exists('currentAsideHasList')) {
 if (! function_exists('getCurrentSubHeaderConfig')) {
 	function getCurrentSubHeaderConfig(){
 		$routeName = Request::route()->getName();
-		return config('jn.subHeader.'.$routeName);
+		return config('jn.my.subHeader.'.$routeName);
 	}
 }; 
 
@@ -82,9 +82,9 @@ if (! function_exists('getCurrentSubHeaderBreadcrumbList')) {
 				$brc[] = ['type'=>'separator'];
 			}
 			
-			$currentBrc = config('jn.subHeader.'.$currentKey.'.breadcrumb');
+			$currentBrc = config('jn.my.subHeader.'.$currentKey.'.breadcrumb');
 			if ( !isset($currentBrc['caption']) ){
-				$currentBrc['caption'] = config('jn.subHeader.'.$currentKey.'.caption');
+				$currentBrc['caption'] = config('jn.my.subHeader.'.$currentKey.'.caption');
 			}
 			$brc[] = $currentBrc;
 		}
