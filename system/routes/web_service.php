@@ -18,13 +18,22 @@ Route::prefix('auth')->group(function () {
 	Route::name('service.auth.logout')->group(function(){
 		Route::any('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 	});
+	
+	Route::name('service.auth.forgot')->group(function(){
+		Route::get('forgot', '\App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm');
+		Route::post('forgot', '\App\Http\Controllers\Auth\ForgotPasswordController@sendResetLinkEmail');
+	});
+	
+	Route::name('service.auth.reset')->group(function(){
+		Route::get('resetpwd/{token}', function($token){
+			return "resetpwd";
+		});
+	});
 });
 
 Route::prefix('plugins')
 	->middleware(['auth'])
 	->group(function(){
-	Route::name('service.plugins.list')
-		->get('list', function(){
-			return "service.plugins.list";
-		});
+		
+	Route::name('service.plugins.list')->get('list', function(){ return "service.plugins.list"; });
 });

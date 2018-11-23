@@ -12,6 +12,7 @@
 			.w3-container{background:transparent !important;}
 			.w3-card.boxContainer{box-shadow: none !important;}
 			.w3-input {color:#fefefe}
+			.info {color: #fefefe;}
 		}
 		
 		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
@@ -23,8 +24,6 @@
 			.brand-title {font-family:gotham-medium; font-size:1.6em; font-weight:bold; line-height:1.2;}
 			.brand-subtitle {line-height:1; font-size:1em;}
 			.w3-card.boxContainer{padding: 16px 32px 16px 32px;box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)}
-			.w3-panel.error{padding: 16px 0 16px 0;}
-			
 		}
 		
 		html, body {height: 100%;}
@@ -43,34 +42,31 @@
 				<h1 class="brand-title">JIWANALA</h1>
 				<div class="brand-subtitle">Learn . Explore . Lead</div>
 			</div>
-			@if ($errors->any())
-			<div class="w3-panel w3-border-red w3-round-small w3-red w3-center error" style="margin-top:32px">
-				<p>@lang('service/auth/login.error.login')</p>	
+			<div class="info" style="margin-top:32px">
+				<p>@lang('service/auth/forgot.label.info')</p>
 			</div>
-			@endif
-			<form method="POST" action="{{route('service.auth.login')}}">
+			<form method="POST" action="{{route('service.auth.forgot')}}">
 				@csrf
 				<div class="w3-padding-16">
-					<input name="name" 
-						value="{{Request::old('name')}}"
+					<input name="email" 
+						value="{{old('email')}}"
 						class="w3-input
 						@if ($errors->any())
 							error
 						@endif"
 						type="text" 
-						placeholder="@lang('service/auth/login.hints.name')" />
+						placeholder="@lang('service/auth/forgot.hints.email')" />
+					@if ($errors->any())
+						<label class="w3-text-red">{{ $errors->first() }}</label>
+					@endif
+					@if (isset($status))
+						<label class="w3-text-green">@lang('service/auth/forgot.success')</label>
+					@endif
 				</div>
 				<div class="w3-padding-16">
-					<input name="password" 
-						class="w3-input
-						@if ($errors->any())
-							error
-						@endif" 
-						type="password" 
-						placeholder="@lang('service/auth/login.hints.password')" />
-				</div>
-				<div class="w3-padding-16">
-					<button class="w3-block w3-button w3-blue w3-hover-indigo">Masuk</button>
+					<button class="w3-block w3-button w3-blue w3-hover-indigo">
+						@lang('service/auth/forgot.hints.button')
+					</button>
 				</div>
 			</form>
 		</div>
