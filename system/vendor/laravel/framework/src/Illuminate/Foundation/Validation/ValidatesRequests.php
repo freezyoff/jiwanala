@@ -40,6 +40,9 @@ trait ValidatesRequests
     public function validate(Request $request, array $rules,
                              array $messages = [], array $customAttributes = [])
     {
+		//echo print_r($rules, true);
+		//echo print_r($messages, true);
+		//exit;
         $this->getValidationFactory()
              ->make($request->all(), $rules, $messages, $customAttributes)
              ->validate();

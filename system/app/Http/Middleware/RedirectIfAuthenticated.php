@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect(\App\Http\Controllers\Auth\LoginController::redirectTo());
+            return redirect(\App\Http\Controllers\Service\Auth\LoginController::redirectTo());
         }
 
         return $next($request);

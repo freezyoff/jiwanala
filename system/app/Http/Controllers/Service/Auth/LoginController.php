@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Service\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected static $redirectTo = 'service.plugins.list';
+    protected static $redirectTo = 'my.dashboard';
 
     /**
      * Create a new controller instance.

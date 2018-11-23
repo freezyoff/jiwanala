@@ -8,6 +8,16 @@ class UserModel extends BaseUserModel{
 	protected $table = 'users';
 	protected $connection = 'jn_core';
 	
+	/**
+     * @NOTE: Tidak dibuat email tersendiri, karena ada database
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token){
+		$this->notify(new \App\Notifications\Service\Auth\ResetPasswordNotification($token));
+    }
+	
 	public function permissions(){
 		return $this->belongsToMany('\App\Models\JNCore\PermissionModel', 'users_permissions', 'user_id', 'permission_id')->withTimestamps();
 	}

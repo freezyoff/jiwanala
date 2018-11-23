@@ -11,20 +11,21 @@ Route::get('/', function () {
 Route::prefix('auth')->group(function () {
 	
 	Route::name('service.auth.login')->group(function(){
-		Route::get('login', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
-		Route::post('login', '\App\Http\Controllers\Auth\LoginController@login');		
+		Route::get('login', '\App\Http\Controllers\Service\Auth\LoginController@showLoginForm');
+		Route::post('login', '\App\Http\Controllers\Service\Auth\LoginController@login');		
 	});
 	
 	Route::name('service.auth.logout')->group(function(){
-		Route::any('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+		Route::any('logout', '\App\Http\Controllers\Service\Auth\LoginController@logout');
 	});
-});
-
-Route::prefix('plugins')
-	->middleware(['auth'])
-	->group(function(){
-	Route::name('service.plugins.list')
-		->get('list', function(){
-			return "service.plugins.list";
-		});
+	
+	Route::name('service.auth.forgot')->group(function(){
+		Route::get('forgot', '\App\Http\Controllers\Service\Auth\ForgotPasswordController@showLinkRequestForm');
+		Route::post('forgot', '\App\Http\Controllers\Service\Auth\ForgotPasswordController@sendResetLinkEmail');
+	});
+	
+	Route::name('service.auth.reset')->group(function(){
+		Route::get('resetpwd/{token}', '\App\Http\Controllers\Service\Auth\ResetPasswordController@showResetForm');
+		Route::post('resetpwd/{token}', '\App\Http\Controllers\Service\Auth\ResetPasswordController@reset');
+	});
 });

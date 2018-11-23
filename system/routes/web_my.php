@@ -3,19 +3,16 @@
 //domain my.jiwa-nala.org
 
 //set the view location
-$theme = config('jn.my.app.theme');
-View::addLocation(resource_path().'/views/my/');
 
 Route::get('/',function(){
 	return "index.php";
 });
 
-
 Route::get('/layout', function(){
 	return view('layouts.default.defaultLayout');
 });
 
-Route::name('dashboard')->group(function(){
+Route::name('my.dashboard')->group(function(){
 	
 	Route::get('/', function () { 
 		return view('dashboard.default.defaultDashboard');
