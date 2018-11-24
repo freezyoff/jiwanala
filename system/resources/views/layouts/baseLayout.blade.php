@@ -27,7 +27,7 @@ lang-fallback="{{config('app.fallback_locale')}}"
 			<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
 			<script>
 				WebFont.load({
-					google: {"families":["Poppins:300,400,500,600,700,800,900","Roboto:300,400,500,600,700,800,900"]},
+					google: {"families":["Roboto:300,400,500,600,700,800,900"]},	//"Poppins:300,400,500,600,700,800,900",
 					active: function() {                
 						sessionStorage.fonts = true;            
 					}
@@ -52,6 +52,8 @@ lang-fallback="{{config('app.fallback_locale')}}"
 	<!-- begin::Body -->    
 	<body
 		@section('body.attributes')
+		@show
+		@section('html.body.attributes')
 		@show
 	>
 		

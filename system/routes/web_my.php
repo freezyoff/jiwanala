@@ -2,20 +2,10 @@
 
 //domain my.jiwa-nala.org
 
-//set the view location
-
-Route::get('/',function(){
-	return "index.php";
-});
-
-Route::get('/layout', function(){
-	return view('layouts.default.defaultLayout');
-});
-
 Route::name('my.dashboard')->group(function(){
 	
 	Route::get('/', function () { 
-		return view('dashboard.default.defaultDashboard');
+		return view('my.dashboard');
 	});
 });
 

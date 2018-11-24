@@ -44,8 +44,21 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
-    {
+    public function render($request, Exception $exception){
+		if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+			
+            return response()->view($this->getExceptionViewPath($request,'404'), [], 404);
+		}
         return parent::render($request, $exception);
     }
+	
+	protected function getExceptionViewPath($request, $viewName){
+		//my.jiwa-nala domain
+		if ( strpos($request->url(), 'my.jiwa-nala') !== false ){
+			return "my.exception.".$viewName;
+		}
+		
+		//other domain
+		return "exception.".$viewName;
+	}
 }

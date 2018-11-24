@@ -20,9 +20,7 @@
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {
-		"files": [
-			"resources/views/my/dashboard/default/LayoutHelpers.php"
-		],
+		"files": [],
         "classmap": [
             "database/seeds",
             "database/factories"
