@@ -28,15 +28,4 @@ Route::prefix('auth')->group(function () {
 		Route::get('resetpwd/{token}', '\App\Http\Controllers\Service\Auth\ResetPasswordController@showResetForm');
 		Route::post('resetpwd/{token}', '\App\Http\Controllers\Service\Auth\ResetPasswordController@reset');
 	});
-	
-	Route::name('service.auth.forgot')->group(function(){
-		Route::get('forgot', '\App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm');
-		Route::post('forgot', '\App\Http\Controllers\Auth\ForgotPasswordController@sendResetLinkEmail');
-	});
-	
-	Route::name('service.auth.reset')->group(function(){
-		Route::get('resetpwd/{token}', function($token){
-			return "resetpwd";
-		});
-	});
 });

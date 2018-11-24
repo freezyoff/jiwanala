@@ -13,6 +13,6 @@
 			'email.exists'=>'Email tidak terdaftar pada sistem.',
 		],
 	],
-	'success'=>'Email terkirim',
+	'success'=>'Email terkirim, cek inbox email',
 	'failed'=>'Kelasahan server, email belum dikirim.'
 ];

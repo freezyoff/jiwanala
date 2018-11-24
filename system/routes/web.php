@@ -52,11 +52,20 @@ Route::domain('tutor.'.$domain)->group(function(){
 	}
 });
 
-Route::domain('my.'.$domain)->group(function () {
+Route::domain('my.'.$domain)
+	->middleware('auth')
+	->group(function () {
+		
+	Route::get('/check/user', function(){
+		if (Auth::check()) return "logged in";
+		else return "not logged in";
+	});
+		
 	if (App::environment('local')){
 		require_once "../system/routes/web_my.php";
 	}
 	else{
 		throw new Exception('TODO: path Route file for my.jiwa-nala.org');
 	}
+	
 });
