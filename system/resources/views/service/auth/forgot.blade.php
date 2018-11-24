@@ -27,7 +27,10 @@
 		}
 		
 		html, body {height: 100%;}
+<<<<<<< HEAD
 		.w3-panel.info{padding: 16px 0 16px 0;}
+=======
+>>>>>>> f8bf6cca9122660d0d7eadc05f37788de510f221
 	</style>
 @endSection
 

@@ -24,10 +24,8 @@
 			.brand-subtitle {line-height:1; font-size:1em;}
 			.w3-card.boxContainer{padding: 16px 32px 16px 32px;box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)}
 			
+			.w3-panel.error{padding: 16px 0 16px 0;}
 		}
-		
-		html, body {height: 100%;}
-		.w3-panel.error{padding: 16px 0 16px 0;}
 	</style>
 @endSection
 
