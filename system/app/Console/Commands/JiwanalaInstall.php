@@ -118,6 +118,21 @@ class JiwanalaInstall extends Command
 		$userModel->email = $email;
 		$userModel->password = Hash::make( $password );
 		$userModel->save();
+		
+		//attach role & permission
+		$defaultRoles = config('permission.default_roles');
+		foreach($defaultRoles as $role){
+			$model = \App\DBModels\JNCore\RoleModel::where('key','=',$role)->first();
+			$userModel->grantRoles($model);
+			$this->info('Attach Role:'. $model->display_name .' ke User:'.$userModel->name);
+		}
+		
+		//listing permissions
+		$list = [];
+		foreach($userModel->permissions()->get() as $permission){
+			$list[] = [$permission->key, $permission->display_name];
+		}
+		$this->table(['Permission', 'Permission Name'],$list);
 	}
 	
 	protected function createRoleAndPermission(){
@@ -147,11 +162,9 @@ class JiwanalaInstall extends Command
 			$permission->save();
 			
 			//attach to role
-			$role = \App\DBModels\JNCore\RoleModel::where('key','=',$item['role'])->first();
-			if ($role){
-				$permission->roles()->attach($role);
-				array_unshift($attr, $role->key);
-			}
+			$permission->grantToRoles($item['roles']);
+			array_unshift($attr, implode(",",$item['roles']));
+			
 			$tableCell[] = $attr;
 		}
 		

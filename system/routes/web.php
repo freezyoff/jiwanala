@@ -28,12 +28,6 @@ else{
 	$domain .= '.org';
 }
 
-Route::domain($domain)->group(function(){
-	Route::name('web')->get('/web', function () { 
-			return view('web.landing'); 
-		})->name('web');
-});
-
 Route::domain('service.'.$domain)->group(function(){
 	if (App::environment('local')){
 		require_once "../system/routes/web_service.php";
@@ -43,18 +37,9 @@ Route::domain('service.'.$domain)->group(function(){
 	}
 });
 
-Route::domain('tutor.'.$domain)->group(function(){
-	if (App::environment('local')){
-		require_once "../system/routes/web_tutor.php";
-	}
-	else{
-		throw new Exception('TODO: path Route file for tutor.jiwa-nala.org');
-	}
-});
-
 Route::domain('my.'.$domain)
 	->middleware('auth')
-	->name('my')
+	->name('my.')
 	->group(function () {
 		
 	if (App::environment('local')){

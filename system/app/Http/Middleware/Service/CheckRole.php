@@ -15,7 +15,10 @@ class CheckRole
      * @return mixed
      */
     public function handle($request, Closure $next, $roleKey){
-		$user = Auth::user();
+		
+		if (!Auth::user()->hasRole($roleKey)){
+			abort(403);
+		}
 		
         return $next($request);
     }
