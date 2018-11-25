@@ -18,8 +18,8 @@ class CreateRolesTable extends Migration
         Schema::connection($this->connection)->create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key')->unique();
-            $table->string('display_name');
-			$table->string('description');
+            $table->string('display_name')->default("");
+			$table->string('description')->default("");
             $table->timestamps();
         });
 		
@@ -27,6 +27,7 @@ class CreateRolesTable extends Migration
 		Schema::connection($this->connection)->create('users_roles', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
 			$table->integer('role_id')->unsigned();
+			$table->boolean('activated')->default(true)->unsigned();
             $table->timestamps();
 			
 			$table->primary(['user_id','role_id']);

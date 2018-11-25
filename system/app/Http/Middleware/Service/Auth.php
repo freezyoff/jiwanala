@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Service;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as LaravelAuth;
 
-class JNAuth
+class Auth
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class JNAuth
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::check()) {
+        if (!LaravelAuth::check()) {
             return redirect()->route('service.auth.login');
         }
 

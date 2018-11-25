@@ -53,8 +53,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
 		//override default auth middleware
         //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-		'auth' => \App\Http\Middleware\JNAuth::class,
-		
+		'auth' => \App\Http\Middleware\Service\Auth::class,
 		
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -63,5 +62,9 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+		
+		//Service Middleware
+		'role' => \App\Http\Middleware\Service\CheckRole::class,
+		'permission'=> \App\Http\Middleware\Service\CheckPermission::class,
     ];
 }

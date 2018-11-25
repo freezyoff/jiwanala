@@ -17,8 +17,8 @@ class CreatePermissionsTable extends Migration
         Schema::connection($this->connection)->create('permissions', function (Blueprint $table) {
             $table->increments('id');
 			$table->string('key')->unique();
-			$table->string('display_name');
-			$table->string('description');
+			$table->string('display_name')->default("");
+			$table->string('description')->default("");
             $table->timestamps();
         });
 		
@@ -26,6 +26,7 @@ class CreatePermissionsTable extends Migration
 		Schema::connection($this->connection)->create('users_permissions', function(Blueprint $table){
 			$table->integer('user_id')->unsigned();
 			$table->integer('permission_id')->unsigned();
+			$table->boolean('activated')->default(true)->unsigned();
             $table->timestamps();
 			
 			$table->primary(['user_id','permission_id']);

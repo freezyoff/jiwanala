@@ -4,7 +4,7 @@
 	@parent
 	<link rel="stylesheet" href="{{url('css/app.css')}}">
 	<style>
-		.brand>.brand-text>.subtitle {line-height:1; letter-spacing:.2px;}
+		.brand>.brand-text>.subtitle {line-height:1.3; letter-spacing:.2px;}
 		.brand{padding-top:8px; padding-bottom:8px;display:inline-block;}
 		.w3-bar-item {float:none !important; display:inline-block !important;}
 		.w3-main{margin-left:300px;}
@@ -15,20 +15,20 @@
 		.brand>.brand-text>.subtitle {font-family:roboto,sanserif}
 		
 		@media only screen and (max-width: 600px) {
-			.brand>img {width: 2.5em;}
+			.brand>img {width: 2em;}
 			.brand>.brand-text {margin-left:.2em;}
-			.brand>.brand-text>.title {font-size:1.5em}
-			.brand>.brand-text>.subtitle {font-size:.7em;}
+			.brand>.brand-text>.title {font-size:1.1em}
+			.brand>.brand-text>.subtitle {font-size:.6em;}
 		}
 		
 		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 		@media only screen and (min-width: 768px),			/* Medium devices (landscape tablets, 768px and up) */
 		@media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
 		@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
-			.brand>img {width: 3em;}
+			.brand>img {width: 2.5em;}
 			.brand>.brand-text {margin-left:.5em;}
-			.brand>.brand-text>.title {font-size:1.6em}
-			.brand>.brand-text>.subtitle {font-size:.8em;}
+			.brand>.brand-text>.title {font-size:1.3em}
+			.brand>.brand-text>.subtitle {font-size:.75em;}
 		}
 	</style>
 @endSection
@@ -48,18 +48,19 @@
 		style="z-index:3;width:300px;" >
 	@section('dashboard.sidebar')
 		@include('my.dashboard_sidebar')
-		
-		<!-- begin: Sidebar overlay -->
-		<!-- Overlay effect when opening sidebar on small screens -->
-		<div class="w3-overlay w3-hide-large w3-animate-opacity" 
-			style="cursor:pointer" 
-			title="close side menu" 
-			id="jn-sidebar-overlay"></div>
-		<!-- end: Sidebar/menu -->
 	@show
 	</nav>
 	<!-- end: Sidebar/menu -->
 	
+	<!-- begin: Sidebar overlay -->
+	@section('dashboard.sidebar.overlay')
+	<!-- Overlay effect when opening sidebar on small screens -->
+	<div class="w3-overlay w3-hide-large w3-animate-opacity" 
+		style="cursor:pointer" 
+		title="close side menu" 
+		id="jn-sidebar-overlay"></div>
+	<!-- end: Sidebar/menu -->
+	@show
 
 	<!-- begin: Main / Page Content -->
 	@section('dashboard.main')
