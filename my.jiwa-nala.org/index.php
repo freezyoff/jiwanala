@@ -20,13 +20,15 @@ define('LARAVEL_START', microtime(true));
 | loading any of our classes later on. It feels great to relax.
 |
 */
-try{
-	//try "production" autoload
+
+//try "remote/production" autoload path
+if (file_exists(__DIR__.'/../GIT-JIWANALA/system/vendor/autoload.php')){
 	require __DIR__.'/../GIT-JIWANALA/system/vendor/autoload.php';
 }
-catch($e){
-	//modify to your autoload
+else{
+	//modify to your "local" autoload path
 	require __DIR__.'/../system/vendor/autoload.php';
+	
 }
 
 /*
@@ -41,13 +43,14 @@ catch($e){
 |
 */
 $app = false;
-try{
-	//try "production" bootstrap/app.php
-	$app = require_once __DIR__.'/../GIT-JIWANALA/system/bootstrap/app.php';	
+
+//try "remote/production" autoload path
+if (file_exists(__DIR__.'/../GIT-JIWANALA/system/bootstrap/app.php')){
+	$app = require_once __DIR__.'/../GIT-JIWANALA/system/bootstrap/app.php';
 }
-catch($e){
-	//modify to your bootstrap/app.php
-	$app = require_once __DIR__.'/../system/bootstrap/app.php';	
+else{
+	//modify to your "local" autoload path
+	$app = require_once __DIR__.'/../system/bootstrap/app.php';
 }
 
 /*

@@ -21,37 +21,28 @@
 */
 
 $domain = 'jiwa-nala';
+$routeFilePath = false;
 if (App::environment('production')){
 	//modify to your remote domain setting
 	$domain .= '.org';
+	//modify to your remote route file path
+	$routeFilePath = '../GIT-JIWANALA/system/routes';
 }
 else{
 	//modify to your local domain setting
 	$domain .= '.local';
+	//modify to your remote route file path
+	$routeFilePath = '../system/routes';
 }
 
-Route::domain('service.'.$domain)->group(function(){
-	if (App::environment('production')){
-		//modify to your remote domain setting
-		require_once "../GIT-JIWANALA/system/routes/web_service.php";
-	}
-	else{
-		//modify to your local domain setting
-		require_once "../system/routes/web_service.php";
-	}
+Route::domain('service.'.$domain)->group(function() use ($routeFilePath){
+	require_once $routeFilePath."/web_service.php";
 });
 
 Route::domain('my.'.$domain)
 	->middleware('auth')
 	->name('my.')
-	->group(function () {
+	->group(function () use($routeFilePath){
 		
-	if (App::environment('production')){
-		//modify to your remote domain setting
-		require_once "../GIT-JIWANALA/system/routes/web_my.php";
-	}
-	else{
-		//modify to your local domain setting
-		require_once "../system/routes/web_my.php";
-	}	
+	require_once $routeFilePath."/web_my.php";
 });
