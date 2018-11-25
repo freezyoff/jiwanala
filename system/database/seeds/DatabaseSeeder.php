@@ -9,19 +9,5 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        // $this->call(UsersTableSeeder::class);
-        //$this->call(UsersTableSeeder::class);
-		
-		//$this->BAUKSeeder();
-    }
-	
-	protected function BAUKSeeder(){
-		$this->call(BAUK_KaryawanTableSeeder::class);
-	}
-	
-	protected function JNBimbelSeeder(){
-		$this->call(JNBimbel_StudentSeeder::class);
-	}
+    public function run(){}
 }

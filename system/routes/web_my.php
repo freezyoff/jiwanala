@@ -6,7 +6,7 @@
 Route::name('dashboard')
 	->group(function(){
 	
-	Route::get('/', function () { 
+	Route::get('/', function () {
 		return view('my.dashboard');
 	});
 	

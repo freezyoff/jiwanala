@@ -15,6 +15,9 @@ class CheckPermission
      */
     public function handle($request, Closure $next, $permissionKey)
     {
+		if (!Auth::user()->hasPermission($permissionKey)){
+			abort(403);
+		}
         return $next($request);
     }
 }

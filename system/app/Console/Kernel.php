@@ -25,8 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+		//schedule artisan queue:*
+		$schedule->command('queue:retry all')->withoutOverlapping()
+			->everyMinute()
+			->appendOutputTo("./storage/logs/scheduleLog.queue-retry.txt");
+        $schedule->command('queue:work --stop-when-empty')->withoutOverlapping()
+			->everyMinute()
+			->appendOutputTo("./storage/logs/scheduleLog.queue-work.txt");
     }
 
     /**
