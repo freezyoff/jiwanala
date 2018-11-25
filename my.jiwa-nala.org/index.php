@@ -20,8 +20,14 @@ define('LARAVEL_START', microtime(true));
 | loading any of our classes later on. It feels great to relax.
 |
 */
-
-require __DIR__.'/../system/vendor/autoload.php';
+try{
+	//try "production" autoload
+	require __DIR__.'/../GIT-JIWANALA/system/vendor/autoload.php';
+}
+catch($e){
+	//modify to your autoload
+	require __DIR__.'/../system/vendor/autoload.php';
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +40,15 @@ require __DIR__.'/../system/vendor/autoload.php';
 | the responses back to the browser and delight our users.
 |
 */
-
-$app = require_once __DIR__.'/../system/bootstrap/app.php';
+$app = false;
+try{
+	//try "production" bootstrap/app.php
+	$app = require_once __DIR__.'/../GIT-JIWANALA/system/bootstrap/app.php';	
+}
+catch($e){
+	//modify to your bootstrap/app.php
+	$app = require_once __DIR__.'/../system/bootstrap/app.php';	
+}
 
 /*
 |--------------------------------------------------------------------------

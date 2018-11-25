@@ -21,19 +21,23 @@
 */
 
 $domain = 'jiwa-nala';
-if (App::environment('local')){
-	$domain .= '.local';
+if (App::environment('production')){
+	//modify to your remote domain setting
+	$domain .= '.org';
 }
 else{
-	$domain .= '.org';
+	//modify to your local domain setting
+	$domain .= '.local';
 }
 
 Route::domain('service.'.$domain)->group(function(){
-	if (App::environment('local')){
-		require_once "../system/routes/web_service.php";
+	if (App::environment('production')){
+		//modify to your remote domain setting
+		require_once "../GIT-JIWANALA/system/routes/web_service.php";
 	}
 	else{
-		throw new Exception('TODO: path Route file for service.jiwa-nala.org');
+		//modify to your local domain setting
+		require_once "../system/routes/web_service.php";
 	}
 });
 
@@ -42,11 +46,12 @@ Route::domain('my.'.$domain)
 	->name('my.')
 	->group(function () {
 		
-	if (App::environment('local')){
-		require_once "../system/routes/web_my.php";
+	if (App::environment('production')){
+		//modify to your remote domain setting
+		require_once "../GIT-JIWANALA/system/routes/web_my.php";
 	}
 	else{
-		throw new Exception('TODO: path Route file for my.jiwa-nala.org');
-	}
-	
+		//modify to your local domain setting
+		require_once "../system/routes/web_my.php";
+	}	
 });
