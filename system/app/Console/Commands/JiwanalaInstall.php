@@ -120,7 +120,7 @@ class JiwanalaInstall extends Command
 		$userModel->save();
 		
 		//attach role & permission
-		$defaultRoles = config('permission.default_roles');
+		$defaultRoles = config('access_control.default_roles');
 		foreach($defaultRoles as $role){
 			$model = \App\DBModels\JNCore\RoleModel::where('key','=',$role)->first();
 			$userModel->grantRoles($model);
@@ -137,7 +137,7 @@ class JiwanalaInstall extends Command
 	
 	protected function createRoleAndPermission(){
 		$tableCell = [];
-		$roleConfig = config('permission.roles');
+		$roleConfig = config('access_control.roles');
 		foreach($roleConfig as $key=>$item){
 			$attr = [
 				'key' => $key, 
@@ -151,7 +151,7 @@ class JiwanalaInstall extends Command
 		$this->table( ['Role', 'Role Name', 'Role Desc'], $tableCell);
 		
 		$tableCell=[];
-		$permissionConfig = config('permission.permissions');
+		$permissionConfig = config('access_control.permissions');
 		foreach($permissionConfig as $key=>$item){
 			$attr=[
 				'key' => $key, 

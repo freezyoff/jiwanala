@@ -7,6 +7,10 @@
 		'user'=>[
 			'display_name'=>'User',
 			'description'=>'User',
+		],
+		'bauk_admin'=>[
+			'display_name'=>'Admin BAUK',
+			'description'=>'Administrator Biro Administrasi Umum & Kepegawaian',
 		]
 	],
 	
