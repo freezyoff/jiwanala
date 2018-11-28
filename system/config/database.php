@@ -32,13 +32,13 @@ return [
     */
 
     'connections' => [
-        'jn_core' => [
+        'service' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE_CORE', 'forge'),
-            'username' => env('DB_USERNAME_CORE', 'forge'),
-            'password' => env('DB_PASSWORD_CORE', ''),
+            'database' => env('DB_DATABASE_SERVICE', 'forge'),
+            'username' => env('DB_USERNAME_SERVICE', 'forge'),
+            'password' => env('DB_PASSWORD_SERVICE', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8_unicode_ci'),
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
@@ -46,53 +46,6 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-		
-		'jn_bauk' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE_BAUK', 'forge'),
-            'username' => env('DB_USERNAME_BAUK', 'forge'),
-            'password' => env('DB_PASSWORD_BAUK', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8_unicode_ci'),
-            'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-		
-		'jn_tutor' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE_BIMBEL', 'forge'),
-            'username' => env('DB_USERNAME_BIMBEL', 'forge'),
-            'password' => env('DB_PASSWORD_BIMBEL', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8_unicode_ci'),
-            'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-		
-		/*
-		'jn_accounting' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE_ACCOUNTING', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8mb4'),
-            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-		*/
     ],
 
     /*

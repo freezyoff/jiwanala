@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622
+class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -407,7 +407,9 @@ class ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622
     );
 
     public static $classMap = array (
-        'App\\Console\\Commands\\JiwanalaInstall' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaInstall.php',
+        'App\\Console\\Commands\\JiwanalaService' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaService.php',
+        'App\\Console\\Commands\\JiwanalaServicePermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaServicePermission.php',
+        'App\\Console\\Commands\\JiwanalaServiceUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaServiceUser.php',
         'App\\Console\\Commands\\TestScript' => __DIR__ . '/../..' . '/app/Console/Commands/TestScript.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\DBModels\\JNAccounting\\Account' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/Account.php',
@@ -418,9 +420,6 @@ class ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622
         'App\\DBModels\\JNBimbel\\Student' => __DIR__ . '/../..' . '/app/DBModels/JNBimbel/Student.php',
         'App\\DBModels\\JNCore\\AreaCodeModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/AreaCodeModel.php',
         'App\\DBModels\\JNCore\\PasswordResetModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/PasswordResetModel.php',
-        'App\\DBModels\\JNCore\\PermissionModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/PermissionModel.php',
-        'App\\DBModels\\JNCore\\RoleModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/RoleModel.php',
-        'App\\DBModels\\JNCore\\UserModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/UserModel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/RegisterController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
@@ -439,6 +438,9 @@ class ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Libraries\\Service\\Auth\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/PasswordResetModel.php',
+        'App\\Libraries\\Service\\Auth\\User' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/User.php',
+        'App\\Libraries\\Service\\Permission' => __DIR__ . '/../..' . '/app/Libraries/Service/Permission.php',
         'App\\Notifications\\Service\\Auth\\ResetPasswordNotification' => __DIR__ . '/../..' . '/app/Notifications/Service/Auth/ResetPasswordNotification.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -4335,11 +4337,11 @@ class ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitbbc3e0422c47b2df6d73b6c70e4f2622::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePermissionsTable extends Migration
 {
-	protected $connection = 'jn_core';
+	protected $connection = 'service';
     /**
      * Run the migrations.
      *
@@ -14,19 +14,22 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::connection($this->connection)->create('permissions', function (Blueprint $table) {
-            $table->increments('id');
+		Schema::connection($this->connection)
+			->create('permissions', function (Blueprint $table) {
+			$table->increments('id');
 			$table->string('key')->unique();
+			$table->string('context')->comment('Konteks Level permission');
 			$table->string('display_name')->default("");
 			$table->string('description')->default("");
-            $table->timestamps();
-        });
+			$table->timestamps();
+		});
 		
 		//	many to many relation with users table
-		Schema::connection($this->connection)->create('users_permissions', function(Blueprint $table){
+		Schema::connection($this->connection)
+			->create('users_permissions', function(Blueprint $table){
 			$table->integer('user_id')->unsigned();
 			$table->integer('permission_id')->unsigned();
-            $table->timestamps();
+			$table->timestamps();
 			
 			$table->primary(['user_id','permission_id']);
 			$table->foreign('user_id')->references('id')->on('users');

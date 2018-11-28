@@ -13,9 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\JiwanalaInstall::class,
-        \App\Console\Commands\JiwanalaRolesAndPermissions::class,
-		\App\Console\Commands\TestScript::class,
+        \App\Console\Commands\JiwanalaServiceUser::class,
+        \App\Console\Commands\JiwanalaServicePermission::class,
+        \App\Console\Commands\JiwanalaService::class,
     ];
 
     /**

@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Console\\Commands\\JiwanalaInstall' => $baseDir . '/app/Console/Commands/JiwanalaInstall.php',
+    'App\\Console\\Commands\\JiwanalaService' => $baseDir . '/app/Console/Commands/JiwanalaService.php',
+    'App\\Console\\Commands\\JiwanalaServicePermission' => $baseDir . '/app/Console/Commands/JiwanalaServicePermission.php',
+    'App\\Console\\Commands\\JiwanalaServiceUser' => $baseDir . '/app/Console/Commands/JiwanalaServiceUser.php',
     'App\\Console\\Commands\\TestScript' => $baseDir . '/app/Console/Commands/TestScript.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\DBModels\\JNAccounting\\Account' => $baseDir . '/app/DBModels/JNAccounting/Account.php',
@@ -17,9 +19,6 @@ return array(
     'App\\DBModels\\JNBimbel\\Student' => $baseDir . '/app/DBModels/JNBimbel/Student.php',
     'App\\DBModels\\JNCore\\AreaCodeModel' => $baseDir . '/app/DBModels/JNCore/AreaCodeModel.php',
     'App\\DBModels\\JNCore\\PasswordResetModel' => $baseDir . '/app/DBModels/JNCore/PasswordResetModel.php',
-    'App\\DBModels\\JNCore\\PermissionModel' => $baseDir . '/app/DBModels/JNCore/PermissionModel.php',
-    'App\\DBModels\\JNCore\\RoleModel' => $baseDir . '/app/DBModels/JNCore/RoleModel.php',
-    'App\\DBModels\\JNCore\\UserModel' => $baseDir . '/app/DBModels/JNCore/UserModel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\RegisterController' => $baseDir . '/app/Http/Controllers/Service/Auth/RegisterController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
@@ -38,6 +37,9 @@ return array(
     'App\\Http\\Middleware\\TrimStrings' => $baseDir . '/app/Http/Middleware/TrimStrings.php',
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
+    'App\\Libraries\\Service\\Auth\\PasswordResetModel' => $baseDir . '/app/Libraries/Service/Auth/PasswordResetModel.php',
+    'App\\Libraries\\Service\\Auth\\User' => $baseDir . '/app/Libraries/Service/Auth/User.php',
+    'App\\Libraries\\Service\\Permission' => $baseDir . '/app/Libraries/Service/Permission.php',
     'App\\Notifications\\Service\\Auth\\ResetPasswordNotification' => $baseDir . '/app/Notifications/Service/Auth/ResetPasswordNotification.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',

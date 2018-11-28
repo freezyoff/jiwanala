@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\DBModels\JNCore\UserModel::class,
+            'model' => App\Libraries\Service\Auth\User::class,
         ],
 
         // 'users' => [
