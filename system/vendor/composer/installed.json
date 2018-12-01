@@ -1,5 +1,59 @@
 [
     {
+        "name": "deskti/laravel-config-writer",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/deskti/laravel-config-writer.git",
+            "reference": "157818bcb003556f24e79a650db39694ab34fbac"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/deskti/laravel-config-writer/zipball/157818bcb003556f24e79a650db39694ab34fbac",
+            "reference": "157818bcb003556f24e79a650db39694ab34fbac",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/config": "~5.2.",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-07-22T16:03:50+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "October\\Rain\\Config\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexey Bobkov",
+                "email": "aleksey.bobkov@gmail.com"
+            },
+            {
+                "name": "Samuel Georges",
+                "email": "daftspunky@gmail.com"
+            },
+            {
+                "name": "Marcos Moraes",
+                "email": "marcos.deskti@gmail.com"
+            }
+        ],
+        "description": "Configuration extension",
+        "homepage": "http://octobercms.com",
+        "keywords": [
+            "config",
+            "deskti",
+            "laravel",
+            "write"
+        ]
+    },
+    {
         "name": "dnoegel/php-xdg-base-dir",
         "version": "0.1",
         "version_normalized": "0.1.0.0",

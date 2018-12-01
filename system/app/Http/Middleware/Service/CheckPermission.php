@@ -3,6 +3,7 @@
 namespace App\Http\Middleware\Service;
 
 use Closure;
+use Auth;
 
 class CheckPermission
 {

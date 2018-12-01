@@ -7,6 +7,7 @@ use App\User as BaseUserModel;
 class User extends BaseUserModel{
 	protected $table = 'users';
 	protected $connection = 'service';
+	protected $fillable=['creator','name','email','password'];
 	
 	/**
      * @NOTE: Tidak dibuat email tersendiri, karena ada database
@@ -55,6 +56,15 @@ class User extends BaseUserModel{
 			}
 			$this->permissions()->detach($toAttach);
 		}
+	}
+	
+	/*
+	 * @param $permissionContextKey (String) - the permission context key
+	 * @return (Boolean)
+	 */
+	public function hasPermissionContext($permissionContextKey){
+		$result = $this->permissions()->where('context','=',$permissionContextKey)->get();
+		return count($result)>0;
 	}
 	
 	/*

@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		
 		//Service Middleware
-		'role' => \App\Http\Middleware\Service\CheckRole::class,
+		'permission.context'=> \App\Http\Middleware\Service\CheckPermissionContext::class,
 		'permission'=> \App\Http\Middleware\Service\CheckPermission::class,
     ];
 }

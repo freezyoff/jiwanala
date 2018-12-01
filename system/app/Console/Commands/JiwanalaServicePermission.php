@@ -12,8 +12,9 @@ class JiwanalaServicePermission extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:service-permission
+    protected $signature = 'jiwanala:permission
 							{--L|diff : compare system permission with database permission table}
+							{--S|sync : Sync Permission list in permission.php config with database. Permission config will be the source to add & remove database record}
 							{--A|add : add permission. use with option [--O|overwrite] and arguments [--key] [--context] [--display] {--desc]}
 							{--R|remove : remove permission. Use with [--key]}
 							{--O|overwrite : Overwrite data if exist, add new data if not. use with [--key] [--context] [--display] {--desc]}
@@ -48,12 +49,12 @@ class JiwanalaServicePermission extends Command
     public function handle(){
 		$forceMigrate = false;
 		if (!$this->option('diff') && !$this->option('add') && 
-			!$this->option('overwrite') && !$this->option('remove')){
+			!$this->option('overwrite') && !$this->option('remove') && 
+			!$this->option('sync')){
 			$this->error('                           ');
 			$this->error('Use one of options:        ');
-			$this->error('      -S | --serve         ');
-			$this->error('      -M | --migrate       ');
 			$this->error('      -L | --diff          ');
+			$this->error('      -S | --sync          ');
 			$this->error('      -A | --add           ');
 			$this->error('      -O | --overwrite     ');
 			$this->error('      -R | --remove        ');
@@ -78,6 +79,9 @@ class JiwanalaServicePermission extends Command
 		
 		//{--R|remove : remove permission}
 		if ($this->option('remove')){ $this->doRemove(); }
+		
+		//{--S|sync : Sync Permission list in permission.php config with database. Permission config will be the source to add & remove database record}
+		if ($this->option('sync')){ $this->doSync(); }
     }
 	
 	protected function getConfig($key=null){
@@ -132,10 +136,9 @@ class JiwanalaServicePermission extends Command
 		
 		$header = ['In Config', "In Database", "Comment"];
 		$table = [];
-		print_r($sort);
 		foreach($sort as $key=>$item){
-			$conf = isset($item['conf'])? $item['conf'] : "";
-			$db = isset($item['db'])? $item['db'] : "";
+			$conf = isset($item['conf'])? $item['conf'] : false;
+			$db = isset($item['db'])? $item['db'] : false;
 			$cc = $conf == $db? "" : "Not Sync";
 			$table[] = [$conf, $db, $cc];
 		}
@@ -182,5 +185,86 @@ class JiwanalaServicePermission extends Command
 		else{
 			$this->info('No record deleted');
 		}
+	}
+	
+	function doSync(){
+		$configAll = $this->getConfig('list');
+		$conf = array_keys($configAll);
+		$confArray = [];
+		foreach($conf as $item){ $confArray[$item] = $item; }
+		$db = \App\Libraries\Service\Permission::all();
+		$dbArray = [];
+		foreach($db as $item){
+			$dbArray[$item->key] = $item->key;
+		}
+		
+		//check array differents, 
+		$this->line('Compare Configuration File & Database record');
+		$diff = ['conf'=>[], 'db'=>[]];
+		$commit = false;
+		foreach(array_values($confArray) as $key){
+			if (!isset($dbArray[$key])){
+				$this->doSync_push($key, $configAll[$key][0], $configAll[$key][1], $configAll[$key][2]);
+			}
+		}
+		foreach(array_values($dbArray) as $key){
+			if (!isset($confArray[$key])){
+				$commit = true;
+				$configAll = $this->doSync_merge($configAll,$key);
+			}
+		}
+		
+		if ($commit) {
+			$this->doSync_commit('permission.list',$configAll);
+		}
+		else{			
+			$this->line('Nothing to sync');
+		}
+	}
+	
+	function doSync_push($key, $context, $display_name, $description){
+		//{--key=  : key of permission}
+		//{--context= : context of permission}
+		//{--display= : display name of permission}
+		//{--desc= : description of permission}';
+		Artisan::call('jiwanala:permission', array_combine(
+			['--key', '--context', '--display', '--desc', '--add'], 
+			[$key, $context, $display_name, $description, true]
+		));
+		$this->line('Add Permission record to dabase');
+		$this->info('    Key:         '.$key);
+		$this->info('    Context:     '.$context);
+		$this->info('    Display Name:'.$display_name);
+		$this->info('    Description: '.$description);
+	}
+	
+	function doSync_merge($config, $key){
+		$record = $this->getRecord($key);
+		$config[$record->key] = [
+			$record->context?$record->context:"",
+			$record->display_name?$record->display_name:"",
+			$record->description?$record->description:""];
+		$this->line('Add Permission to configuration file Permission.php');
+		$this->line('    Key:         '.$key);
+		$this->info('    Context:     '.$record->context);
+		$this->info('    Display Name:'.$record->display_name);
+		$this->info('    Description: '.$record->description);
+		return $config;
+	}
+	
+	function doSync_commit($key, $value){
+		config([$key => $value]);
+		$fp = fopen(config_path('permission.php'), 'w');
+		fwrite($fp, '<?php return ' . $this->varexport($this->getConfig(), true) . ';');
+		fclose($fp);
+	}
+	
+	function varexport($expression, $return=FALSE) {
+		$export = var_export($expression, TRUE);
+		$export = preg_replace("/^([ ]*)(.*)/m", '$1$1$2', $export);
+		$array = preg_split("/\r\n|\n|\r/", $export);
+		$array = preg_replace(["/\s*array\s\($/", "/\)(,)?$/", "/\s=>\s$/"], [NULL, ']$1', ' => ['], $array);
+		$export = join(PHP_EOL, array_filter(["["] + $array));
+		if ((bool)$return) return $export; else echo $export;
 	}
 }

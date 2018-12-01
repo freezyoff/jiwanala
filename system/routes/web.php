@@ -40,8 +40,8 @@ Route::domain('service.'.$domain)->group(function() use ($routeFilePath){
 });
 
 Route::domain('my.'.$domain)
-	->middleware('auth')
 	->name('my.')
+	->middleware('auth')
 	->group(function () use($routeFilePath){
 		
 	require_once $routeFilePath."/web_my.php";

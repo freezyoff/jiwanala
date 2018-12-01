@@ -113,6 +113,7 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'O' => 
         array (
             'Opis\\Closure\\' => 13,
+            'October\\Rain\\Config\\' => 20,
         ),
         'N' => 
         array (
@@ -281,6 +282,10 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
         ),
+        'October\\Rain\\Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/deskti/laravel-config-writer/src',
+        ),
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
@@ -407,16 +412,16 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
     );
 
     public static $classMap = array (
-        'App\\Console\\Commands\\JiwanalaService' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaService.php',
+        'App\\Console\\Commands\\JiwanalaAddPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddPermission.php',
+        'App\\Console\\Commands\\JiwanalaAddUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddUser.php',
+        'App\\Console\\Commands\\JiwanalaGrantPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaGrantPermission.php',
+        'App\\Console\\Commands\\JiwanalaMigration' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaMigration.php',
         'App\\Console\\Commands\\JiwanalaServicePermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaServicePermission.php',
-        'App\\Console\\Commands\\JiwanalaServiceUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaServiceUser.php',
         'App\\Console\\Commands\\TestScript' => __DIR__ . '/../..' . '/app/Console/Commands/TestScript.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\DBModels\\JNAccounting\\Account' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/Account.php',
         'App\\DBModels\\JNAccounting\\AccountBalance' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/AccountBalance.php',
         'App\\DBModels\\JNAccounting\\Journal' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/Journal.php',
-        'App\\DBModels\\JNBauk\\Karyawan' => __DIR__ . '/../..' . '/app/DBModels/JNBauk/Karyawan.php',
-        'App\\DBModels\\JNBauk\\KaryawanExporter' => __DIR__ . '/../..' . '/app/DBModels/JNBauk/KaryawanExporter.php',
         'App\\DBModels\\JNBimbel\\Student' => __DIR__ . '/../..' . '/app/DBModels/JNBimbel/Student.php',
         'App\\DBModels\\JNCore\\AreaCodeModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/AreaCodeModel.php',
         'App\\DBModels\\JNCore\\PasswordResetModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/PasswordResetModel.php',
@@ -425,6 +430,8 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\My\\AdministratorController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/AdministratorController.php',
+        'App\\Http\\Controllers\\My\\BaukController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/BaukController.php',
+        'App\\Http\\Controllers\\My\\Bauk\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/EmployeeController.php',
         'App\\Http\\Controllers\\Service\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Service\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/LoginController.php',
         'App\\Http\\Controllers\\Service\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/ResetPasswordController.php',
@@ -434,10 +441,13 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
         'App\\Http\\Middleware\\Service\\Auth' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/Auth.php',
         'App\\Http\\Middleware\\Service\\CheckPermission' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/CheckPermission.php',
-        'App\\Http\\Middleware\\Service\\CheckRole' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/CheckRole.php',
+        'App\\Http\\Middleware\\Service\\CheckPermissionContext' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/CheckPermissionContext.php',
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Http\\Requests\\My\\Bauk\\Employee\\AddRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Employee/AddRequest.php',
+        'App\\Libraries\\Bauk\\Employees' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Employees.php',
+        'App\\Libraries\\Foundation\\Migration' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Migration.php',
         'App\\Libraries\\Service\\Auth\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/PasswordResetModel.php',
         'App\\Libraries\\Service\\Auth\\User' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/User.php',
         'App\\Libraries\\Service\\Permission' => __DIR__ . '/../..' . '/app/Libraries/Service/Permission.php',
@@ -2341,6 +2351,10 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'NunoMaduro\\Collision\\Highlighter' => __DIR__ . '/..' . '/nunomaduro/collision/src/Highlighter.php',
         'NunoMaduro\\Collision\\Provider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Provider.php',
         'NunoMaduro\\Collision\\Writer' => __DIR__ . '/..' . '/nunomaduro/collision/src/Writer.php',
+        'October\\Rain\\Config\\ConfigServiceProvider' => __DIR__ . '/..' . '/deskti/laravel-config-writer/src/ConfigServiceProvider.php',
+        'October\\Rain\\Config\\FileWriter' => __DIR__ . '/..' . '/deskti/laravel-config-writer/src/FileWriter.php',
+        'October\\Rain\\Config\\Repository' => __DIR__ . '/..' . '/deskti/laravel-config-writer/src/Repository.php',
+        'October\\Rain\\Config\\Rewrite' => __DIR__ . '/..' . '/deskti/laravel-config-writer/src/Rewrite.php',
         'Opis\\Closure\\Analyzer' => __DIR__ . '/..' . '/opis/closure/src/Analyzer.php',
         'Opis\\Closure\\ClosureContext' => __DIR__ . '/..' . '/opis/closure/src/ClosureContext.php',
         'Opis\\Closure\\ClosureScope' => __DIR__ . '/..' . '/opis/closure/src/ClosureScope.php',
