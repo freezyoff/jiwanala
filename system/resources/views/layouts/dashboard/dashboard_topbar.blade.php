@@ -37,7 +37,7 @@
 					@if( Auth::user()->hasPermissionContext($key) )
 						<li class="w3-hover-light-grey" style="cursor:pointer">
 							<a class="w3-text-theme w3-mobile"
-								onclick="{{$item['href']? 'document.location=\''.route($item['href']).'\'' : ''}}">
+								href="{{$item['href']? route($item['href']) : ''}}">
 								<i class="{{$item['display']['icon']}}"></i>
 								<span style="padding-left:12px">{{ucfirst($item['display']['name'])}}</span>
 							</a>

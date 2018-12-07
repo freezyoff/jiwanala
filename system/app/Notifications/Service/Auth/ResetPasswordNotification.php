@@ -18,7 +18,10 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      * @return void
      */
     public function __construct($token){
-        $this->reset_url = route('service.auth.reset', $token);
+		//$this->reset_url = route('service.auth.reset', $token);
+		
+		//force url to remote
+        $this->reset_url = 'https://service.jiwa-nala.org/auth/resetpwd/'.$token;
     }
 
     /**
