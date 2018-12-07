@@ -11,7 +11,7 @@ class JiwanalaGrantPermission extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:grant {user : username} {permissions? : permission list to grant}
+    protected $signature = 'jiwanala:grant {user : username} {permissions* : permission list to grant}
 								{--default : default permission. see config permission.php}';
 
     /**

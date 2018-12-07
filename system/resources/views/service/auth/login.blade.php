@@ -67,6 +67,11 @@
 						type="password" 
 						placeholder="@lang('service/auth/login.hints.password')" />
 				</div>
+				<div>
+					<a class="w3-text-red" style="text-decoration:none;"
+						href="{{route('service.auth.forgot')}}" 
+						>Lupa sandi?</a>
+				</div>
 				<div class="w3-padding-16">
 					<button class="w3-block w3-button w3-blue w3-hover-indigo">Masuk</button>
 				</div>

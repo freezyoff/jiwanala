@@ -46,7 +46,7 @@
 				@endforeach
 				<li class="w3-hover-light-grey">
 					<a class="w3-text-theme w3-mobile" style="text-decoration:none;"
-						href="document.location='{{route('service.auth.logout')}}'">
+						href="{{route('service.auth.logout')}}">
 						<i class="fas fa-power-off"></i>
 						<span style="padding-left:12px">Log Out</span>
 					</a>
