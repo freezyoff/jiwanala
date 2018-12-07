@@ -26,13 +26,15 @@ class CrateTableEmployees extends Migration
             $table->integer('user_id')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
 			$table->integer('person_id')->unsigned();
-			$table->date('registered_at')->nullabel()->comment('tanggal terdaftar');
-			$table->date('resign_at')->nullabel()->comment('tanggal keluar / drop out');
+			$table->string('nip',10)->unique()->comment('Nomor Induk Pegawai <4 digit tahun masuk> <2 digit bulan lahir> <2 digit nomor urut>');
+			$table->enum('work_time',['f','p'])->default('f')->comment('f: full time, p: part time');
+			$table->timestamp('registered_at')->useCurrent()->comment('tanggal terdaftar');
+			$table->timestamp('resign_at')->nullable()->comment('tanggal keluar / drop out');
             $table->boolean('active')->default(true);
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('user_id')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('person'));
+			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
         }, 'employee');
     }
 

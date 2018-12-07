@@ -36,6 +36,7 @@ class JiwanalaMigration extends Command
 		'/database/migrations/service/system',
 		'/database/migrations/service/user',
 		'/database/migrations/service/permission',
+		'/database/migrations/core',
 		'/database/migrations/bauk',
 		'/database/migrations/baak',
 	];

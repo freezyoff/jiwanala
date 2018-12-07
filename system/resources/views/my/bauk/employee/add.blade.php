@@ -5,6 +5,7 @@
 	<form id="form1" 
 		method="post" 
 		action="{{route('my.bauk.employee.add')}}">
+		<input type="hidden" name="user_timezone" value="">
 		<div class="w3-card w3-round w3-col s12 m12 l8 ">
 			<header class="w3-container w3-theme-l1 padding-top-bottom-8">
 				<h4>Karyawan Baru</h4>
@@ -12,98 +13,279 @@
 			<div class="w3-container">
 				<div class="padding-top-16 padding-bottom-8">
 						@csrf
-						<input name="NIP" type="text" value="{{old('NIP')}}" 
-							placeholder="{{trans('my/bauk/employee/add.hints.NIP')}}" 
+						<!-- begin: input nip -->
+						<input name="nip" type="text" value="{{old('nip')}}" 
+							placeholder="{{trans('my/bauk/employee/add.hints.nip')}}" 
 							class="w3-input
-							@if(isset($errors) && $errors->has('NIP'))
-								error
-							@endif
-							" />
-						@if(isset($errors) && $errors->has('NIP'))
-							<label class="w3-text-red">{{$errors->first('NIP')}}</label>
-						@else
-							<label>&nbsp;</label>
-						@endif
-						<input name="KTP" type="text" value="{{old('KTP')}}" 
-						placeholder="{{trans('my/bauk/employee/add.hints.KTP')}}" 
-							class="w3-input
-							@if(isset($errors) && $errors->has('KTP'))
+							@if(isset($errors) && $errors->has('nip'))
 								error
 							@endif
 							"/>
-						@if(isset($errors) && $errors->has('KTP'))
-							<label class="w3-text-red">{{$errors->first('KTP')}}</label>
+						@if(isset($errors) && $errors->has('nip'))
+							<label class="w3-text-red">{{$errors->first('nip')}}</label>
 						@else
 							<label>&nbsp;</label>
 						@endif
-						<input name="nama_lengkap" type="text" value="{{old('nama_lengkap')}}" 
-							placeholder="{{trans('my/bauk/employee/add.hints.nama_lengkap')}}" 
+						<!-- end: input nip -->
+						<!-- begin: input nik -->
+						<input name="nik" type="text" value="{{old('nik')}}" 
+						placeholder="{{trans('my/bauk/employee/add.hints.nik')}}" 
 							class="w3-input
-							@if(isset($errors) && $errors->has('nama_lengkap'))
+							@if(isset($errors) && $errors->has('nik'))
 								error
 							@endif
 							"/>
-						@if(isset($errors) && $errors->has('nama_lengkap'))
-							<label class="w3-text-red">{{$errors->first('nama_lengkap')}}</label>
+						@if(isset($errors) && $errors->has('nik'))
+							<label class="w3-text-red">{{$errors->first('nik')}}</label>
 						@else
 							<label>&nbsp;</label>
 						@endif
-						<div class="input-group
-							@if(isset($errors) && $errors->has('tlp1'))
-									error
-								@endif
-							">
-							<label>+62</label>
-							<input name="tlp1" type="text" value="{{old('tlp1')}}" 
-								placeholder="{{trans('my/bauk/employee/add.hints.tlp1')}}" class="input w3-input"/>
+						<!-- end: input nik -->
+						<!-- begin: input name -->
+						<div id="name-with-titles">@include('my.bauk.employee.add_name_with_titles')</div>
+						<!-- end: input name -->
+						<!-- begin: input name -->
+						<div id="birth-place">@include('my.bauk.employee.add_birth_place_and_date')</div>
+						<!-- end: input name -->
+						<!-- begin: input phone -->
+						<div id="address-container">
+							@for ($i = 0; $i < max(is_array(old('address'))?count(old('address')):0,1); $i++)
+								@include('my.bauk.employee.add_address',['index'=>$i])
+							@endfor
 						</div>
-						@if(isset($errors) && $errors->has('tlp1'))
-							<label class="w3-text-red">{{$errors->first('tlp1')}}</label>
-						@else
-							<label>&nbsp;</label>
-						@endif
+						<div class="padding-bottom-16 padding-left-8">
+							<a href="#" class="w3-hover-text-blue" style="text-decoration:none; cursor:pointer" 
+								onclick="event.preventDefault(); UI.address.add();">
+								<i class="fas fa-plus-square"></i>
+								<span class="padding-left-8">Tambah Alamat</span>
+							</a>
+						</div>
+						<!-- end: input phone -->
+						<!-- begin: input phone -->
+						<div id="phone-container">
+							@for ($i = 0; $i < max(is_array(old('phone'))? count(old('phone')):0,1); $i++)
+								@include('my.bauk.employee.add_phone',['index'=>$i])
+							@endfor
+						</div>
+						<div class="padding-bottom-16 padding-left-8">
+							<a href="#" class="w3-hover-text-blue" style="text-decoration:none; cursor:pointer" 
+								onclick="event.preventDefault(); UI.phone.add();">
+								<i class="fas fa-plus-square"></i>
+								<span class="padding-left-8">Tambah Telepon</span>
+							</a>
+						</div>
+						<!-- end: input phone -->
+						<!-- begin: input work time & registered-->
+						<div id="name-with-titles">@include('my.bauk.employee.add_worktime_and_registered_at')</div>
+						<!-- end: input work time & registered -->
 				</div>
-				<div class="w3-hide-small padding-bottom-16" style="text-align:right">
-					<button class="w3-button w3-red" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">Batal</button>
-					<button class="w3-button w3-blue margin-left-8" type="submit">Simpan</button>
+				<div class="w3-hide-small padding-bottom-16 padding-top-16" style="text-align:right">
+					<button id="btn-cancel-large" class="w3-button w3-red w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">
+						<i class="fas fa-times"></i>
+						<span class="padding-left-8">Batal</span>
+					</button>
+					<button id="btn-save-large" class="w3-button w3-blue w3-hover-blue w3-hover-none margin-left-8" type="submit">
+						<i class="fas fa-cloud-upload-alt"></i>
+						<span class="padding-left-8">Simpan</span>
+					</button>
+					<button id="btn-loader-large" class="w3-button w3-blue w3-mobile w3-hover-blue" type="button">
+						<i class="button-icon-loader"></i>
+						<span class="padding-left-8">Simpan</span>
+					</button>
 				</div>
 				<div class="w3-hide-large w3-hide-medium padding-top-8 padding-bottom-16" style="text-align:right">
-					<button class="w3-button w3-red w3-mobile" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">Batal</button>
-					<button class="w3-button w3-blue w3-mobile margin-top-bottom-8" type="submit">Simpan</button>
+					<button id="btn-cancel-small" class="w3-button w3-red w3-mobile w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">
+						<i class="fas fa-times"></i>
+						<span class="padding-left-8">Batal</span>
+					</button>
+					<button id="btn-save-small" class="w3-button w3-blue w3-mobile w3-hover-blue margin-top-bottom-8" type="submit">
+						<i class="fas fa-cloud-upload-alt"></i>
+						<span class="padding-left-8">Simpan</span>
+					</button>
+					<button id="btn-loader-small" class="w3-button w3-blue w3-mobile w3-hover-blue margin-top-bottom-8" type="button">
+						<i class="button-icon-loader"></i>
+						<span class="padding-left-8">Simpan</span>
+					</button>
 				</div>
 			</div>			
 		</div>
 	</form>
 	<div class="w3-hide-small w3-hide-medium w3-col l4 padding-left-16">
-		<div class="container padding-top-bottom-8">
-			<h4>Note:</h4>
-			<div class="legend">
-				<h5>Nomor Induk Pegawai:</h5>
-				<div style="display:flex; justify-content:space-between; align-content:center; font-size:.8em">
-					<div style="flex-grow:1; text-align:center;">&#8826;Tahun Masuk&#8827;</div>
-					<div style="flex-grow:1; text-align:center;">&#8826;Bulan Lahir&#8827;</div>
-					<div style="flex-grow:1; text-align:center;">&#8826;Nomor Urut&#8827;</div>
-				</div>
-				<div style="display:flex; justify-content:space-between; align-content:center; font-size:.8em">
-					<div style="flex-grow:1; text-align:center;">4 digit</div>
-					<div style="flex-grow:1; text-align:center;">2 digit</div>
-					<div style="flex-grow:1; text-align:center;">2 digit</div>
-				</div>
-			</div>
-			<div class="legend">
-				<h5>Nomor Kartu Tanda Penduduk:</h5>
-				<p>Sesuai dengan nomor KTP. Panjang 2 sampai dengan 20 karakter. Pastikan belum pernah digunakan oleh karyawan lain.</p>
-			</div>
-			<div class="legend">
-				<h5>Nama Lengkap:</h5>
-				<p>Gunakan karakter alpabet. Isi nama tanpa gelar.</p>
-			</div>
-			<div class="legend">
-				<h5>Nomor Telepon / Handphone:</h5>
-				<p>Tanpa menggunakan angka depan nol.</p> 
-				<p>Contoh: 0811xxxx &#x2192; 811xxxx</p>
-			</div>
-		</div>
+		@include('my.bauk.employee.add_help')
 	</div>
 </div>
+@endSection
+
+@section('html.head.scripts')
+@parent
+<script src="{{url('js/datepicker.js')}}"></script>
+@endSection
+
+@section('html.head.styles')
+@parent
+<link rel="stylesheet" href="{{url('css/datepicker.css')}}">
+@endSection
+
+@section('html.body.scripts')
+@parent
+<script>
+var UI = {};
+UI.phone = {
+	add: function (){
+		$('#phone-container').append(@include('my.bauk.employee.add_phone_json'));
+	},
+	remove: function (inputGroup){
+		//inputGroup.next().remove();
+		inputGroup.remove();
+	},
+};
+
+UI.address={
+	add:function(){
+		$('#address-container').append(@include('my.bauk.employee.add_address_json'));
+	},
+	remove:function(inputGroup){
+		inputGroup.remove();
+	}
+}
+
+UI.worktime = {
+	init: function(){
+		//work_time dropdown large
+		$('#worktime-dropdown .w3-ul li')
+			.click(UI.worktime.itemClick)
+			.click(UI.worktime.dropdownToggle);
+		$('input[name=work_time_large]').on('focusin',UI.worktime.dropdownToggle);
+		$('button.w3-button.w3-hide-small.w3-hide-medium').on('click',UI.worktime.dropdownToggle);
+		
+		//work_time dropdown small
+		$('#worktime-modal .w3-bar-block .w3-ul li').click(UI.worktime.itemClick);
+		$('input[name=work_time_small]').on('focusin',UI.worktime.modalToggle);
+		$('button.w3-button.w3-hide-large').on('click',UI.worktime.modalToggle);
+	},
+	modalToggle:function(){
+		$('#worktime-modal').show();
+	},
+	dropdownToggle:function(){
+		var dropdown = $('#worktime-dropdown');
+		dropdown.width($(this).parent().width());
+		if (dropdown.css('display') == 'block') {
+			dropdown.removeClass('w3-show');
+			$('button.w3-button.w3-hide-small.w3-hide-medium>i')
+				.removeClass('fa-chevron-up')
+				.addClass('fa-chevron-down');
+		}
+		else {			
+			dropdown.addClass('w3-show');
+			$('button.w3-button.w3-hide-small.w3-hide-medium>i')
+				.removeClass('fa-chevron-down')
+				.addClass('fa-chevron-up');
+		}
+	},
+	itemClick: function(){
+		var item = $(this).children('a');
+		UI.worktime.set(item.attr('data-value'), item.children('span').text());
+	},
+	set:function(value, display){
+		$('input[name=work_time]').val(value);
+		$('input[name=work_time_large]').val(display);
+		$('input[name=work_time_small]').val(display);
+	}
+}
+
+UI.datepicker = {
+	format: {
+		float:{ format: 'dd-mm-yyyy', offset: 5, language: 'id-ID', autoHide:true },
+		inline: { format: 'dd-mm-yyyy', offset: 5, container: '#datepicker-inline-container', inline: true, language: 'id-ID'}
+	},
+	click:{
+		float: function(e){
+			if(e.view == 'day') {
+				var td = $(e.target).datepicker('getDate');
+			}
+			$(e.target).trigger('date-change');
+		},
+		inline:function(e){
+			if(e.view == 'day') {
+				$('.w3-modal').hide();
+				UI.datepicker.click.float(e);
+			}
+		}
+	},
+	change:{
+		
+	},
+	init: function(){
+		var datepickerValueChange={
+			birthDate: function(e){
+				var tds = $(e.target).val();
+				$('#birth_date').val(tds);
+				
+				var el = $('input[name="birth_date_large"]');
+				el.val(tds);
+				
+				el = $('input[name="birth_date_small"]');
+				el.val(tds);
+			},
+			registeredAt:function(e){
+				var tds = $(e.target).val();
+				$('#registered_at').attr('value', tds);
+				
+				var el = $('input[name="registered_at_large"]');
+				el.val(tds);
+				
+				el = $('input[name="registered_at_small"]');
+				el.val(tds);
+			}
+		}
+		
+		$('[data-toggle="datepicker"]').datepicker(UI.datepicker.format.float)
+			.on('pick.datepicker', UI.datepicker.click.float)
+			.on('date-change change keyup', datepickerValueChange.birthDate);
+		$('[data-toggle="datepicker-inline"]').datepicker(
+			$.extend(UI.datepicker.format.inline, {container: '#datepicker-inline-container'})
+		).on('pick.datepicker', UI.datepicker.click.inline)
+		 .on('date-change change keyup', datepickerValueChange.birthDate);
+		
+		$('[data-toggle="datepicker-registeredAt"]').datepicker(UI.datepicker.format.float)
+			.on('pick.datepicker', UI.datepicker.click.float)
+			.on('date-change change keyup', datepickerValueChange.registeredAt);
+		
+		$('[data-toggle="datepicker-inline-registeredAt"]').datepicker(
+			$.extend(UI.datepicker.format.inline, {container: '#datepicker-inline-container-registeredAt'})
+		).on('pick.datepicker', UI.datepicker.click.inline)
+		 .on('date-change change keyup', datepickerValueChange.registeredAt);
+	}
+}
+
+UI.actionButton={
+	id:{
+		save:['#btn-save-large', '#btn-save-small'],
+		cancel:['#btn-cancel-large', '#btn-cancel-small'],
+		loader:['#btn-loader-large', '#btn-loader-small'],
+	},
+	init:function(){
+		this.origin();
+		$(this.id.save.join(',')).click(function(event){
+			UI.actionButton.submit();
+		});
+	},
+	origin:function(){
+		$(this.id.save.join(',')).show();
+		$(this.id.cancel.join(',')).show();
+		$(this.id.loader.join(',')).hide();
+	},
+	submit: function(){
+		$(this.id.save.join(',')).hide();
+		$(this.id.cancel.join(',')).hide();
+		$(this.id.loader.join(',')).show();
+	}
+}
+
+$(document).ready(function(){
+	UI.worktime.init();
+	UI.datepicker.init();
+	UI.actionButton.init();
+});
+</script>
 @endSection

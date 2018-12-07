@@ -29,4 +29,8 @@ abstract class Migration extends BaseMigration{
 	protected function dropSchema($tableKey=false){
 		$this->schema()->dropIfExists($this->getTableName($tableKey));
 	}
+	
+	protected function alterSchema($closure, $tableKey=false){
+		$this->schema()->table($this->getTableName($tableKey), $closure);
+	}
 }

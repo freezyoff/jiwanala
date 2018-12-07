@@ -9,22 +9,117 @@
 	font-style: normal;
 }
 
+i.button-icon-loader {
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #3498db;
+  width: 16px;
+  height: 16px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  vertical-align:middle;
+  display:inline-block;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 body, html,
 h1,h2,h3,h4,h5,h6,
 div,span,pre,p{ margin:0; font-family:roboto;}
 
+input:focus,select:focus,textarea:focus,button:focus {outline: none;}
+
 .full-height {height: 100%;}
 
 .padding-none {padding:0;}
+.padding-top-bottom-16{padding-bottom:16px;padding-top:16px;}
+.padding-top-bottom-8{padding-bottom:8px;padding-top:8px;}
+.padding-top-8{padding-top:8px;}
+.padding-top-16{padding-top:16px;}
+.padding-bottom-8{padding-bottom:8px;}
+.padding-bottom-16{padding-bottom:16px;}
+.padding-left{padding-left:1em;}
+.padding-left-8{padding-left:8px;}
+.padding-left-16{padding-left:16px;}
+.padding-right-8{padding-right:8px;}
+.padding-right-16{padding-right:16px;}
+.padding-left-none{padding-left:0 !important;}
+.padding-right-none{padding-right:0 !important;}
+@media only screen and (max-width: 600px){
+	.padding-none-small {padding:0 !important;}
+}
+@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
+	.padding-none-medium {padding:0 !important;}
+}
+		
+.margin-left-8{margin-left:8px;}
+.margin-left-16{margin-left:16px;}
+.margin-top-8{margin-top:8px;}
+.margin-top-16{margin-top:16px;}
+.margin-top-bottom-8{margin-top:8px;margin-bottom:8px;}
+
+/* Input Group */
+.input-group{border-bottom:1px solid #ccc;display:flex;justify-content:center;}
+.input-group>label{font-size:inherit; padding:8px;}
+.input-group>.input,
+.input-group>.input:hover,
+.input-group>.input:focus{ border-bottom:none; }
+.input-group:hover,
+.input-group.focus{border-bottom:1px solid #2196F3; }
+.input-group.error{border-bottom:1px solid #f44336; }
+
+/* Input Group help - right aside */
+.legend{padding-top:1em;}
+.legend>h5{font-weight:600;}
+.legend>h5{font-size:1em;}
+.legend>h5+p,
+.legend>p+p{font-size:.8em;}
 
 /* w3css hack */
 .w3-padding-8 {padding-top:8px; padding-bottom:8px;}
+.w3-theme, .w3-theme-l1{color:rgb(241, 241, 241) !important;}
+.w3-light-grey, .w3-hover-light-grey:hover, .w3-light-gray, .w3-hover-light-gray:hover{color:rgb(51, 51, 51) !important;}
+.w3-modal{padding-top:75px;}
 
 input.w3-input { background-color:transparent; }
 input.w3-input:hover{border-bottom:1px solid #2196F3; }
 input.w3-input:focus{border-bottom:1px solid #2196F3; }
 input.w3-input.error{border-bottom:1px solid #f44336; }
-input.w3-input.error{border-bottom:1px solid #f44336; }
 
 form label,
 input.w3-input ~ label {font-size:.8em;}
+
+
+/* datepicker hack */
+.datepicker-modal .datepicker-inline {font-size:1.1em; min-width:20em; width:inherit;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul {display:flex; width:inherit; justify-content:space-evenly; align-items:center;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li {width:inherit;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="days"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="months"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="years"] {flex-wrap:wrap !important;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month next"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year next"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years next"] {width:inherit; min-width:14% !important;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month current"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year current"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years current"] {width:inherit; flex-grow:1;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="week"]>li,
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="days"]>li {min-width:14% !important;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="months"]>li,
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="years"]>li {min-width:25% !important;}

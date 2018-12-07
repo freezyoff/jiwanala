@@ -12,7 +12,7 @@ class CreateTableClasses extends Migration
 		'tutor'=>'tutors',
 		"class"=>"classes",
 		'acyear'=>'acyears',
-		'student-class'=>'students_classes',
+		'class-student'=>'class_students',
 		'grade'=>'grades',
 		'student'=>'students'
 	];
@@ -49,7 +49,7 @@ class CreateTableClasses extends Migration
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('student_id')->references('id')->on($this->getSchemaName('baak').'.'.$this->getTableName('student'));
 			$table->foreign('class_id')->references('id')->on($this->getSchemaName('baak').'.'.$this->getTableName('class'));
-		},'student-class');
+		},'class-student');
     }
 
     /**
@@ -59,7 +59,7 @@ class CreateTableClasses extends Migration
      */
     public function down()
     {
-        $this->dropSchema('student-class');
+        $this->dropSchema('class-student');
         $this->dropSchema('class');
     }
 }

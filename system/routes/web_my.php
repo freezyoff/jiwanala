@@ -36,31 +36,30 @@ Route::prefix ('bauk')
 		->name('get')
 		->middleware('permission:bauk.get')
 		->get('patch', '\App\Http\Controllers\My\BaukController@get');
-		
-	Route::prefix('post')
-		->name('post')
-		->middleware('permission:bauk.post')
-		->group(function(){
-		Route::get('post', '\App\Http\Controllers\My\BaukController@post');
-		Route::post('post', '\App\Http\Controllers\My\BaukController@post');
-	});
-	Route::prefix('patch')
-		->middleware('permission:bauk.patch')
-		->group(function(){
-		Route::get('patch', '\App\Http\Controllers\My\BaukController@patch');
-		Route::post('patch', '\App\Http\Controllers\My\BaukController@patch');
-	});
 	
 	Route::prefix('employee')
 		->name('employee')
 		->group(function(){
+		
 		Route::get('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
+		Route::name('.generate.nip')
+			->get('/get/nip', '\App\Http\Controllers\My\Bauk\EmployeeController@generateNIP');
+		
 		Route::prefix('add')
 			->name('.add')
 			->middleware('permission:bauk.post.employee')
 			->group(function(){
 			Route::get('/', '\App\Http\Controllers\My\Bauk\EmployeeController@postView');
 			Route::post('/', '\App\Http\Controllers\My\Bauk\EmployeeController@post');
+		});
+		
+		Route::prefix('edit')
+			->name('.edit')
+			->middleware('permission:bauk.patch.employee')
+			->group(function($id){
+			
+			Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patchView');
+			Route::post('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patch');
 		});
 	});
 	

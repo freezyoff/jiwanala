@@ -14,7 +14,7 @@ class CreateTableSchedules extends Migration
 		'tutor'=>'tutors',
 		'schedule'=>'schedules',
 		'class'=>'classes',
-		'class-schedule'=>'classes_schedules'
+		'class-schedule'=>'class_schedules'
 	];
 	
     /**

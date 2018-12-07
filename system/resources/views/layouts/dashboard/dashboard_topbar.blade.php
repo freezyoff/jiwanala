@@ -15,18 +15,19 @@
 	</a>
 	<div class="top-nav">
 		<button class="w3-bar-item w3-button w3-hover-none w3-text-light-grey w3-hover-text-white" 
-			onclick="document.getElementById('jn-modal').style.display='block'">
+			onclick="$('#jn-modal').show()">
 			<i class="fas fa-ellipsis-v"></i>
 		</button>
 	</div>
-	<div id="jn-modal" class="w3-modal">
+	<div id="jn-modal" class="w3-modal" onclick="$(this).hide()">
 		<div class="w3-modal-content w3-animate-top w3-card-4">
 			<header class="w3-container w3-theme">
 				<span onclick="document.getElementById('jn-modal').style.display='none'" 
-					class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey">
+					class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
+					style="font-size:20px !important;">
 					&times;
 				</span>
-				<h4 style="padding-bottom:5px;">
+				<h4 class="padding-top-8 padding-bottom-8">
 					<i class="fa fa-bars"></i>
 					<span style="padding-left:12px;">Choose:</span>
 				</h4>

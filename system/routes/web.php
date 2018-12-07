@@ -35,13 +35,14 @@ else{
 	$routeFilePath = '../system/routes';
 }
 
-Route::domain('service.'.$domain)->group(function() use ($routeFilePath){
+Route::domain('service.'.$domain)
+	->group(function() use ($routeFilePath){
 	require_once $routeFilePath."/web_service.php";
 });
 
 Route::domain('my.'.$domain)
 	->name('my.')
-	->middleware('auth')
+	->middleware(['auth', 'timezone'])
 	->group(function () use($routeFilePath){
 		
 	require_once $routeFilePath."/web_my.php";

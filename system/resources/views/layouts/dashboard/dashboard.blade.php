@@ -78,6 +78,7 @@
 	@section('dashboard.topbar')
 		@include('layouts.dashboard.dashboard_topbar')	
 	@show
+	{{\Carbon\Carbon::now('Asia/Jakarta')}}
 	</div>
 	<!-- end: Top Bar -->
 	
@@ -141,36 +142,36 @@
 		
 	</div>
 	<!-- end: Main / Page Content -->
+@endSection
 
-	@section('dashboard.pagescipts')
-	<script>
-		var dashboard = {
-			initSideBar: function(){
-				var height = $("#jn-topbar").height();
-				$('#jn-main').css('margin-top',height+'px');
-				$('#jn-main>content').css('min-height',$(document).height()-$('#jn-main>header').outerHeight()-$('#jn-main>footer').outerHeight()-height);
-				$('#jn-sidebar').css('top',height+'px');
-			},
-			toggleSideBar: function(){
-				if ($('#jn-sidebar').css('display') == 'none'){ this.openSideBar(); }
-				else{ this.closeSideBar(); }
-			},
-			openSideBar: function(){
-				$('#jn-sidebar').css('display', 'block');
-				$('#jn-sidebar-overlay').css('display', 'block');
-			},
-			closeSideBar: function(){
-				$('#jn-sidebar').css('display', 'none');
-				$('#jn-sidebar-overlay').css('display', 'none');
-			}
+@section('html.body.scripts')
+<script>
+	var dashboard = {
+		initSideBar: function(){
+			var height = $("#jn-topbar").height();
+			$('#jn-main').css('margin-top',height+'px');
+			$('#jn-main>content').css('min-height',$(document).height()-$('#jn-main>header').outerHeight()-$('#jn-main>footer').outerHeight()-height);
+			$('#jn-sidebar').css('top',height+'px');
+		},
+		toggleSideBar: function(){
+			if ($('#jn-sidebar').css('display') == 'none'){ this.openSideBar(); }
+			else{ this.closeSideBar(); }
+		},
+		openSideBar: function(){
+			$('#jn-sidebar').css('display', 'block');
+			$('#jn-sidebar-overlay').css('display', 'block');
+		},
+		closeSideBar: function(){
+			$('#jn-sidebar').css('display', 'none');
+			$('#jn-sidebar-overlay').css('display', 'none');
 		}
+	}
 
-		$(document).ready(function(){
-			fontSpy('gotham-medium', {success: function(){dashboard.initSideBar();}, failure: function(){dashboard.initSideBar();}});
-			$( window ).resize(dashboard.initSideBar);
-			$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
-			$('#jn-sidebar-overlay').on('click', function(){ dashboard.closeSideBar(); });
-		});
-	</script>
-	@show
+	$(document).ready(function(){
+		fontSpy('gotham-medium', {success: function(){dashboard.initSideBar();}, failure: function(){dashboard.initSideBar();}});
+		$( window ).resize(dashboard.initSideBar);
+		$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
+		$('#jn-sidebar-overlay').on('click', function(){ dashboard.closeSideBar(); });
+	});
+</script>
 @endSection

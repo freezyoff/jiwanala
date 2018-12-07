@@ -4,6 +4,10 @@
 app-version="{{config('app.version')}}" 
 lang="{{config('app.locale')}}" 
 lang-fallback="{{config('app.fallback_locale')}}"
+timezone="{{config('app.timezone')}}"
+client-timezone="{{session()->get('timezone')}}"
+time="{{\Carbon\Carbon::now()}}"
+client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 @show
 >
 	<!-- begin::Head -->
@@ -29,7 +33,6 @@ lang-fallback="{{config('app.fallback_locale')}}"
 				//"Poppins:300,400,500,600,700,800,900",
 				WebFont.load({google: {"families":["Roboto:300,400,500,600,700,800,900"]}, active: function() { sessionStorage.fonts = true; }});
 			</script>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 			<script src="{{url('js/app.js')}}"></script>
 		@show
 		<!--[endsection: html.head.scripts]/-->

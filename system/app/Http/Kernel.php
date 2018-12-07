@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
 		//Service Middleware
 		'permission.context'=> \App\Http\Middleware\Service\CheckPermissionContext::class,
 		'permission'=> \App\Http\Middleware\Service\CheckPermission::class,
+		'timezone'=> \App\Http\Middleware\Service\RequireClientTimezone::class,
     ];
 }

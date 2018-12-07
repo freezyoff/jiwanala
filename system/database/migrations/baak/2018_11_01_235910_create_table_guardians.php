@@ -28,10 +28,11 @@ class CreateTableGuardians extends Migration
 			$table->integer('user_id')->unsigned()->nullable();
             $table->increments('id');
 			$table->integer('person_id')->unsigned();
+			$table->timestamp('registered_at')->useCurrent()->comment('tanggal terdaftar');
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('user_id')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('person'));
+			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
 		}, 'guardian');
 		
 		$this->createSchema(function (Blueprint $table) {

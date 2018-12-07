@@ -57,6 +57,9 @@ class Handler extends ExceptionHandler
 				['code'=>'403', 'message'=>trans('http_error.403')], 
 				403);
 		}
+		elseif ($exception instanceof \App\Exceptions\NoUserTimezoneException){
+			return "NoUserTimezoneException";
+		}
         return parent::render($request, $exception);
     }
 	
@@ -67,6 +70,6 @@ class Handler extends ExceptionHandler
 		}
 		
 		//other domain
-		return "exception.".$viewName;
+		return "layouts.exception.".$viewName;
 	}
 }

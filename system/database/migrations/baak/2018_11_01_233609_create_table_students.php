@@ -28,13 +28,13 @@ class CreateTableStudents extends Migration
 			$table->integer('user_id')->unsigned()->nullable();
             $table->increments('id');
 			$table->integer('person_id')->unsigned();
-			$table->date('registered_at')->nullabel()->comment('tanggal terdaftar');
-			$table->date('graduated_at')->nullabel()->comment('tanggal lulus');
-			$table->date('resign_at')->nullabel()->comment('tanggal keluar / drop out');
+			$table->timestamp('registered_at')->useCurrent()->comment('tanggal terdaftar');
+			$table->timestamp('graduated_at')->nullable()->comment('tanggal lulus');
+			$table->timestamp('resign_at')->nullable()->comment('tanggal keluar / drop out');
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('user_id')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('person'));
+			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
         }, 'student');
     }
 

@@ -7,6 +7,12 @@
         4 => 'service.patch.permission',
         5 => 'service.put.permission',
         6 => 'service.delete.permission',
+		
+		'bauk.list.employee',
+        'bauk.post.employee',
+        'bauk.patch.employee',
+        'bauk.put.employee',
+        'bauk.delete.employee',
     ],
     'list' => [
         'service.grant.permission' => [

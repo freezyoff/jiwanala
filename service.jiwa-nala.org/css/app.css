@@ -2,8 +2,8 @@
 	font-family: 'gotham-medium';
 	src: url('/font/Gotham Medium Regular.eot'); /* IE9 Compat Modes */
 	src: url('/font/Gotham Medium Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-		 url('/font/Gotham Medium Regular.woff') format('woff'), /* Modern Browsers */
 		 url('/font/Gotham Medium Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+		 url('/font/Gotham Medium Regular.woff') format('woff'), /* Modern Browsers */
 		 url('/font/Gotham Medium Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
 	font-weight: 400;
 	font-style: normal;
@@ -19,6 +19,7 @@ div,span,pre,p{ margin:0; font-family:roboto;}
 
 /* w3css hack */
 .w3-padding-8 {padding-top:8px; padding-bottom:8px;}
+.w3-theme, .w3-theme-l1{color:rgb(241, 241, 241) !important;}
 
 input.w3-input { background-color:transparent; }
 input.w3-input:hover{border-bottom:1px solid #2196F3; }

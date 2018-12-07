@@ -26,8 +26,8 @@ class CreateTableAcademicYears extends Migration
             $table->increments('id');
 			$table->integer('code')->unique()->comment('Kode semester, <4 digit Tahun>');
 			$table->string('name',100)->comment('Nama Tahun Akademik');
-			$table->date('start');
-			$table->date('end');
+			$table->timestamp('start')->useCurrent();
+			$table->timestamp('end')->useCurrent();
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
         }, 'acyear');

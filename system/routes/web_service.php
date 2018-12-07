@@ -7,8 +7,15 @@
 Route::get('/', function () {
 	return redirect()->route('service.auth.login');
 });
+
+Route::name('service.client.timezone')->post('/put/timezone', function(){
+	Request::session()->put('timezone', Request::input('timezone'));
+	return redirect(Request::input('redirect'));
+});
 	
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')
+	->middleware(['timezone'])
+	->group(function () {
 	
 	Route::name('service.auth.login')->group(function(){
 		Route::get('login', '\App\Http\Controllers\Service\Auth\LoginController@showLoginForm');
