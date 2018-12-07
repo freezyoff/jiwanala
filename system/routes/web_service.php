@@ -10,7 +10,6 @@ Route::get('/', function () {
 
 Route::name('service.client.timezone')->post('/put/timezone', function(){
 	Request::session()->put('timezone', Request::input('timezone'));
-	//return '<pre>'.print_r(session(),true).'</pre>';
 	return redirect(Request::input('redirect'));
 });
 	
