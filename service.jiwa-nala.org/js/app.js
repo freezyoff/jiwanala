@@ -87,9 +87,20 @@
     checkFont();
     }
   })( this, jQuery );
+  
+var App = { UI: {} };
+App.init = function(){
+	//input error remove error class
+	$('input.w3-input.error').on('keyup', function(){ $(this).removeClass('error'); });
+	$('.input-group.error>.input.w3-input').on('keyup', function(){ $(this).parent().removeClass('error'); });
+	
+	$.each( $('.input-group>.input') , function( index, item ){ App.UI.inputGroup(item); });
+}
 
-$(document).ready(function() {
-    $('input.w3-input.error').on('keyup', function(){
-		$(this).removeClass('error');
-	});
-});
+App.UI.inputGroup = function(el){
+	$(el).focusin(function(){ $(el).parent().addClass('focus'); })
+		.focusout(function(){$(el).parent().removeClass('focus');})
+		.blur(function(){$(el).parent().removeClass('focus');});
+}
+  
+$(document).ready(function() { App.init() });

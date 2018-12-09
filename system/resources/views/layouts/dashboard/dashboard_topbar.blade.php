@@ -35,8 +35,9 @@
 			<ul class="w3-ul">
 				@foreach(config('my.dashboardTopNav') as $key=>$item)
 					@if( Auth::user()->hasPermissionContext($key) )
-						<li class="w3-hover-light-grey" style="cursor:pointer">
+						<li class="w3-hover-light-grey" style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile"
+								style="text-decoration:none;"
 								href="{{$item['href']? route($item['href']) : ''}}">
 								<i class="{{$item['display']['icon']}}"></i>
 								<span style="padding-left:12px">{{ucfirst($item['display']['name'])}}</span>
@@ -45,7 +46,7 @@
 					@endif
 				@endforeach
 				<li class="w3-hover-light-grey">
-					<a class="w3-text-theme w3-mobile" style="text-decoration:none;"
+					<a class="w3-text-theme w3-mobile" style="text-decoration:none; text-decoration:none;"
 						href="{{route('service.auth.logout')}}">
 						<i class="fas fa-power-off"></i>
 						<span style="padding-left:12px">Log Out</span>

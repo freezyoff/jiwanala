@@ -63,14 +63,14 @@
 						<li class="w3-hover-light-grey" style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile" 
 								data-value="f">
-								<i class="fas fa-hands-helping"></i>
+								<i class="fas fa-handshake"></i>
 								<span style="padding-left:12px">Full Time</span>
 							</a>
 						</li>
 						<li class="w3-hover-light-grey" style="cursor:pointer">
 							<a class="w3-text-theme w3-mobile" 
 								data-value="p">
-								<i class="fas fa-handshake"></i>
+								<i class="fas fa-hands-helping"></i>
 								<span style="padding-left:12px">Part Time</span>
 							</a>
 						</li>

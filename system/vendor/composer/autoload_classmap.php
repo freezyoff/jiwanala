@@ -49,6 +49,7 @@ return array(
     'App\\Libraries\\Core\\Person' => $baseDir . '/app/Libraries/Core/Person.php',
     'App\\Libraries\\Core\\Phone' => $baseDir . '/app/Libraries/Core/Phone.php',
     'App\\Libraries\\Foundation\\Migration' => $baseDir . '/app/Libraries/Foundation/Migration.php',
+    'App\\Libraries\\Foundation\\Model' => $baseDir . '/app/Libraries/Foundation/Model.php',
     'App\\Libraries\\Service\\Auth\\PasswordResetModel' => $baseDir . '/app/Libraries/Service/Auth/PasswordResetModel.php',
     'App\\Libraries\\Service\\Auth\\User' => $baseDir . '/app/Libraries/Service/Auth/User.php',
     'App\\Libraries\\Service\\Permission' => $baseDir . '/app/Libraries/Service/Permission.php',

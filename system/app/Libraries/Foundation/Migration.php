@@ -23,7 +23,7 @@ abstract class Migration extends BaseMigration{
 	}
 	
 	protected function createSchema($closure, $tableKey=false){
-		$this->schema()->create($this->getTableName($tableKey), $closure);
+		$this->schema()->create($this->getTableName($tableKey), $closure);			
 	}
 	
 	protected function dropSchema($tableKey=false){
@@ -32,5 +32,9 @@ abstract class Migration extends BaseMigration{
 	
 	protected function alterSchema($closure, $tableKey=false){
 		$this->schema()->table($this->getTableName($tableKey), $closure);
+	}
+
+	protected function hasTable($name){
+		return $this->schema()->hasTable($this->getTableName($tableKey));
 	}
 }

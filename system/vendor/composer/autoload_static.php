@@ -547,6 +547,7 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'App\\Libraries\\Core\\Person' => __DIR__ . '/../..' . '/app/Libraries/Core/Person.php',
         'App\\Libraries\\Core\\Phone' => __DIR__ . '/../..' . '/app/Libraries/Core/Phone.php',
         'App\\Libraries\\Foundation\\Migration' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Migration.php',
+        'App\\Libraries\\Foundation\\Model' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Model.php',
         'App\\Libraries\\Service\\Auth\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/PasswordResetModel.php',
         'App\\Libraries\\Service\\Auth\\User' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/User.php',
         'App\\Libraries\\Service\\Permission' => __DIR__ . '/../..' . '/app/Libraries/Service/Permission.php',

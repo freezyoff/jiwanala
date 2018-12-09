@@ -15,10 +15,69 @@ class EmployeeController extends Controller
 		]);
 	}
 	
-    public function landing(){
-		return view('my.bauk.employee.landing',[
-			'employees'=> \App\Libraries\Bauk\Employee::all()
-		]);
+    public function landing(Request $req){
+		// return '<pre>'.print_r($req->all(), true).'</pre>';
+		
+		//check given keywords and keyactive
+		$keywords = $req->input('keywords', $req->session()->get('my.bauk.employee.search.keywords', ''));
+		$keyactive = $req->input('keyactive', $req->session()->get('my.bauk.employee.search.keyactive', 1));
+		
+		//store to session
+		$req->session()->put('my.bauk.employee.search.keywords', $keywords);
+		$req->session()->put('my.bauk.employee.search.keyactive', $keyactive);
+		
+		$schema = new \App\Libraries\Core\Person();
+		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new \App\Libraries\Core\Phone();
+		$phoneSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new \App\Libraries\Bauk\Employee();
+		$employeeSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		
+		$employee = \App\Libraries\Bauk\Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
+            ->join($phoneSchema, $personSchema.'.id', '=', $phoneSchema.'.person_id')
+			->where($phoneSchema.'.default','=',1)
+			->groupBy($employeeSchema.'.nip')
+			->orderBy('nip', 'asc')
+			->orderBy('active', 'desc')
+			->select([
+				$employeeSchema.'.id as id',
+				$employeeSchema.'.nip',
+				$employeeSchema.'.work_time',
+				$employeeSchema.'.active',
+				$personSchema.'.name_front_titles',
+				$personSchema.'.name_full',
+				$personSchema.'.name_back_titles',
+				$phoneSchema.'.phone',
+				$phoneSchema.'.extension',
+			]);
+		
+		if ($keywords){
+			$employee->where(function($q) use ($personSchema, $phoneSchema, $employeeSchema, $keywords){
+				$q->where($employeeSchema.'.nip','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_front_titles','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_full','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_back_titles','like','%'.$keywords.'%');
+				$q->orWhere($phoneSchema.'.phone','like','%'.$keywords.'%');
+				$q->orWhere($phoneSchema.'.extension','like','%'.$keywords.'%');
+			});
+		}
+		
+		if (isset($keyactive) && $keyactive>-1){
+			$employee->where($employeeSchema.'.active','=',$keyactive);
+		}
+		
+		$trans = [
+			0=>'all',
+			1=>'inactive',
+			2=>'active'
+		];
+		return view('my.bauk.employee.landing', [
+				'keyactive'=> $req->input('keyactive'), 
+				'keywords'=> $req->input('keywords'), 
+				'keyactive_large'=> $req->input('keyactive_large', trans('my/bauk/employee/landing.hints.key_active_items.'.$trans[$keyactive+1])), 
+				'keyactive_small'=> $req->input('keyactive_small', trans('my/bauk/employee/landing.hints.key_active_items.'.$trans[$keyactive+1])), 
+				'employees'=> $employee->paginate()
+			]);
 	}
 	
 	public function postView(Request $request){
@@ -123,7 +182,7 @@ class EmployeeController extends Controller
 		$employee->fill($req->only(['nip', 'work_time', 'registered_at']));
 		$employee->save();
 		
-		//return redirect()->route('my.bauk.employee');
+		return redirect()->route('my.bauk.employee');
 	}
 	
 	private function patch_updateAddress(PatchRequest $req, \App\Libraries\Core\Person $person){
@@ -194,5 +253,17 @@ class EmployeeController extends Controller
 			}
 			$record->save();
 		}
+	}
+	
+	public function delete(Request $req, $id){
+		$employee = \App\Libraries\Bauk\Employee::find($id)->delete();
+		return redirect()->back();
+	}
+	
+	public function activate(Request $req, $id, $activationFlag=1){
+		$employee = \App\Libraries\Bauk\Employee::find($id);
+		$employee->active = $activationFlag;
+		$employee->save();
+		return redirect()->back()->withInput($req->all());
 	}
 }

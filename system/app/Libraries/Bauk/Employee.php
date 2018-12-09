@@ -18,6 +18,10 @@ class Employee extends Model
 		'active',
 	];
 	
+	public function phones(){
+		return $this->asPerson()->with('phones');
+	}
+	
 	public function asPerson(){
 		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
 	}
@@ -43,5 +47,23 @@ class Employee extends Model
 	
 	public function setRegisteredAtAttribute($value){
 		$this->attributes['registered_at'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+	}
+	
+	public function delete(){
+		$person = $this->asPerson()->first();
+		
+		//delete phone
+		$this->asPerson()->first()->phones()->delete();
+		
+		//delete address
+		$this->asPerson()->first()->addresses()->detach();
+		$this->asPerson()->first()->addresses()->delete();
+		
+		//delete self
+		parent::delete();
+		
+		//delete person
+		$person->delete();
+		
 	}
 }

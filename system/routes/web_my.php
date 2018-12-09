@@ -30,18 +30,19 @@ Route::prefix ('bauk')
 	->name('bauk.')
 	->middleware(['permission.context:bauk'])
 	->group(function(){
-		
-	Route::name('landing')->get('/', '\App\Http\Controllers\My\BaukController@landing');
-	Route::prefix('get')
-		->name('get')
-		->middleware('permission:bauk.get')
-		->get('patch', '\App\Http\Controllers\My\BaukController@get');
+	
+	Route::prefix('landing')
+		->group(function(){
+			
+		Route::name('landing')->get('/', '\App\Http\Controllers\My\BaukController@landing');
+	});
 	
 	Route::prefix('employee')
 		->name('employee')
 		->group(function(){
 		
-		Route::get('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
+		Route::any('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
+		
 		Route::name('.generate.nip')
 			->get('/get/nip', '\App\Http\Controllers\My\Bauk\EmployeeController@generateNIP');
 		
@@ -56,10 +57,24 @@ Route::prefix ('bauk')
 		Route::prefix('edit')
 			->name('.edit')
 			->middleware('permission:bauk.patch.employee')
-			->group(function($id){
+			->group(function(){
 			
 			Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patchView');
 			Route::post('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patch');
+		});
+		
+		Route::prefix('delete')
+			->name('.delete')
+			->middleware('permission:bauk.delete.employee')
+			->group(function(){
+			Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@delete');
+		});
+		
+		Route::prefix('activate')
+			->name('.activate')
+			->middleware('permission:bauk.patch.employee')
+			->group(function(){
+			Route::get('{id}/{activationFlag?}', '\App\Http\Controllers\My\Bauk\EmployeeController@activate');
 		});
 	});
 	

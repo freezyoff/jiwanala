@@ -70,6 +70,7 @@
 				<div>
 					<a class="w3-text-red" style="text-decoration:none;"
 						href="{{route('service.auth.forgot')}}" 
+						target="_blank"
 						>Lupa sandi?</a>
 				</div>
 				<div class="w3-padding-16">

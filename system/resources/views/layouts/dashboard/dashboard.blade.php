@@ -78,7 +78,6 @@
 	@section('dashboard.topbar')
 		@include('layouts.dashboard.dashboard_topbar')	
 	@show
-	{{\Carbon\Carbon::now('Asia/Jakarta')}}
 	</div>
 	<!-- end: Top Bar -->
 	
@@ -113,7 +112,7 @@
 	<div class="w3-main" id="jn-main">
 		<!-- begin: Main / Page Header -->
 		<header class="w3-container" style="padding-top:8px; padding-bottom:8px;">
-			<h3 style="font-weight:bold">{{isset($title)? $title : 'Page Title'}}</h3>
+			<h3 style="font-weight:bold;">{{isset($title)? $title : 'Page Title'}}</h3>			
 		</header>
 		<!-- end: Main / Page Header -->
 		<!-- begin: Main / Page content -->
@@ -168,6 +167,7 @@
 	}
 
 	$(document).ready(function(){
+		setInterval(function(){$('#serverTime').text( moment().tz('Asia/Jakarta').format("DD-MM-YYYY HH:mm:ss") );}, 1000);
 		fontSpy('gotham-medium', {success: function(){dashboard.initSideBar();}, failure: function(){dashboard.initSideBar();}});
 		$( window ).resize(dashboard.initSideBar);
 		$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
