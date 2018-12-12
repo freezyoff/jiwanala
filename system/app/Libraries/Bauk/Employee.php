@@ -26,6 +26,15 @@ class Employee extends Model
 		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
 	}
 	
+	public function attendance(){
+		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
+	}
+	
+	public function attend($date){
+		$record = $this->attendance()->where('date','=',$date)->first();
+		return $record;
+	}
+	
 	public function workTime($key=false){
 		if ($key) return $key== "f"? "Full Time" : "Part Time";
 		return $this->work_time == "f"? "Full Time" : "Part Time";

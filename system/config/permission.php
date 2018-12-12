@@ -15,49 +15,26 @@
         'bauk.delete.employee',
     ],
     'list' => [
-        'service.grant.permission' => [
-            0 => 'service',
-            1 => 'Grant Service Feature Permission',
-            2 => 'Grant Application Level Permission ke user lain',
-        ],
-        'service.revoke.permission' => [
-            0 => 'service',
-            1 => 'Revoke Service Feature Permission',
-            2 => 'Revoke Application Level Permission ke user lain',
-        ],
-        'service.list.permission' => [
-            0 => 'service',
-            1 => 'List Service Feature Permission',
-            2 => '-',
-        ],
-        'service.post.permission' => [
-            0 => 'service',
-            1 => 'Post Service Feature Permission',
-            2 => '-',
-        ],
-        'service.patch.permission' => [
-            0 => 'service',
-            1 => 'Patch Service Feature Permission',
-            2 => '-',
-        ],
-        'service.put.permission' => [
-            0 => 'service',
-            1 => 'Put Service Feature Permission',
-            2 => '-',
-        ],
-        'service.delete.permission' => [
-            0 => 'service',
-            1 => 'Delete Service Feature Permission',
-            2 => '-',
-        ],
-        'bauk.list.employee' => ['bauk', 'List all Employees', 'View list of employee records'],
+		'profile.patch.own'	=>	['profile', 'Patch owned Profile record', 'Permission to update owned profile record'],
+		'profile.put.own'	=>	['profile', 'Put owned Profile record', 'Permission to store owned profile record'],
+		'profile.list.own'	=>	['profile', 'List owned Profile record', 'Permission to List owned profile record'],
+		
+        'service.grant.permission' => ['service', 'Grant Service Feature Permission', 'Grant Application Level Permission ke user lain'],
+        'service.revoke.permission' => ['service', 'Revoke Service Feature Permission', 'Revoke Application Level Permission ke user lain'],
+        'service.list.permission' => ['service', 'List Service Feature Permission', '-'],
+        'service.post.permission' => ['service', 'Post Service Feature Permission', '-'],
+        'service.patch.permission' => ['service', 'Patch Service Feature Permission', '-'],
+        'service.put.permission' => ['service', 'Put Service Feature Permission', '-'],
+        'service.delete.permission' => ['service', 'Delete Service Feature Permission', '-'],
+        
+		'bauk.list.employee' => ['bauk', 'List all Employees', 'View list of employee records'],
         'bauk.post.employee' => ['bauk', 'Post Employees', 'Create and save Employee records'],
         'bauk.patch.employee' => ['bauk', 'Patch Employees', 'Update Employee records'],
         'bauk.put.employee' => ['bauk', 'Put Employees', 'Update Employee records'],
         'bauk.delete.employee' => ['bauk', 'Delete Employees', 'Delete Employee records'],
-		
-		'profile.patch.own'	=>	['profile', 'Patch owned Profile record', 'Permission to update owned profile record'],
-		'profile.put.own'	=>	['profile', 'Put owned Profile record', 'Permission to store owned profile record'],
-		'profile.list.own'	=>	['profile', 'List owned Profile record', 'Permission to List owned profile record'],
+        'bauk.attendance.list' => ['bauk', 'List Employee attendance', 'Melihat data kehadiran karyawan'],
+        'bauk.attendance.post' => ['bauk', 'Post Employee attendance', 'Menambah data kehadiran karyawan'],
+        'bauk.attendance.patch' => ['bauk', 'Patch Employee attendance', 'Meng-update data kehadiran karyawan'],
+        'bauk.attendance.delete' => ['bauk', 'Delete Employee attendance', 'Menghapus data kehadiran karyawan'],
     ],
 ];

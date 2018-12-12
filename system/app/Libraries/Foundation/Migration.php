@@ -34,7 +34,7 @@ abstract class Migration extends BaseMigration{
 		$this->schema()->table($this->getTableName($tableKey), $closure);
 	}
 
-	protected function hasTable($name){
+	protected function schemaExist($tableKey){
 		return $this->schema()->hasTable($this->getTableName($tableKey));
 	}
 }

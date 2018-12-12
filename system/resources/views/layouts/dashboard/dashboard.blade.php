@@ -41,12 +41,12 @@
 		@endif
 		
 		@media only screen and (max-width: 600px) {
-			.brand{padding-left:16px; padding-right:16px;}
+			.brand{}
 			.brand>img {width: 2em;}
 			.brand>.brand-text {margin-left:.2em;}
 			.brand>.brand-text>.title {font-size:1.1em}
 			.brand>.brand-text>.subtitle {font-size:.6em;}	
-			#jn-topbar>.w3-bar>.brand:first-child{padding-left:0;}
+			#jn-topbar>.w3-bar>.brand:first-child{padding-left:16px;}
 		}
 		
 		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */

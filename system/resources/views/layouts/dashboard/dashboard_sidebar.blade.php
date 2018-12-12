@@ -56,9 +56,9 @@
 		<span id="serverTime" class="padding-left-16"></sspan>
 	</div>
 	<a class="w3-bar-item dashboard {{ (url()->current() == route('my.dashboard'))? 'active' : '' }}" 
-		href="{{ route('my.dashboard') }}">
+		href="{{ route('my.'.$sidebar.'.landing') }}">
 		<div class="icon"><i class="fas fa-tachometer-alt fa-fw"></i></div>
-		<span class="">Dashboard</span>
+		<span class="">{{strtoupper($sidebar)}} Dashboard</span>
 	</a>
 	@foreach($sidebarItems as $item)
 		@if (!isset($item['group']) || !$item['group'])

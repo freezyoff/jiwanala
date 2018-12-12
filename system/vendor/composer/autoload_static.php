@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
+class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -506,17 +506,12 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
     public static $classMap = array (
         'App\\Console\\Commands\\JiwanalaAddPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddPermission.php',
         'App\\Console\\Commands\\JiwanalaAddUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddUser.php',
+        'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
         'App\\Console\\Commands\\JiwanalaGrantPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaGrantPermission.php',
         'App\\Console\\Commands\\JiwanalaMigration' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaMigration.php',
-        'App\\Console\\Commands\\JiwanalaServicePermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaServicePermission.php',
+        'App\\Console\\Commands\\JiwanalaPermissions' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaPermissions.php',
         'App\\Console\\Commands\\TestScript' => __DIR__ . '/../..' . '/app/Console/Commands/TestScript.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
-        'App\\DBModels\\JNAccounting\\Account' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/Account.php',
-        'App\\DBModels\\JNAccounting\\AccountBalance' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/AccountBalance.php',
-        'App\\DBModels\\JNAccounting\\Journal' => __DIR__ . '/../..' . '/app/DBModels/JNAccounting/Journal.php',
-        'App\\DBModels\\JNBimbel\\Student' => __DIR__ . '/../..' . '/app/DBModels/JNBimbel/Student.php',
-        'App\\DBModels\\JNCore\\AreaCodeModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/AreaCodeModel.php',
-        'App\\DBModels\\JNCore\\PasswordResetModel' => __DIR__ . '/../..' . '/app/DBModels/JNCore/PasswordResetModel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Exceptions\\NoUserTimezoneException' => __DIR__ . '/../..' . '/app/Exceptions/NoUserTimezoneException.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/RegisterController.php',
@@ -524,6 +519,7 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\My\\AdministratorController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/AdministratorController.php',
         'App\\Http\\Controllers\\My\\BaukController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/BaukController.php',
+        'App\\Http\\Controllers\\My\\Bauk\\EmployeeAttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/EmployeeAttendanceController.php',
         'App\\Http\\Controllers\\My\\Bauk\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/EmployeeController.php',
         'App\\Http\\Controllers\\Service\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Service\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Service/Auth/LoginController.php',
@@ -536,20 +532,24 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'App\\Http\\Middleware\\Service\\CheckPermission' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/CheckPermission.php',
         'App\\Http\\Middleware\\Service\\CheckPermissionContext' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/CheckPermissionContext.php',
         'App\\Http\\Middleware\\Service\\RequireClientTimezone' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/RequireClientTimezone.php',
+        'App\\Http\\Middleware\\Service\\RequireResetPassword' => __DIR__ . '/../..' . '/app/Http/Middleware/Service/RequireResetPassword.php',
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Http\\Requests\\My\\Bauk\\Attendance\\UploadRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Attendance/UploadRequest.php',
         'App\\Http\\Requests\\My\\Bauk\\Employee\\PatchRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Employee/PatchRequest.php',
         'App\\Http\\Requests\\My\\Bauk\\Employee\\PostRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Employee/PostRequest.php',
         'App\\Libraries\\Baak\\Student' => __DIR__ . '/../..' . '/app/Libraries/Baak/Student.php',
         'App\\Libraries\\Bauk\\Employee' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Employee.php',
+        'App\\Libraries\\Bauk\\EmployeeAttendance' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeAttendance.php',
+        'App\\Libraries\\Bauk\\EmployeeAttendanceAttachment' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeAttendanceAttachment.php',
         'App\\Libraries\\Core\\Address' => __DIR__ . '/../..' . '/app/Libraries/Core/Address.php',
         'App\\Libraries\\Core\\Person' => __DIR__ . '/../..' . '/app/Libraries/Core/Person.php',
         'App\\Libraries\\Core\\Phone' => __DIR__ . '/../..' . '/app/Libraries/Core/Phone.php',
         'App\\Libraries\\Foundation\\Migration' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Migration.php',
-        'App\\Libraries\\Foundation\\Model' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Model.php',
         'App\\Libraries\\Service\\Auth\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/PasswordResetModel.php',
         'App\\Libraries\\Service\\Auth\\User' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/User.php',
+        'App\\Libraries\\Service\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Core/PasswordResetModel.php',
         'App\\Libraries\\Service\\Permission' => __DIR__ . '/../..' . '/app/Libraries/Service/Permission.php',
         'App\\Notifications\\Service\\Auth\\ResetPasswordNotification' => __DIR__ . '/../..' . '/app/Notifications/Service/Auth/ResetPasswordNotification.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
@@ -3118,6 +3118,7 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
         'PHPUnit\\Runner\\AfterSuccessfulTestHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/AfterSuccessfulTestHook.php',
         'PHPUnit\\Runner\\AfterTestErrorHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/AfterTestErrorHook.php',
         'PHPUnit\\Runner\\AfterTestFailureHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/AfterTestFailureHook.php',
+        'PHPUnit\\Runner\\AfterTestHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/AfterTestHook.php',
         'PHPUnit\\Runner\\AfterTestWarningHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/AfterTestWarningHook.php',
         'PHPUnit\\Runner\\BaseTestRunner' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/BaseTestRunner.php',
         'PHPUnit\\Runner\\BeforeFirstTestHook' => __DIR__ . '/..' . '/phpunit/phpunit/src/Runner/Hook/BeforeFirstTestHook.php',
@@ -5035,11 +5036,11 @@ class ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb7400ba2f2c11b6e1cf679e78e0d7b14::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a::$classMap;
 
         }, null, ClassLoader::class);
     }

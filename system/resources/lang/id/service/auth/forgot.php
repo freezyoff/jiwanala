@@ -1,6 +1,6 @@
 <?php return[
 	'label'=>[
-		'info'=>'Link untuk merubah password akan dikirim melalui email, pastikan email terdaftar pada sistem.'
+		'info'=>'Token untuk merubah password akan dikirim melalui email, pastikan email terdaftar pada sistem.',
 	],
 	'hints'=>[
 		'email'=>'Alamat Email',

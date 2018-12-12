@@ -20,6 +20,8 @@ class CrateTableEmployees extends Migration
      */
     public function up()
     {
+		if ($this->schemaExist('employee')) return;
+		
 		$this->createSchema(function (Blueprint $table) {
             $table->timestamps();
             $table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');

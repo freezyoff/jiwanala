@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DBModels\JNCore;
+namespace App\Libraries\Service;
 
 use Illuminate\Database\Eloquent\Model;
 
 class PasswordResetModel extends Model{
     protected $table = 'password_resets';
-	protected $connection = 'jn_core';
+	protected $connection = 'service';
 }

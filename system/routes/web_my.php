@@ -31,11 +31,7 @@ Route::prefix ('bauk')
 	->middleware(['permission.context:bauk'])
 	->group(function(){
 	
-	Route::prefix('landing')
-		->group(function(){
-			
-		Route::name('landing')->get('/', '\App\Http\Controllers\My\BaukController@landing');
-	});
+	Route::name('landing')->get('/', '\App\Http\Controllers\My\BaukController@landing');
 	
 	Route::prefix('employee')
 		->name('employee')
@@ -78,4 +74,11 @@ Route::prefix ('bauk')
 		});
 	});
 	
+	Route::prefix('attendance')
+		->name('attendance')
+		->group(function(){
+		
+		Route::middleware('permission:bauk.attendance.list')
+			->any('', '\App\Http\Controllers\My\Bauk\EmployeeAttendanceController@landing');
+	});
 });

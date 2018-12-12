@@ -4,6 +4,14 @@
 
 //echo resource_path().'/views/layouts/'.$theme;exit;
 
+Route::get('mail/test',function(){
+	$markdown = new Illuminate\Mail\Markdown(view(), config('mail.markdown'));
+    return $markdown->render('service.auth.mail.reset_user_password',[
+		'usr'=>'asdsad',
+		'pwd'=>'asdsad'
+	]);
+});
+
 Route::get('/', function () {
 	return redirect()->route('service.auth.login');
 });

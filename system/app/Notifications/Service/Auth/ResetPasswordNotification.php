@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 class ResetPasswordNotification extends Notification implements ShouldQueue{
     use Queueable;
 
-	protected $reset_url = false;
+	protected $token = '';
 	
     /**
      * Create a new notification instance.
@@ -18,10 +18,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      * @return void
      */
     public function __construct($token){
-		//$this->reset_url = route('service.auth.reset', $token);
-		
-		//force url to remote
-        $this->reset_url = 'https://service.jiwa-nala.org/auth/resetpwd/'.$token;
+		$this->token = 'service.jiwa-nala.org/auth/resetpwd/'.$token;
     }
 
     /**
@@ -44,7 +41,9 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
     public function toMail($notifiable){
 		return (new MailMessage)
 			->subject(trans('service/auth/reset.mail.subject'))
-			->markdown('service.auth.mail.reset_user_password', ['url' => $this->reset_url]);
+			->markdown('service.auth.mail.reset_user_password', [
+				'token'=>$this->token
+			]);
     }
 
     /**

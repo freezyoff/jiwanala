@@ -3,6 +3,8 @@
 namespace App\Libraries\Service\Auth;
 
 use App\User as BaseUserModel;
+use Illuminate\Support\Str;
+use Hash;
 
 class User extends BaseUserModel{
 	protected $table = 'users';

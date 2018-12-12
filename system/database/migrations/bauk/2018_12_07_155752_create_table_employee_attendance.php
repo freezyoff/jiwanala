@@ -12,7 +12,7 @@ class CreateTableEmployeeAttendance extends Migration
 		'employee'=>'employees',
 		'user'=>'users',
 		'employee-attendance'=>'employee_attendance',
-		'employee-attendance-histories'=>'employee_attendance_histories'
+		'employee-attendance-attachments'=>'employee_attendance_attachments'
 	];
 	
     /**
@@ -24,8 +24,10 @@ class CreateTableEmployeeAttendance extends Migration
     {
         $this->createSchema(function (Blueprint $table) {
             $table->timestamps();
+			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
+			$table->increments('id');
             $table->integer('employee_id')->unsigned()->comment('employee_id = id tabel bauk.employee');
-            $table->date('date')->nullable()->comment('employee_id = id tabel bauk.employee');
+            $table->date('date')->comment('tanggal histories');
 			$table->enum('consent', [
 				'ct',	//cuti tahunan
 				'cs',	//cuti sakit
@@ -33,23 +35,27 @@ class CreateTableEmployeeAttendance extends Migration
 				'ca',	//cuti bersama
 				'ch',	//cuti hamil
 				'cp',	//cuti penting
+				'td',	//Tugas / Dinas
 			])->nullable()->comment('izin tidak masuk');
+			$table->time('time1')->nullable()->comment('jam finger masuk');
+			$table->time('time2')->nullable()->comment('jam finger keluar');
+			$table->time('time3')->nullable()->comment('jam finger keluar');
+			$table->time('time4')->nullable()->comment('jam finger keluar');
+			$table->time('time5')->nullable()->comment('jam finger keluar');
+			$table->time('time6')->nullable()->comment('jam finger keluar');
 			
-			$table->primary(['employee_id','date']);
-			$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
+			$table->foreign('employee_id')->references('id')
+				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
         },'employee-attendance');
 		
 		$this->createSchema(function (Blueprint $table) {
-            $table->timestamps();
-			$table->integer('employee_id')->unsigned()->comment('employee_id = id tabel bauk.employee');
-            $table->date('date')->nullable()->comment('employee_id = id tabel bauk.employee');
-            $table->time('time1')->comment('jam finger');
-            $table->time('time2')->comment('jam finger');
-            $table->time('time3')->comment('jam finger');
-            $table->time('time4')->comment('jam finger');
-			$table->primary(['employee_id','date']);
-			$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
-		},'employee-attendance-histories');
+			$table->timestamps();
+			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
+			$table->integer('employee_attendance_id')->unsigned()->comment('id on bauk.employee_attendance');
+			$table->binary('attachment');
+			$table->foreign('employee_attendance_id')->references('id')
+				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee-attendance'));
+		}, 'employee-attendance-attachments');
     }
 
     /**
@@ -59,7 +65,7 @@ class CreateTableEmployeeAttendance extends Migration
      */
     public function down()
     {
+        $this->dropSchema('employee-attendance-attachments');
         $this->dropSchema('employee-attendance');
-        $this->dropSchema('employee-attendance-histories');
     }
 }

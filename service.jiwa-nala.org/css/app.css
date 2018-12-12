@@ -34,7 +34,7 @@ i.button-icon-loader {
 
 body, html,
 h1,h2,h3,h4,h5,h6,
-div,span,pre,p{ margin:0; font-family:roboto;}
+div,span,pre,p,ul{ margin:0; padding:0; font-family:roboto;}
 
 input:focus,select:focus,textarea:focus,button:focus {outline: none;}
 
@@ -129,3 +129,15 @@ input.w3-input ~ label {font-size:.8em;}
 
 .datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="months"]>li,
 .datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="years"]>li {min-width:25% !important;}
+
+/* Laravel Bootstrap Pagination hack */
+ul.pagination[role="navigation"]{
+	list-style:none; 
+	padding-left:0; 
+	display:flex;
+	justify-content:end;
+}
+
+ul.pagination[role="navigation"]>li>* {padding: 4px 8px; text-decoration:none; cursor:pointer;}
+ul.pagination[role="navigation"]>li>*:hover {color:#2196F3;}
+ul.pagination[role="navigation"]>li.active>* {color:#2196F3;}

@@ -50,7 +50,12 @@
 				'display'=>[ 'name'=>'Manajemen Karyawan', 'icon'=>'fas fa-user-circle' ], 
 				'permission'=>'bauk.list.employee',
 				'href'=>'my.bauk.employee',
-			]
+			],
+			[
+				'display'=>[ 'name'=>'Kehadiran Karyawan', 'icon'=>'far fa-eye' ], 
+				'permission'=>'permission:bauk.attendance.list',
+				'href'=>'my.bauk.attendance',
+			],
 		]
 	],
 	

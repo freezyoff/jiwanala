@@ -36,7 +36,9 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+		//comment below
+		//because we need user to change the password
+        //$this->middleware('guest');
     }
 	
 	/**
@@ -105,7 +107,7 @@ class ResetPasswordController extends Controller
      */
 	protected function getUserByToken($token){
 		$email = false;
-		foreach(\App\DBModels\JNCore\PasswordResetModel::all() as $row){
+		foreach(\App\Libraries\Service\Auth\PasswordResetModel::all() as $row){
 			if (Hash::check($token, $row->token)){
 				$email = $row->email;
 			}
@@ -114,7 +116,7 @@ class ResetPasswordController extends Controller
 		//No email found, token expired
 		if (!$email) return false;
 		
-		$user = \App\DBModels\JNCore\UserModel::where('email','=',$email)->first();
+		$user = \App\Libraries\Service\Auth\User::where('email','=',$email)->first();
 		return $user;
 	}
 	
