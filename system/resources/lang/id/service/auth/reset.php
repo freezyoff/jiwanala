@@ -1,6 +1,7 @@
 <?php return[
 	'mail'=>[
-		'subject'=>'Atur Ulang Sandi',
+		'reset'=>'Atur Ulang Sandi',
+		'invitation'=>'Selamat Datang di JIWANALA'
 	],
 	'hints'=>[
 		'info'=>'Buat sandi baru dengan panjang minimal 6 digit &amp; menggunakan kombinasi Alfabet dan Angka',

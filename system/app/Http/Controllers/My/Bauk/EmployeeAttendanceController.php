@@ -4,13 +4,14 @@ namespace App\Http\Controllers\My\Bauk;
 
 use App\Http\Controllers\Controller;
 use App\Libraries\Bauk\EmployeeAttendance;
+use App\Http\Requests\My\Bauk\Attendance\UploadRequest;
 use Illuminate\Http\Request;
 use Storage;
 use Validator;
 
 class EmployeeAttendanceController extends Controller
 {
-    public function landing(Request $req){
+    public function landing(UploadRequest $req){
 		$imported = false;
 		if ($req->hasFile('upload')){
 			$file = $req->file('upload');

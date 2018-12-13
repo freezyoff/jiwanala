@@ -21,6 +21,10 @@ class User extends BaseUserModel{
 		$this->notify(new \App\Notifications\Service\Auth\ResetPasswordNotification($token));
     }
 	
+	public function sendNewUserInvitationNotification($token){
+		$this->notify(new \App\Notifications\Service\Auth\NewUserInvitationNotification($token));
+	}
+	
 	public function permissions(){
 		return $this->belongsToMany('\App\Libraries\Service\Permission', 'users_permissions', 'user_id', 'permission_id')->withTimestamps();
 	}

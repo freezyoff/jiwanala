@@ -34,12 +34,7 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-		//comment below
-		//because we need user to change the password
-        //$this->middleware('guest');
-    }
+    public function __construct(){ $this->middleware('guest'); }
 	
 	/**
      * Get the password reset validation rules.
@@ -138,7 +133,6 @@ class ResetPasswordController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     protected function sendResetFailedResponse(Request $request, $response){
-		return $response;
         return redirect()->back()
                     ->withInput($this->credentials($request))
                     ->withErrors(['failed' => trans($response)]);

@@ -41,8 +41,6 @@ class CreateTableEmployeeAttendance extends Migration
 			$table->time('time2')->nullable()->comment('jam finger keluar');
 			$table->time('time3')->nullable()->comment('jam finger keluar');
 			$table->time('time4')->nullable()->comment('jam finger keluar');
-			$table->time('time5')->nullable()->comment('jam finger keluar');
-			$table->time('time6')->nullable()->comment('jam finger keluar');
 			
 			$table->foreign('employee_id')->references('id')
 				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));

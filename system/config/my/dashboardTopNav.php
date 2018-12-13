@@ -53,7 +53,7 @@
 			],
 			[
 				'display'=>[ 'name'=>'Kehadiran Karyawan', 'icon'=>'far fa-eye' ], 
-				'permission'=>'permission:bauk.attendance.list',
+				'permission'=>'bauk.attendance.list',
 				'href'=>'my.bauk.attendance',
 			],
 		]
@@ -77,6 +77,7 @@
 		'href'=>'',
 		'permission_context'=>'baku',
 	],
+	
 	'service'=>[
 		'display'=>[ 'name'=>'System', 'icon'=>'fas fa-server'],
 		'href'=>'my.service.landing',

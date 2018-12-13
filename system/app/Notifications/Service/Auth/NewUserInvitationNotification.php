@@ -7,7 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ResetPasswordNotification extends Notification implements ShouldQueue{
+class NewUserInvitationNotification extends Notification
+{
     use Queueable;
 
 	protected $token = '';
@@ -17,9 +18,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      *
      * @return void
      */
-    public function __construct($token){
-		$this->token = 'service.jiwa-nala.org/auth/resetpwd/'.$token;
-    }
+    public function __construct($token){ $this->token = 'service.jiwa-nala.org/auth/resetpwd/'.$token; }
 
     /**
      * Get the notification's delivery channels.
@@ -38,10 +37,11 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable){
-		return (new MailMessage)
-			->subject(trans('service/auth/reset.mail.reset'))
-			->markdown('service.auth.mail.reset_user_password', [
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+			->subject(trans('service/auth/reset.mail.invitation'))
+			->markdown('service.auth.mail.new_user_invitation', [
 				'token'=>$this->token
 			]);
     }
@@ -52,7 +52,10 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable){
-        return ['reset_url'=>$this->reset_url];
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
     }
 }

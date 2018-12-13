@@ -13,7 +13,7 @@ class UploadRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return \Auth::user()->hasPermission('bauk.attendance.post');
     }
 
     /**
@@ -24,7 +24,11 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'upload'=>[
+				'sometimes',
+				'required',
+				new \App\Rules\CsvRFC4180
+			]
         ];
     }
 }

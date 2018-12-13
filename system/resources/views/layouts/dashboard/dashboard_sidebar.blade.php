@@ -61,7 +61,7 @@
 		<span class="">{{strtoupper($sidebar)}} Dashboard</span>
 	</a>
 	@foreach($sidebarItems as $item)
-		@if (!isset($item['group']) || !$item['group'])
+		@if ( (!isset($item['group']) || !$item['group']) && \Auth::user()->hasPermission($item['permission']) )
 		<?php 
 			$href = route($item['href']);
 			$icon = $item['display']['icon'];
@@ -74,7 +74,7 @@
 				<span class="">{{ $name }}</span>
 			</a>
 			<!-- end: sidebar item -->
-		@else
+		@elseif (isset($item['group']))
 		<?php
 			$accordionId = time();
 			$groupItemList = $item['items'];

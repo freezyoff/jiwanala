@@ -12,7 +12,7 @@ class JiwanalaAddUser extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:add-user {name : username} {email : Email} {password : Secret password}';
+    protected $signature = 'jiwanala:add-user {name : username} {email : Email}';
 
     /**
      * The console command description.
@@ -41,9 +41,17 @@ class JiwanalaAddUser extends Command
 		$fill = [];
 		$fill['name'] = $this->argument('name')?: $this->ask('User name:');
 		$fill['email'] = $this->argument('email')?: $this->ask('User email:');
-		$fill['password'] = Hash::make($this->argument('password')?: $this->ask('User secret password:'));
+		$fill['password'] = Hash::make('verify');
 		$user = new \App\Libraries\Service\Auth\User($fill);
 		$user->save();
+		
+		//send notification with reset
+		$user->sendNewUserInvitationNotification(
+			$response = \Password::broker()->getRepository()->create($user)
+		);
+		
+		
 		$this->info('User: '. $fill['name']. ' added.');
+		$this->info('Email verification has been send');
     }
 }

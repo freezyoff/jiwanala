@@ -87,6 +87,7 @@ class JiwanalaMigration extends Command
 	function runMigration($migrationPaths, $rollback=false){
 		$migrationPaths = is_array($migrationPaths)? $migrationPaths : [$migrationPaths];
 		foreach($migrationPaths as $path){
+			$this->line($path);
 			$command = $rollback? 'migrate:rollback' : 'migrate';
 			Artisan::call($command,['--path'=>$path]);
 			$this->info(

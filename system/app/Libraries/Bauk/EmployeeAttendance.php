@@ -21,9 +21,19 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 		'time2',
 		'time3',
 		'time4',
-		'time5',
-		'time6'
 	];
+	
+	public function getAttendArrivalTime(){
+		return $this->time1;
+	}
+	
+	public function getAttendReturnTimes(){
+		return [$this->time2, $this->time3, $this->time4];
+	}
+	
+	public function getAttendTimes(){
+		return [$this->time1, $this->time2, $this->time3, $this->time4];
+	}
 	
 	public static  function getConsentTypes(){
 		return array_keys(trans('my/bauk/attendance/consent'));
@@ -60,8 +70,6 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 			'*.finger_keluar'=>'required|date_format:"g:i:s A"',
 			'*.finger_keluar_2'=>'nullable|date_format:"g:i:s A"',
 			'*.finger_keluar_3'=>'nullable|date_format:"g:i:s A"',
-			'*.finger_keluar_4'=>'nullable|date_format:"g:i:s A"',
-			'*.finger_keluar_5'=>'nullable|date_format:"g:i:s A"',
 		];
     }
 	
@@ -77,8 +85,6 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 			'*.finger_keluar'	=> 'Finger Keluar',
 			'*.finger_keluar_2'	=> 'Finger Keluar 2',
 			'*.finger_keluar_3'	=> 'Finger Keluar 3',
-			'*.finger_keluar_4'	=> 'Finger Keluar 4',
-			'*.finger_keluar_5'	=> 'Finger Keluar 5',
 		];
 	}
 }

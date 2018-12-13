@@ -91,7 +91,12 @@
 var App = { UI: {} };
 App.init = function(){
 	//input error remove error class
-	$('input.w3-input.error').on('keyup', function(){ $(this).removeClass('error'); });
+	$('input.w3-input.error').on('keyup', function(event){ 
+		var inp = String.fromCharCode(event.keyCode);
+		if (/[a-zA-Z0-9-_ ]/.test(inp)){
+			$(this).removeClass('error'); 			
+		}
+	});
 	$('.input-group.error>.input.w3-input').on('keyup', function(){ $(this).parent().removeClass('error'); });
 	
 	$.each( $('.input-group>.input') , function( index, item ){ App.UI.inputGroup(item); });
