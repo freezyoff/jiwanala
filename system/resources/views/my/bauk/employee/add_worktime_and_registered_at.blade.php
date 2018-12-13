@@ -1,7 +1,7 @@
 <?php
 	$workTimeCollection = ['f'=>'Full Time','p'=>'Part Time'];
 	$workTimeKey = in_array(old('work_time'),['f','p'])? old('work_time') : '';
-	$workTimeLabel = in_array(old('work_time'),['f','p'])? $workTimeLabel[$workTimeKey] : '';
+	$workTimeLabel = in_array(old('work_time'),['f','p'])? $workTimeCollection[$workTimeKey] : '';
 ?>
 <div class="w3-row">
 	<div class="w3-col s12 m6">	
