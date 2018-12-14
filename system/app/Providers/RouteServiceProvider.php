@@ -38,8 +38,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-
-        //
     }
 
     /**
@@ -51,10 +49,37 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
+		/*
+		Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
+			 
+		*/
+		
+		Route::middleware('web')
+			->namespace($this->namespace)
+			->group(function(){
+				
+			 $domain = $this->getDomain();
+			 $this->mapWebDomainMy($domain);
+			 $this->mapWebDomainService($domain);
+			 
+		 });
     }
+	
+	protected function mapWebDomainService($domain){
+		Route::domain('service.'.$domain)
+			->name('service.')
+			->middleware('web')
+			->group(base_path('routes/web_service.php'));
+	}
+	
+	protected function mapWebDomainMy($domain){
+		Route::domain('my.'.$domain)
+			->middleware(['auth', 'timezone'])
+			->name('my.')
+			->group(base_path('routes/web_my.php'));
+	}
 
     /**
      * Define the "api" routes for the application.
@@ -70,4 +95,9 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
+	
+	protected function getDomain(){
+		$domainBase = 'jiwa-nala';
+		return $domainBase . (\App::environment('production')? '.org' : '.local');
+	}
 }

@@ -1,8 +1,5 @@
 <?php
 
-//domain= my.jiwa-nala.org
-//parent route= my
-
 Route::name('dashboard')
 	->group(function(){
 	
