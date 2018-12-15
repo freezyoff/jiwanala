@@ -26,7 +26,7 @@ class CreateTablePersons extends Migration
             $table->string('name_full', 100);
             $table->string('name_back_titles', 50)->nullable();
             $table->string('birth_place', 50)->nullable();
-            $table->timestamp('birth_date')->nullable();
+            $table->date('birth_date')->nullable();
 			$table->enum('gender', ['l', 'p']);
             $table->enum('marital',['bm','mn','cr','mt'])->comment('bm: belum menikah, mn:menikah, dj: duda/janda cerai, mt: duda/janda mati')->nullable();
         });

@@ -45,18 +45,22 @@
 @endSection
 
 @section('dashboard.main')
+{{base_path()}}
 	@include('my.bauk.attendance.landing_first')
-	@include('my.bauk.attendance.landing_second')
+	@include('my.bauk.attendance.landing_second')	
 @endSection
 
 @section('html.head.scripts')
 @parent
+<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
 <script src="{{url('js/datepicker.js')}}"></script>
+<script src="{{url('js/timepicker.js')}}"></script>
 @endSection
 
 @section('html.head.styles')
 @parent
 <link rel="stylesheet" href="{{url('css/datepicker.css')}}">
+<link rel="stylesheet" href="{{url('css/timepicker.css')}}">
 @endSection
 
 @section('html.body.scripts')
@@ -96,33 +100,98 @@
 			inline:function(e){
 				if(e.view == 'day') {
 					var modal = $(e.target).attr('data-modal');
-					$('#'+modal).hide();
+					$(modal).hide();
 					App.UI.datepicker.click.float(e);
 				}
 			},
 		},
 		showModal: function(e){
-			$('#'+$(this).attr('data-modal')).show();
+			var modal = $(this).attr('data-modal');
+			$(modal).show();
 		},
 		valueChange: function(e){
 			var taget = $(e.target).attr('data-value');
-			$('input[name="'+taget+'"]').val($(e.target).val());
+			$(taget).val($(e.target).val());
 		},
 		init: function(){
-			$('[data-toggle="datepicker-inline"]').each(function(){
-				var opt = $.extend(App.UI.datepicker.format.inline, {container: '#'+$(this).attr('data-container')});
+			$('[data-toggle="datepicker-modal"]').each(function(){
+				var opt = $.extend(App.UI.datepicker.format.inline, {container: $(this).attr('data-container')});
 				$(this).datepicker(opt)
-					.on('focus focusin', App.UI.datepicker.showModal)
+					.on('focusin', App.UI.datepicker.showModal)
+					.on('pick.datepicker', App.UI.datepicker.click.inline)
+					.on('value-change change keyup', App.UI.datepicker.valueChange);
+			});	
+			$('[data-toggle="datepicker"]').each(function(){
+				$(this).datepicker(App.UI.datepicker.format.float)
+					.on('focusin', App.UI.datepicker.showModal)
 					.on('pick.datepicker', App.UI.datepicker.click.inline)
 					.on('value-change change keyup', App.UI.datepicker.valueChange);
 			});	
 		}
 	};
-
+	
 	$(document).ready(function(){
 		App.UI.upload.init();
 		App.UI.small.init();
 		App.UI.datepicker.init();
+		
+		App.Large.init();
+		$(window).keydown(function(event){
+			if(event.keyCode == 13) {
+				event.preventDefault();
+				return false;
+			}
+		});
 	});
+	
+	App.Large = {
+		init: function(){
+			App.Large.datepicker();
+			App.Large.timepicker();
+			
+			$(window).click(function(){
+				console.log('window.click');
+				App.Large.closeFloatingInput();
+			});
+		},
+		closeFloatingInput: function(){
+			$('form#large input[data-toggle="timepicker"]').trigger('hide');
+			$('form#large input[data-toggle="datepicker"]').datepicker('hide');
+		},
+		datepicker: function(){
+			$('form#large input[data-toggle="datepicker"]').each(function(index,item){
+				$(item).datepicker(App.UI.datepicker.format.float)
+					.on('click focus', function(event){ 
+						event.stopPropagation(); 
+						App.Large.closeFloatingInput();
+						$(this).datepicker('show');
+					})
+					.on('pick.datepicker', App.UI.datepicker.click.inline)
+					.on('value-change change keyup', App.UI.datepicker.valueChange);
+			});	
+		},
+		timepicker:function(){
+			$('form#large input[data-toggle="timepicker"]').each(function(){
+				$(this).timepicker({
+					container: $(this).attr('data-container'),
+					class:'w3-small',
+					styles:'justify-content:center; padding:8px;'
+				});
+				
+				$(this).on('click focus', function(event){ 
+					event.stopPropagation(); 
+					App.Large.closeFloatingInput();
+					$($(this).attr('data-container')).show(); 
+				}).on('change pick', function(event){ 
+					$($(this).attr('data-value')).val($(this).val()); 
+				}).on('hide', function(event){ 
+					$($(this).attr('data-container')).hide(); 
+				});
+			});
+		},
+		inputLostFocus: function(){
+			
+		}
+	}
 </script>
 @endSection

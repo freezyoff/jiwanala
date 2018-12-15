@@ -60,6 +60,11 @@
 	<div class="w3-container padding-top-16">@include('my.bauk.employee.landing_search')</div>
 	<!--- end: search Key --->
 	<div class="w3-responsive w3-container padding-bottom-24">
+		@if ($employees->count()>0)
+			<div style="padding-bottom:16px;">
+				{{$employees->links('layouts.dashboard.pagination')}}
+			</div>
+		@endif
 		<table class="w3-table-all w3-hoverable" style="min-width:750px">
 			<thead>
 				<tr>
@@ -114,7 +119,9 @@
 			</tbody>
 		</table>
 		@if ($employees->count()>0)
-			{{$employees->links('layouts.dashboard.pagination')}}
+			<div style="padding-top:16px;">
+				{{$employees->links('layouts.dashboard.pagination')}}
+			</div>
 		@endif
 	</div> 
 </div> 

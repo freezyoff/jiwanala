@@ -88,7 +88,15 @@
     }
   })( this, jQuery );
   
+
 var App = { UI: {} };
+
+App.UI.inputGroup = function(el){
+	$(el).focusin(function(){ $(el).parent().addClass('focus'); })
+		.focusout(function(){$(el).parent().removeClass('focus');})
+		.blur(function(){$(el).parent().removeClass('focus');});
+};
+
 App.init = function(){
 	//input error remove error class
 	$('input.w3-input.error').on('keyup', function(event){ 
@@ -100,12 +108,6 @@ App.init = function(){
 	$('.input-group.error>.input.w3-input').on('keyup', function(){ $(this).parent().removeClass('error'); });
 	
 	$.each( $('.input-group>.input') , function( index, item ){ App.UI.inputGroup(item); });
-}
-
-App.UI.inputGroup = function(el){
-	$(el).focusin(function(){ $(el).parent().addClass('focus'); })
-		.focusout(function(){$(el).parent().removeClass('focus');})
-		.blur(function(){$(el).parent().removeClass('focus');});
-}
+};
   
 $(document).ready(function() { App.init() });

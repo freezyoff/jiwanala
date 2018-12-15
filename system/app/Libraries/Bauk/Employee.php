@@ -55,6 +55,7 @@ class Employee extends Model
 	}
 	
 	public function setRegisteredAtAttribute($value){
+		$value = preg_replace('/\s+/', '', $value);
 		$this->attributes['registered_at'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
 	}
 	

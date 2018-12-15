@@ -13,7 +13,7 @@
 		.brand>.brand-text>.subtitle {line-height:1.3; letter-spacing:.2px;}
 		.brand>img {padding: 0;margin: 0;top:0;position:relative; vertical-align:middle;}
 		.brand>.brand-text {position:relative; display:inline-block; vertical-align:middle;}
-		.brand>.brand-text>.title {font-family:gotham-medium; font-weight:bold; line-height:1;}
+		.brand>.brand-text>.title {font-family:gotham; font-weight:bold; line-height:1;}
 		.brand>.brand-text>.subtitle {font-family:roboto}
 		
 		#jn-sidebar{font-size:1.2em;}
@@ -168,10 +168,20 @@
 
 	$(document).ready(function(){
 		setInterval(function(){$('#serverTime').text( moment().tz('Asia/Jakarta').format("DD-MM-YYYY HH:mm:ss") );}, 1000);
-		fontSpy('gotham-medium', {success: function(){dashboard.initSideBar();}, failure: function(){dashboard.initSideBar();}});
 		$( window ).resize(dashboard.initSideBar);
 		$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
 		$('#jn-sidebar-overlay').on('click', function(){ dashboard.closeSideBar(); });
+		fontSpy('gotham-medium', {
+			success: function(){
+				console.log('fontSpy: load success');
+				dashboard.initSideBar();
+				$( window ).resize(dashboard.initSideBar);
+			}, failure: function(){
+				console.log('fontSpy: load failed');
+				dashboard.initSideBar();
+				$( window ).resize(dashboard.initSideBar);
+			}
+		});
 	});
 </script>
 @endSection

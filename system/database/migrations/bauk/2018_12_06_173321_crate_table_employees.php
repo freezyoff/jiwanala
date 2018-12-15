@@ -30,8 +30,8 @@ class CrateTableEmployees extends Migration
 			$table->integer('person_id')->unsigned();
 			$table->string('nip',10)->unique()->comment('Nomor Induk Pegawai <4 digit tahun masuk> <2 digit bulan lahir> <2 digit nomor urut>');
 			$table->enum('work_time',['f','p'])->default('f')->comment('f: full time, p: part time');
-			$table->timestamp('registered_at')->useCurrent()->comment('tanggal terdaftar');
-			$table->timestamp('resign_at')->nullable()->comment('tanggal keluar / drop out');
+			$table->date('registered_at')->nullable()->comment('tanggal terdaftar');
+			$table->date('resign_at')->nullable()->comment('tanggal keluar / drop out');
             $table->boolean('active')->default(true);
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
