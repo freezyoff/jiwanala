@@ -8,7 +8,7 @@
 			.w3-theme {background-color:#f1f1f1 !important; color:#333 !important;}
 			.w3-display-middle{position:relative; transform: none; left:0; top:0; min-width:300px;}
 			img.brand {width: 6em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top; }
-			.brand-title {font-family:gotham-medium; font-size:1.6em; font-weight:bold; line-height:1.2; }
+			.brand-title {font-family:gotham; font-size:1.6em; font-weight:bold; line-height:1.2; }
 			.brand-subtitle {line-height:1; font-size:1em;}
 			.w3-display-middle{position:relative;transform: none;left:0;}
 			.w3-container{background:transparent !important;}
@@ -21,7 +21,7 @@
 		@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
 			.w3-display-middle{width:450px;}
 			img.brand {width: 6em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top;}
-			.brand-title {font-family:gotham-medium; font-size:1.6em; font-weight:bold; line-height:1.2;}
+			.brand-title {font-family:gotham; font-size:1.6em; font-weight:bold; line-height:1.2;}
 			.brand-subtitle {line-height:1; font-size:1em;}
 			.w3-card.boxContainer{padding: 16px 32px 16px 32px;box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)}
 		}

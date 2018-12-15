@@ -1,13 +1,4 @@
-font-face {
-	font-family: 'gotham';
-	src: url('font/Gotham_Medium_Regular.eot'), /* IE9 Compat Modes */
-		 url('font/Gotham_Medium_Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-		 url('font/Gotham_Medium_Regular.woff') format('woff'), /* Modern Browsers */
-		 url('font/Gotham_Medium_Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
-		 url('font/Gotham_Medium_Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
-	font-weight: 400;
-	font-style: normal;
-}
+@import('../font/stylesheet.css')
 
 i.button-icon-loader {
   border: 2px solid #f3f3f3;
@@ -36,7 +27,8 @@ body, html,
 h1,h2,h3,h4,h5,h6,
 div,span,pre,p,ul{ margin:0; padding:0; font-family:roboto;}
 
-input:focus,select:focus,textarea:focus,button:focus {outline: none;}
+input,textarea,select,
+input:focus,select:focus,textarea:focus,button:focus {outline: none; background-color:transparent;}
 
 .full-height {height: 100%;}
 

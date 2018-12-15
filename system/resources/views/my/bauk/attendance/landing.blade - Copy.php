@@ -3,7 +3,7 @@
 @section('html.head.styles')
 @parent
 <style>
-	/* SMALL */	
+	/* SMALL */
 	@media only screen and (max-width: 600px) {		
 		#small {min-width:300px;}
 		#small .btn-upload{
