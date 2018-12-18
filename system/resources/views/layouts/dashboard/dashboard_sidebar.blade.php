@@ -1,28 +1,3 @@
-<!--
-<div class="w3-container w3-row">
-	<div class="w3-col s4">
-		<img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
-	</div>
-	<div class="w3-col s8 w3-bar">
-		<span>
-			Welcome,
-			<strong>
-				Mike
-			</strong>
-		</span>
-		<br>
-		<a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-		<a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-		<a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-	</div>
-</div>
-<hr>
-<div class="w3-container">
-	<h5>
-		Dashboard
-	</h5>
-</div>
--->
 <?php
 	//@param $sidebar - get from parent view
 	$sidebarItems = config('my.dashboardTopNav.'.$sidebar.'.sideNav');
@@ -68,7 +43,7 @@
 			$name = $item['display']['name'];
 		?>
 			<!-- begin: sidebar item -->
-			<a class="w3-bar-item {{ str_contains(url()->current(), $href)? 'active' : '' }}" 
+			<a class="w3-bar-item {{ str_contains( url()->current(), $href)? 'active' : '' }}" 
 				href="{{ $href }}">
 				<div class="icon"><i class="{{ $icon }} fa-fw"></i></div>
 				<span class="">{{ $name }}</span>
@@ -80,34 +55,47 @@
 			$groupItemList = $item['items'];
 			$icon = $item['display']['icon'];
 			$name = $item['display']['name'];
+			$links = [];
 		?>
 			<!-- begin: sidebar item group -->
-			<a class="w3-bar-item accordion" href="#" target="{{ $accordionId }}">
+			<a class="w3-bar-item 
+				accordion
+				@foreach($groupItemList as $item)
+					{{ str_contains(route($item['href']), url()->current())? 'active' : '' }}
+				@endforeach
+				"
+				href="#" 
+				target="{{ $accordionId }}">
 				<div class="icon"><i class="{{ $icon }} fa-fw"></i> </div>
 				<span class="">{{ $name }}</span>
 			</a>
+			<div id="{{ $accordionId }}" class="accordion-item">
 			@foreach($groupItemList as $lItem)
-				<div id="{{ $accordionId }}" class="w3-theme-l5">
-					<a class="w3-bar-item" 
+					<a class="w3-bar-item {{ url()->current() == route($lItem['href'])? 'active' : '' }}" 
 						href="{{ route($lItem['href']) }}"
 						style="padding: 0;display: flex !important;align-items: center; text-decoration:none;">
-						<div class="icon" style="padding: 8px 16px;visibility: hidden;"><i class="fa fa-fw"></i></div>
-						<span class="" style="flex-grow: 1;">{{ $lItem['display']['name'] }}</span>
+						<div class="icon">
+							<i class="fas fa-caret-right fa-fw"></i>
+						</div>
+						<span style="flex-grow: 1;">{{ $lItem['display']['name'] }}</span>
 					</a>
-				</div>
 			@endforeach
+			</div>
 			<!-- end: sidebar item group -->
 		@endif
 	@endforeach
 </div>
 <script>
 	$(document).ready(function(){
-		$('.accordion').each(function(){
-			$("#"+this.target).slideToggle();
-		})
-		 $('.accordion').on('click', function(e){
-			e.preventDefault();
+		$('.accordion').on('click', function(event){
+			event.preventDefault();
 			$("#"+this.target).slideToggle();
 		});
+		 
+		 $('.accordion').each(function(index, item){
+			if ( !$(item).hasClass('active') ){
+				$(item).trigger('click');
+			}
+		})
 	});
 </script>

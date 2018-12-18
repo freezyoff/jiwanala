@@ -11,20 +11,50 @@ use Validator;
 
 class EmployeeAttendanceController extends Controller
 {
-    public function landing(UploadRequest $req){
-		$imported = false;
-		if ($req->hasFile('upload')){
-			$file = $req->file('upload');
-			$ext = $file->getClientOriginalExtension();
-			
-			if ($ext == 'csv') {
-				//csv has only one sheet
-				return $this->importCSV(new EmployeeAttendance, $file);
-			}
+    public function landing(Request $req){
+		return view('my.bauk.attendance.landing');
+	}
+	
+	public function searchEmployee(Request $req){
+		
+		$keywords = $req->input('keywords');
+		if (!$keywords) return response()->json([]);
+		
+		$schema = new \App\Libraries\Core\Person();
+		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new \App\Libraries\Core\Phone();
+		$phoneSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new \App\Libraries\Bauk\Employee();
+		$employeeSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		
+		$employee = \App\Libraries\Bauk\Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
+            ->join($phoneSchema, $personSchema.'.id', '=', $phoneSchema.'.person_id')
+			->where($phoneSchema.'.default','=',1)
+			->groupBy($employeeSchema.'.nip')
+			->orderBy('nip', 'asc')
+			->orderBy('active', 'desc')
+			->select([
+				$employeeSchema.'.id as id',
+				$employeeSchema.'.nip',
+				$personSchema.'.name_front_titles',
+				$personSchema.'.name_full',
+				$personSchema.'.name_back_titles',
+			]);
+		
+		if ($keywords){
+			$employee->where(function($q) use ($personSchema, $phoneSchema, $employeeSchema, $keywords){
+				$q->where($employeeSchema.'.nip','like','%'.$keywords.'%');
+			});
 		}
 		
-		return view('my.bauk.attendance.landing', $imported? ['imported'=>$imported[0]] : []);
+		return response()->json($employee->get());
 	}
+	
+	public function showUpload(){
+		return view('my.bauk.attendance.upload');
+	}
+	
+	public function upload(){}
 	
 	protected function importCSV(EmployeeAttendance $toImport, $file){
 		$imported = $toImport->toArray($file);
@@ -45,7 +75,4 @@ class EmployeeAttendanceController extends Controller
 		return Storage::disk('local')->download('bauk/employee_attendance.xlsx', trans('my.bauk.attendance.upload.template_file_name'));
 	}
 	
-	public function upload(){
-		
-	}
 }

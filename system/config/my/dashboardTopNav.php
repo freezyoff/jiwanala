@@ -47,14 +47,46 @@
 		'permission_context'=>'bauk',
 		'sideNav'=>[
 			[
+				'display'=>[ 'name'=>'Hari Libur', 'icon'=>'fas fa-calendar-check fa-fw' ], 
+				'permission'=>'bauk.holiday.list',
+				'href'=>'my.bauk.holiday.landing',
+			],
+			[
 				'display'=>[ 'name'=>'Manajemen Karyawan', 'icon'=>'fas fa-user-circle' ], 
 				'permission'=>'bauk.list.employee',
 				'href'=>'my.bauk.employee',
 			],
 			[
-				'display'=>[ 'name'=>'Kehadiran Karyawan', 'icon'=>'far fa-eye' ], 
+				'display'=>[ 'name'=>'Absensi Kehadiran', 'icon'=>'far fa-eye' ], 
 				'permission'=>'bauk.attendance.list',
-				'href'=>'my.bauk.attendance',
+				'href'=>'my.bauk.attendance.landing',
+				'group'=> true,
+	 			'items'=> [
+					[
+						'permission'=>'bauk.attendance.list',
+						'display'=>[ 				
+							'name'=>'Riwayat', 
+							'icon'=>false 
+						], 
+						'href'=>'my.bauk.attendance.landing',
+					],
+					[
+						'permission'=>'bauk.attendance.post',
+						'display'=>[ 				
+							'name'=>'Izin Kehadiran', 
+							'icon'=>false 
+						], 
+						'href'=>'my.bauk.landing',
+					],
+					[
+						'permission'=>'bauk.attendance.post',
+						'display'=>[ 				
+							'name'=>'Upload Finger', 
+							'icon'=>false 
+						], 
+						'href'=>'my.bauk.attendance.upload',
+					]
+				]
 			],
 		]
 	],

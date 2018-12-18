@@ -2,6 +2,7 @@
 
 @section('html.head.styles')
 	@parent
+	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
 	<link rel="stylesheet" href="{{url('css/app.css')}}">
 	<style>
 		@media only screen and (max-width: 600px) {

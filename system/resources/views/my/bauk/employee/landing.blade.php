@@ -1,15 +1,5 @@
 @extends('layouts.dashboard.dashboard', ['sidebar'=>'bauk', 'title'=>trans('my/bauk/employee/landing.page.title')])
 
-@section('html.head.styles')
-@parent
-<style>
-.w3-hoverable tbody tr:hover, .w3-ul.w3-hoverable li:hover {
-	background-color: #2196F31A;
-	cursor:pointer;
-}
-</style>
-@endSection
-
 @section('dashboard.main')
 <!--
 <div style="padding-bottom:16px;">
@@ -60,12 +50,12 @@
 	<div class="w3-container padding-top-16">@include('my.bauk.employee.landing_search')</div>
 	<!--- end: search Key --->
 	@if ($employees->count()>0)
-		<div style="padding-bottom:16px;">
+		<div class="w3-container padding-bottom-16">
 			{{$employees->links('layouts.dashboard.pagination')}}
 		</div>
 	@endif
-	<div class="w3-responsive w3-container padding-bottom-24">
-		<table class="w3-table-all w3-hoverable" style="min-width:750px">
+	<div class="w3-responsive w3-container" style="margin-bottom:16px">
+		<table class="w3-table-all w3-hoverable" style="min-width:750px;">
 			<thead>
 				<tr>
 					<td class="w3-theme-l1 w3-hide-large"></td>
@@ -120,7 +110,7 @@
 		</table>
 	</div> 
 	@if ($employees->count()>0)
-		<div style="padding-top:16px;">
+		<div class="w3-container padding-bottom-16">
 			{{$employees->links('layouts.dashboard.pagination')}}
 		</div>
 	@endif
@@ -163,7 +153,7 @@ App.UI.searchActivation = function(){
 		$('input[name=keyactive_large], input[name=keyactive_small]').val(display);
 		$('input[name=keyactive]').val(value);
 		$('form[name=searchkey]').submit();
-	}
+	};
 	
 	//style
 	$(window).resize(containerStyle.largeOnWindowResize);

@@ -33,7 +33,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 			<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
 			<script>
 				//"Poppins:300,400,500,600,700,800,900",
-				WebFont.load({google: {"families":["Roboto:300,400,500,600,700,800,900"]}, active: function() { sessionStorage.fonts = true; }});
+				WebFont.load({google: {families:["Roboto:300,400,500,600,700,800,900"]}, active: function() { sessionStorage.fonts = true; }});
 			</script>
 			<script src="{{url('js/app.js')}}"></script>
 		@show

@@ -110,7 +110,7 @@
 		</div>
 		<div class="w3-hide-large padding-left-8 padding-none-small">
 			<input name="registered_at_small" 
-				value="{{old('registered_at', \Carbon\Carbon::now(session()->get('timezone'))->format('Y-m-d') )}}"
+				value="{{old('registered_at', \Carbon\Carbon::now(session()->get('timezone'))->format('d-m-Y') )}}"
 				class="w3-input
 					@if(isset($errors) && $errors->has('registered_at'))
 						error

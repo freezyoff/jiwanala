@@ -36,22 +36,22 @@
 					</h4>
 				</header>
 				<div class="w3-bar-block" style="width:100%">
-					<ul class="w3-ul" style="font-size:1.2em">
-						<li class="w3-hover-light-grey" style="cursor:pointer">
+					<ul class="w3-ul w3-hoverable" style="font-size:1.2em">
+						<li style="cursor:pointer">
 							<a class="w3-text-theme w3-mobile" 
 								data-value="1">
 								<i class="fas fa-lightbulb "></i>
 								<span style="padding-left:12px">{{trans('my/bauk/employee/landing.hints.key_active_items.active')}}</span>
 							</a>
 						</li>
-						<li class="w3-hover-light-grey" style="cursor:pointer">
+						<li style="cursor:pointer">
 							<a class="w3-text-theme w3-mobile" 
 								data-value="0">
 								<i class="far fa-lightbulb"></i>
 								<span style="padding-left:12px">{{trans('my/bauk/employee/landing.hints.key_active_items.inactive')}}</span>
 							</a>
 						</li>
-						<li class="w3-hover-light-grey" style="cursor:pointer;">
+						<li style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile" 
 								data-value="-1">
 								<i class="fas fa-asterisk"></i>
@@ -75,22 +75,22 @@
 			<label><i class="fas fa-chevron-down w3-large"></i></label>
 		</div>
 		<div id="keyactive-dropdown" class="w3-dropdown-content w3-bar-block w3-card">
-			<ul class="w3-ul">
-				<li class="w3-hover-light-grey" style="cursor:pointer">
+			<ul class="w3-ul w3-hoverable">
+				<li style="cursor:pointer">
 					<a class="w3-text-theme w3-mobile" 
 						data-value="1">
 						<i class="fas fa-lightbulb"></i>
 						<span style="padding-left:12px">{{trans('my/bauk/employee/landing.hints.key_active_items.active')}}</span>
 					</a>
 				</li>
-				<li class="w3-hover-light-grey" style="cursor:pointer">
+				<li style="cursor:pointer">
 					<a class="w3-text-theme w3-mobile" 
 						data-value="0">
 						<i class="far fa-lightbulb"></i>
 						<span style="padding-left:12px">{{trans('my/bauk/employee/landing.hints.key_active_items.inactive')}}</span>
 					</a>
 				</li>
-				<li class="w3-hover-light-grey" style="cursor:pointer;">
+				<li style="cursor:pointer;">
 					<a class="w3-text-theme w3-mobile" 
 						data-value="-1">
 						<i class="fas fa-asterisk"></i>

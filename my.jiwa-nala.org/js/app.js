@@ -88,9 +88,115 @@
     }
   })( this, jQuery );
   
+  
+(function( $ ) {
+    $.fn.select = function() {
+		$(this).each(function(){
+			
+			var origin = $(this);
+			origin.attr('type','hidden');	//hide original input element
+			
+			if (origin.attr('id')==''){	
+				origin.attr('id', Math.rand(4)); //generate id
+			}
+			
+			//need to wrap like <div class="input-group"><input /></div>
+			if (!origin.parent().hasClass('input-group')){
+				var wrapper = $('<div class="input-group"></div>');
+				origin = origin.replaceWith( wrapper );
+				origin.appendTo(wrapper);
+			}
+			
+			var toggleContainer = [];
+			if ($(this).attr('select-dropdown') != '') 			toggleContainer.push($(this).attr('select-dropdown'));
+			if ($(this).attr('select-modal-container') != '')	toggleContainer.push($(this).attr('select-modal-container'));
+			if ($(this).attr('select-modal') != '')				toggleContainer.push($(this).attr('select-modal'));
+			toggleContainer = $(toggleContainer.join(','));
+			
+			var label = $('<label class="w3-input" for="'+ origin.attr('id') +'"></label>')
+				.css('cursor','pointer')
+				.insertBefore(this)
+				.html( origin.val()==''? 
+					$('<span></span>').css('color','rgb(120,120,120)').html(origin.attr('placeholder')).prop('outerHTML') : 
+					$(toggleContainer).find('[select-value="'+origin.val()+'"]').html() 
+				);
+				
+			var chevron = $(
+					'<label class="icon">'+
+						'<i class="fas fa-chevron-down fa-fw w3-hide-small w3-hide-medium"></i>'+
+						'<i class="fas fa-square fa-fw w3-hide-large"></i>'+
+					'</label>'
+				).css('cursor','pointer')
+				.insertBefore(origin);
+			
+			//event 
+			var chevronToggle = function(){
+				var dropdown = toggleContainer.filter(origin.attr('select-dropdown'));
+				var add = dropdown.is(':visible')? 'fa-chevron-up' : 'fa-chevron-down';
+				var del = dropdown.is(':visible')? 'fa-chevron-down' : 'fa-chevron-up';
+				chevron.find('.w3-hide-small.w3-hide-medium').removeClass(del).addClass(add);
+			};
+			
+			var triggerShowContainer = function(event){
+				event.stopPropagation();
+				origin.trigger('click');
+			}
+			
+			var showContainer = function(event){
+				event.stopPropagation();
+				var width = $(this).parent().hasClass('input-group')? $(this).parent().width() : $(this).width();
+				toggleContainer.filter($(this).attr('select-dropdown')).width(width);	//dropdown only set the width
+				toggleContainer.show();	//show all
+				chevronToggle();
+			};
+			
+			var hideContainer = function(event){
+				toggleContainer.hide();	//hide all
+				chevronToggle();
+			};
+			
+			var pickItemInContainer = function(){
+				if ($(this).is('li')){
+					var val = $(this).find('a[select-role="item"]');
+					label.html( $(val).html() );
+					origin.val( $(val).attr('select-value') );	
+				}
+				else{
+					label.html( $(this).html() );
+					origin.val( $(this).attr('select-value') );	
+				}
+				
+				hideContainer();
+				origin.trigger('select.pick');
+			};
+			
+			$.each([label, chevron], function(index, item){ item.click(triggerShowContainer); });
+			origin.click(showContainer);
+			toggleContainer.find('[select-role="item"]').each(function(index, item){
+				var pwidth = $(item).parent().width();
+				var cwidth = $(item).width();
+				
+				//item width = parent.width, no issue on click
+				if (cwidth == pwidth){
+					$(item).click(pickItemInContainer);
+				}
+				
+				//item width only display, absolutely an issue when not clicking item,
+				//we git parent the event click
+				else{
+					$(item).parent().click(pickItemInContainer);
+				}
+			});
+			$(window).click(hideContainer);
+			
+		});
+		
+		return this;
+    };
+}( jQuery ));
+
 
 var App = { UI: {} };
-
 App.UI.inputGroup = function(el){
 	$(el).focusin(function(){ $(el).parent().addClass('focus'); })
 		.focusout(function(){$(el).parent().removeClass('focus');})
@@ -105,9 +211,9 @@ App.init = function(){
 			$(this).removeClass('error'); 			
 		}
 	});
-	$('.input-group.error>.input.w3-input').on('keyup', function(){ $(this).parent().removeClass('error'); });
+	$('.input-group.error>.w3-input').on('keyup', function(){ $(this).parent().removeClass('error'); });
 	
-	$.each( $('.input-group>.input') , function( index, item ){ App.UI.inputGroup(item); });
+	$.each( $('.input-group>.w3-input') , function( index, item ){ App.UI.inputGroup(item); });
 };
   
 $(document).ready(function() { App.init() });

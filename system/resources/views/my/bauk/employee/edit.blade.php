@@ -162,7 +162,7 @@ UI.address={
 	remove:function(inputGroup){
 		inputGroup.remove();
 	}
-}
+};
 
 UI.worktime = {
 	init: function(){
@@ -175,8 +175,9 @@ UI.worktime = {
 		
 		//work_time dropdown small
 		$('#worktime-modal .w3-bar-block .w3-ul li').click(UI.worktime.itemClick);
-		$('input[name=work_time_small]').on('focusin',UI.worktime.modalToggle);
-		$('button.w3-button.w3-hide-large').on('click',UI.worktime.modalToggle);
+		$('input[name=work_time_small]').on('focusin',UI.worktime.modalToggle)
+			.next() //the button;
+			.on('click',UI.worktime.modalToggle);
 	},
 	modalToggle:function(){
 		$('#worktime-modal').show();
@@ -206,7 +207,7 @@ UI.worktime = {
 		$('input[name=work_time_large]').val(display);
 		$('input[name=work_time_small]').val(display);
 	}
-}
+};
 
 UI.datepicker = {
 	format: {
@@ -252,7 +253,7 @@ UI.datepicker = {
 				el = $('input[name="registered_at_small"]');
 				el.val(tds);
 			}
-		}
+		};
 		
 		$('[data-toggle="datepicker"]').datepicker(UI.datepicker.format.float)
 			.on('pick.datepicker', UI.datepicker.click.float)
@@ -271,7 +272,7 @@ UI.datepicker = {
 		).on('pick.datepicker', UI.datepicker.click.inline)
 		 .on('date-change change keyup', datepickerValueChange.registeredAt);
 	}
-}
+};
 
 UI.actionButton={
 	id:{
@@ -295,7 +296,7 @@ UI.actionButton={
 		$(this.id.cancel.join(',')).hide();
 		$(this.id.loader.join(',')).show();
 	}
-}
+};
 
 $(document).ready(function(){
 	UI.worktime.init();
