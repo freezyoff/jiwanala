@@ -11,9 +11,10 @@ use App\Libraries\Bauk\Holiday;
 class HolidayController extends Controller
 {
     public function landing(Request $req){
-		$year = $req->input('year', now()->format('Y'));
+		$year = $req->input('year');
 		return view('my.bauk.holiday.landing',[
-			'holidays'=> Holiday::getHolidaysByYear($year)
+			'holidays'=> Holiday::getHolidaysByYear($year),
+			'year'=>$year
 		]);
 	}
 	

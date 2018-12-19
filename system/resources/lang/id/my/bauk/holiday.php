@@ -1,6 +1,7 @@
 <?php return[
 	'title'=>'Hari Libur',
 	'subtitles'=>[
+		'landing'=>'Daftar Hari Libur',
 		'add'=>'Even Hari Libur'
 	],
 	
@@ -12,6 +13,7 @@
 		'save'=>'Simpan',
 		'back'=>'Batal',
 		'delete'=>'Hapus',
+		'add'=>'Tambah Hari Libur',
 	],
 	
 	'validation'=>[

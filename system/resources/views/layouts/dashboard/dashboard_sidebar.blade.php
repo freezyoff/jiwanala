@@ -43,7 +43,7 @@
 			$name = $item['display']['name'];
 		?>
 			<!-- begin: sidebar item -->
-			<a class="w3-bar-item {{ str_contains( url()->current(), $href)? 'active' : '' }}" 
+			<a class="w3-bar-item {{ str_contains( url()->current(), $href)? 'selected' : '' }}" 
 				href="{{ $href }}">
 				<div class="icon"><i class="{{ $icon }} fa-fw"></i></div>
 				<span class="">{{ $name }}</span>
@@ -65,13 +65,13 @@
 				@endforeach
 				"
 				href="#" 
-				target="{{ $accordionId }}">
+				target="#{{ $accordionId }}">
 				<div class="icon"><i class="{{ $icon }} fa-fw"></i> </div>
 				<span class="">{{ $name }}</span>
 			</a>
 			<div id="{{ $accordionId }}" class="accordion-item">
 			@foreach($groupItemList as $lItem)
-					<a class="w3-bar-item {{ url()->current() == route($lItem['href'])? 'active' : '' }}" 
+					<a class="w3-bar-item {{ url()->current() == route($lItem['href'])? 'selected' : '' }}" 
 						href="{{ route($lItem['href']) }}"
 						style="padding: 0;display: flex !important;align-items: center; text-decoration:none;">
 						<div class="icon">
@@ -89,7 +89,8 @@
 	$(document).ready(function(){
 		$('.accordion').on('click', function(event){
 			event.preventDefault();
-			$("#"+this.target).slideToggle();
+			$(this.target).slideToggle();
+			$(this).toggleClass('collapse');
 		});
 		 
 		 $('.accordion').each(function(index, item){
