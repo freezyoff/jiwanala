@@ -3,6 +3,7 @@
 		<tr class="w3-theme-l1">
 			<th>Hari Libur</th>
 			<th>Tanggal</th>
+			<th style="text-align:center" width="20px">Berulang</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -11,10 +12,28 @@
 		<tr>
 			<td>{{$holiday->name}}</td>
 			<td>
-			<?php $range = $holiday->getDateRange(); ?>
-				{{$range[0]->format('d F')}}
+			<?php 
+				$range = $holiday->getDateRange(); 
+				if ($holiday->repeat) {
+					$range[0]->year = $year;
+					$range[1]->year = $year;
+				}
+			?>
+				<span>{{ trans('calendar.days.long.'.($range[0]->dayOfWeek)) }},&nbsp;</span>
+				<span>{{ $range[0]->format('d') }}&nbsp;</span>
+				<span>{{ trans('calendar.months.long.'.($range[0]->format('n')-1)) }}&nbsp;</span>
+				<span>{{ $range[0]->format('Y') }}</span>
 				@if($holiday->start != $holiday->end)
-					s/d {{$range[1]->format('d F')}}
+					<span style="padding:0 8px;"><i class="fas fa-minus"></i></span>
+					<span>{{ trans('calendar.days.long.'.($range[1]->dayOfWeek)) }},&nbsp;</span>
+					<span>{{ $range[1]->format('d') }}&nbsp;</span>
+					<span>{{ trans('calendar.months.long.'.($range[1]->format('n')-1)) }}&nbsp;</span>
+					<span>{{ $range[0]->format('Y') }}</span>
+				@endif
+			</td>
+			<td style="text-align:center">
+				@if ($holiday->repeat)
+					<i class="fas fa-redo fa-fw"></i>
 				@endif
 			</td>
 			<td style="text-align:right">
@@ -35,7 +54,7 @@
 		</tr>
 		@empty
 		<tr>
-			<td colspan="2">{{trans('my/bauk/holiday.table.empty')}}</td>
+			<td colspan="3">{{trans('my/bauk/holiday.table.empty')}}</td>
 		</tr>
 		@endforelse
 	</tbody>

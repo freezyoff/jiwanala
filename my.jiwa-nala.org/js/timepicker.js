@@ -1,13 +1,8 @@
 (function( $ ) {
  
     $.fn.timepicker = function(options) {
-		var defaults={
-			parseFormat:'hh:mm:ss A',
-			outputFormat: 'HH:mm:ss'
-		}
-		
-		var iroot = this;
-        var troot =  $('<div id="'+ this.attr('name').replace(/[\[\]]/g,'') +'-timepicker" class="timepicker">');
+		var iroot = $(this);
+        var troot =  $('<div id="'+ iroot.attr('name').replace(/[\[\]]/g,'') +'-timepicker" class="timepicker">');
 		
 		//hours
 		var thours = $('<div class="hours">').appendTo(troot);
@@ -37,62 +32,88 @@
 		tsecondsBtnNext.click(function(event){ click("s", 1, event) });
 		tsecondsBtnPrev.click(function(event){ click("s", -1, event) });
 		
-		var stopPropagation = function(event){ event.stopPropagation(); }
-		thoursInp.on('keyup', $.debounce( 250, function(event){
-			change('h',$(this).val(), event);
-		})).on('focus click ', stopPropagation);
-		tminutesInp.on('keyup', $.debounce( 250, function(event){
-			change('m',$(this).val(), event);
-		})).on('focus click ', stopPropagation);
-		tsecondsInp.on('keyup', $.debounce( 250, function(event){
-			change('s',$(this).val(), event);
-		})).on('focus click ', stopPropagation);
+		var stopPropagation = function(event){ event.stopPropagation(); };
+		var throttle = function(code, event){
+			event.stopPropagation();
+			if (event.keyCode == 38) click(code, 1, event);
+			if (event.keyCode == 40) click(code, -1, event);
+		};
+		thoursInp.on('focus click ', stopPropagation)
+			.on('keydown', function(event){ throttle("h",event); })
+			.on('keyup', $.debounce( 250, function(event){
+				event.stopPropagation();
+				change('h',$(this).val(), event);
+			}));
+		tminutesInp.on('focus click ', stopPropagation)
+			.on('keydown', function(event){ throttle("m",event); })
+			.on('keyup', $.debounce( 250, function(event){
+				change('m',$(this).val(), event);
+			}));
+		tsecondsInp.on('focus click ', stopPropagation)
+			.on('keydown', function(event){ throttle("s",event); })
+			.on('keyup', $.debounce( 250, function(event){
+				change('s',$(this).val(), event);
+			}));
 		
+		var defaults={
+			parseFormat:'hh:mm:ss A',
+			outputFormat: 'HH:mm:ss'
+		}
 		options = $.extend(defaults, options);
 		
-		var initTime = function(parseFormat){
-			var time = moment(iroot.val(), parseFormat);
-			if (!time.isValid()) return moment('00:00:00 AM',parseFormat);
+		var getTime = function(){
+			var time = moment(iroot.val(), options.parseFormat);
 			return time;
 		};
 		
-		var time = initTime(options.parseFormat);
-		
 		var click = function(act, number, event){
 			event.stopPropagation();
+			var time = getTime();
+			time = time.isValid()? time : moment('00:00:00', 'HH:mm:ss');
 			if (number>0) time.add(number, act);
-			else if (number<0) time.subtract(number*-1, act);				
-			display();
+			else if (number<0) time.subtract(number*-1, act);
+			display(time);
 		}
 		
 		var change = function(act, number, event){
 			event.stopPropagation();
+			var time = getTime();
+			time = time.isValid()? time : moment('00:00:00', 'HH:mm:ss');
 			if (act=='h') time.hours(number);
 			else if (act=='m') time.minute(number);
 			else if (act=='s') time.second(number);
-			display();
+			display(time);
 		}
 		
-		var display = function(){
-			thoursInp.val(time.format('HH'));
-			tminutesInp.val(time.format('mm'));
-			tsecondsInp.val(time.format('ss'));
-			iroot.val(time.format(options.outputFormat));
+		var display = function(time){
+			thoursInp.val( time.isValid()? time.format('HH') : '00');
+			tminutesInp.val( time.isValid()? time.format('mm') : '00' );
+			tsecondsInp.val( time.isValid()? time.format('ss') : '00' );
+			iroot.val( time.isValid()? time.format(options.outputFormat) : '');
 			$(iroot).trigger('change');
 		}
 		
 		//if options[container] exist
-		if (options){			
-			if (options.container) $(options.container).append(troot);
+		if (options.container){
+			$(options.container).append(troot).css('padding', '8px');
 			if (options.class) $(troot).addClass(options.class);
 			if (options.styles) $(troot).attr('style',options.styles);
+			
+			//add focus event
+			iroot.on('focus click', function(event){
+				event.stopPropagation();
+				$(window).trigger('click');
+				$(options.container).addClass('w3-show').css('right','0');
+			});
+			$(window).on('click focus', function(){
+				$(options.container).removeClass('w3-show');
+			});
 		}
 		else{
-			troot.insertAfter(this);
+			troot.insertAfter(iroot);
 		}
 		
-		//trigger display
-		display();
+		display(getTime());
         return this;
     };
  

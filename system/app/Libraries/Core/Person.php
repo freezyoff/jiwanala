@@ -41,8 +41,6 @@ class Person extends Model{
 		return $default;
 	}
 	
-	
-	
 	public function addresses(){
 		return $this->belongsToMany('\App\Libraries\Core\Address', 'person_addresses', 'person_id', 'address_id')->withTimestamps();
 	}

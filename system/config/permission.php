@@ -36,6 +36,7 @@
         'bauk.attendance.post' => ['bauk', 'Post Employee attendance', 'Menambah data kehadiran karyawan'],
         'bauk.attendance.patch' => ['bauk', 'Patch Employee attendance', 'Meng-update data kehadiran karyawan'],
         'bauk.attendance.delete' => ['bauk', 'Delete Employee attendance', 'Menghapus data kehadiran karyawan'],
+        'bauk.attendance.lock' => ['bauk', 'Lock Employee attendance', 'Mengunci data kehadiran karyawan untuk persiapan laporan'],
 		'bauk.holiday.list'=>['bauk', 'List Holiday', 'Melihat daftar hari libur'],
 		'bauk.holiday.post'=>['bauk', 'Post Holiday', 'Menambahkan hari libur'],
 		'bauk.holiday.patch'=>['bauk', 'Patch Holiday', 'Merubah data hari libur'],

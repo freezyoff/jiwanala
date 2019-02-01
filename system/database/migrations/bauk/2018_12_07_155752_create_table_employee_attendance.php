@@ -42,6 +42,7 @@ class CreateTableEmployeeAttendance extends Migration
 			$table->time('time3')->nullable()->comment('jam finger keluar');
 			$table->time('time4')->nullable()->comment('jam finger keluar');
 			
+			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('employee_id')->references('id')
 				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
         },'employee-attendance');
@@ -51,6 +52,8 @@ class CreateTableEmployeeAttendance extends Migration
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->integer('employee_attendance_id')->unsigned()->comment('id on bauk.employee_attendance');
 			$table->binary('attachment');
+			
+			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('employee_attendance_id')->references('id')
 				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee-attendance'));
 		}, 'employee-attendance-attachments');

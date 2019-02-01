@@ -18,6 +18,12 @@ class Employee extends Model
 		'active',
 	];
 	
+	public function getFullName($spacer=' '){
+		//return $this->id .'-'. $this->person_id;
+		$person = $this->asPerson()->first();
+		return $person->name_front_titles .$spacer .$person->name_full .$spacer .$spacer.$person->name_back_titles;
+	}
+	
 	public function phones(){
 		return $this->asPerson()->with('phones');
 	}
@@ -26,13 +32,17 @@ class Employee extends Model
 		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
 	}
 	
-	public function attendance(){
+	public function attendances(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
 	}
 	
 	public function attend($date){
 		$record = $this->attendance()->where('date','=',$date)->first();
 		return $record;
+	}
+	
+	public static function findByNIP($nip){
+		return Employee::where('nip','=',$nip)->first();
 	}
 	
 	public function workTime($key=false){
