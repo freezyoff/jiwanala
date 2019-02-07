@@ -1,10 +1,12 @@
 <?php return[
 	'titles'=>[
-		'landing'=>'Absensi Kehadiran',
-		'finger'=>'Riwayat Finger Kehadiran'
+		'landing'=>'Riwayat Kehadiran',
+		'finger'=>'Finger Kehadiran',
+		'consent'=>'Izin / Cuti Kehadiran'
 	],
 	'subtitles'=>[
 		'year'=>'tahun',
-		'month'=>'bulan'
+		'month'=>'bulan',
+		'consent'=>'cuti / izin'
 	]
 ];

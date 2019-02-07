@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -15,13 +16,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Filesystem\Factory;
 use PhpOffice\PhpSpreadsheet\Reader\IReader;
 use Maatwebsite\Excel\Factories\ReaderFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Maatwebsite\Excel\Concerns\MapsCsvSettings;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Maatwebsite\Excel\Exceptions\SheetNotFoundException;
+use Maatwebsite\Excel\Exceptions\NoTypeDetectedException;
 
 class Reader
 {
@@ -68,16 +74,16 @@ class Reader
     /**
      * @param object              $import
      * @param string|UploadedFile $filePath
-     * @param string              $readerType
+     * @param string|null         $readerType
      * @param string|null         $disk
      *
+     * @throws Exception
      * @throws Exceptions\UnreadableFileException
-     * @throws InvalidArgumentException
+     * @throws NoTypeDetectedException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @return \Illuminate\Foundation\Bus\PendingDispatch|$this
      */
-    public function read($import, $filePath, string $readerType, string $disk = null)
+    public function read($import, $filePath, string $readerType = null, string $disk = null)
     {
         $reader = $this->getReader($import, $filePath, $readerType, $disk);
 
@@ -87,11 +93,12 @@ class Reader
 
         $this->beforeReading($import, $reader);
 
-        DB::transaction(function () {
+        DB::transaction(function () use ($import) {
             foreach ($this->sheetImports as $index => $sheetImport) {
-                $sheet = Sheet::make($this->spreadsheet, $index);
-                $sheet->import($sheetImport, $sheet->getStartRow($sheetImport));
-                $sheet->disconnect();
+                if ($sheet = $this->getSheet($import, $sheetImport, $index)) {
+                    $sheet->import($sheetImport, $sheet->getStartRow($sheetImport));
+                    $sheet->disconnect();
+                }
             }
         });
 
@@ -106,10 +113,11 @@ class Reader
      * @param string              $readerType
      * @param string|null         $disk
      *
+     * @throws Exceptions\SheetNotFoundException
      * @throws Exceptions\UnreadableFileException
-     * @throws InvalidArgumentException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws NoTypeDetectedException
      * @return array
      */
     public function toArray($import, $filePath, string $readerType, string $disk = null): array
@@ -119,9 +127,11 @@ class Reader
 
         $sheets = [];
         foreach ($this->sheetImports as $index => $sheetImport) {
-            $sheet          = Sheet::make($this->spreadsheet, $index);
-            $sheets[$index] = $sheet->toArray($sheetImport, $sheet->getStartRow($sheetImport));
-            $sheet->disconnect();
+            $calculatesFormulas = $sheetImport instanceof WithCalculatedFormulas;
+            if ($sheet = $this->getSheet($import, $sheetImport, $index)) {
+                $sheets[$index] = $sheet->toArray($sheetImport, $sheet->getStartRow($sheetImport), null, $calculatesFormulas);
+                $sheet->disconnect();
+            }
         }
 
         $this->afterReading($import);
@@ -135,10 +145,11 @@ class Reader
      * @param string              $readerType
      * @param string|null         $disk
      *
+     * @throws Exceptions\SheetNotFoundException
      * @throws Exceptions\UnreadableFileException
-     * @throws InvalidArgumentException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws NoTypeDetectedException
      * @return Collection
      */
     public function toCollection($import, $filePath, string $readerType, string $disk = null): Collection
@@ -148,9 +159,11 @@ class Reader
 
         $sheets = new Collection();
         foreach ($this->sheetImports as $index => $sheetImport) {
-            $sheet = Sheet::make($this->spreadsheet, $index);
-            $sheets->put($index, $sheet->toCollection($sheetImport, $sheet->getStartRow($sheetImport)));
-            $sheet->disconnect();
+            $calculatesFormulas = $sheetImport instanceof WithCalculatedFormulas;
+            if ($sheet = $this->getSheet($import, $sheetImport, $index)) {
+                $sheets->put($index, $sheet->toCollection($sheetImport, $sheet->getStartRow($sheetImport), null, $calculatesFormulas));
+                $sheet->disconnect();
+            }
         }
 
         $this->afterReading($import);
@@ -169,11 +182,41 @@ class Reader
     /**
      * @return $this
      */
-    public function setDefaultValueBinder()
+    public function setDefaultValueBinder(): self
     {
         Cell::setValueBinder(new DefaultValueBinder);
 
         return $this;
+    }
+
+    /**
+     * @param $import
+     * @param $sheetImport
+     * @param $index
+     *
+     * @throws SheetNotFoundException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @return Sheet|null
+     */
+    protected function getSheet($import, $sheetImport, $index)
+    {
+        try {
+            return Sheet::make($this->spreadsheet, $index);
+        } catch (SheetNotFoundException $e) {
+            if ($import instanceof SkipsUnknownSheets) {
+                $import->onUnknownSheet($index);
+
+                return null;
+            }
+
+            if ($sheetImport instanceof SkipsUnknownSheets) {
+                $sheetImport->onUnknownSheet($index);
+
+                return null;
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -183,7 +226,7 @@ class Reader
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @return string
      */
-    protected function copyToFileSystem($filePath, string $disk = null)
+    protected function copyToFileSystem($filePath, string $disk = null): string
     {
         $tempFilePath = $this->getTmpFile();
 
@@ -235,7 +278,12 @@ class Reader
         if ($import instanceof WithMultipleSheets) {
             $sheetImports = $import->sheets();
 
-            if (method_exists($reader, 'setLoadSheetsOnly')) {
+            // When only sheet names are given and the reader has
+            // an option to load only the selected sheets.
+            if (
+                method_exists($reader, 'setLoadSheetsOnly')
+                && count(array_filter(array_keys($sheetImports), 'is_numeric')) === 0
+            ) {
                 $reader->setLoadSheetsOnly(array_keys($sheetImports));
             }
         }
@@ -246,15 +294,16 @@ class Reader
     /**
      * @param object              $import
      * @param string|UploadedFile $filePath
-     * @param string              $readerType
+     * @param string|null         $readerType
      * @param string              $disk
      *
      * @throws Exceptions\UnreadableFileException
      * @throws InvalidArgumentException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws NoTypeDetectedException
      * @return IReader
      */
-    private function getReader($import, $filePath, string $readerType, string $disk = null): IReader
+    private function getReader($import, $filePath, string $readerType = null, string $disk = null): IReader
     {
         if ($import instanceof ShouldQueue && !$import instanceof WithChunkReading) {
             throw new InvalidArgumentException('ShouldQueue is only supported in combination with WithChunkReading.');
@@ -274,7 +323,7 @@ class Reader
 
         $this->currentFile = $this->copyToFileSystem($filePath, $disk);
 
-        $reader = ReaderFactory::make($this->currentFile, $readerType);
+        $reader = ReaderFactory::make($this->currentFile, $this->getReaderType($readerType));
 
         if (method_exists($reader, 'setReadDataOnly')) {
             $reader->setReadDataOnly(config('excel.imports.read_only', true));
@@ -294,6 +343,8 @@ class Reader
     /**
      * @param object  $import
      * @param IReader $reader
+     *
+     * @throws Exception
      */
     private function beforeReading($import, IReader $reader)
     {
@@ -317,5 +368,24 @@ class Reader
     {
         $this->raise(new AfterImport($this, $import));
         $this->garbageCollect();
+    }
+
+    /**
+     * @param string|null $readerType
+     *
+     * @throws NoTypeDetectedException
+     * @return string
+     */
+    private function getReaderType(string $readerType = null): string
+    {
+        if (null !== $readerType) {
+            return $readerType;
+        }
+
+        try {
+            return IOFactory::identify($this->currentFile);
+        } catch (Exception $e) {
+            throw new NoTypeDetectedException(null, null, $e);
+        }
     }
 }

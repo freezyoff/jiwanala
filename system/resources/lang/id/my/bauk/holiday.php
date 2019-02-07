@@ -10,10 +10,12 @@
 		'start'=>'Mulai tanggal?',
 		'end'=>'Sampai tanggal?',
 		'repeat'=>'Setiap tahun atau tahun ini saja?',
+		'repeat_choice'=>['0'=>'tahun ini saja', '1'=>'setiap tahun', ],
 		'save'=>'Simpan',
 		'back'=>'Batal',
 		'delete'=>'Hapus',
 		'add'=>'Tambah Hari Libur',
+		'deleteModal'=>'Hapus hari libur?',
 	],
 	
 	'validation'=>[

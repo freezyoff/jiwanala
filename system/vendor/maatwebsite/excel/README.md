@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <a href="https://laravel-excel.maatwebsite.nl">
     <img alt="Laravel Excel" src="https://user-images.githubusercontent.com/7728097/43685313-ff1e2110-98b0-11e8-8b50-900a2b262f0f.png" />
@@ -7,6 +9,20 @@
 <h1 align="center">
   Laravel Excel 3.1
 </h1>
+
+<p align="center">
+  
+  <a href="https://medium.com/maatwebsite/celebrating-5-years-of-laravel-excel-d0416eebca20">
+  <img alt="Laravel Excel" src="https://user-images.githubusercontent.com/7728097/48266170-df40e200-e42e-11e8-9bc1-f0adc7145c9e.png" />
+  </a>
+  </p>
+  
+<h3 align="center">
+  🎉 Celebrating 5 years of Laravel Excel. Read more on <a href="https://medium.com/maatwebsite/celebrating-5-years-of-laravel-excel-d0416eebca20">our blog!</a>
+</h3>
+
+<p></p>
+
 
 <h3 align="center">
   :muscle: :fire: :rocket:
@@ -191,7 +207,7 @@ Versions will be supported for a limited amount of time.
 | Version | Laravel Version | Php Version | Support |
 |---- |----|----|----|
 | 2.1 | <=5.6 | <=7.0 | Unsupported since 15-5-2018 |
-| 3.0 | ^5.5 |  ^7.0 | Security fixes till 31-12-2018 |
+| 3.0 | ^5.5 |  ^7.0 | Unsupported since 31-12-2018 |
 | 3.1 | ^5.5 |  ^7.0 | New features |
 
 ## :mailbox_with_mail: License & Postcardware

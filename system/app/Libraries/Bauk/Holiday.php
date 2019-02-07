@@ -60,26 +60,6 @@ class Holiday extends Model
 		return $this->attributes['end'];
 	}
 	
-	public function setStartAttribute($value){
-		if (config('app.locale') == 'id'){
-			$date = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
-			$this->attributes['start'] = $date->format('Y-m-d');
-		}
-		else{
-			$this->attributes['start'] = $value;			
-		}
-	}
-	
-	public function setEndAttribute($value){
-		if (config('app.locale') == 'id'){
-			$date = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
-			$this->attributes['end'] = $date->format('Y-m-d');
-		}
-		else{
-			$this->attributes['end'] = $value;			
-		}
-	}
-	
 	public function getDateRange(){
 		return [
 			\Carbon\Carbon::parse($this->attributes['start']), 

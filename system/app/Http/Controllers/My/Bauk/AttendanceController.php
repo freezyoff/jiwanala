@@ -43,10 +43,7 @@ class AttendanceController extends Controller
 		$date->day = $date->daysInMonth;
 		$end = $date->format('Y-m-d');
 		
-		$attendanceRecords = Employee::findByNIP($nip)
-						->attendances()
-						->whereBetween('date', [$start, $end])
-						->orderBy('date', 'asc');
+		$attendanceRecords = Employee::findByNIP($nip)->attendanceRecordsByPeriode($start, $end);
 		
 		//create date array of current month
 		$list = [];
@@ -57,6 +54,12 @@ class AttendanceController extends Controller
 				'label_dayofweek'=>trans('calendar.days.long.'.($date->dayOfWeek)),
 				'label_date'=>$date->format('d'),
 				'link_finger'=>route('my.bauk.attendance.fingers',[
+									'nip'=>$nip, 
+									'year'=>$date->format('Y'), 
+									'month'=>$date->format('n'),
+									'day'=>$date->format('d'),
+								]),
+				'link_consent'=>route('my.bauk.attendance.consents',[
 									'nip'=>$nip, 
 									'year'=>$date->format('Y'), 
 									'month'=>$date->format('n'),

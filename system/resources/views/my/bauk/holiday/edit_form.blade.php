@@ -133,14 +133,14 @@
 					<a class="w3-text-theme w3-mobile" 
 						select-role="item" 
 						select-value="1">
-						Setiap Tahun
+						{!! trans('my/bauk/holiday.hints.repeat_choice.1') !!}
 					</a>
 				</li>
 				<li style="cursor:pointer;">
 					<a class="w3-text-theme w3-mobile" 
 						select-role="item" 
 						select-value="0">
-						Tahun ini saja
+						{!! trans('my/bauk/holiday.hints.repeat_choice.0') !!}
 					</a>
 				</li>
 			</ul>

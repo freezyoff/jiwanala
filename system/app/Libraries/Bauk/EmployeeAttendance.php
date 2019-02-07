@@ -4,11 +4,11 @@ namespace App\Libraries\Bauk;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
+//use Maatwebsite\Excel\Concerns\Importable;
+//use Maatwebsite\Excel\Concerns\WithHeadingRow;
+//use Maatwebsite\Excel\Concerns\WithValidation;
 
-class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
+class EmployeeAttendance extends Model //implements WithHeadingRow, WithValidation
 {
     protected $table="employee_attendance";
 	protected $connection ="bauk";
@@ -16,7 +16,6 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 		'creator',
 		'employee_id',
 		'date',
-		'consent',
 		'time1',
 		'time2',
 		'time3',
@@ -35,22 +34,9 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 		return [$this->time1, $this->time2, $this->time3, $this->time4];
 	}
 	
-	public static  function getConsentTypes(){
-		return array_keys(trans('my/bauk/attendance/consent'));
-	}
-	
-	public static function getConsentName($type){
-		return trans('my/bauk/attendance/consent.'.$type);
-	}
-	
 	public function employee(){
 		return $this->belongsTo('\App\Libraries\Bauk\Employee', 'employee_id', 'id');
 	}
-	
-	public function attachments(){
-		return $this->hasMany('\App\Libraries\Bauk\EmployeeAttendanceAttachment', 'employee_id', 'id');
-	}
-	
 	
 	/*
 	 *	Impelementation of :
@@ -60,6 +46,7 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 	 * 	use Maatwebsite\Excel\Concerns\WithValidation;
 	 * 	
 	 */
+	/*
 	use Importable;
 	
 	public function rules(): array{
@@ -87,4 +74,5 @@ class EmployeeAttendance extends Model implements WithHeadingRow, WithValidation
 			'*.finger_keluar_3'	=> 'Finger Keluar 3',
 		];
 	}
+	*/
 }

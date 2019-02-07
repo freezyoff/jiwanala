@@ -64,19 +64,16 @@ class HolidayController extends Controller
 			"endsmall":"18-12-2018",
 			"repeat":null
 		}*/
-		$holiday = Holiday::find($req->input('id'))->fill(
-			$req->only(['start','end','name','start','end','repeat'])
-		);
+		$holiday = Holiday::find($req->input('id'))->fill( $req->only(['name','repeat']) );
+		$holiday->start = \Carbon\Carbon::createFromFormat('d-m-Y', $req->start);
+		$holiday->end = \Carbon\Carbon::createFromFormat('d-m-Y', $req->end);
 		$holiday->save();
 		return redirect()->route('my.bauk.holiday.landing');
 	}
 	
 	public function delete(Request $req){
-		$id = $req->input('id',false);
-		if ($id){
-			$holiday->find($id);
-			$holiday->delete();
-		}
+		$id = $req->input('id', false);
+		if ($id){ Holiday::find($id)->delete(); }
 		return redirect()->route('my.bauk.holiday.landing');
 	}
 }

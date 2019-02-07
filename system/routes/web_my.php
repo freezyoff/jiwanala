@@ -9,19 +9,14 @@ Route::name('dashboard')
 	
 });
 
+Route::prefix('misc')
+	->name('misc.')
+	->group(base_path('routes/web_my_misc.php'));
+
 Route::prefix('service')
 	->name('service.')
 	->middleware(['permission.context:service'])
-	->group(function(){
-	
-	//service for administer user and job
-	//@TODO create service
-	
-	Route::get('/', function(){ 
-		return view('my.service.landing'); 
-	})->name('landing');
-	
-});
+	->group(base_path('routes/web_my_service.php'));
 
 Route::prefix ('bauk')
 	->name('bauk.')

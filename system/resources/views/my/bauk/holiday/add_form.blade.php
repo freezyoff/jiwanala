@@ -44,7 +44,7 @@
 			<div class="w3-modal-content w3-animate-top w3-card-4">
 				<header class="w3-container w3-theme">
 					<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
-						onclick="$('#jn-modal').hide()" 
+						onclick="$('#startsmall-modal').hide()" 
 						style="font-size:20px !important">
 						×
 					</span>
@@ -129,14 +129,14 @@
 					<a class="w3-text-theme w3-mobile" 
 						select-role="item" 
 						select-value="1">
-						Setiap Tahun
+						{!! trans('my/bauk/holiday.hints.repeat_choice.1') !!}
 					</a>
 				</li>
 				<li style="cursor:pointer;">
 					<a class="w3-text-theme w3-mobile" 
 						select-role="item" 
 						select-value="0">
-						Tahun ini saja
+						{!! trans('my/bauk/holiday.hints.repeat_choice.0') !!}
 					</a>
 				</li>
 			</ul>

@@ -1,10 +1,10 @@
-<table class="w3-table-all">
+<table class="w3-table w3-table-all">
 	<thead>
 		<tr class="w3-theme-l1">
 			<th>Hari Libur</th>
 			<th>Tanggal</th>
-			<th style="text-align:center" width="20px">Berulang</th>
-			<th></th>
+			<th width="75px" style="text-align:center" width="20px">Berulang</th>
+			<th width="75px"></th>
 		</tr>
 	</thead>
 	<tbody>

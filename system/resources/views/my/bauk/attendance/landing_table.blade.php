@@ -20,17 +20,25 @@
 					<td>
 						@if ($attendance['holiday'])
 							{{$attendance['holiday']}}
-						@elseif ($attendance['record'] && $attendance['record']->consent)
-							{{'consent'}}
-						@elseif ($attendance['record'])
-							@foreach([1,2,3,4] as $index)
-								@if ( $attendance['record']->{'time'.$index} )
-								<div class="w3-col s12 m6 l3">
-									<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
-									<span class="padding-left-8">{{$attendance['record']->{'time'.$index} }}</span>
+						@else
+							@if ($attendance['record'])
+								<div class="w3-row">
+								@foreach([1,2,3,4] as $index)
+									@if ( $attendance['record']->{'time'.$index} )
+									<div class="w3-col s12 m6 l3">
+										<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
+										<span class="padding-left-8">{{$attendance['record']->{'time'.$index} }}</span>
+									</div>
+									@endif
+								@endforeach
 								</div>
-								@endif
-							@endforeach
+							@endif
+							@if ($attendance['record'] && $attendance['record']->consent)
+								<div class="w3-row">
+									<i class="fas fa-exclamation-circle fa-fw"></i>
+									<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['record']->consent)}}</span>
+								</div>
+							@endif
 						@endif
 					</td>
 					
@@ -38,7 +46,7 @@
 						{{-- data kehadiran tidak dikunci --}}
 						@if (!$attendance['locked'] && !$attendance['holiday'])
 							<a 	href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
-							<a href="#" class="padding-left-8" title="izin/cuti">
+							<a href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti">
 								<i class="far fa-calendar-check"></i>
 							</a>
 						@endif

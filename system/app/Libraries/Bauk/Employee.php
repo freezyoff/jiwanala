@@ -36,9 +36,44 @@ class Employee extends Model
 		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
 	}
 	
+	//@deprecated use Employee@attendanceRecord
 	public function attend($date){
-		$record = $this->attendance()->where('date','=',$date)->first();
+		return $this->attendanceRecord($date);
+	}
+	
+	/**
+	 *	return attendance record for current employee by given date
+	 *	@param $date (String) - formatted date "Y-m-d"
+	 *	@return (App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
+	 */
+	public function attendanceRecord($date){
+		$record = $this->attendances()->where('date','=',$date)->first();
 		return $record;
+	}
+	
+	/**
+	 *	return attendance record for current employee between given start & end date
+	 *	@param $start (String) - formatted date "Y-m-d"
+	 *	@param $end (String) - formatted date "Y-m-d"
+	 *	@return (Array of App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
+	 */
+	public function attendanceRecordsByPeriode($start, $end, $sort='asc'){
+		return $this->attendances()
+					->whereBetween('date', [$start, $end])
+					->orderBy('date', $sort);
+	}
+	
+	public function consents(){
+		return $this->hasMany('App\Libraries\Bauk\EmployeeConsent', 'employee_id', 'id');
+	}
+	
+	/**
+	 *	return consent record for current employee between given $date
+	 *	@param $date (String) - formatted date "Y-m-d"
+	 *	@return (Array of App\Libraries\Bauk\EmployeeConsent|Boolean) the records or false
+	 */
+	public function consentRecord($date){
+		return $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`')->first();
 	}
 	
 	public static function findByNIP($nip){
