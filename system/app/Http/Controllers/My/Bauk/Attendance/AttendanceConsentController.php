@@ -45,11 +45,11 @@ class AttendanceConsentController extends Controller
 		//get file 
 		
 		$filecontent = '';
-		if ($req->disk == 'db'){
-			$records = EmployeeConsentAttachment::find($req->recordId);
-			@$filecontent = base64_encode($records->input('attachment'));
+		if ($req->input('disk') == 'db'){
+			$records = EmployeeConsentAttachment::find($req->input('path'));
+			@$filecontent = base64_encode($records->attachment);
 		}
-		else if ($req->disk){
+		else if ($req->input('disk')){
 			@$filecontent = base64_encode(
 				\Storage::disk($req->disk)->get($req->path)
 			);
@@ -71,7 +71,7 @@ class AttendanceConsentController extends Controller
 	
 	public function post(ConsentPostRequest $request, $nip, $year, $month, $day){
 		//return [$nip, $year, $month, $day, request()->all()];
-		//return $req->all();
+		//return $request->all();
 		
 		//save data
 		$consentDate = EmployeeConsent::find($request->input('consent_record_id',-1));
@@ -83,7 +83,14 @@ class AttendanceConsentController extends Controller
 		$consentDate->save();
 		
 		//save attachment
+		$fileDBList = [];
 		foreach($request->input('file',[]) as $file){
+			if ($file['disk'] == 'db') {
+				//we get the database record id, we get from $file[path]
+				$fileDBList[] = $file['path'];
+				continue;
+			}
+			
 			$attachmentData = new EmployeeConsentAttachment(['creator'=>\Auth::user()->id]);
 			
 			//read file
@@ -93,18 +100,13 @@ class AttendanceConsentController extends Controller
 			//$attachmentData->ext = \Storage::disk($file['disk'])->extension($file['path']);
 			$attachmentData->attachment = \Storage::disk($file['disk'])->get($file['path']);
 			$attachmentData->save();
+			$fileDBList[] = $attachmentData->id;
 		}
 		
 		//check uploaded file in db
-		$dbrecords = $consentDate->attachments()->get(['id','employee_consent_id']);
-		$rdbFile = $request->input('db',[]);
-		
-		//compare input $rdbFile with $dbrecords
+		$dbrecords = $consentDate->attachments()->get();
 		foreach($dbrecords as $record){
-			$deleted = false;
-			foreach($rdbFile as $uploadedID){
-				$deleted = ($uploadedID == $record->id)?: $deleted;
-			}
+			if ( !in_array($record->id, $fileDBList) ) $record->delete();
 		}
 		
 		return redirect($request->input('back_action'));

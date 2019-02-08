@@ -1,7 +1,6 @@
 @extends('layouts.dashboard.dashboard', ['sidebar'=>'bauk', 'title'=>trans('my/bauk/attendance/pages.titles.landing')])
 
 @section('dashboard.main')
-<pre>{{print_r(session()->getOldInput(), true)}}</pre>
 <div class="w3-card">
 	<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
 		<h4>{{trans('my/bauk/attendance/pages.titles.consent')}}</h4>
@@ -54,6 +53,7 @@
 							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
+							readonly="readonly"
 							role="datepicker-dropdown"
 							datepicker-value="input[name='end']"
 							datepicker-link="input[name='endsmall']" />
@@ -64,6 +64,7 @@
 							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
+							readonly="readonly"
 							role="datepicker-modal"
 							datepicker-modal="#endsmall-modal"
 							datepicker-container="#endsmall-modal-container" 
@@ -209,7 +210,7 @@ app.upload = {
 				filename = 'dokumen '+(index+1);
 				
 			app.upload.createRow(rowid, 'dokumen '+(index+1), item.mime, item.size);
-			app.upload.createUploadFileField(rowid, disk, item.recordId, 'dokumen '+(index+1), item.mime);
+			app.upload.updateRowSuccessUpload(rowid, disk, item.recordId, 'dokumen '+(index+1), item.size, item.mime);
 		});
 		
 		//create row from old input fields
@@ -315,6 +316,9 @@ app.upload = {
 			data: formData,
 			processData: false, // important
 			contentType: false, // important
+			beforeSend: function(){
+				app.misc.showLoader();
+			},
 			success:function(response, text){
 				if (response.tag){
 					app.misc.documentViewer(response.mime, response.tag);
@@ -393,11 +397,38 @@ app.upload = {
 app.misc = {
 	viewContainer: $('#viewer-modal'),
 	fileContainer: $('#viewer-modal-file'),
+	showLoader:function(){
+		app.misc.fileContainer.empty()
+			.append(
+				$('<i></i>').addClass('button-icon-loader')
+					.css({
+						position: 'relative',
+						margin: 'auto',
+						width: '120px',
+						height: '120px',
+						'border-top-width': '12px',
+						'border-bottom-width': '12px',
+						'border-left-width': '12px',
+						'border-right-width': '12px',
+						left: '20%',
+						top: '20%'
+					})
+			);
+		var w = app.misc.fileContainer.children().width(),
+			h = app.misc.fileContainer.children().height(),
+			offset = 100;
+		app.misc.viewContainer.show();
+		app.misc.fileContainer.css({width: w+offset, height: h+offset});
+	},
 	documentViewer: function(mime, tag){
-		app.misc.fileContainer.empty().append(tag).children().css('width','100%');
-		app.misc.viewContainer.show(400, function(){
+		$(tag).ready(function(){	//we wait untill ready
+			app.misc.fileContainer.empty().css('width','');
+			app.misc.fileContainer.append(tag).children().css('width','100%');
+			
+			var offset = parseInt($('#viewer-modal').css('padding-top')),
+				maxHeight = $(window).height() - (offset*2);
 			if (mime.includes('image')) {
-				app.misc.fileContainer.children().css(app.misc.calcImageViewSize());				
+				app.misc.fileContainer.children().css('max-height', maxHeight);
 			}
 			else if (mime.includes('pdf')) {
 				app.misc.fileContainer.children().css(app.misc.calcPdfViewSize());
@@ -409,44 +440,13 @@ app.misc = {
 		return {
 			height: $(window).height() - (offset*2)
 		};
-	},
-	calcImageViewSize: function(){
-		var windowHeight = $(window).height(),
-			offset = parseInt($('#viewer-modal').css('padding-top')),
-			viewer = app.misc.fileContainer,
-			item = app.misc.fileContainer.children(),
-		
-			maxWidth = viewer.width(), 				// Max width for the image
-			maxHeight = windowHeight - (offset*2), 	// Max height for the image
-			ratio = 0,  							// Used for aspect ratio
-			width = $(item).width(),    			// Current image width
-			height = $(item).height();  			// Current image height
-
-        // Check if the current width is larger than the max
-        if(width > maxWidth){
-            ratio = maxWidth / width;   			// get ratio for scaling image
-            $(viewer).css("width", maxWidth); 		// Set new width
-            $(viewer).css("height", height * ratio);// Scale height based on ratio
-            height = height * ratio;    			// Reset height to match scaled image
-            width = width * ratio;    				// Reset width to match scaled image
-        }
-
-        // Check if current height is larger than max
-        if(height > maxHeight){
-            ratio = maxHeight / height; 			// get ratio for scaling image
-            $(viewer).css("height", maxHeight);   	// Set new height
-            $(viewer).css("width", width * ratio);  // Scale width based on ratio
-            width = width * ratio;    				// Reset width to match scaled image
-            height = height * ratio;    			// Reset height to match scaled image
-        }
-		
-		return {width: width, height: height};
 	}
 };
 
 app.datepicker= {
 	init: function(){
-		var datepickerFloat = {format: 'dd-mm-yyyy', offset: 5, autoHide:true, language: 'id-ID'};
+		var startDate = '{{$date->format('d-m-Y')}}';
+		var datepickerFloat = {format: 'dd-mm-yyyy', offset: 5, autoHide:true, language: 'id-ID', startDate: startDate};
 		$('[role="datepicker-dropdown"]').each(function(index, item){
 			$(window).resize(function(){ 
 				$(item).datepicker('hide'); 
@@ -456,7 +456,7 @@ app.datepicker= {
 				.on('pick.datepicker', app.datepicker.pick);
 		});
 		
-		var datepickerModal = {format: 'dd-mm-yyyy', offset: 5, container: '', inline: true, language: 'id-ID'};
+		var datepickerModal = {format: 'dd-mm-yyyy', offset: 5, container: '', inline: true, language: 'id-ID', startDate: startDate};
 		$('[role="datepicker-modal"]').each(function(index, item){
 			$(window).resize(function(){ 
 				$( $(item).attr('datepicker-modal') ).hide();
@@ -464,6 +464,9 @@ app.datepicker= {
 			$(item).datepicker( $.extend(datepickerModal, {container: $(item).attr('datepicker-container') }) )
 				.on('click focusin', app.datepicker.showModal)
 				.on('pick.datepicker', app.datepicker.pick);
+		});
+		
+		$('[role="datepicker-dropdown"], [role="datepicker-modal"]').on('pick.datepicker',function(){
 		});
 	},
 	syncValue: function(datepicker, value){

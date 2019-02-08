@@ -28,7 +28,8 @@ class ConsentPostRequest extends FormRequest
 				$fail('disk: cannot be empty');
 			}
 			
-			if ($value['disk'] && $value['path']){
+			if ($value['disk'] == 'db'){}
+			elseif ($value['disk'] && $value['path']){
 				//check file exists
 				if (! \Storage::disk($value['disk'])->exists($value['path'])){
 					$fail('Storage: file not exist');

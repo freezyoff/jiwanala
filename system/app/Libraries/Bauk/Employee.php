@@ -76,6 +76,19 @@ class Employee extends Model
 		return $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`')->first();
 	}
 	
+	/**
+	 *	return consent records for current employee between given start & end date
+	 *	@param $start (String) - formatted date "Y-m-d"
+	 *	@param $end (String) - formatted date "Y-m-d"
+	 *	@return (Array of App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
+	 */
+	public function consentRecordsByPeriode($start, $end, $sort='asc'){
+		return $this->consents()
+					->whereBetween('start', [$start, $end])
+					->orWhereBetween('end', [$start, $end])
+					->orderBy('start', $sort);
+	}
+	
 	public static function findByNIP($nip){
 		return Employee::where('nip','=',$nip)->first();
 	}
@@ -119,6 +132,5 @@ class Employee extends Model
 		
 		//delete person
 		$person->delete();
-		
 	}
 }

@@ -73,14 +73,6 @@
 					[
 						'permission'=>'bauk.attendance.post',
 						'display'=>[ 				
-							'name'=>'Izin Kehadiran', 
-							'icon'=>false 
-						], 
-						'href'=>'my.bauk.landing',
-					],
-					[
-						'permission'=>'bauk.attendance.post',
-						'display'=>[ 				
 							'name'=>'Upload Finger', 
 							'icon'=>false 
 						], 

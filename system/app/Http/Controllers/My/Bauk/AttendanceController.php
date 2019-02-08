@@ -25,6 +25,7 @@ class AttendanceController extends Controller
 		
 		$name = \App\Libraries\Bauk\Employee::findByNIP( $nip? $nip : -1 );
 		
+		//return $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
 		return view('my.bauk.attendance.landing',[
 			'attendances'=>$periode? $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d')) : [],
 			'nip'=>$nip,
@@ -42,8 +43,6 @@ class AttendanceController extends Controller
 		
 		$date->day = $date->daysInMonth;
 		$end = $date->format('Y-m-d');
-		
-		$attendanceRecords = Employee::findByNIP($nip)->attendanceRecordsByPeriode($start, $end);
 		
 		//create date array of current month
 		$list = [];
@@ -65,16 +64,37 @@ class AttendanceController extends Controller
 									'month'=>$date->format('m'),
 									'day'=>$date->format('d'),
 								]),
-				'record'=>false,
-				'locked'=>false,
 				'holiday'=>\App\Libraries\Bauk\Holiday::getHolidayName($date),
+				'attendance'=>false,
+				'consent'=>false,
+				'locked'=>false,
 			];
 		}
 		
-		//add the data
+		//add attendance data
+		$employee = Employee::findByNIP($nip);
+		$attendanceRecords = $employee->attendanceRecordsByPeriode($start, $end);
 		foreach($attendanceRecords->get() as $att){
-			$list[$att->date]['record'] = $att;
-			$list[$att->date]['locked'] = $att? $att->locked : false;
+			$list[$att->date]['attendance'] = $att;
+			$list[$att->date]['locked'] = $att && $att->locked? $att->locked : $list[$att->date]['locked'];
+		}
+		
+		//add consent data
+		$consentRecords = $employee->consentRecordsByPeriode($start, $end);
+		foreach($consentRecords->get(['id','consent','start','end','locked']) as $consent){
+			$sd = \Carbon\Carbon::createFromFormat('Y-m-d', $consent->start);
+			$se = \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end);
+			$diff = $sd->diffInDays($se) + 1;
+			$link = true;
+			while($diff){
+				$dd = $sd->format('Y-m-d');
+				$list[$dd]['consent'] = $consent;
+				$list[$dd]['locked'] = $consent? $consent->locked : $list[$dd]['locked'];
+				if (!$link) $list[$dd]['link_consent'] = false;
+				$sd->addDays(1);
+				$diff--;
+				$link = false;
+			}
 		}
 		
 		return $list;

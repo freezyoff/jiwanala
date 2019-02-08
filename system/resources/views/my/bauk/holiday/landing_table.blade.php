@@ -9,6 +9,22 @@
 	</thead>
 	<tbody>
 		@forelse($holidays as $holiday)
+		<td class="w3-hide-medium w3-hide-large" style="text-align:right">
+				<a class="w3-hover-text-green loader" 
+					style="cursor:pointer" 
+					onclick="
+						$(this).find('i').removeClass('fa-edit').addClass('button-icon-loader'); 
+						document.location='{{route('my.bauk.holiday.edit',[$holiday->id])}}'">
+					<i class="fas fa-edit fa-fw"></i>
+				</a>
+				<a class="w3-hover-text-red padding-left-8 loader" 
+					style="cursor:pointer" 
+					onclick="$('#delete-modal-{{$holiday->id}}').show()">
+					<i class="fas fa-trash fa-fw"></i>
+				</a>
+				@include('my.bauk.holiday.landing_table_modal')
+			</td>
+		</tr>
 		<tr>
 			<td>{{$holiday->name}}</td>
 			<td>
@@ -36,7 +52,7 @@
 					<i class="fas fa-redo fa-fw"></i>
 				@endif
 			</td>
-			<td style="text-align:right">
+			<td class="w3-hide-small" style="text-align:right">
 				<a class="w3-hover-text-green loader" 
 					style="cursor:pointer" 
 					onclick="
