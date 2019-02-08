@@ -36,7 +36,7 @@
 							@if ($attendance['consent'])
 								<div class="w3-row">
 									<i class="fas fa-exclamation-circle fa-fw"></i>
-									<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['consent']->consent)}}</span>
+									<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['consent']->consent) }}</span>
 								</div>
 							@endif
 						@endif

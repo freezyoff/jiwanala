@@ -10,8 +10,7 @@ use App\Libraries\Bauk\EmployeeConsentAttachment;
 use App\Libraries\Bauk\Holiday;
 use App\Http\Requests\My\Bauk\Attendance\ConsentPostRequest;
 
-class AttendanceConsentController extends Controller
-{
+class AttendanceConsentController extends Controller{
 	
 	protected function validateRequestParameters($nip, $year, $month, $day){
 		if (!$nip || !$year || !$month || !$day) abort(404);
@@ -37,13 +36,11 @@ class AttendanceConsentController extends Controller
 			'back_action'=>route('my.bauk.attendance.landing',[$nip,$year,$month]),
 			'upload_action'=>route('my.misc.upload'),
 			'upload_mime'=>'image/jpeg,image/png,image/gif,application/pdf',
-			'upload_max_size'=>16777215
+			'upload_max_size'=>16777215,
 		]);
 	}
 	
 	public function previewFile(Request $req){
-		//get file 
-		
 		$filecontent = '';
 		if ($req->input('disk') == 'db'){
 			$records = EmployeeConsentAttachment::find($req->input('path'));

@@ -11,7 +11,7 @@
 			<input name="employee_id" value="{{$employee->id}}" type="hidden" />
 			<input name="employee_nip" value="{{$employee->nip}}" type="hidden" />
 			<input name="date" value="{{$date->format('Y-m-d')}}" type="hidden" />
-			<input name="end" value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" type="hidden" />
+			<input name="end" value="{{ old('end', $consent? \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y') : $date->format('d-m-Y'))  }}" type="hidden" />
 			<input name="consent_record_id" value="{{$consent? $consent->id : ''}}" type="hidden" />
 			<input name="back_action" value="{{$back_action}}" type="hidden" />
 			<div class="w3-container padding-top-8">
@@ -50,7 +50,7 @@
 							name="endlarge" 
 							type="text" 
 							class="w3-input w3-hide-small w3-hide-medium" 
-							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
+							value="{{ old('end', $consent? \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y') : $date->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
 							readonly="readonly"
@@ -61,7 +61,7 @@
 							name="endsmall" 
 							type="text" 
 							class="w3-input w3-hide-large" 
-							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
+							value="{{ old('end', $consent? \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y') : $date->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
 							readonly="readonly"
@@ -448,9 +448,7 @@ app.datepicker= {
 		var startDate = '{{$date->format('d-m-Y')}}';
 		var datepickerFloat = {format: 'dd-mm-yyyy', offset: 5, autoHide:true, language: 'id-ID', startDate: startDate};
 		$('[role="datepicker-dropdown"]').each(function(index, item){
-			$(window).resize(function(){ 
-				$(item).datepicker('hide'); 
-			});
+			$(window).resize(app.datepicker.windowResize);
 			$(item).datepicker(datepickerFloat)
 				.on('click focusin', app.datepicker.click)
 				.on('pick.datepicker', app.datepicker.pick);
@@ -458,27 +456,32 @@ app.datepicker= {
 		
 		var datepickerModal = {format: 'dd-mm-yyyy', offset: 5, container: '', inline: true, language: 'id-ID', startDate: startDate};
 		$('[role="datepicker-modal"]').each(function(index, item){
-			$(window).resize(function(){ 
-				$( $(item).attr('datepicker-modal') ).hide();
-			});
+			$(window).resize(app.datepicker.windowResize);
 			$(item).datepicker( $.extend(datepickerModal, {container: $(item).attr('datepicker-container') }) )
 				.on('click focusin', app.datepicker.showModal)
 				.on('pick.datepicker', app.datepicker.pick);
-		});
-		
-		$('[role="datepicker-dropdown"], [role="datepicker-modal"]').on('pick.datepicker',function(){
 		});
 	},
 	syncValue: function(datepicker, value){
 		$( datepicker.attr('datepicker-value') ).val(value);
 		$( datepicker.attr('datepicker-link') ).val(value);
 	},
-	pick: function(){
+	hideDatepicker: function(target){
+		if ($(target).attr('datepicker-modal')) $( $(target).attr('datepicker-modal') ).hide();
+		else $(target).datepicker('hide');
+	},
+	pick: function(event){
 		app.datepicker.syncValue($(this), $(this).datepicker('getDate',true));
+		app.datepicker.hideDatepicker($(event.target));
 	},
 	click: function(event){
 		event.stopPropagation();
 		$( $(this).attr('datepicker-link') ).trigger('click');
+	},
+	windowResize: function(event){
+		$('[role="datepicker-dropdown"], [role="datepicker-modal"]').each(function(ind,item){
+			app.datepicker.hideDatepicker(item);
+		});
 	},
 	showModal: function(event){
 		app.datepicker.click(event);
