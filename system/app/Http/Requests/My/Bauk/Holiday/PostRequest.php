@@ -51,8 +51,8 @@ class PostRequest extends FormRequest
 			}			
 		};
 		
-		$startDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->input('start'));
-		$endDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->input('end'));
+		$startDate = $this->input('start');
+		$endDate = $this->input('end');
 		/*
 		 *	check if current date range overlap with others start date and end date
 		 *	@param $attribute -
@@ -60,6 +60,8 @@ class PostRequest extends FormRequest
 		 *	@param (Closure) $fail -
 		 */
 		$rangeOverlap = function($attribute, $value, $fail) use($startDate, $endDate, $messages){
+			$startDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->input('start'));
+			$endDate = \Carbon\Carbon::createFromFormat('d-m-Y', $this->input('end'));
 			$count = Holiday::where(function($q) use($startDate, $endDate){
 				$q->where(function($q) use ($startDate, $endDate) {
 					$q->where('repeat','<>',1);

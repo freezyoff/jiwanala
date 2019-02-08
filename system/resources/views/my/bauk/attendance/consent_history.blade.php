@@ -12,7 +12,7 @@
 			<input name="employee_id" value="{{$employee->id}}" type="hidden" />
 			<input name="employee_nip" value="{{$employee->nip}}" type="hidden" />
 			<input name="date" value="{{$date->format('Y-m-d')}}" type="hidden" />
-			<input name="end" value="{{old('end')}}" type="hidden" />
+			<input name="end" value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" type="hidden" />
 			<input name="consent_record_id" value="{{$consent? $consent->id : ''}}" type="hidden" />
 			<input name="back_action" value="{{$back_action}}" type="hidden" />
 			<div class="w3-container padding-top-8">
@@ -51,7 +51,7 @@
 							name="endlarge" 
 							type="text" 
 							class="w3-input w3-hide-small w3-hide-medium" 
-							value="{{old('end')}}" 
+							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
 							role="datepicker-dropdown"
@@ -61,7 +61,7 @@
 							name="endsmall" 
 							type="text" 
 							class="w3-input w3-hide-large" 
-							value="{{old('end')}}" 
+							value="{{ old('end', \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end)->format('d-m-Y')) }}" 
 							placeholder="Sampai tanggal"
 							autocomplete="off"
 							role="datepicker-modal"
@@ -147,17 +147,19 @@
 						onchange="app.upload.handleUpload($(this).prop('files')[0])" />
 				</div>
 			</div>
-			<div class="w3-container">
-				<table id="upload-file-table" class="w3-table-all">
-					<thead>
-						<tr class="w3-theme-l1">
-							<th colspan="2">File</th>
-							<th style="text-align:center">Size (Bytes)</th>
-							<th>{{-- action --}}</th>
-						</tr>
-					</thead>
-					<tbody id="upload-file-table-body"></tbody>
-				</table>
+			<div class="w3-container padding-top-8">
+				<div class="w3-responsive">
+					<table id="upload-file-table" class="w3-table w3-table-all">
+						<thead>
+							<tr class="w3-theme-l1">
+								<th colspan="2">File</th>
+								<th width="150px" style="text-align:center">Size (Bytes)</th>
+								<th width="50px">{{-- action --}}</th>
+							</tr>
+						</thead>
+						<tbody id="upload-file-table-body"></tbody>
+					</table>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -195,19 +197,22 @@
 var app = {};
 app.upload = {
 	init: function(){ 
-		//create row from db
+		//create row from database records
 		var dbFileRecords = [
 			@foreach(($consent? $consent->attachments()->get() : []) as $item)
 				{!! json_encode(['recordId'=>$item->id, 'size'=>$item->size, 'mime'=>$item->mime]).',' !!}
 			@endforeach
 		];
 		$.each(dbFileRecords, function(index, item){
-			var rowid = new Date().getTime();
-			app.upload.createRow(item.recordId, 'dokumen '+(index+1), item.mime, item.size);
-			$('#'+ rowid +'-col4').append($('<input name="db[]" value="'+ rowid +'" type="hidden" />'));
+			var rowid = new Date().getTime(),
+				disk = 'db',
+				filename = 'dokumen '+(index+1);
+				
+			app.upload.createRow(rowid, 'dokumen '+(index+1), item.mime, item.size);
+			app.upload.createUploadFileField(rowid, disk, item.recordId, 'dokumen '+(index+1), item.mime);
 		});
 		
-		//create row from old input
+		//create row from old input fields
 		var uploadedFiles = [
 			@foreach( old('file',[]) as $key=>$value )
 				@if ($key == 'upload-file-predefined') 
@@ -282,39 +287,9 @@ app.upload = {
 		var filename = $('#upload-file').val().split('\\').pop();
 		app.upload.createRow(clientRequestId, filename,);
 	},
-	updateRowSuccessUpload: function(clientRequestId, disk, filename, clientName, size, mime,){
+	updateRowSuccessUpload: function(clientRequestId, disk, filename, clientName, size, mime){
 		var successRow = this.createRow(clientRequestId, clientName, mime, size)
-			.click(function(){
-				var el = $(this);
-				var inputList = el.find('#'+$(this).attr('id')+'-col4').find('input');
-				var formData = new FormData();
-				formData.append('_token', '{{ csrf_token() }}');
-				$.each(inputList, function(index, item){
-					var key = $(item).attr('name').replace('file['+el.attr('id')+']', '')
-								.replace('[','')
-								.replace(']','');
-					formData.append(key, $(item).val());
-				});
-				
-				$.ajax({
-					url: '{{route('my.bauk.attendance.consents.preview')}}',
-					method: 'POST',
-					data: formData,
-					processData: false, // important
-					contentType: false, // important
-					success:function(response, text){
-						var windowHeight = $(window).height();
-						var offset = parseInt($('#viewer-modal').css('padding-top'));
-						if (response.tag){
-							$('#viewer-modal-file').empty().append(response.tag)
-								.children()
-								.attr('width', '100%')
-								.attr('height', windowHeight - (offset*2));
-							$('#viewer-modal').show();							
-						}
-					}
-				});
-			});
+			.click(app.upload.updateRowSuccessUpload_rowClick);
 		$('#'+clientRequestId).replaceWith( successRow );
 		
 		var inputFields = this.createUploadFileField(clientRequestId, disk, filename, clientName, mime);
@@ -322,9 +297,34 @@ app.upload = {
 			$('#'+clientRequestId+'-col4').append(value);
 		});
 	},
+	updateRowSuccessUpload_rowClick: function(){
+		var el = $(this);
+		var inputList = el.find('#'+$(this).attr('id')+'-col4').find('input');
+		var formData = new FormData();
+		formData.append('_token', '{{ csrf_token() }}');
+		$.each(inputList, function(index, item){
+			var key = $(item).attr('name').replace('file['+el.attr('id')+']', '')
+						.replace('[','')
+						.replace(']','');
+			formData.append(key, $(item).val());
+		});
+		
+		$.ajax({
+			url: '{{route('my.bauk.attendance.consents.preview')}}',
+			method: 'POST',
+			data: formData,
+			processData: false, // important
+			contentType: false, // important
+			success:function(response, text){
+				if (response.tag){
+					app.misc.documentViewer(response.mime, response.tag);
+				}
+			}
+		});
+	},
 	updateRowFailedUpload: function(clientRequestId, message){
 		$('#'+clientRequestId).addClass('w3-red').click(function(){
-			$(this).fadeOut("normal", function() {$(this).remove();});
+			$(this).fadeOut("normal", function(){$(this).remove();});
 		});
 		$('#'+clientRequestId+'-col1').find('i').attr('class','fas fa-times fa-fw');
 		$('#'+clientRequestId+'-col2').append($('<div>'+message+'</div>'));
@@ -387,6 +387,60 @@ app.upload = {
 				app.upload.removeDummyRow();
 			}
 		});
+	}
+};
+
+app.misc = {
+	viewContainer: $('#viewer-modal'),
+	fileContainer: $('#viewer-modal-file'),
+	documentViewer: function(mime, tag){
+		app.misc.fileContainer.empty().append(tag).children().css('width','100%');
+		app.misc.viewContainer.show(400, function(){
+			if (mime.includes('image')) {
+				app.misc.fileContainer.children().css(app.misc.calcImageViewSize());				
+			}
+			else if (mime.includes('pdf')) {
+				app.misc.fileContainer.children().css(app.misc.calcPdfViewSize());
+			}
+		});
+	},
+	calcPdfViewSize: function(){
+		var offset = parseInt($('#viewer-modal').css('padding-top'));
+		return {
+			height: $(window).height() - (offset*2)
+		};
+	},
+	calcImageViewSize: function(){
+		var windowHeight = $(window).height(),
+			offset = parseInt($('#viewer-modal').css('padding-top')),
+			viewer = app.misc.fileContainer,
+			item = app.misc.fileContainer.children(),
+		
+			maxWidth = viewer.width(), 				// Max width for the image
+			maxHeight = windowHeight - (offset*2), 	// Max height for the image
+			ratio = 0,  							// Used for aspect ratio
+			width = $(item).width(),    			// Current image width
+			height = $(item).height();  			// Current image height
+
+        // Check if the current width is larger than the max
+        if(width > maxWidth){
+            ratio = maxWidth / width;   			// get ratio for scaling image
+            $(viewer).css("width", maxWidth); 		// Set new width
+            $(viewer).css("height", height * ratio);// Scale height based on ratio
+            height = height * ratio;    			// Reset height to match scaled image
+            width = width * ratio;    				// Reset width to match scaled image
+        }
+
+        // Check if current height is larger than max
+        if(height > maxHeight){
+            ratio = maxHeight / height; 			// get ratio for scaling image
+            $(viewer).css("height", maxHeight);   	// Set new height
+            $(viewer).css("width", width * ratio);  // Scale width based on ratio
+            width = width * ratio;    				// Reset width to match scaled image
+            height = height * ratio;    			// Reset height to match scaled image
+        }
+		
+		return {width: width, height: height};
 	}
 };
 

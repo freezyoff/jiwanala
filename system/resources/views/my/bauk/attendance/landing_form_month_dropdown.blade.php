@@ -4,7 +4,7 @@
 		<li style="cursor:pointer;">
 			<a class="w3-text-theme w3-mobile" 
 				select-role="item" 
-				select-value="{{$i}}">
+				select-value="{{$i<10? '0'.$i : $i}}">
 				{{ trans('calendar.months.long.'.($i-1)) }}
 			</a>
 		</li>

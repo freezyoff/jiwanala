@@ -64,6 +64,7 @@ class AttendanceConsentController extends Controller
 		
 		return response()->json([
 			'code'=>200,
+			'mime'=>$req->mime,
 			'tag'=>'<'.$tag.' src="data:'. $mime .';base64, '. $filecontent .'" alt="'. $req->name .'"></'.$tag.'>',
 		]);
 	}

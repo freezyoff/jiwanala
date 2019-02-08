@@ -14,6 +14,7 @@ class EmployeeConsent extends Model{
 		'consent',
 		'start',
 		'end',
+		'locked'
 	];
 	
 	public static  function getConsentTypes(){

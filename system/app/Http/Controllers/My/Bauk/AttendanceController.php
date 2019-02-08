@@ -20,7 +20,7 @@ class AttendanceController extends Controller
 		else{
 			$periode = now();
 			$year = $periode->format('Y');
-			$month = $periode->format('n');
+			$month = $periode->format('m');
 		}
 		
 		$name = \App\Libraries\Bauk\Employee::findByNIP( $nip? $nip : -1 );
@@ -56,13 +56,13 @@ class AttendanceController extends Controller
 				'link_finger'=>route('my.bauk.attendance.fingers',[
 									'nip'=>$nip, 
 									'year'=>$date->format('Y'), 
-									'month'=>$date->format('n'),
+									'month'=>$date->format('m'),
 									'day'=>$date->format('d'),
 								]),
 				'link_consent'=>route('my.bauk.attendance.consents',[
 									'nip'=>$nip, 
 									'year'=>$date->format('Y'), 
-									'month'=>$date->format('n'),
+									'month'=>$date->format('m'),
 									'day'=>$date->format('d'),
 								]),
 				'record'=>false,

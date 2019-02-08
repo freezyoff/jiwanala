@@ -19,24 +19,28 @@
 			<label><i class="fas fa-calendar"></i></label>
 			<input id="startlarge" 
 				name="startlarge" 
-				type="text" 
-				class="w3-input w3-hide-small w3-hide-medium" 
 				value="{{old('start')}}" 
 				placeholder="{{trans('my/bauk/holiday.hints.start')}}"
 				datepicker-role="dropdown"
 				datepicker-value="input[name='start']"
-				datepicker-link="input[name='startsmall']" />
+				datepicker-link="input[name='startsmall']" 
+				type="text" 
+				class="w3-input w3-hide-small w3-hide-medium" 
+				autocomplete="off"
+				readonly="readonly" />
 			<input id="startsmall" 
 				name="startsmall" 
-				type="text" 
-				class="w3-input w3-hide-large" 
 				value="{{old('start')}}" 
 				placeholder="{{trans('my/bauk/holiday.hints.start')}}"
 				datepicker-role="modal"
 				datepicker-modal="#startsmall-modal"
 				datepicker-container="#startsmall-modal-container" 
 				datepicker-value="input[name='start']" 
-				datepicker-link="input[name='startlarge']" />
+				datepicker-link="input[name='startlarge']" 
+				type="text" 
+				class="w3-input w3-hide-large" 
+				autocomplete="off"
+				readonly="readonly" />
 		</div>
 		<div id="startsmall-modal" 
 			class="w3-modal w3-display-container datepicker-modal w3-hide-large" 
@@ -67,24 +71,28 @@
 			<label><i class="fas fa-calendar"></i></label>
 			<input id="endlarge" 
 				name="endlarge" 
-				type="text" 
-				class="w3-input w3-hide-small w3-hide-medium" 
 				value="{{old('end')}}" 
 				placeholder="{{trans('my/bauk/holiday.hints.end')}}"
 				datepicker-role="dropdown"
 				datepicker-value="input[name='end']"
-				datepicker-link="input[name='endsmall']" />
+				datepicker-link="input[name='endsmall']" 
+				type="text" 
+				class="w3-input w3-hide-small w3-hide-medium" 
+				autocomplete="off"
+				readonly="readonly" />
 			<input id="endsmall" 
 				name="endsmall" 
-				type="text" 
-				class="w3-input w3-hide-large" 
 				value="{{old('end')}}" 
 				placeholder="{{trans('my/bauk/holiday.hints.end')}}"
 				datepicker-role="modal"
 				datepicker-modal="#endsmall-modal"
 				datepicker-container="#endsmall-modal-container" 
 				datepicker-value="input[name='end']" 
-				datepicker-link="input[name='endlarge']" />
+				datepicker-link="input[name='endlarge']" 
+				type="text" 
+				class="w3-input w3-hide-large" 
+				autocomplete="off"
+				readonly="readonly" />
 		</div>
 		<div id="endsmall-modal" 
 			class="w3-modal w3-display-container datepicker-modal w3-hide-large" 
