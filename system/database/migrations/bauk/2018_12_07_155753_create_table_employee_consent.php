@@ -36,7 +36,7 @@ class CreateTableEmployeeConsent extends Migration
 			])->nullable()->comment('izin tidak masuk');
 			$table->date('start')->comment('tanggal mulai cuti/izin');
 			$table->date('end')->comment('tanggal selesai cuti/izin');
-			$table->boolean('locked')->comment('flag kunci untuk persiapan laporan');
+			$table->boolean('locked')->default(false)->comment('flag kunci untuk persiapan laporan');
 			
 			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
 			$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));

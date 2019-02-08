@@ -25,13 +25,18 @@ class AttendanceController extends Controller
 		
 		$name = \App\Libraries\Bauk\Employee::findByNIP( $nip? $nip : -1 );
 		
+		$attendance = [];
+		if ($periode){
+			$attendance = $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
+		}
+		
 		//return $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
 		return view('my.bauk.attendance.landing',[
-			'attendances'=>$periode? $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d')) : [],
-			'nip'=>$nip,
+			'attendances'=> $attendance,
+			'nip'=> $nip,
 			'name'=> $name? $name->getFullName() : '',
 			'year' => $year,
-			'month'=> $month
+			'month'=> $month,
 		]);
 	}
 	

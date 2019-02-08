@@ -84,9 +84,9 @@ class Employee extends Model
 	 */
 	public function consentRecordsByPeriode($start, $end, $sort='asc'){
 		return $this->consents()
-					->whereBetween('start', [$start, $end])
-					->orWhereBetween('end', [$start, $end])
-					->orderBy('start', $sort);
+			->whereBetween('start', [$start, $end])
+			->whereBetween('end', [$start, $end])
+			->orderBy('start', $sort);
 	}
 	
 	public static function findByNIP($nip){
@@ -107,7 +107,6 @@ class Employee extends Model
 	}
 	
 	public function getRegisteredAtAttribute(){
-		//return $this->attributes['birth_date']->format('Y-m-d');
 		$date = \Carbon\Carbon::parse($this->attributes['registered_at']);
 		return $date->format('d-m-Y');
 	}

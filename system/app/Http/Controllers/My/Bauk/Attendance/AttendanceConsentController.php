@@ -77,6 +77,7 @@ class AttendanceConsentController extends Controller{
 		$consentDate->start = $request->input('date');
 		$consentDate->end = \Carbon\Carbon::createFromFormat('d-m-Y',$request->input('end'))->format('Y-m-d');
 		$consentDate->consent = $request->input('consent_type');
+		$consentDate->locked = false;
 		$consentDate->save();
 		
 		//save attachment
