@@ -92,7 +92,7 @@
 								</span>
 								<h4 class="padding-top-8 padding-bottom-8">
 									<i class="fas fa-calendar-alt"></i>
-									<span style="padding-left:12px;">{{trans('my/bauk/holiday.hints.start')}}</span>
+									<span style="padding-left:12px;">{{trans('my/bauk/attendance/hints.modal.endDate')}}</span>
 								</h4>
 							</header>
 							<div id="endsmall-modal-container" class="datepicker-inline-container"></div>

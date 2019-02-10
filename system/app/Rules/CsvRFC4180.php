@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class CsvRFC4180 implements Rule
 {
-	protected $delimiter = ",";
+	protected $delimiter = ";";
 	protected $enclosure = "\"";
 	
 	protected $errorLine = 0;
@@ -16,10 +16,10 @@ class CsvRFC4180 implements Rule
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct($expectedHeaderColumnCount, $delimiter=';', $enclosure='"'){
+		$this->delimiter = $delimiter;
+		$this->enclosure = $enclosure;
+	}
 
     /**
      * Determine if the validation rule passes.
@@ -56,8 +56,10 @@ class CsvRFC4180 implements Rule
      *
      * @return string
      */
-    public function message()
-    {
-        return 'Not valid CSV RFC4180 format. Please check line '.$this->errorLine;
+    public function message(){
+        return str_replace(
+			[':delimiter', ':enclosure', ':line'], 
+			[$this->delimiter, $this->enclosure, $this->errorLine], 
+			trans('validation.csvRFC4180'));
     }
 }

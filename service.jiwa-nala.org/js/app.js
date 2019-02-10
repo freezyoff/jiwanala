@@ -114,7 +114,10 @@
 			toggleContainer = $(toggleContainer.join(','));
 			
 			var label = $('<label class="w3-input" for="'+ origin.attr('id') +'"></label>')
-				.css('cursor','pointer')
+				.css({
+					cursor: 'pointer',
+					overflow: 'hidden'
+				})
 				.insertBefore(this)
 				.html( origin.val()==''? 
 					$('<span></span>').css('color','rgb(120,120,120)').html(origin.attr('placeholder')).prop('outerHTML') : 
@@ -139,13 +142,15 @@
 			
 			var triggerShowContainer = function(event){
 				event.stopPropagation();
+				$(window).trigger('click');	
 				origin.trigger('click');
-			}
+			};
 			
 			var showContainer = function(event){
 				event.stopPropagation();
+				var requiredWidth = toggleContainer.filter($(this).attr('select-dropdown')).width('').width();
 				var width = $(this).parent().hasClass('input-group')? $(this).parent().width() : $(this).width();
-				toggleContainer.filter($(this).attr('select-dropdown')).width(width);	//dropdown only set the width
+				toggleContainer.filter($(this).attr('select-dropdown')).width(Math.max(width, requiredWidth));	//dropdown only set the width
 				toggleContainer.show();	//show all
 				chevronToggle();
 			};

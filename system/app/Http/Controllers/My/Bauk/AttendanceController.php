@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Bauk\Employee;
 use App\Libraries\Bauk\EmployeeAttendance;
 use App\Http\Requests\My\Bauk\Attendance\UploadRequest;
+use App\Imports\My\Bauk\Attendance\AttendanceByFingersImport;
 use Illuminate\Http\Request;
 use Storage;
 use Validator;
@@ -143,25 +144,24 @@ class AttendanceController extends Controller
 		return view('my.bauk.attendance.upload');
 	}
 	
-	public function upload(){}
-	
-	protected function importCSV(EmployeeAttendance $toImport, $file){
-		$imported = $toImport->toArray($file);
-		$validator =  Validator::make(
-			$imported[0], 
-			$toImport->rules(), 
-			method_exists($toImport, 'customValidationMessages')? $toImport->customValidationMessages() : [],
-			method_exists($toImport, 'customValidationAttributes')? $toImport->customValidationAttributes() : []
-		);
+	public function upload(UploadRequest $req){
+		$file = $req->file('file');
+		$import = new AttendanceByFingersImport(\Auth::user(), $req->input('dateformat'), $req->input('timeformat'));
+		$import->setValidationMessages(trans('my/bauk/attendance/hints.validations.import'));
+		$import->import($file);
+		$fails = [];
+		foreach ($import->failures() as $failure) {
+			$fails[$failure->row()][$failure->attribute()] = $failure->errors()[0];
+		}
 		
-		return view('my.bauk.attendance.landing', [
-			'imported'=> $imported[0],
-			'step'=>2,
-		])->withErrors($validator);
+		$response = redirect()->back();
+		if (count($fails)>0) $response->with('fails',$fail);
+		if ($import->hasErrors()) $response->with('invalid', $import->getErrors());
+		return $response;
 	}
 	
 	public function download(){
-		return Storage::disk('local')
-			->download('bauk/employee_attendance.xlsx', trans('my.bauk.attendance.upload.template_file_name'));
+		$type = request()->segment(count(request()->segments()));
+		return Storage::download('my/bauk/attendance/employee_attendance.'.$type, time().'_attendance_fingers.'.$type);
 	}
 }

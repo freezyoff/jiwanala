@@ -103,11 +103,22 @@ Route::prefix('attendance')
 			->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
 	});
 		
-	Route::middleware('permission:bauk.attendance.post')
-		->name('.upload')
-		->get('/upload', '\App\Http\Controllers\My\Bauk\AttendanceController@showUpload');
-		
+	Route::prefix('download')
+		->name('.download')
+		->group(function(){
+		Route::get('csv', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
+		Route::get('xls', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
+		Route::get('xlsx', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
+	});
 	
+	Route::name('.upload')
+		->middleware('permission:bauk.attendance.post')
+		->group(function(){
+		Route::get('/upload', '\App\Http\Controllers\My\Bauk\AttendanceController@showUpload');
+		Route::post('/upload', '\App\Http\Controllers\My\Bauk\AttendanceController@upload');
+	});
+	
+		
 	//diurutkan seperti ini dengan tujuan urutan routing.
 	//WARNING: jangan dirubah urutannya
 	Route::middleware('permission:bauk.list.employee')

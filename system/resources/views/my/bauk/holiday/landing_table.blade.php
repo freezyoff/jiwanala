@@ -1,15 +1,17 @@
 <table class="w3-table w3-table-all">
 	<thead>
 		<tr class="w3-theme-l1">
+			<th width="75px" class="w3-hide-medium w3-hide-large"></th>
 			<th>Hari Libur</th>
 			<th>Tanggal</th>
 			<th width="75px" style="text-align:center" width="20px">Berulang</th>
-			<th width="75px"></th>
+			<th width="75px" class="w3-hide-small"></th>
 		</tr>
 	</thead>
 	<tbody>
 		@forelse($holidays as $holiday)
-		<td class="w3-hide-medium w3-hide-large" style="text-align:right">
+		<tr>
+			<td class="w3-hide-medium w3-hide-large" style="text-align:right">
 				<a class="w3-hover-text-green loader" 
 					style="cursor:pointer" 
 					onclick="
@@ -24,8 +26,6 @@
 				</a>
 				@include('my.bauk.holiday.landing_table_modal')
 			</td>
-		</tr>
-		<tr>
 			<td>{{$holiday->name}}</td>
 			<td>
 			<?php 

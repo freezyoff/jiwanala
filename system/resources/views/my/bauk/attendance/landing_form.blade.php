@@ -11,17 +11,19 @@
 						select-dropdown="#year-dropdown"
 						select-modal="#year-modal"
 						select-modal-container="#year-modal-container" />
-									
 				</div>
 				@include('my.bauk.attendance.landing_form_year_dropdown')
 				@include('my.bauk.attendance.landing_form_year_modal')
 				<label>&nbsp;</label>
 			</div>
-			<div class="w3-col s12 m6 l4 padding-left-8 no-padding-none-small">
+			<div class="w3-col s12 m6 l4 padding-left-8 padding-none-small">
 				<div class="input-group">
 					<label><i class="fas fa-calendar fa-fw"></i></label>
-					<input id="month" name="month" type="text" class="w3-input" 
+					<input id="month" 
+						name="month" 
 						value="{{isset($month)? $month : now()->format('n')}}"
+						type="text" 
+						class="w3-input" 
 						role="select"
 						select-dropdown="#month-dropdown"
 						select-modal="#month-modal"

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\My\Bauk\Attendance;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UploadRequest extends FormRequest
 {
@@ -21,14 +22,23 @@ class UploadRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
-        return [
-            'upload'=>[
-				'sometimes',
-				'required',
-				new \App\Rules\CsvRFC4180
-			]
+    public function rules(){
+		$rules = [
+			'dateformat'=>['required', Rule::in(array_keys(trans('my/bauk/attendance/hints.selections.dateformat')))],
+			'timeformat'=>['required', Rule::in(array_keys(trans('my/bauk/attendance/hints.selections.timeformat')))],
+            'file'=>['required',],
         ];
+		
+        return $rules;
     }
+	
+	public function messages(){
+		return [
+			'dateformat.required'=> trans('my/bauk/attendance/hints.validations.dateformat_required'),
+			'dateformat.in'=> trans('my/bauk/attendance/hints.validations.dateformat_required'),
+			'timeformat.required'=> trans('my/bauk/attendance/hints.validations.timeformat_required'),
+			'timeformat.in'=> trans('my/bauk/attendance/hints.validations.timeformat_required'),
+			'file.required'=> trans('my/bauk/attendance/hints.validations.file_required'),
+		];
+	}
 }

@@ -81,6 +81,10 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .margin-left-16{margin-left:16px;}
 .margin-top-8{margin-top:8px;}
 .margin-top-16{margin-top:16px;}
+.margin-bottom-8{margin-bottom:8px;}
+.margin-bottom-16{margin-bottom:16px;}
+.margin-bottom-24{margin-bottom:24px;}
+.margin-bottom-32{margin-bottom:32px;}
 .margin-top-bottom-8{margin-top:8px;margin-bottom:8px;}
 
 /* Input Group */

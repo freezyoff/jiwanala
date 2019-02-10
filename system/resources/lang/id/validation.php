@@ -113,6 +113,8 @@ return [
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
 
+	'csvRFC4180'			=> 'Format CSV tidak sesuai. Gunakan tanda baca ( :delimiter ) untuk Delimiter dan tanda baca ( :enclosure ) untuk Enclosure pada baris :line',
+	
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
