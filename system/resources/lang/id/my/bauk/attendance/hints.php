@@ -13,6 +13,7 @@
 		'type-upload-file'=>'Ekstensi file PDF, JPG/JPEG. Maksimal 16 Mb',
 		'download'=>'Unduh contoh berkas:',
 		'import'=>'Impor Data Finger',
+		'finger-time'=>'Jam',
 	],
 	
 	'modal'=>[
@@ -98,14 +99,19 @@
 	],
 	
 	'info'=>[
-		//upload
-		['h6'=>'Format Tanggal', 'p'=>'Pilih format Tanggal sesuai data pada berkas upload.'],
-		['h6'=>'Format Waktu', 'p'=>'Pilih format Waktu sesuai data pada berkas upload.'],
-		[
-			'h6'=>'Unggah Berkas', 
-			'p'=>'Unggah berkas sesuai format yang telah disediakan. Pastikan format kolom tabel,&nbsp;format tanggal,&nbsp;& format waktu sesuai dengan pilihan.<br>'.
-				'Unduh contoh file untuk memudahkan impor data.'
+		'upload'=>[
+			['h6'=>'Format Tanggal', 'p'=>'Pilih format Tanggal sesuai data pada berkas upload.'],
+			['h6'=>'Format Waktu', 'p'=>'Pilih format Waktu sesuai data pada berkas upload.'],
+			[
+				'h6'=>'Unggah Berkas', 
+				'p'=>'Unggah berkas sesuai format yang telah disediakan. Pastikan format kolom tabel,&nbsp;format tanggal,&nbsp;& format waktu sesuai dengan pilihan.<br>'.
+					'Unduh contoh file untuk memudahkan impor data.'
+			],
+			['h6'=>'Impor Data', 'p'=>'Import data proses 1 arah dan tidak dapat diputar kembali. Data lama akan ditumpuk/diganti dengan data baru dari unggahan berkas. Pastikan data telah sesuai.'],
 		],
-		['h6'=>'Impor Data', 'p'=>'Import data proses 1 arah dan tidak dapat diputar kembali. Data lama akan ditumpuk/diganti dengan data baru dari unggahan berkas. Pastikan data telah sesuai.'],
+		'finger'=>[
+			['h6'=>'Jam Masuk', 'p'=>'Jam masuk menggunakan format waktu 24 jam [jam]:[menit]:[detik].'],
+			['h6'=>'Jam Keluar', 'p'=>'Isi salah satu Jam Keluar sesuai waktu finger. Jam keluar menggunakan format waktu 24 jam [jam]:[menit]:[detik].'],
+		]
 	],
 ];

@@ -160,8 +160,7 @@ class AttendanceController extends Controller
 		return $response;
 	}
 	
-	public function download(){
-		$type = request()->segment(count(request()->segments()));
+	public function download($type){
 		return Storage::download('my/bauk/attendance/employee_attendance.'.$type, time().'_attendance_fingers.'.$type);
 	}
 }

@@ -72,14 +72,14 @@
 			</a>
 			<div id="{{ $accordionId }}" class="accordion-item">
 			@foreach($groupItemList as $lItem)
-					<a class="w3-bar-item {{ str_contains(url()->current(), route($lItem['href']))? 'selected' : '' }}" 
-						href="{{ route($lItem['href']) }}"
-						style="padding: 0;display: flex !important;align-items: center; text-decoration:none;">
-						<div class="icon">
-							<i class="fas fa-caret-right fa-fw"></i>
-						</div>
-						<span style="flex-grow: 1;">{{ $lItem['display']['name'] }}</span>
-					</a>
+				<a class="w3-bar-item {{ str_contains(url()->current(), route($lItem['href']))? 'selected' : '' }}" 
+					href="{{ route($lItem['href']) }}"
+					style="padding: 0;display: flex !important;align-items: center; text-decoration:none;">
+					<div class="icon">
+						<i class="fas fa-caret-right fa-fw"></i>
+					</div>
+					<span style="flex-grow: 1;">{{ $lItem['display']['name'] }}</span>
+				</a>
 			@endforeach
 			</div>
 			<!-- end: sidebar item group -->

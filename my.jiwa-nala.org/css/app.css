@@ -71,10 +71,17 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .padding-right-none{padding-right:0 !important;}
 @media only screen and (max-width: 600px){
 	.padding-none-small {padding:0 !important;}
+	.margin-none-small {margin:0 !important;}
 }
 @media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
 	.padding-none-medium {padding:0 !important;}
+	.margin-none-medium {margin:0 !important;}
+}
+@media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
+	.padding-none-large {padding:0 !important;}
+	.margin-none-large {margin:0 !important;}
 }
 		
 .margin-left-8{margin-left:8px;}

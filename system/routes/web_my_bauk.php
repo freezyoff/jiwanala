@@ -24,7 +24,6 @@ Route::prefix('employee')
 		->name('.edit')
 		->middleware('permission:bauk.patch.employee')
 		->group(function(){
-		
 		Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patchView');
 		Route::post('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patch');
 	});
@@ -83,32 +82,11 @@ Route::prefix('holiday')
 Route::prefix('attendance')
 	->name('attendance')
 	->group(function(){
-	
-	Route::prefix('fingers')
-		->name('.fingers')
-		->middleware('permission:bauk.attendance.post')
-		->group(function(){	
-		Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
-		Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
-	});
-	
-	Route::prefix('consent')
-		->name('.consents')
-		->middleware('permission:bauk.attendance.post')
-		->group(function(){	
-		Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
-		Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
-		
-		Route::name('.preview')
-			->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
-	});
 		
 	Route::prefix('download')
 		->name('.download')
 		->group(function(){
-		Route::get('csv', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
-		Route::get('xls', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
-		Route::get('xlsx', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
+		Route::get('{type}', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
 	});
 	
 	Route::name('.upload')
@@ -118,14 +96,33 @@ Route::prefix('attendance')
 		Route::post('/upload', '\App\Http\Controllers\My\Bauk\AttendanceController@upload');
 	});
 	
-		
-	//diurutkan seperti ini dengan tujuan urutan routing.
-	//WARNING: jangan dirubah urutannya
 	Route::middleware('permission:bauk.list.employee')
 		->name('.search.employee')
 		->post('search/employee', '\App\Http\Controllers\My\Bauk\AttendanceController@searchEmployee');
-	Route::name('.landing')
-		->middleware('permission:bauk.attendance.list')
-		->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
 		
+	Route::prefix('histories')
+		->group(function(){
+			Route::name('.landing')
+				->middleware('permission:bauk.attendance.list')
+				->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
+				
+			Route::prefix('fingers')
+				->name('.fingers')
+				->middleware('permission:bauk.attendance.post')
+				->group(function(){	
+				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
+				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
+			});
+			
+			Route::prefix('consent')
+				->name('.consents')
+				->middleware('permission:bauk.attendance.post')
+				->group(function(){	
+				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
+				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
+				
+				Route::name('.preview')
+					->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
+			});
+		});
 });

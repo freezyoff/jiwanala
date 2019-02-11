@@ -8,18 +8,18 @@
 	<div class="w3-row padding-top-bottom-8">
 		<div class="w3-col s12 m12 l6">
 			<div class="w3-panel margin-left-8 margin-right-8">
-				<span class="w3-large">{{trans('my/bauk/attendance/hints.download')}}<span>
+				<span class="w3-large">{{trans('my/bauk/attendance/hints.buttons.download')}}<span>
 				<a href="{{route('my.bauk.attendance.download',['csv'])}}" class="w3-xlarge w3-hover-text-indigo margin-left-8">
 					<i class="fas fa-file-csv fa-fw"></i>
 				</a>
-				<a href="{{route('my.bauk.attendance.download',['excel'])}}" class="w3-xlarge w3-hover-text-purple margin-left-8">
+				<a href="{{route('my.bauk.attendance.download',['xls'])}}" class="w3-xlarge w3-hover-text-purple margin-left-8">
 					<i class="fas fa-file-excel fa-fw"></i>
 				</a>				
 			</div>
 			@include('my.bauk.attendance.upload_form')
 		</div>
 		<div class="w3-col s12 m12 l6 w3-hide-small w3-hide-medium">
-			@foreach(trans('my/bauk/attendance/hints.info') as $key=>$item)
+			@foreach(trans('my/bauk/attendance/hints.info.upload') as $key=>$item)
 			<h6 style="padding-top:{{$key>0? '.5':'.3' }}em; font-size:1.1em"><strong>{{$item['h6']}}</strong></h6>
 			<p style="font-size:1em">{!! $item['p'] !!}</p>
 			@endforeach
