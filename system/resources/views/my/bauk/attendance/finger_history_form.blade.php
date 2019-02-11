@@ -43,25 +43,25 @@
 						<i class="fas fa-sign-{{$item>1? 'out' : 'in'}}-alt fa-fw"></i>
 					</label>
 					<input id="time{{$item}}" name="time{{$item}}" type="hidden" value="{{ $attendance? $attendance->{'time'.$item} : "" }}" />
-					<input name="time{{$item}}-large" 
+					<input id="time{{$item}}-large" name="time{{$item}}-large" 
 						value=""
 						class="timepicker w3-input input w3-hide-small w3-hide-medium" 
 						type="text" 
 						timepicker-source="#time{{$item}}"
+						timepicker-link="#time{{$item}}-small"
 						timepicker-container="#time{{$item}}-container"
 						readonly="readonly" 
 						placeholder="{{trans('my/bauk/attendance/hints.buttons.finger-time').' '.$label}}"/>
-					<!--
-					<input name="time{{$item}}-small" 
+					<input id="time{{$item}}-small" name="time{{$item}}-small" 
 						value=""
 						class="timepicker w3-input input w3-hide-large" 
 						type="text" 
 						timepicker-source="#time{{$item}}"
+						timepicker-link="#time{{$item}}-large"
 						timepicker-modal="#time{{$item}}-modal"
 						timepicker-container="#time{{$item}}-modal-container"
 						readonly="readonly" 
 						placeholder="{{trans('my/bauk/attendance/hints.buttons.finger-time').' '.$label}}"/>
-					-->
 					<label onclick="$(this).prev().val('')" style="cursor:pointer;" class="w3-hover-text-red">
 						<i class="fas fa-times fa-fw" style="padding-top:4px"></i>
 					</label>
@@ -72,7 +72,7 @@
 				<div id="time{{$item}}-modal" 
 					class="w3-modal w3-display-container datepicker-modal w3-hide-large" 
 					onclick="$(this).hide()">
-					<div class="w3-modal-content w3-animate-top w3-card-4">
+					<div class="w3-modal-content w3-animate-top w3-card-4" style="max-width:300px">
 						<header class="w3-container w3-theme">
 							<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
 								onclick="$('#time{{$item}}-modal').hide()" 
@@ -80,8 +80,10 @@
 								×
 							</span>
 							<h4 class="padding-top-8 padding-bottom-8">
-								<i class="fas fa-calendar-alt"></i>
-								<span style="padding-left:12px;">{{trans('my/bauk/attendance/hints.modal.endDate')}}</span>
+								<i class="fas fa-sign-{{$item>1? 'out' : 'in'}}-alt fa-fw"></i>
+								<span style="padding-left:12px;">
+									{{str_replace(':attribute',ucfirst($label), trans('my/bauk/attendance/hints.modal.finger'))}}
+								</span>
 							</h4>
 						</header>
 						<div id="time{{$item}}-modal-container" class="datepicker-inline-container"></div>

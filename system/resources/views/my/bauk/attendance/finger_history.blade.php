@@ -9,7 +9,7 @@
 		<div class="w3-col s12 m12 l7 padding-top-16 padding-bottom-16">
 			@include('my.bauk.attendance.finger_history_form')
 		</div>
-		<div class="w3-col s12 m12 l5 w3-hide-small w3-hide-medium">
+		<div class="w3-col s12 m12 l5 w3-hide-small w3-hide-medium padding-top-8">
 			@foreach(trans('my/bauk/attendance/hints.info.finger') as $key=>$item)
 			<h6 style="padding-top:{{$key>0? '.5':'.3' }}em; font-size:1.1em"><strong>{{$item['h6']}}</strong></h6>
 			<p style="font-size:1em">{!! $item['p'] !!}</p>

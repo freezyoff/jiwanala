@@ -17,6 +17,10 @@
 	],
 	
 	'modal'=>[
+		//finger
+		'finger'=>'Jam :attribute',
+		
+		//upload
 		'endDate'=>'Sampai Tanggal?',
 		'dateformat'=>'Format Tanggal',
 		'timeformat'=>'Format Waktu',

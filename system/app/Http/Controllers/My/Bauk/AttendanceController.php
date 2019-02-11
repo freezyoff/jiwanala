@@ -155,7 +155,7 @@ class AttendanceController extends Controller
 		}
 		
 		$response = redirect()->back();
-		if (count($fails)>0) $response->with('fails',$fail);
+		if (count($fails)>0) $response->with('fails',$fails);
 		if ($import->hasErrors()) $response->with('invalid', $import->getErrors());
 		return $response;
 	}

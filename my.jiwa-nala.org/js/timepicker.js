@@ -67,13 +67,9 @@
 		var getSourceTime = function(){ return moment(getSource(), options.parseFormat); }
 		
 		var getTime = function(){
-			//if has attr data-source
-			if (iroot.attr('timepicker-source')){
-				return getSourceTime();
-			} 
-			else {
-				return moment(iroot.val(), options.parseFormat);
-			}
+			return iroot.attr('timepicker-source')? 
+				getSourceTime() : 
+				moment(iroot.val(), options.parseFormat);
 		};
 		
 		var click = function(act, number, event){
@@ -102,8 +98,8 @@
 			
 			//set time value to source data
 			var time = time.isValid()? time.format(options.outputFormat) : '';
-			//if (iroot.attr('data-source')) setSource(time);
-			//if (iroot.attr('data-link')) setLink(time);
+			if (iroot.attr('timepicker-source')) setSource(time);
+			if (iroot.attr('timepicker-link')) setLink(time);
 			iroot.val(time);
 			
 			//trigger to display
@@ -121,10 +117,21 @@
 			iroot.on('focus click', function(event){
 				event.stopPropagation();
 				$(window).trigger('click');
-				$(container).addClass('w3-show').css('right','0');
+				
+				if (iroot.attr('timepicker-modal')){
+					$(iroot.attr('timepicker-modal')).show();
+				}
+				else{
+					$(container).addClass('w3-show').css('right','0');
+				}
 			});
 			$(window).on('click focus', function(){
-				$(container).removeClass('w3-show');
+				if (iroot.attr('timepicker-modal')){
+					$(iroot.attr('timepicker-modal')).hide();
+				}
+				else{
+					$(container).removeClass('w3-show');
+				}
 			});
 		}
 		else{
