@@ -1,4 +1,8 @@
 <?php return[
+	'tags'=>[
+		'upload_success'=>'Impor Sukses',
+		'upload_fail'=>'Impor Gagal',
+	],
 	'table'=>[
 		'head'=>[
 			'Hari / Tanggal',
@@ -11,7 +15,7 @@
 		'add-upload-file'=>'Tambah berkas',
 		'select-upload-file'=>'Pilih / Unggah berkas',
 		'type-upload-file'=>'Ekstensi file PDF, JPG/JPEG. Maksimal 16 Mb',
-		'download'=>'Unduh contoh berkas:',
+		'download'=>'Unduh berkas format tabel:',
 		'import'=>'Impor Data Finger',
 		'finger-time'=>'Jam',
 	],
@@ -59,19 +63,29 @@
 		
 		//import
 		'import'=>[
+			'nip.required'=>'Isi NIP',
+			'nip.numeric'=>'Isi NIP dengan angka',
 			'nip.exists'=>'NIP tidak terdaftar',
-			'tanggal.date_format'=>'Gunakan format tanggal sesuai pilihan',
-			'finger_masuk.date_format'=>'Gunakan format Tanggal sesuai pilihan',
-			'finger_keluar_1.date_format'=>'Gunakan format Waktu sesuai pilihan',
-			'finger_keluar_2.date_format'=>'Gunakan format Waktu sesuai pilihan',
-			'finger_keluar_3.date_format'=>'Gunakan format Waktu sesuai pilihan',
+			'tanggal.required'=>'Isi Tanggal dengan format: [tgl]/[bln]/[thn]',
+			'tanggal.date_format'=>'Gunakan format Tanggal: [tgl]/[bln]/[thn]',
+			'finger_masuk.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_masuk.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_keluar_1.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_keluar_1.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 			
+			'*.nip.required'=>'Isi NIP',
+			'*.nip.numeric'=>'Isi NIP dengan angka',
 			'*.nip.exists'=>'NIP tidak terdaftar',
-			'*.tanggal.date_format'=>'Gunakan format tanggal sesuai pilihan',
-			'*.finger_masuk.date_format'=>'Gunakan format Tanggal sesuai pilihan',
-			'*.finger_keluar_1.date_format'=>'Gunakan format Waktu sesuai pilihan',
-			'*.finger_keluar_2.date_format'=>'Gunakan format Waktu sesuai pilihan',
-			'*.finger_keluar_3.date_format'=>'Gunakan format Waktu sesuai pilihan',
+			'*.tanggal.required'=>'Isi Tanggal dengan format: [tgl]/[bln]/[thn]',
+			'*.tanggal.date_format'=>'Gunakan format Tanggal: [tgl]/[bln]/[thn]',
+			'*.finger_masuk.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_masuk.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_keluar_1.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_keluar_1.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 		],
 	],
 	
@@ -103,19 +117,30 @@
 	],
 	
 	'info'=>[
-		'upload'=>[
-			['h6'=>'Format Tanggal', 'p'=>'Pilih format Tanggal sesuai data pada berkas upload.'],
-			['h6'=>'Format Waktu', 'p'=>'Pilih format Waktu sesuai data pada berkas upload.'],
+		'upload_step'=>[
 			[
-				'h6'=>'Unggah Berkas', 
-				'p'=>'Unggah berkas sesuai format yang telah disediakan. Pastikan format kolom tabel,&nbsp;format tanggal,&nbsp;& format waktu sesuai dengan pilihan.<br>'.
-					'Unduh contoh file untuk memudahkan impor data.'
+				'h4'=>'Pengaturan Sistem Operasi Windows',
+				'p1'=>'Berkas impor,&nbsp;dibuat dengan mengkonversi berkas <code>Excel</code> ke ekstensi <code>CSV</code>.&nbsp;Sebelum memulai,&nbsp;pastikan pengaturan windows telah sesuai untuk proses konversi.',
+				'p2'=>'Unduh cara pengaturan sistem operasi berikut:'
 			],
-			['h6'=>'Impor Data', 'p'=>'Import data proses 1 arah dan tidak dapat diputar kembali. Data lama akan ditumpuk/diganti dengan data baru dari unggahan berkas. Pastikan data telah sesuai.'],
+			[
+				'h4'=>'Unduh Berkas Format Tabel',
+				'p1'=>'Saat mengisi data,&nbsp;pastikan tidak merubah format kolom dan baris. Unduh berkas,&nbsp;modifikasi,&nbsp;dan simpan (save as) dengan ekstensi .csv',
+				'p2'=>'Klik icon berkas untuk mengunduh.'
+			],
+			[
+				'h4'=>'Unggah Berkas Tabel',
+				'p1'=>'Unggah berkas yang telah disimpan dengan ekstensi .CSV',
+			]
 		],
 		'finger'=>[
 			['h6'=>'Jam Masuk', 'p'=>'Jam masuk menggunakan format waktu 24 jam [jam]:[menit]:[detik].'],
 			['h6'=>'Jam Keluar', 'p'=>'Isi salah satu Jam Keluar sesuai waktu finger. Jam keluar menggunakan format waktu 24 jam [jam]:[menit]:[detik].'],
+		],
+		'consent'=>[
+			['h6'=>'Tanggal Izin/Cuti', 'p'=>'Pilih tanggal minimal sama dengan tanggal awal. Jika melewati tanggal libur (sesuai kalender hari libur),&nbsp;sistem otomatis menghitung jumlah cuti tanpa menghiraukan hari libur.'],
+			['h6'=>'Jenis Izin/Cuti', 'p'=>'Sesuaikan jenis izin/cuti.'],
+			['h6'=>'Berkas Izin/Cuti', 'p'=>'Unggah berkas sebagai bukti izin/cuti. Unggah berkas dengan ekstensi PDF atau JPG/JPEG. Berkas.'],
 		]
 	],
 ];

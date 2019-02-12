@@ -1,5 +1,5 @@
 /* Time Picker */
-.timepicker {display:flex; align-items:stretch;}
+.timepicker {display:flex; justify-content:center; align-items:stretch;}
 .timepicker>.hours {display:flex; flex-direction:column; width:2.5em;}
 .timepicker>.minutes,
 .timepicker>.seconds {display:flex; flex-direction:column; width:2.5em; margin-left:1em;}

@@ -14,6 +14,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 		//\Carbon\Carbon::setLocale(config('app.locale'));
+		
+		//force ssl
+		if (env('APP_ENV') === 'production') {
+			$this->app['request']->server->set('HTTPS', true);
+		}
     }
 
     /**

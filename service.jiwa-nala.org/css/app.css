@@ -98,7 +98,7 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 
 /* Input Group */
 .input-group{border-bottom:1px solid #ccc;display:flex;justify-content:center;}
-.input-group>label{font-size:inherit; padding:8px; white-space:nowrap;}
+.input-group>label{font-size:inherit; padding:8px; white-space:nowrap; overflow:hidden;}
 .input-group>.w3-input,
 .input-group>.w3-input:hover,
 .input-group>.w3-input:focus,

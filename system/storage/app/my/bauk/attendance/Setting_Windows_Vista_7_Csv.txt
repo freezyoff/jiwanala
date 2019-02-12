@@ -1,0 +1,22 @@
+1. 	Tutup semua aplikasi Excel
+	Close the Excel application
+2.	Klik tombol Windows/Start
+	Click on the Windows/Start button
+3.	Pilih Kontrol Panel
+	Select Control Panel
+4.	Pilih Wilayah & Bahasa
+	Select Region and Language
+5.	Klik tabulasi Format
+    Click on Formats Tab
+6.	Klik Pengaturan Tambahan
+    Click on Additional Settings
+7.	Cari isian List separator
+    Locate the List separator
+8.	Rubah tanda Decimal dari tanda titik (.) ke koma (,)
+	Change the Decimal separator from a full stop (.) to a comma (,) 
+9.	Klik Aplikasikan dan OK
+	Then click on Apply then Ok
+10.	Pada tabulasi Format, klik Aplikasikan dan OK
+	Under the Formats Tab click on Apply then Ok
+11.	Buka Excel dan impor
+	Test the Excel import again

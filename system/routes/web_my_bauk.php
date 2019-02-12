@@ -86,7 +86,10 @@ Route::prefix('attendance')
 	Route::prefix('download')
 		->name('.download')
 		->group(function(){
-		Route::get('{type}', '\App\Http\Controllers\My\Bauk\AttendanceController@download');
+		Route::name('.template')
+			->get('/template/{type}', '\App\Http\Controllers\My\Bauk\AttendanceController@download_template');
+		Route::name('.help')
+			->get('/help/{type}', '\App\Http\Controllers\My\Bauk\AttendanceController@download_help');
 	});
 	
 	Route::name('.upload')

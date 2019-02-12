@@ -61,9 +61,15 @@
 		}
 		options = $.extend(defaults, options);
 		
+		var setLink = function(value) { $(iroot.attr('timepicker-link')).val(value); }
+		var setSource = function(value){ $(iroot.attr('timepicker-source')).val(value); }
+		var getSource = function(){ return $(iroot.attr('timepicker-source')).val(); }
+		var getSourceTime = function(){ return moment(getSource(), options.parseFormat); }
+		
 		var getTime = function(){
-			var time = moment(iroot.val(), options.parseFormat);
-			return time;
+			return iroot.attr('timepicker-source')? 
+				getSourceTime() : 
+				moment(iroot.val(), options.parseFormat);
 		};
 		
 		var click = function(act, number, event){
@@ -89,13 +95,21 @@
 			thoursInp.val( time.isValid()? time.format('HH') : '00');
 			tminutesInp.val( time.isValid()? time.format('mm') : '00' );
 			tsecondsInp.val( time.isValid()? time.format('ss') : '00' );
-			iroot.val( time.isValid()? time.format(options.outputFormat) : '');
+			
+			//set time value to source data
+			var time = time.isValid()? time.format(options.outputFormat) : '';
+			if (iroot.attr('timepicker-source')) setSource(time);
+			if (iroot.attr('timepicker-link')) setLink(time);
+			iroot.val(time);
+			
+			//trigger to display
 			$(iroot).trigger('change');
 		}
 		
 		//if options[container] exist
-		if (options.container){
-			$(options.container).append(troot).css('padding', '8px');
+		if (iroot.attr('timepicker-container')){
+			var container = iroot.attr('timepicker-container');
+			$(container).append(troot).css('padding', '8px');
 			if (options.class) $(troot).addClass(options.class);
 			if (options.styles) $(troot).attr('style',options.styles);
 			
@@ -103,10 +117,21 @@
 			iroot.on('focus click', function(event){
 				event.stopPropagation();
 				$(window).trigger('click');
-				$(options.container).addClass('w3-show').css('right','0');
+				
+				if (iroot.attr('timepicker-modal')){
+					$(iroot.attr('timepicker-modal')).show();
+				}
+				else{
+					$(container).addClass('w3-show').css('right','0');
+				}
 			});
 			$(window).on('click focus', function(){
-				$(options.container).removeClass('w3-show');
+				if (iroot.attr('timepicker-modal')){
+					$(iroot.attr('timepicker-modal')).hide();
+				}
+				else{
+					$(container).removeClass('w3-show');
+				}
 			});
 		}
 		else{

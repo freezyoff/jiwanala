@@ -87,8 +87,24 @@
     checkFont();
     }
   })( this, jQuery );
-  
-  
+
+(function( $ ) {
+	$.fn.isOnScreen = function(){
+		var el = $(this);
+		var win = $(window);
+		var bounds = el.offset();
+
+		var viewport = {
+		top : win.scrollTop()
+		};
+
+		viewport.bottom = viewport.top + win.height();
+		bounds.bottom = bounds.top + el.outerHeight();
+
+		return (!(viewport.bottom < bounds.top || viewport.bottom < bounds.bottom || viewport.top > bounds.bottom || viewport.top > bounds.top));
+	};  
+}( jQuery ));
+
 (function( $ ) {
     $.fn.select = function() {
 		$(this).each(function(){

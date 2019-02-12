@@ -144,23 +144,27 @@ class AttendanceController extends Controller
 		return view('my.bauk.attendance.upload');
 	}
 	
-	public function upload(UploadRequest $req){
+	public function upload(Request $req){	//(UploadRequest $req){
 		$file = $req->file('file');
-		$import = new AttendanceByFingersImport(\Auth::user(), $req->input('dateformat'), $req->input('timeformat'));
-		$import->setValidationMessages(trans('my/bauk/attendance/hints.validations.import'));
-		$import->import($file);
-		$fails = [];
-		foreach ($import->failures() as $failure) {
-			$fails[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-		}
+		$import = new AttendanceByFingersImport(
+			\Auth::user(), 
+			trans('my/bauk/attendance/hints.validations.import')
+		);
 		
-		$response = redirect()->back();
-		if (count($fails)>0) $response->with('fails',$fails);
-		if ($import->hasErrors()) $response->with('invalid', $import->getErrors());
-		return $response;
+		$import->import($file);
+		if ($import->hasErrors()) return redirect()->back()->with('invalid', $import->getErrors());
+		
+		return view('my.bauk.attendance.upload_report',[
+			'import'=>$import->getReport(),
+			'lineOffset'=>$import->headingRow(),
+		]);
 	}
 	
-	public function download($type){
+	public function download_template($type){
 		return Storage::download('my/bauk/attendance/employee_attendance.'.$type, time().'_attendance_fingers.'.$type);
+	}
+	
+	public function download_help($type){
+		return Storage::download('my/bauk/attendance/Setting_Windows_'.$type.'_Csv.txt', time().'_setting_windows.'.$type.'_Csv.txt');
 	}
 }

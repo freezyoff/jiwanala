@@ -4,8 +4,8 @@
 		'finger'=>'Finger Kehadiran',
 		'consent'=>'Izin / Cuti Kehadiran',
 		'upload'=>'Upload Finger Kehadiran',
-		'upload_import'=>'Import File',
-		'upload_error'=>'Import Gagal',
+		'upload_import'=>'Impor File',
+		'upload_report'=>'Laporan Impor',
 	],
 	'subtitles'=>[
 		'year'=>'tahun',

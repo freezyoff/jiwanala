@@ -12,10 +12,11 @@ use App\Libraries\Bauk\EmployeeAttendance;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
 
 class AttendanceByFingersImport implements 
 	ToModel,
@@ -25,40 +26,42 @@ class AttendanceByFingersImport implements
 	SkipsOnFailure
 	//ShouldQueue
 {
-	use Importable, SkipsFailures;
+	use Importable;//, SkipsFailures;
 	
 	protected $user = null;
-	protected $dateformat= null;
-	protected $timeformat = null;
+	protected $dateformat= 'd/m/Y';
+	protected $timeformat = 'h:i:s A';
+	protected $report = [];
 	
-	public function __construct(User $creator, String $dateformat, String $timeformat){ 
+	public function __construct(User $creator, Array $validationMessages=[]){ 
 		$this->user = $creator; 
-		$this->dateformat = $dateformat;
-		$this->timeformat = $timeformat;
+		$this->setValidationMessages($validationMessages);
 	}
 	
 	public function chunkSize(): int { return 1000; }
 	
-	protected $headingRow = 1;
-	public function setHeadingRow($line){ $this->headingRow = $line; }
-	public function headingRow(): int { return $this->headingRow; }
+	public function headingRow(): int { return 3; }
 	
 	public function rules(): array{
+		//@NOTE: 
+		//we use this regex to validate timeformat: "h:i:s A".
+		//looks like the validation cannot handle proper rule "date_format:h:i:s A".
+		$regexTimeFormat = 'regex:/^([0-9]{1,2})\:([0-9]{1,2})\:([0-9]{1,2})\s\w{2}$/';
         return [
-			'nip'=> 'numeric|exists:bauk.employees,nip',
-            'tanggal' => 'date_format:'.$this->dateformat,
-			'finger_masuk' => 'date_format:'.$this->timeformat,
-			'finger_keluar_1' => 'date_format:'.$this->timeformat,
-			'finger_keluar_2' => 'nullable|date_format:'.$this->timeformat,
-			'finger_keluar_3' => 'nullable|date_format:'.$this->timeformat,
+			'nip'=> 			'required|numeric|exists:bauk.employees,nip',
+            'tanggal' => 		'required|date_format:'.$this->dateformat,
+			'finger_masuk' => 	'required|'.$regexTimeFormat,
+			'finger_keluar_1' =>'required|'.$regexTimeFormat,
+			'finger_keluar_2' =>'nullable|'.$regexTimeFormat,
+			'finger_keluar_3' =>'nullable|'.$regexTimeFormat,
 
-            // Above is alias for as it always validates in batches
-			'*.nip'=> 'exists:bauk.employees,nip',
-			'*.tanggal' => 'date_format:'.$this->dateformat,
-			'*.finger_masuk' => 'date_format:'.$this->timeformat,
-			'*.finger_keluar_1' => 'date_format:'.$this->timeformat,
-			'*.finger_keluar_2' => 'nullable|date_format:'.$this->timeformat,
-			'*.finger_keluar_3' => 'nullable|date_format:'.$this->timeformat,
+            //	Above is alias for as it always validates in batches
+			'*.nip'=> 				'required|numeric|exists:bauk.employees,nip',
+			'*.tanggal' => 			'required|'.'date_format:'.$this->dateformat,
+			'*.finger_masuk' => 	'required|'.$regexTimeFormat,
+			'*.finger_keluar_1' => 	'required|'.$regexTimeFormat,
+			'*.finger_keluar_2' => 	'nullable|'.$regexTimeFormat,
+			'*.finger_keluar_3' => 	'nullable|'.$regexTimeFormat,
         ];
     }
 	
@@ -85,34 +88,67 @@ class AttendanceByFingersImport implements
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-	private $currentRow = 2;
     public function model(array $row){
-		$this->currentRow++;
-		try{
+		//try{
 			$employeeId = \App\Libraries\Bauk\Employee::findByNIP($row['nip'])->id;
-			$date 	= $row['tanggal']? \Carbon\Carbon::createFromFormat($this->dateformat, $row['tanggal']) : null;
-			$time1 	= $row['finger_masuk']? \Carbon\Carbon::createFromFormat($this->timeformat, $row['finger_masuk']) : null;
-			$time2 	= $row['finger_keluar_1']? \Carbon\Carbon::createFromFormat($this->timeformat, $row['finger_keluar_1']) : null;
-			$time3 	= $row['finger_keluar_2']? \Carbon\Carbon::createFromFormat($this->timeformat, $row['finger_keluar_2']) : null;
-			$time4 	= $row['finger_keluar_3']? \Carbon\Carbon::createFromFormat($this->timeformat, $row['finger_keluar_3']) : null;
-			
+			$date = $this->convertToDatabaseDateFormat($row['tanggal'], $this->dateformat);
 			$data = [
 				'creator'		=> $this->user->id,
 				'employee_id'	=> $employeeId,
-				'date' 			=> $date->format('Y-m-d'),
-				'time1' 		=> $time1->format('H:i:s'),
-				'time2'			=> $time2->format('H:i:s'),
-				'time3'			=> !$time3?: $time3->format('H:i:s'),
-				'time4'			=> !$time4?: $time4->format('H:i:s'),
+				'date' 			=> $date,
+				'time1' 		=> $this->convertToDatabaseDateFormat($row['finger_masuk'], $this->timeformat),
+				'time2'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat),
+				'time3'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat),
+				'time4'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat),
 				'locked'		=> \App\Libraries\Bauk\EmployeeAttendanceReport::isLockedPeriode($date),
 			];
 			
-			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date->format('Y-m-d'))->first();
+			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
 			$record = $record?: new EmployeeAttendance();
-			return $record->fill($data);			
-		}
-		catch(\Exception $e){
-			$this->errors[$this->currentRow] = trans('my/bauk/attendance/hints.errors.invalidTableFile');
+			$record->fill($data);
+			
+			//save the success
+			$this->onSuccess($row);
+			return $record;
+		//}
+		//catch(\Exception $e){
+			//$this->errors[$this->currentRow] = trans('my/bauk/attendance/hints.errors.invalidTableFile');
+		//}
+    }
+	
+	private function convertToDatabaseDateFormat($value, $formatDateTime){
+		if ($value == null && $value =='') return null;
+		
+		$carbon = \Carbon\Carbon::createFromFormat($formatDateTime, $value);
+		return $formatDateTime==$this->dateformat? 
+			$carbon->format('Y-m-d'):
+			$carbon->format('H:i:s');
+	}
+	
+	/**
+     * @param Failure[] $failures
+     */
+    public function onFailure(Failure ...$failures)
+    {
+		foreach($failures as $f){
+			$ind = $f->row();
+			$this->report[$ind][$f->attribute()] = $f->errors()[0];
+			if (!isset($this->report[$ind]['type'])){
+				$this->report[$ind]['imported'] = false;
+			}
 		}
     }
+	
+	private function onSuccess(Array $row){
+		$ind = $row['no'] + $this->headingRow();
+		$keys = ['nip','tanggal','finger_masuk','finger_keluar_1','finger_keluar_2','finger_keluar_3'];
+		foreach($keys as $k){
+			$this->report[$ind][$k] = $row[$k];
+		}
+		$this->report[$ind]['imported'] = true;
+	}
+	
+	public function getReport(){
+		return $this->report;
+	}
 }
