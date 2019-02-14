@@ -58,13 +58,13 @@
 		var defaults={
 			parseFormat:'hh:mm:ss A',
 			outputFormat: 'HH:mm:ss'
-		}
+		};
 		options = $.extend(defaults, options);
 		
-		var setLink = function(value) { $(iroot.attr('timepicker-link')).val(value); }
-		var setSource = function(value){ $(iroot.attr('timepicker-source')).val(value); }
-		var getSource = function(){ return $(iroot.attr('timepicker-source')).val(); }
-		var getSourceTime = function(){ return moment(getSource(), options.parseFormat); }
+		var setLink = function(value) { $(iroot.attr('timepicker-link')).val(value); };
+		var setSource = function(value){ $(iroot.attr('timepicker-source')).val(value); };
+		var getSource = function(){ return $(iroot.attr('timepicker-source')).val(); };
+		var getSourceTime = function(){ return moment(getSource(), options.parseFormat); };
 		
 		var getTime = function(){
 			return iroot.attr('timepicker-source')? 
@@ -79,7 +79,7 @@
 			if (number>0) time.add(number, act);
 			else if (number<0) time.subtract(number*-1, act);
 			display(time);
-		}
+		};
 		
 		var change = function(act, number, event){
 			event.stopPropagation();
@@ -89,7 +89,7 @@
 			else if (act=='m') time.minute(number);
 			else if (act=='s') time.second(number);
 			display(time);
-		}
+		};
 		
 		var display = function(time){
 			thoursInp.val( time.isValid()? time.format('HH') : '00');
@@ -104,7 +104,7 @@
 			
 			//trigger to display
 			$(iroot).trigger('change');
-		}
+		};
 		
 		//if options[container] exist
 		if (iroot.attr('timepicker-container')){

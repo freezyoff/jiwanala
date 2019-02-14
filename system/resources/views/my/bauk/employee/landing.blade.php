@@ -1,13 +1,6 @@
 @extends('layouts.dashboard.dashboard', ['sidebar'=>'bauk', 'title'=>trans('my/bauk/employee/landing.page.title')])
 
 @section('dashboard.main')
-<!--
-<div style="padding-bottom:16px;">
-	<div></div>
-	<a class="accordion" href="#" target="searchForm" style="cursor:pointer;">Opsi pencarian data</a>
-	<div id="searchForm">@TODO</div>
-</div>
--->
 <div class="w3-card w3-round">
 	<header class="w3-container w3-theme-l1 padding-top-bottom-8">
 		<h4>{{trans('my/bauk/employee/landing.page.sub_title')}}</h4>
@@ -118,8 +111,16 @@
 @endSection
 
 @section('html.body.scripts')
+<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
 @parent
 <script>
+App.UI.keywords = function(){
+	$('input[name="keywords"]').on('change', $.debounce(250, function(){
+		$(this).prev().find('i').attr('class','button-icon-loader');
+		$('form[name=searchkey]').submit();
+	}));
+};
+
 App.UI.searchActivation = function(){
 	var containerStyle = {
 		largeOnWindowResize: function(){
@@ -169,8 +170,13 @@ App.UI.searchActivation = function(){
 	});
 };
 
+App.submitSearch = function(){
+	$('form[name=searchkey]').submit();
+};
+
 $(document).ready(function(){
-	App.UI.searchActivation();
+	App.UI.keywords();
+	$('[role="select"]').on('select.pick', App.submitSearch).select();
 });
 </script>
 @endSection

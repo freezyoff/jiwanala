@@ -1,5 +1,15 @@
 <?php 
-Route::name('landing')->get('/', '\App\Http\Controllers\My\BaukController@landing');
+Route::name('landing')
+	->group(function(){
+	Route::get('/', '\App\Http\Controllers\My\BaukController@landing');
+		
+	Route::prefix('info')
+		->name('.info')
+		->group(function(){
+		Route::name('.nextHolidays')
+			->post('nextHolidays', '\App\Http\Controllers\My\BaukController@nextHolidays');
+	});
+});
 	
 Route::prefix('employee')
 	->name('employee')

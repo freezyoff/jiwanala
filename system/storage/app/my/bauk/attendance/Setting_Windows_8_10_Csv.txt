@@ -5,16 +5,16 @@
 	
 	
 ---------------------------------------------------------------------------------------
-Win 8:									Win 10:
+Win 8:							Win 10:
 ---------------------------------------------------------------------------------------
-3.	Pilih Kontrol Panel					3.	Ketik Kontrol Panel dan klik tombol wilayah
+3.	Pilih Kontrol Panel				3.	Ketik Kontrol Panel dan klik tombol wilayah
 	Select Control Panel					type Control Panel and press enter > Region
 4.	Pilih Wilayah & Bahasa				4.	Klik Pengaturan Tambahan
 	Select Region and Language				Click Additional Settings
 	
 	
 5.	Klik Pengaturan Tambahan
-    Click on Additional Settings
+	Click on Additional Settings
 6.	Cari isian List separator
 	Locate the List separator
 7.	Rubah tanda Decimal dari tanda titik (.) ke koma (,)
