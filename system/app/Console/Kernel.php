@@ -29,13 +29,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+		$outputPath = './storage/logs/';
+		if (env('APP_ENV') === 'production') {
+			$outputPath = '/home/jiwanala/GIT-JIWANALA/storage/logs/';
+		}
 		//schedule artisan queue:*
 		$schedule->command('queue:retry all')->withoutOverlapping()
 			->everyMinute()
-			->appendOutputTo("./storage/logs/scheduleLog.queue-retry.txt");
+			->appendOutputTo($outputPath."scheduleLog.queue-retry.txt");
         $schedule->command('queue:work --stop-when-empty')->withoutOverlapping()
 			->everyMinute()
-			->appendOutputTo("./storage/logs/scheduleLog.queue-work.txt");
+			->appendOutputTo($outputPath."scheduleLog.queue-work.txt");
     }
 
     /**

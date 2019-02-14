@@ -72,7 +72,7 @@ class EmployeeController extends Controller
 			2=>'active'
 		];
 		return view('my.bauk.employee.landing', [
-				'keyactive'=> $req->input('keyactive'), 
+				'keyactive'=> $req->input('keyactive',1), 
 				'keywords'=> $req->input('keywords'), 
 				'keyactive_large'=> $req->input('keyactive_large', trans('my/bauk/employee/landing.hints.key_active_items.'.$trans[$keyactive+1])), 
 				'keyactive_small'=> $req->input('keyactive_small', trans('my/bauk/employee/landing.hints.key_active_items.'.$trans[$keyactive+1])), 

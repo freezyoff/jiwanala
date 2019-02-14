@@ -72,7 +72,7 @@
 				<div id="time{{$item}}-modal" 
 					class="w3-modal w3-display-container datepicker-modal w3-hide-large" 
 					onclick="$(this).hide()">
-					<div class="w3-modal-content w3-animate-top w3-card-4" style="max-width:300px">
+					<div class="w3-modal-content w3-animate-top w3-card-4" style="max-width:300px; margin:auto;">
 						<header class="w3-container w3-theme">
 							<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
 								onclick="$('#time{{$item}}-modal').hide()" 
