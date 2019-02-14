@@ -67,7 +67,11 @@
 					<form action="{{route('my.bauk.attendance.upload')}}" name="import" method="POST" enctype="multipart/form-data">
 						@csrf
 						<div class="padding-left-16 w3-col s12 m8 l6">
-							<div class="input-group">
+							<div class="input-group
+								@if ($errors->has('file') || \Session::has('invalid'))
+									error
+								@endif
+								">
 								<label><i class="fas fa-upload fa-fw"></i></label>
 								<label for="file" style="width:100%"><span class="w3-text-grey">{{trans('my/bauk/attendance/hints.buttons.upload-file')}}</span></label>
 								<input id="file" name="file" type="file" style="display:none" accept=".csv" />

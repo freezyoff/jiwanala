@@ -144,16 +144,23 @@ class AttendanceController extends Controller
 		return view('my.bauk.attendance.upload');
 	}
 	
-	public function upload(Request $req){	//(UploadRequest $req){
+	public function upload(Request $req){
 		$file = $req->file('file');
 		$import = new AttendanceByFingersImport(
 			\Auth::user(), 
 			trans('my/bauk/attendance/hints.validations.import')
 		);
 		
+		$mime = $file->getMimeType() == 'text/plain';
+		$ext = $file->getClientOriginalExtension() == 'csv';
+		
+		if (!$mime && !$ext){
+			return redirect()->back()
+				->withErrors(['file'=>trans('my/bauk/attendance/hints.errors.fileMimeExtensionInvalid')]);
+		}
+		
 		$import->import($file);
 		if ($import->hasErrors()) return redirect()->back()->with('invalid', $import->getErrors());
-		
 		return view('my.bauk.attendance.upload_report',[
 			'import'=>$import->getReport(),
 			'lineOffset'=>$import->headingRow(),

@@ -128,7 +128,7 @@
 	<div class="w3-main" id="jn-main">
 		<!-- begin: Main / Page Header -->
 		<header class="w3-container" style="padding-top:8px; padding-bottom:8px;">
-			<h3 style="font-weight:bold;">{{isset($title)? $title : 'Page Title'}}</h3>			
+			<h3 style="font-weight:bold;">{!!isset($title)? $title : 'Page Title'!!}</h3>
 		</header>
 		<!-- end: Main / Page Header -->
 		<!-- begin: Main / Page content -->

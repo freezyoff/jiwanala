@@ -11,6 +11,19 @@ class Holiday extends Model
 	protected $connection ="bauk";
 	protected $fillable=['creator', 'name','start','end','repeat'];
 	
+	public static function getHolidaysByMonth($month, $year=false){
+		$year = $year? $year : now()->format('Y');
+		return 	Holiday::where(function($q) use ($year, $month){
+					$q->whereRaw('DATE_FORMAT(`start`,"%Y-%m") = \''.$year.'-'.$month.'\'');
+					$q->whereRaw('DATE_FORMAT(`end`,"%Y-%m") = \''.$year.'-'.$month.'\'');
+					$q->where('repeat', '<>', '1');
+				})->orWhere(function($q) use ($year, $month){
+					$q->whereRaw('DATE_FORMAT(`start`,"%m") = \''.$month.'\'');
+					$q->whereRaw('DATE_FORMAT(`end`,"%m") = \''.$month.'\'');
+					$q->where('repeat', '=', '1');
+				})
+				->orderByRaw('`start` asc')->get();
+	}
 	
 	public static function getHolidaysByYear($year=false, $reuse=false){
 		$year = $year? $year : now()->format('Y');

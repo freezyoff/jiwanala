@@ -36,6 +36,7 @@
 		'uploadConnectionTimeout'=>'Tidak dapat menghubungi server. Mohon cek koneksi.',
 		'uploadFileTooLarge'=>'Besar file melebihi 16 Mb',
 		'invalidTableFile'=>'Gunakan format tabel yang sesuai. Unduh contoh format tabel.',
+		'fileMimeExtensionInvalid'=>'Unggah file dengan ekstensi .csv'
 	],
 	
 	'validations'=>[
@@ -125,7 +126,7 @@
 			],
 			[
 				'h4'=>'Unduh Berkas Format Tabel',
-				'p1'=>'Saat mengisi data,&nbsp;pastikan tidak merubah format kolom dan baris. Unduh berkas,&nbsp;modifikasi,&nbsp;dan simpan (save as) dengan ekstensi .csv',
+				'p1'=>'Saat mengisi data,&nbsp;pastikan tidak merubah format kolom dan baris. Unduh berkas,&nbsp;modifikasi,&nbsp;dan simpan (save as)&nbsp;dengan ekstensi .csv .',
 				'p2'=>'Klik icon berkas untuk mengunduh.'
 			],
 			[
