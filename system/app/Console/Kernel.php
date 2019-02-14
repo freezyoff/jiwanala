@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\JiwanalaAddUser::class,
 		\App\Console\Commands\JiwanalaGrantPermission::class,
 		\App\Console\Commands\JiwanalaPermissions::class,
-		\App\Console\Commands\JiwanalaEmployeeAttendance::class,
+		\App\Console\Commands\Bauk\JiwanalaEmployeeAttendance_Lock::class,
     ];
 
     /**
@@ -29,10 +29,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-		$outputPath = './storage/logs/';
-		if (env('APP_ENV') === 'production') {
-			$outputPath = '/home/jiwanala/GIT-JIWANALA/storage/logs/';
-		}
+		$outputPath = \App\Libraries\Foundation\Schedules::getOutputLogPath();
+		
 		//schedule artisan queue:*
 		$schedule->command('queue:retry all')->withoutOverlapping()
 			->everyMinute()
@@ -40,6 +38,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:work --stop-when-empty')->withoutOverlapping()
 			->everyMinute()
 			->appendOutputTo($outputPath."scheduleLog.queue-work.txt");
+		
+		\App\Libraries\Foundation\Schedules::run($schedule);
     }
 
     /**

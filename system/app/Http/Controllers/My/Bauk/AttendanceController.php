@@ -50,56 +50,44 @@ class AttendanceController extends Controller
 		$date->day = $date->daysInMonth;
 		$end = $date->format('Y-m-d');
 		
+		
 		//create date array of current month
+		$employee = Employee::findByNIP($nip);
 		$list = [];
 		$loop = $date->daysInMonth;
 		for($currentDay=1; $currentDay<=$loop; $currentDay++){
 			$date->day = $currentDay;
-			$list[$date->format('Y-m-d')] = [
-				'label_dayofweek'=>trans('calendar.days.long.'.($date->dayOfWeek)),
-				'label_date'=>$date->format('d'),
-				'link_finger'=>route('my.bauk.attendance.fingers',[
-									'nip'=>$nip, 
-									'year'=>$date->format('Y'), 
-									'month'=>$date->format('m'),
-									'day'=>$date->format('d'),
-								]),
-				'link_consent'=>route('my.bauk.attendance.consents',[
-									'nip'=>$nip, 
-									'year'=>$date->format('Y'), 
-									'month'=>$date->format('m'),
-									'day'=>$date->format('d'),
-								]),
-				'holiday'=>\App\Libraries\Bauk\Holiday::getHolidayName($date),
-				'attendance'=>false,
-				'consent'=>false,
-				'locked'=>false,
+			$key = $date->format('Y-m-d');
+			
+			$list[$key] = [
+				'label_dayofweek'=>	trans('calendar.days.long.'.($date->dayOfWeek)),
+				'label_date'=>		$date->format('d'),
+				'holiday'=>			\App\Libraries\Bauk\Holiday::getHolidayName($date),
 			];
-		}
-		
-		//add attendance data
-		$employee = Employee::findByNIP($nip);
-		$attendanceRecords = $employee->attendanceRecordsByPeriode($start, $end);
-		foreach($attendanceRecords->get() as $att){
-			$list[$att->date]['attendance'] = $att;
-			$list[$att->date]['locked'] = $att && $att->locked? $att->locked : $list[$att->date]['locked'];
-		}
-		
-		//add consent data
-		$consentRecords = $employee->consentRecordsByPeriode($start, $end);
-		foreach($consentRecords->get(['id','consent','start','end','locked']) as $consent){
-			$sd = \Carbon\Carbon::createFromFormat('Y-m-d', $consent->start);
-			$se = \Carbon\Carbon::createFromFormat('Y-m-d', $consent->end);
-			$diff = $sd->diffInDays($se) + 1;
-			$link = true;
-			while($diff){
-				$dd = $sd->format('Y-m-d');
-				$list[$dd]['consent'] = $consent;
-				$list[$dd]['locked'] = $consent? $consent->locked : $list[$dd]['locked'];
-				if (!$link) $list[$dd]['link_consent'] = false;
-				$sd->addDays(1);
-				$diff--;
-				$link = false;
+			
+			if ($list[$key]['holiday']) continue;	//next record
+			
+			$list[$key]['locked'] = !isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date);
+			$list[$key]['attendance'] = $employee->attendanceRecord($key);
+			$list[$key]['consent'] = $employee->consentRecord($key);
+			
+			if (!$list[$key]['locked']){	
+				$list[$key]['link_finger']=route('my.bauk.attendance.fingers',[
+					'nip'=>$nip, 
+					'year'=>$date->format('Y'), 
+					'month'=>$date->format('m'),
+					'day'=>$date->format('d'),
+				]);
+				
+				if (($list[$key]['consent'] && $list[$key]['consent']->start == $date->format('Y-m-d')) ||
+					!$list[$key]['consent']){
+					$list[$key]['link_consent']=route('my.bauk.attendance.consents',[
+						'nip'=>$nip, 
+						'year'=>$date->format('Y'), 
+						'month'=>$date->format('m'),
+						'day'=>$date->format('d'),
+					]);
+				}
 			}
 		}
 		

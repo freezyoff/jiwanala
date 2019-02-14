@@ -61,6 +61,8 @@
 		'timeformat_required'=>'Pilih salah satu Format Waktu',
 		'file_required'=>'Sertakan berkas untuk impor',
 		'file_format'=>'Format CSV invalid, periksa baris :line',
+		'notAllowedByPeriode'=>'Tanggal :value sudah melewati periode pelaporan.',
+		'holiday'=>'Tanggal :value hari libur :name',
 		
 		//import
 		'import'=>[

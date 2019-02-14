@@ -53,6 +53,6 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      * @return array
      */
     public function toArray($notifiable){
-        return ['reset_url'=>$this->reset_url];
+        return ['reset_url'=>$this->token];
     }
 }

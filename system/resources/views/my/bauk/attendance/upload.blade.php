@@ -97,6 +97,7 @@
 <script>
 	$('#file').change(function(event){
 		$(this).prev().html(event.target.files[0].name)
+			.prev().find('i').attr('class','button-icon-loader')
 			.parents('form').trigger('submit');
 	});
 </script>

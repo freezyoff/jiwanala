@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => $baseDir . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
     'App\\Console\\Commands\\JiwanalaAddPermission' => $baseDir . '/app/Console/Commands/JiwanalaAddPermission.php',
     'App\\Console\\Commands\\JiwanalaAddUser' => $baseDir . '/app/Console/Commands/JiwanalaAddUser.php',
     'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => $baseDir . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
@@ -51,11 +52,9 @@ return array(
     'App\\Http\\Requests\\My\\Bauk\\Holiday\\PatchRequest' => $baseDir . '/app/Http/Requests/My/Bauk/Holiday/PatchRequest.php',
     'App\\Http\\Requests\\My\\Bauk\\Holiday\\PostRequest' => $baseDir . '/app/Http/Requests/My/Bauk/Holiday/PostRequest.php',
     'App\\Imports\\My\\Bauk\\Attendance\\AttendanceByFingersImport' => $baseDir . '/app/Imports/My/Bauk/Attendance/AttendanceByFingersImport.php',
-    'App\\Jobs\\My\\Bauk\\Attendance\\ImportAttendanceCSV' => $baseDir . '/app/Jobs/My/Bauk/Attendance/ImportAttendanceCSV.php',
     'App\\Libraries\\Baak\\Student' => $baseDir . '/app/Libraries/Baak/Student.php',
     'App\\Libraries\\Bauk\\Employee' => $baseDir . '/app/Libraries/Bauk/Employee.php',
     'App\\Libraries\\Bauk\\EmployeeAttendance' => $baseDir . '/app/Libraries/Bauk/EmployeeAttendance.php',
-    'App\\Libraries\\Bauk\\EmployeeAttendanceReport' => $baseDir . '/app/Libraries/Bauk/EmployeeAttendanceReport.php',
     'App\\Libraries\\Bauk\\EmployeeConsent' => $baseDir . '/app/Libraries/Bauk/EmployeeConsent.php',
     'App\\Libraries\\Bauk\\EmployeeConsentAttachment' => $baseDir . '/app/Libraries/Bauk/EmployeeConsentAttachment.php',
     'App\\Libraries\\Bauk\\Holiday' => $baseDir . '/app/Libraries/Bauk/Holiday.php',

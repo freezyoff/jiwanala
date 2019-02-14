@@ -35,5 +35,4 @@ class EmployeeAttendance extends Model
 	public function employee(){
 		return $this->belongsTo('\App\Libraries\Bauk\Employee', 'employee_id', 'id');
 	}
-	
 }

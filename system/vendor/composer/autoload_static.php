@@ -87,6 +87,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
+        '45968c58143a5da08e33130cc66f8436' => __DIR__ . '/../..' . '/app/Libraries/Foundation/AttendanceAndConsentHelper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -525,6 +526,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => __DIR__ . '/../..' . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
         'App\\Console\\Commands\\JiwanalaAddPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddPermission.php',
         'App\\Console\\Commands\\JiwanalaAddUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddUser.php',
         'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
@@ -570,11 +572,9 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Http\\Requests\\My\\Bauk\\Holiday\\PatchRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Holiday/PatchRequest.php',
         'App\\Http\\Requests\\My\\Bauk\\Holiday\\PostRequest' => __DIR__ . '/../..' . '/app/Http/Requests/My/Bauk/Holiday/PostRequest.php',
         'App\\Imports\\My\\Bauk\\Attendance\\AttendanceByFingersImport' => __DIR__ . '/../..' . '/app/Imports/My/Bauk/Attendance/AttendanceByFingersImport.php',
-        'App\\Jobs\\My\\Bauk\\Attendance\\ImportAttendanceCSV' => __DIR__ . '/../..' . '/app/Jobs/My/Bauk/Attendance/ImportAttendanceCSV.php',
         'App\\Libraries\\Baak\\Student' => __DIR__ . '/../..' . '/app/Libraries/Baak/Student.php',
         'App\\Libraries\\Bauk\\Employee' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Employee.php',
         'App\\Libraries\\Bauk\\EmployeeAttendance' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeAttendance.php',
-        'App\\Libraries\\Bauk\\EmployeeAttendanceReport' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeAttendanceReport.php',
         'App\\Libraries\\Bauk\\EmployeeConsent' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeConsent.php',
         'App\\Libraries\\Bauk\\EmployeeConsentAttachment' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeConsentAttachment.php',
         'App\\Libraries\\Bauk\\Holiday' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Holiday.php',

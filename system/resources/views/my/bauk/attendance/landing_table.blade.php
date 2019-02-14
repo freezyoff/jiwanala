@@ -19,36 +19,35 @@
 					{{-- ada data kehadiran --}}
 					<td>
 						@if ($attendance['holiday'])
-							{{$attendance['holiday']}}
-						@else
-							@if ($attendance['attendance'])
-								<div class="w3-row">
-								@foreach([1,2,3,4] as $index)
-									@if ( $attendance['attendance']->{'time'.$index} )
-									<div class="w3-col s12 m6 l3">
-										<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
-										<span class="padding-left-8">{{$attendance['attendance']->{'time'.$index} }}</span>
-									</div>
-									@endif
-								@endforeach
+							{{$attendance['holiday']}}	
+						@endif
+						@if (isset($attendance['attendance']))
+							<div class="w3-row">
+							@foreach([1,2,3,4] as $index)
+								@if ( $attendance['attendance']->{'time'.$index} )
+								<div class="w3-col s12 m6 l3">
+									<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
+									<span class="padding-left-8">{{$attendance['attendance']->{'time'.$index} }}</span>
 								</div>
-							@endif
-							@if ($attendance['consent'])
-								<div class="w3-row">
-									<i class="fas fa-exclamation-circle fa-fw"></i>
-									<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['consent']->consent) }}</span>
-								</div>
-							@endif
+								@endif
+							@endforeach
+							</div>
+						@endif
+						@if (isset($attendance['consent']))
+							<div class="w3-row">
+								<i class="fas fa-exclamation-circle fa-fw"></i>
+								<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['consent']->consent) }}</span>
+							</div>
 						@endif
 					</td>
 					
 					<td style="text-align:right">
 						{{-- data kehadiran tidak dikunci --}}
-						@if (!$attendance['locked'] && !$attendance['holiday'])
-							@if ($attendance['link_finger'])
+						@if (!$attendance['holiday'])
+							@if (isset($attendance['link_finger']))
 							<a 	href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
 							@endif
-							@if($attendance['link_consent'])
+							@if(isset($attendance['link_consent']))
 							<a href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti"><i class="far fa-calendar-check"></i></a>
 							@endif
 						@endif

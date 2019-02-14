@@ -17,11 +17,6 @@ Route::prefix('employee')
 	
 	Route::any('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
 	
-	/*
-	Route::name('.generate.nip')
-		->get('/get/nip', '\App\Http\Controllers\My\Bauk\EmployeeController@generateNIP');
-	*/
-	
 	Route::prefix('add')
 		->name('.add')
 		->middleware('permission:bauk.post.employee')

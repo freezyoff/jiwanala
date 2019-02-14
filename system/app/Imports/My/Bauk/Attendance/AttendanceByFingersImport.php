@@ -47,9 +47,32 @@ class AttendanceByFingersImport implements
 		//we use this regex to validate timeformat: "h:i:s A".
 		//looks like the validation cannot handle proper rule "date_format:h:i:s A".
 		$regexTimeFormat = 'regex:/^([0-9]{1,2})\:([0-9]{1,2})\:([0-9]{1,2})\s\w{2}$/';
+		$dateFormat = $this->dateformat;
+		$isAllowed = function ($attribute, $value, $fail) use($dateFormat){
+			$date = \Carbon\Carbon::createFromFormat($dateFormat, $value);
+			if (!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date)) {
+				$fail( str_replace(
+					':value',
+					$value,
+					trans('my/bauk/attendance/hints.validations.notAllowedByPeriode')
+				));
+			}
+		};
+		$isHoliday = function ($attribute, $value, $fail) use($dateFormat){
+			$date = \Carbon\Carbon::createFromFormat($dateFormat, $value);
+			$holiday = \App\Libraries\Bauk\Holiday::getHolidayName($date);
+			if ($holiday) {
+				$fail( str_replace(
+					[':value',':name'],
+					[$value, $holiday],
+					trans('my/bauk/attendance/hints.validations.holiday')
+				));
+			}
+		};
+		
         return [
 			'nip'=> 			'required|numeric|exists:bauk.employees,nip',
-            'tanggal' => 		'required|date_format:'.$this->dateformat,
+            'tanggal' => 		['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
 			'finger_masuk' => 	'required|'.$regexTimeFormat,
 			'finger_keluar_1' =>'required|'.$regexTimeFormat,
 			'finger_keluar_2' =>'nullable|'.$regexTimeFormat,
@@ -57,7 +80,7 @@ class AttendanceByFingersImport implements
 
             //	Above is alias for as it always validates in batches
 			'*.nip'=> 				'required|numeric|exists:bauk.employees,nip',
-			'*.tanggal' => 			'required|'.'date_format:'.$this->dateformat,
+			'*.tanggal' => 			['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
 			'*.finger_masuk' => 	'required|'.$regexTimeFormat,
 			'*.finger_keluar_1' => 	'required|'.$regexTimeFormat,
 			'*.finger_keluar_2' => 	'nullable|'.$regexTimeFormat,
@@ -100,7 +123,6 @@ class AttendanceByFingersImport implements
 				'time2'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat),
 				'time3'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat),
 				'time4'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat),
-				'locked'		=> \App\Libraries\Bauk\EmployeeAttendanceReport::isLockedPeriode($date),
 			];
 			
 			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
