@@ -71,6 +71,7 @@ class AttendanceByFingersImport implements
 		};
 		
         return [
+			'no' =>				'required|number',
 			'nip'=> 			'required|numeric|exists:bauk.employees,nip',
             'tanggal' => 		['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
 			'finger_masuk' => 	'required|'.$regexTimeFormat,
@@ -79,6 +80,7 @@ class AttendanceByFingersImport implements
 			'finger_keluar_3' =>'nullable|'.$regexTimeFormat,
 
             //	Above is alias for as it always validates in batches
+			'*.no' =>				'required|number',
 			'*.nip'=> 				'required|numeric|exists:bauk.employees,nip',
 			'*.tanggal' => 			['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
 			'*.finger_masuk' => 	'required|'.$regexTimeFormat,
@@ -115,7 +117,10 @@ class AttendanceByFingersImport implements
 		//try{
 			$employeeId = \App\Libraries\Bauk\Employee::findByNIP($row['nip'])->id;
 			$date = $this->convertToDatabaseDateFormat($row['tanggal'], $this->dateformat);
-			$data = [
+			
+			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
+			$record = $record?: new EmployeeAttendance();
+			$record->fill([
 				'creator'		=> $this->user->id,
 				'employee_id'	=> $employeeId,
 				'date' 			=> $date,
@@ -123,11 +128,7 @@ class AttendanceByFingersImport implements
 				'time2'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat),
 				'time3'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat),
 				'time4'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat),
-			];
-			
-			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
-			$record = $record?: new EmployeeAttendance();
-			$record->fill($data);
+			]);
 			
 			//save the success
 			$this->onSuccess($row);

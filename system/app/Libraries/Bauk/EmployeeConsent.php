@@ -32,4 +32,5 @@ class EmployeeConsent extends Model{
 	public function attachments(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeConsentAttachment', 'employee_consent_id', 'id');
 	}
+	
 }

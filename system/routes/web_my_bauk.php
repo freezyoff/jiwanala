@@ -8,6 +8,12 @@ Route::name('landing')
 		->group(function(){
 		Route::name('.nextHolidays')
 			->post('nextHolidays', '\App\Http\Controllers\My\BaukController@nextHolidays');
+		Route::name('.employeesCount')
+			->post('employeesCount', '\App\Http\Controllers\My\BaukController@employeesCount');	
+		Route::name('.attendanceProgress')
+			->post('attendanceProgress', '\App\Http\Controllers\My\BaukController@attendanceProgress');
+		Route::name('.attendanceStatistics')
+			->post('attendanceStatistics', '\App\Http\Controllers\My\BaukController@attendanceStatistics');
 	});
 });
 	

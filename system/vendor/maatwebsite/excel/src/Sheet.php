@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\Excel;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToArray;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -18,6 +19,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Html;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Concerns\WithCharts;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Helpers\ArrayHelper;
 use Illuminate\Contracts\Support\Arrayable;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Imports\EndRowFinder;
@@ -354,9 +356,7 @@ class Sheet
     public function fromQuery(FromQuery $sheetExport, Worksheet $worksheet)
     {
         $sheetExport->query()->chunk($this->getChunkSize($sheetExport), function ($chunk) use ($sheetExport, $worksheet) {
-            foreach ($chunk as $row) {
-                $this->appendRow($row, $sheetExport);
-            }
+            $this->appendRows($chunk, $sheetExport);
         });
     }
 
@@ -388,8 +388,6 @@ class Sheet
      * @param array       $rows
      * @param string|null $startCell
      * @param bool        $strictNullComparison
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function append(array $rows, string $startCell = null, bool $strictNullComparison = false)
     {
@@ -485,25 +483,24 @@ class Sheet
     /**
      * @param iterable $rows
      * @param object   $sheetExport
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function appendRows($rows, $sheetExport)
     {
-        $append = [];
-        foreach ($rows as $row) {
+        $rows = (new Collection($rows))->flatMap(function ($row) use ($sheetExport) {
             if ($sheetExport instanceof WithMapping) {
                 $row = $sheetExport->map($row);
             }
 
-            $append[] = static::mapArraybleRow($row);
-        }
+            return ArrayHelper::ensureMultiDimensional(
+                static::mapArraybleRow($row)
+            );
+        })->toArray();
 
-        if ($sheetExport instanceof WithCustomStartCell) {
-            $startCell = $sheetExport->startCell();
-        }
-
-        $this->append($append, $startCell ?? null, $this->hasStrictNullComparison($sheetExport));
+        $this->append(
+            $rows,
+            $sheetExport instanceof WithCustomStartCell ? $sheetExport->startCell() : null,
+            $this->hasStrictNullComparison($sheetExport)
+        );
     }
 
     /**
@@ -551,31 +548,6 @@ class Sheet
     }
 
     /**
-     * @param iterable $row
-     * @param object   $sheetExport
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     */
-    protected function appendRow($row, $sheetExport)
-    {
-        if ($sheetExport instanceof WithMapping) {
-            $row = $sheetExport->map($row);
-        }
-
-        $row = static::mapArraybleRow($row);
-
-        if ($sheetExport instanceof WithCustomStartCell) {
-            $startCell = $sheetExport->startCell();
-        }
-
-        if (isset($row[0]) && is_array($row[0])) {
-            $this->append($row, $startCell ?? null, $this->hasStrictNullComparison($sheetExport));
-        } else {
-            $this->append([$row], $startCell ?? null, $this->hasStrictNullComparison($sheetExport));
-        }
-    }
-
-    /**
      * @param string $lower
      * @param string $upper
      *
@@ -594,7 +566,7 @@ class Sheet
      */
     protected function tempFile(): string
     {
-        return $this->tmpPath . DIRECTORY_SEPARATOR . 'laravel-excel-' . str_random(16);
+        return $this->tmpPath . DIRECTORY_SEPARATOR . 'laravel-excel-' . Str::random(16);
     }
 
     /**

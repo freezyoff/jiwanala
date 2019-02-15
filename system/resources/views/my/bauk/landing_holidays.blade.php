@@ -1,22 +1,24 @@
-<div id="nextHolidays" class="w3-col s12 m6 l6">
-	<h4>Hari Libur Selanjutnya</h4>
-	<table class="w3-table w3-table-all">
-		<thead>
-			<tr>
-				<th>Tanggal</th>
-				<th>Hari Libur</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td colspan="2"><i class="button-icon-loader"></i></td>
-			<tr>
-		</tbody>
-	</table>
+<div id="nextHolidays" class="w3-col s12 m6 l6 padding-left-8 padding-none-small ">
+	<div class="w3-card">
+		<header class="w3-container w3-red padding-top-8 padding-bottom-8">
+			<h4>Hari Libur Selanjutnya</h4>
+		</header>
+		<table class="w3-table w3-table-all">
+			<thead>
+				<tr class="w3-red">
+					<th>Tanggal</th>
+					<th>Hari Libur</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="2"><i class="button-icon-loader"></i></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
-
-@section('html.body.scripts')
-@parent
+<div class="w3-hide-large w3-hide-medium">&nbsp;</div>
 <script>
 var nextHolidays = function(){
 	$.ajax({
@@ -32,7 +34,7 @@ var nextHolidays = function(){
 };
 
 $(document).ready(function(){
-	 setInterval(nextHolidays, 1000*10);
+	nextHolidays();
+	setInterval(nextHolidays, 1000*10);
 });
 </script>
-@endSection

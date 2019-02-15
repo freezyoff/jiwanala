@@ -13,8 +13,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Filesystem\Factory;
 use PhpOffice\PhpSpreadsheet\Reader\IReader;
+use Maatwebsite\Excel\Helpers\FilePathHelper;
 use Maatwebsite\Excel\Factories\ReaderFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Maatwebsite\Excel\Concerns\MapsCsvSettings;
@@ -39,11 +39,6 @@ class Reader
     protected $spreadsheet;
 
     /**
-     * @var string
-     */
-    protected $tmpPath;
-
-    /**
      * @var object[]
      */
     protected $sheetImports = [];
@@ -54,20 +49,19 @@ class Reader
     protected $currentFile;
 
     /**
-     * @var Factory
+     * @var FilePathHelper
      */
-    private $filesystem;
+    protected $filePathHelper;
 
     /**
-     * @param Factory $filesystem
+     * @param FilePathHelper $filePathHelper
+     * @param array          $csvSettings
      */
-    public function __construct(Factory $filesystem)
+    public function __construct(FilePathHelper $filePathHelper, array $csvSettings = [])
     {
-        $this->filesystem = $filesystem;
+        $this->filePathHelper = $filePathHelper;
 
-        $this->tmpPath = config('excel.exports.temp_path', sys_get_temp_dir());
-        $this->applyCsvSettings(config('excel.exports.csv', []));
-
+        $this->applyCsvSettings($csvSettings);
         $this->setDefaultValueBinder();
     }
 
@@ -220,39 +214,6 @@ class Reader
     }
 
     /**
-     * @param UploadedFile|string $filePath
-     * @param string|null         $disk
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @return string
-     */
-    protected function copyToFileSystem($filePath, string $disk = null): string
-    {
-        $tempFilePath = $this->getTmpFile();
-
-        if ($filePath instanceof UploadedFile) {
-            return $filePath->move($tempFilePath)->getRealPath();
-        }
-
-        $tmpStream = fopen($tempFilePath, 'w+');
-
-        $file = $this->filesystem->disk($disk)->readStream($filePath);
-
-        stream_copy_to_stream($file, $tmpStream);
-        fclose($tmpStream);
-
-        return $tempFilePath;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTmpFile(): string
-    {
-        return $this->tmpPath . DIRECTORY_SEPARATOR . str_random(16);
-    }
-
-    /**
      * Garbage collect.
      */
     private function garbageCollect()
@@ -321,7 +282,7 @@ class Reader
             $this->applyCsvSettings($import->getCsvSettings());
         }
 
-        $this->currentFile = $this->copyToFileSystem($filePath, $disk);
+        $this->currentFile = $this->filePathHelper->getRealPath($filePath, $disk);
 
         $reader = ReaderFactory::make($this->currentFile, $this->getReaderType($readerType));
 

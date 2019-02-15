@@ -1181,18 +1181,110 @@
         "description": "Highlight PHP code in terminal"
     },
     {
-        "name": "laravel/framework",
-        "version": "v5.7.25",
-        "version_normalized": "5.7.25.0",
+        "name": "khill/lavacharts",
+        "version": "3.0.8",
+        "version_normalized": "3.0.8.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/laravel/framework.git",
-            "reference": "f8fb354878064b94a3ff09a6ffd48ee9a8d712cf"
+            "url": "https://github.com/kevinkhill/lavacharts.git",
+            "reference": "ab4aa8d8bc3d68d0e86b3d59383a0aaee384c6f5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/laravel/framework/zipball/f8fb354878064b94a3ff09a6ffd48ee9a8d712cf",
-            "reference": "f8fb354878064b94a3ff09a6ffd48ee9a8d712cf",
+            "url": "https://api.github.com/repos/kevinkhill/lavacharts/zipball/ab4aa8d8bc3d68d0e86b3d59383a0aaee384c6f5",
+            "reference": "ab4aa8d8bc3d68d0e86b3d59383a0aaee384c6f5",
+            "shasum": ""
+        },
+        "require": {
+            "nesbot/carbon": "~1.14",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "illuminate/support": "5.0.*",
+            "mockery/mockery": "~0.9",
+            "mybuilder/phpunit-accelerator": "~1.1",
+            "phpunit/phpunit": "~4.5",
+            "satooshi/php-coveralls": "~1.0",
+            "squizlabs/php_codesniffer": "~2.5"
+        },
+        "suggest": {
+            "khill/datatableplus": "Adds extra features to DataTables such as csv and laravel collection parsing."
+        },
+        "time": "2017-03-14T13:36:30+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Khill\\Lavacharts\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kevin Hill",
+                "email": "kevinkhill@gmail.com",
+                "role": "Creator"
+            },
+            {
+                "name": "deringer",
+                "homepage": "https://github.com/deringer",
+                "role": "Contributor"
+            },
+            {
+                "name": "stevebauman",
+                "homepage": "https://github.com/stevebauman",
+                "role": "Contributor"
+            },
+            {
+                "name": "rajivseelam",
+                "homepage": "https://github.com/rajivseelam",
+                "role": "Contributor"
+            },
+            {
+                "name": "tobias-kuendig",
+                "homepage": "https://github.com/tobias-kuendig",
+                "role": "Contributor"
+            },
+            {
+                "name": "Stonos",
+                "homepage": "https://github.com/Stonos",
+                "role": "Contributor"
+            },
+            {
+                "name": "MicahKV",
+                "email": "micah138@yahoo.com",
+                "role": "Contributor"
+            },
+            {
+                "name": "SendDerek",
+                "homepage": "https://github.com/SendDerek",
+                "role": "Contributor"
+            }
+        ],
+        "description": "PHP wrapper library for the Google Chart API",
+        "homepage": "http://lavacharts.com",
+        "keywords": [
+            "charts",
+            "google",
+            "graphs"
+        ]
+    },
+    {
+        "name": "laravel/framework",
+        "version": "v5.7.26",
+        "version_normalized": "5.7.26.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/framework.git",
+            "reference": "ca3bc9769969e8af3bd9878a3e0242051c74dae4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/framework/zipball/ca3bc9769969e8af3bd9878a3e0242051c74dae4",
+            "reference": "ca3bc9769969e8af3bd9878a3e0242051c74dae4",
             "shasum": ""
         },
         "require": {
@@ -1294,7 +1386,7 @@
             "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (^4.1).",
             "symfony/psr-http-message-bridge": "Required to psr7 bridging features (^1.0)."
         },
-        "time": "2019-02-05T14:28:43+00:00",
+        "time": "2019-02-12T14:52:21+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1659,33 +1751,33 @@
     },
     {
         "name": "maatwebsite/excel",
-        "version": "3.1.6",
-        "version_normalized": "3.1.6.0",
+        "version": "3.1.7",
+        "version_normalized": "3.1.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-            "reference": "d5e51dca5ed845c1ce605a7a1d9882d5b57e270d"
+            "reference": "b9bf4ca1ec698010192fbe1694df65ecef3b2502"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/d5e51dca5ed845c1ce605a7a1d9882d5b57e270d",
-            "reference": "d5e51dca5ed845c1ce605a7a1d9882d5b57e270d",
+            "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/b9bf4ca1ec698010192fbe1694df65ecef3b2502",
+            "reference": "b9bf4ca1ec698010192fbe1694df65ecef3b2502",
             "shasum": ""
         },
         "require": {
             "ext-json": "*",
-            "illuminate/support": "5.5.* || 5.6.* || 5.7.*",
+            "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
             "php": "^7.0",
-            "phpoffice/phpspreadsheet": "^1.4"
+            "phpoffice/phpspreadsheet": "^1.6"
         },
         "require-dev": {
             "mockery/mockery": "^1.1",
-            "orchestra/database": "^3.6",
-            "orchestra/testbench": "^3.6",
-            "phpunit/phpunit": "^7.0",
+            "orchestra/database": "^3.7",
+            "orchestra/testbench": "^3.7",
+            "phpunit/phpunit": "^7.5",
             "predis/predis": "^1.1"
         },
-        "time": "2019-01-30T19:01:33+00:00",
+        "time": "2019-02-14T18:17:58+00:00",
         "type": "library",
         "extra": {
             "laravel": {
@@ -1897,17 +1989,17 @@
     },
     {
         "name": "mockery/mockery",
-        "version": "1.2.1",
-        "version_normalized": "1.2.1.0",
+        "version": "1.2.2",
+        "version_normalized": "1.2.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/mockery/mockery.git",
-            "reference": "dc4f10b6b1148744facb784015e4b339d7feec23"
+            "reference": "0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mockery/mockery/zipball/dc4f10b6b1148744facb784015e4b339d7feec23",
-            "reference": "dc4f10b6b1148744facb784015e4b339d7feec23",
+            "url": "https://api.github.com/repos/mockery/mockery/zipball/0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2",
+            "reference": "0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2",
             "shasum": ""
         },
         "require": {
@@ -1918,7 +2010,7 @@
         "require-dev": {
             "phpunit/phpunit": "~5.7.10|~6.5|~7.0|~8.0"
         },
-        "time": "2019-02-08T14:43:54+00:00",
+        "time": "2019-02-13T09:37:52+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
