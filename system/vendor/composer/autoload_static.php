@@ -586,6 +586,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Libraries\\Bauk\\EmployeeConsent' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeConsent.php',
         'App\\Libraries\\Bauk\\EmployeeConsentAttachment' => __DIR__ . '/../..' . '/app/Libraries/Bauk/EmployeeConsentAttachment.php',
         'App\\Libraries\\Bauk\\Holiday' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Holiday.php',
+        'App\\Libraries\\Bauk\\Setting' => __DIR__ . '/../..' . '/app/Libraries/Bauk/Setting.php',
         'App\\Libraries\\Core\\Address' => __DIR__ . '/../..' . '/app/Libraries/Core/Address.php',
         'App\\Libraries\\Core\\Person' => __DIR__ . '/../..' . '/app/Libraries/Core/Person.php',
         'App\\Libraries\\Core\\Phone' => __DIR__ . '/../..' . '/app/Libraries/Core/Phone.php',

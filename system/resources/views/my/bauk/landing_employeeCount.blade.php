@@ -1,12 +1,12 @@
-<div id="employeesCount" class="w3-col s12 m6 l6">
+<div id="employeesCount" class="w3-col s12 m6 l6 padding-left-8 padding-none-small">
 	<div class="w3-card">
 		<header class="w3-container w3-indigo padding-top-8 padding-bottom-8">
-			<h4>KARYAWAN<h4>
+			<h4>Karyawan Fulltime<h4>
 		</header>
 		<table class="w3-table w3-striped w3-bordered">
 			<thead>
 				<tr class="w3-indigo">
-					<th>Full / Part Time</th>
+					<th>Karyawan Aktif</th>
 					<th style="text-align:center;">Jumlah (org)</th>
 				</tr>
 			</thead>

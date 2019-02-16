@@ -3,7 +3,7 @@
 		<header class="w3-container w3-red padding-top-8 padding-bottom-8">
 			<h4>Hari Libur Selanjutnya</h4>
 		</header>
-		<table class="w3-table w3-table-all">
+		<table class="w3-table w3-striped w3-bordered">
 			<thead>
 				<tr class="w3-red">
 					<th>Tanggal</th>

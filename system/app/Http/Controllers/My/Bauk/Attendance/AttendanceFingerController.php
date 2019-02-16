@@ -13,9 +13,12 @@ class AttendanceFingerController extends Controller
     public function show($nip=false, $year=false, $month=false, $day=false){
 		if (!$nip && !$year && !$month && !$day) abort(404);
 		
+		$date = \Carbon\Carbon::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
+		if (!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date)) abort(404);
+				
+		
 		//find the employee
 		$employee = Employee::findByNIP($nip);
-		$date = \Carbon\Carbon::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
 		$formattedDate = $date->format('Y-m-d');
 		
 		return view('my.bauk.attendance.finger_history',[

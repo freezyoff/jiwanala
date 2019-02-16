@@ -71,22 +71,22 @@ class AttendanceByFingersImport implements
 		};
 		
         return [
-			'no' =>				'required|number',
-			'nip'=> 			'required|numeric|exists:bauk.employees,nip',
-            'tanggal' => 		['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
-			'finger_masuk' => 	'required|'.$regexTimeFormat,
-			'finger_keluar_1' =>'required|'.$regexTimeFormat,
-			'finger_keluar_2' =>'nullable|'.$regexTimeFormat,
-			'finger_keluar_3' =>'nullable|'.$regexTimeFormat,
+			'no' =>				['required','numeric'],
+			'nip'=> 			['required','numeric','exists:bauk.employees,nip'],
+            'tanggal' => 		['required','date_format:'.$dateFormat, $isAllowed, $isHoliday],
+			'finger_masuk' => 	['required',$regexTimeFormat],
+			'finger_keluar_1' =>['required',$regexTimeFormat],
+			'finger_keluar_2' =>['nullable',$regexTimeFormat],
+			'finger_keluar_3' =>['nullable',$regexTimeFormat],
 
             //	Above is alias for as it always validates in batches
-			'*.no' =>				'required|number',
-			'*.nip'=> 				'required|numeric|exists:bauk.employees,nip',
-			'*.tanggal' => 			['required','date_format:'.$this->dateformat,$isAllowed,$isHoliday],
-			'*.finger_masuk' => 	'required|'.$regexTimeFormat,
-			'*.finger_keluar_1' => 	'required|'.$regexTimeFormat,
-			'*.finger_keluar_2' => 	'nullable|'.$regexTimeFormat,
-			'*.finger_keluar_3' => 	'nullable|'.$regexTimeFormat,
+			'*.no' =>				['required','numeric'],
+			'*.nip'=> 				['required','numeric','exists:bauk.employees,nip'],
+			'*.tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday],
+			'*.finger_masuk' => 	['required',$regexTimeFormat],
+			'*.finger_keluar_1' =>	['required',$regexTimeFormat],
+			'*.finger_keluar_2' =>	['nullable',$regexTimeFormat],
+			'*.finger_keluar_3' =>	['nullable',$regexTimeFormat],
         ];
     }
 	

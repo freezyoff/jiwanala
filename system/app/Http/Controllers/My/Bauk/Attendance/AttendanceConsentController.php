@@ -14,9 +14,10 @@ class AttendanceConsentController extends Controller{
 	
 	protected function validateRequestParameters($nip, $year, $month, $day){
 		if (!$nip || !$year || !$month || !$day) abort(404);
-		$date = \Carbon\Carbon::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
 		
+		$date = \Carbon\Carbon::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
 		if (Holiday::isHoliday($date)) abort(404);
+		if (!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date)) abort(404);
 		
 		return $date;
 	}

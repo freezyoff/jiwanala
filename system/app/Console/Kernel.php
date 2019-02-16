@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\JiwanalaGrantPermission::class,
 		\App\Console\Commands\JiwanalaPermissions::class,
 		\App\Console\Commands\Bauk\JiwanalaEmployeeAttendance_Lock::class,
+		\App\Console\Commands\Service\JiwanalaUser_changepassword::class,
     ];
 
     /**

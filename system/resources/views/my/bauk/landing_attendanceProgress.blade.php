@@ -1,19 +1,143 @@
-<div id="attendanceProgress" class="w3-col s12 m12 l12 margin-bottom-16">
-	<div class="w3-card">
-		<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
-			<h4>Progres Rekaman Data Kehadiran<h4>
+<div id="attendanceProgress" class="w3-col s12 m6 l6 w3-light-grey">
+	<div class="w3-card w3-light-grey">
+		<header class="w3-container padding-top-8">
+			<h4>Progres Rekaman Finger Kehadiran</h4>
 		</header>
-		<div class="w3-container padding-top-8 padding-bottom-8">
-			<div class="w3-light-grey w3-round" style="text-align:center">
-				<span id="progressbar-label" style="position:absolute;"></span>
-				<div id="progressbar" class="w3-container w3-green w3-center w3-round">
-					&nbsp;
+		<div class="w3-container padding-top-16 padding-bottom-16 ">
+			<div class="" style="float:left;min-width:135px;max-width:135px;">
+				<div style="display:flex; flex-direction:column;align-items:left;">
+					<div id="progressbar-radial" 
+						class="progressbar radial xlarge" 
+						style="font-size:9em;box-shadow:2px 1px 10px .1px #898383 inset">
+						<span class="w3-text-green"><i class="button-icon-loader"></i></span>
+						<div class="slice">
+							<div class="bar"></div>
+							<div class="fill"></div>
+						</div>
+					</div>
+					<span class="padding-top-8" style="font-size:.7em; text-align:center">
+						Progres rekaman kehadiran karyawan fulltime
+					</span>
 				</div>
-			</div> 
+			</div>
+			<div class="" style="margin-left:150px;">
+				<ul class="w3-ul" id="employee">
+					<li>
+						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Aktif</span>
+						<span>:</span>
+						<span id="employee-active" style="width:50px; text-align:right; display:inline-block">
+							<i class="button-icon-loader"></i>
+						</span>
+					</li>
+					<li>
+						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime</span>
+						<span>:</span>
+						<span id="employee-fulltime" style="width:50px; text-align:right; display:inline-block">
+							<i class="button-icon-loader"></i>
+						</span>
+					</li>
+					<li>
+						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime Kotrak thn 2</span>
+						<span>:</span>
+						<span id="employee-fulltime-contract-2" style="width:50px; text-align:right; display:inline-block">
+							<i class="button-icon-loader"></i>
+						</span>
+					</li>
+					<li>
+						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime Kotrak thn 1</span>
+						<span>:</span>
+						<span id="employee-fulltime-contract-1" style="width:50px; text-align:right; display:inline-block">
+							<i class="button-icon-loader"></i>
+						</span>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>
-<div class="w3-hide-large w3-hide-medium">&nbsp;</div>
+<style>
+.progressbar.radial *{box-sizing:content-box;}
+
+.progressbar.radial{
+	position: relative;
+	font-size: 120px;
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	background-color: #cccccc;
+}
+
+.progressbar.radial:after{
+	position: absolute;
+	top: 0.08em;
+	left: 0.08em;
+	display: block;
+	content: " ";
+	border-radius: 50%;
+	background-color: #f5f5f5;
+	width: 0.84em;
+	height: 0.84em;
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-duration: 0.2s;
+	-o-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	-webkit-transition-timing-function: ease-in;
+	-moz-transition-timing-function: ease-in;
+	-o-transition-timing-function: ease-in;
+	transition-timing-function: ease-in;
+}
+
+.progressbar.radial span{
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 5em;
+	line-height: 5em;
+	font-size: 0.2em;
+	color: #cccccc;
+	display: block;
+	text-align: center;
+	white-space: nowrap;
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-duration: 0.2s;
+	-o-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	-o-transition-timing-function: ease-out;
+	transition-timing-function: ease-out;
+}
+
+
+.progressbar.radial .slice .bar,
+.progressbar.radial .slice .fill{
+	position: absolute;
+	border: 0.08em solid #307bbb;
+	width: 0.84em;
+	height: 0.84em;
+	clip: rect(0em, 0.5em, 1em, 0em);
+	border-radius: 50%;
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+.progressbar.radial .slice{position: absolute;width: 1em;height: 1em;clip: rect(0em, 1em, 1em, 0.5em);}
+.progressbar.radial .slice.full{clip: rect(auto, auto, auto, auto) !important;}
+
+</style>
 <script>
 var attendanceProgress = function(){
 	$.ajax({
@@ -23,16 +147,53 @@ var attendanceProgress = function(){
 		dataType: "json",
 		beforeSend: function() {},
 		success: function(response){
-			$('#progressbar-label').html(response+'%');
-			$('#progressbar').animate({
-				width:response+'%'
+			var duration =  1000,
+				percent = response,
+				angel = (percent/100)*360,
+				pbar = $('#progressbar-radial'),
+				span = pbar.find('span'),
+				slice = pbar.find('.slice');
+			
+			$({countNum: 0, deg: 0}).animate({countNum: percent, deg: angel}, {
+				duration: duration,
+				easing:'linear',
+				step: function() {
+					span.html(Math.floor(this.countNum)+'%');
+					slice.find('.bar').css('transform','rotate('+ this.deg +'deg)');
+					
+					if (this.deg>180){
+						slice.addClass('full');
+						slice.find('.fill').css('transform','rotate(180deg)');
+					} 
+					else{
+						slice.find('.fill').css('transform','rotate('+ this.deg +'deg)');
+					}
+				}
 			});
+		}
+	});
+};
+
+var employeesCount = function(){
+	$.ajax({
+		method: "POST",
+		url: '{{route('my.bauk.landing.info.employeesCount')}}',
+		data: { '_token': '{{csrf_token()}}' },
+		dataType: "json",
+		beforeSend: function() {},
+		success: function(response){
+			$('#employee-active').html(response.count+' org');
+			$('#employee-fulltime').html(response.fulltime+' org');
+			$('#employee-fulltime-contract-1').html(response.contract1+' org');
+			$('#employee-fulltime-contract-2').html(response.contract2+' org');
 		}
 	});
 };
 
 $(document).ready(function(){
 	attendanceProgress();
+	employeesCount();
+	setInterval(attendanceProgress, 1000*60*10);
 	setInterval(employeesCount, 1000*60*10);
 });
 </script>

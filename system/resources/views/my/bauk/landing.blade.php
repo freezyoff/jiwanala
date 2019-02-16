@@ -3,7 +3,6 @@
 @section('dashboard.main')
 <div class="w3-row">
 	@include('my.bauk.landing_attendanceProgress')
-	@include('my.bauk.landing_employeeCount')
 	@include('my.bauk.landing_holidays')
 	
 </div>

@@ -58,6 +58,7 @@ return array(
     'App\\Libraries\\Bauk\\EmployeeConsent' => $baseDir . '/app/Libraries/Bauk/EmployeeConsent.php',
     'App\\Libraries\\Bauk\\EmployeeConsentAttachment' => $baseDir . '/app/Libraries/Bauk/EmployeeConsentAttachment.php',
     'App\\Libraries\\Bauk\\Holiday' => $baseDir . '/app/Libraries/Bauk/Holiday.php',
+    'App\\Libraries\\Bauk\\Setting' => $baseDir . '/app/Libraries/Bauk/Setting.php',
     'App\\Libraries\\Core\\Address' => $baseDir . '/app/Libraries/Core/Address.php',
     'App\\Libraries\\Core\\Person' => $baseDir . '/app/Libraries/Core/Person.php',
     'App\\Libraries\\Core\\Phone' => $baseDir . '/app/Libraries/Core/Phone.php',
