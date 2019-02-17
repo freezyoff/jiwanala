@@ -13,10 +13,10 @@ Route::prefix('misc')
 	->name('misc.')
 	->group(base_path('routes/web/web_my_misc.php'));
 
-Route::prefix('service')
-	->name('service.')
-	->middleware(['permission.context:service'])
-	->group(base_path('routes/web/web_my_service.php'));
+Route::prefix('system')
+	->name('system.')
+	->middleware(['permission.context:system'])
+	->group(base_path('routes/web/web_my_system.php'));
 
 Route::prefix ('bauk')
 	->name('bauk.')

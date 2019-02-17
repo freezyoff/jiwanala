@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-		$outputPath = base_path('storage/logs');
+		$outputPath = base_path('storage/logs/');
 		
 		//schedule artisan queue:*
 		$schedule->command('queue:retry all')->withoutOverlapping()

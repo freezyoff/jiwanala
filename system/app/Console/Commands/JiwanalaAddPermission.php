@@ -11,11 +11,11 @@ class JiwanalaAddPermission extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:add-permission 
+    protected $signature = 'jiwanala:permission-add
 								{key? : Permission key} 
 								{context? : Permission context}
 								{display_name? : Permission display}
-								{decription? : Permission description}
+								{description? : Permission description}
 								{--default : Add default permission}';
 
     /**

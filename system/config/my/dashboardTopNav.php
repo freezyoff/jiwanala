@@ -102,12 +102,15 @@
 		'permission_context'=>'baku',
 	],
 	
-	'service'=>[
+	'system'=>[
 		'display'=>[ 'name'=>'System', 'icon'=>'fas fa-server'],
-		'href'=>'my.service.landing',
-		'permission_context'=>'service',
+		'href'=>'my.system.landing',
+		'permission_context'=>'system',
 		'sideNav'=>[
-			['display'=>[ 'name'=>'Permission', 'icon'=>false ], 'href'=>'','permission'=>'']
+			[
+				'display'=>[ 'name'=>'Akun', 'icon'=>'fas fa-users'], 
+				'href'=>'my.system.user.index',
+				'permission'=>'system.user.list']
 		]
 	],
 ];

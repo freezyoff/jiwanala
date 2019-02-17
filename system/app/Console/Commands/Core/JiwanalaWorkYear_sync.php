@@ -46,6 +46,10 @@ class JiwanalaWorkYear_sync extends Command
 				'name'=>$this->getPeriodeName($start, $end)
 			]);
 			$periode->save();
+			$this->info('created Work Year: name='.$periode->name .' '.
+				'start='.$periode->start .' '.
+				'end='.$periode->start .' '
+			);
 		}
     }
 	

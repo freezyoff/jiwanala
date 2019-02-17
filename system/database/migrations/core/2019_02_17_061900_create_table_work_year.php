@@ -21,7 +21,7 @@ class CreateTableWorkYear extends Migration
         $this->createSchema(function (Blueprint $table) {
             $table->timestamps();
             $table->increments('id');
-			$table->date('name');
+			$table->string('name', 50);
 			$table->date('start');
 			$table->date('end');
         },'work-year');

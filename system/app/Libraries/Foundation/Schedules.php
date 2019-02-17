@@ -7,7 +7,7 @@ class Schedules{
 	public static function getOutputLogPath(){
 		$outputPath = './storage/logs/';
 		if (env('APP_ENV') === 'production') {
-			$outputPath = base_path('storate/logs');
+			$outputPath = base_path('storage/logs/');
 		}
 		return $outputPath;
 	}
@@ -19,7 +19,7 @@ class Schedules{
 			->appendOutputTo($outputPath."scheduleLog.jiwanala.employee-attendance-lock.txt");
 			
 		$schedule->command('jiwanala:work-year-sync')
-			->dailyAt('00:01')
+			->everyMinute()
 			->appendOutputTo($outputPath."scheduleLog.jiwanala.work-year-sync.txt");
 	}
 }
