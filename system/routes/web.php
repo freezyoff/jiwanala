@@ -21,30 +21,13 @@
 */
 
 $domain = 'jiwa-nala';
-$routeFilePath = false;
-if (App::environment('production')){
-	//modify to your remote domain setting
-	$domain .= '.org';
-	//modify to your remote route file path
-	$routeFilePath = config('server.paths.routes');
-	
-}
-else{
-	//modify to your local domain setting
-	$domain .= '.local';
-	//modify to your remote route file path
-	$routeFilePath = '../system/routes/';
-}
+$domain .= App::environment('production')? '.org' : '.local';
 
 Route::domain('service.'.$domain)
-	->group(function() use ($routeFilePath){
-	require_once $routeFilePath."web_service.php";
-});
+	->name('service.')
+	->group(base_path('routes/web/web_service.php'));
 
 Route::domain('my.'.$domain)
 	->name('my.')
 	->middleware(['auth', 'timezone'])
-	->group(function () use($routeFilePath){
-		
-	require_once $routeFilePath."web_my.php";
-});
+	->group(base_path('routes/web/web_my.php'));

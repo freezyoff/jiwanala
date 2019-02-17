@@ -11,14 +11,14 @@ Route::name('dashboard')
 
 Route::prefix('misc')
 	->name('misc.')
-	->group(base_path('routes/web_my_misc.php'));
+	->group(base_path('routes/web/web_my_misc.php'));
 
 Route::prefix('service')
 	->name('service.')
 	->middleware(['permission.context:service'])
-	->group(base_path('routes/web_my_service.php'));
+	->group(base_path('routes/web/web_my_service.php'));
 
 Route::prefix ('bauk')
 	->name('bauk.')
 	->middleware(['permission.context:bauk'])
-	->group(base_path('routes/web_my_bauk.php'));
+	->group(base_path('routes/web/web_my_bauk.php'));

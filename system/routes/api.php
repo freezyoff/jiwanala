@@ -18,19 +18,16 @@ use Illuminate\Http\Request;
 */
 
 $domain = 'jiwa-nala';
-$routeFilePath = false;
-if (App::environment('production')){
-	//modify to your remote domain setting
-	$domain .= '.org';
-	//modify to your remote route file path
-	$routeFilePath = config('server.paths.routes');
-}
-else{
-	//modify to your local domain setting
-	$domain .= '.local';
-	//modify to your remote route file path
-	$routeFilePath = '../system/routes/';
-}
+$domain .= App::environment('production')? '.org' : '.local';
+
+Route::domain('service.'.$domain)
+	->name('service.')
+	->group(base_path('routes/api/api_service.php'));
+
+Route::domain('my.'.$domain)
+	->name('my.')
+	->middleware(['auth', 'timezone'])
+	->group(base_path('routes/api/api_my.php'));
 
 Route::get('/test', function(){
 	$hh = Hash::make(now()->format('Y-m-d H:i:s'));
