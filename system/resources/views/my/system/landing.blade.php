@@ -1,0 +1,1 @@
+@extends('layouts.dashboard.dashboard', ['title'=>trans('my/system/landing.title'), 'sidebar'=>'system'])
