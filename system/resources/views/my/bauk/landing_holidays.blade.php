@@ -1,6 +1,6 @@
 <div id="nextHolidays" class="w3-col s12 m6 l6 padding-left-8 padding-none-small ">
 	<div class="w3-card">
-		<header class="w3-container w3-red padding-top-8 padding-bottom-8">
+		<header class="w3-container w3-red padding-top-8">
 			<h4>Hari Libur Selanjutnya</h4>
 		</header>
 		<table class="w3-table w3-striped w3-bordered">

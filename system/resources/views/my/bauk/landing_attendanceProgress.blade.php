@@ -3,13 +3,13 @@
 		<header class="w3-container padding-top-8">
 			<h4>Progres Rekaman Finger Kehadiran</h4>
 		</header>
-		<div class="w3-container padding-top-16 padding-bottom-16 ">
-			<div class="" style="float:left;min-width:135px;max-width:135px;">
-				<div style="display:flex; flex-direction:column;align-items:left;">
+		<div class="w3-container padding-top-16 padding-bottom-16">
+			<div class="w3-col s12 m12 l5 margin-bottom-8 margin-none-large" style="min-width:135px">
+				<div style="display:flex; flex-direction:column;align-items:center;">
 					<div id="progressbar-radial" 
 						class="progressbar radial xlarge" 
-						style="font-size:9em;box-shadow:2px 1px 10px .1px #898383 inset">
-						<span class="w3-text-green"><i class="button-icon-loader"></i></span>
+						style="font-size:9em;box-shadow:2px 1px 10px .1px #898383 inset; ">
+						<span><i class="button-icon-loader"></i></span>
 						<div class="slice">
 							<div class="bar"></div>
 							<div class="fill"></div>
@@ -20,37 +20,31 @@
 					</span>
 				</div>
 			</div>
-			<div class="" style="margin-left:150px;">
-				<ul class="w3-ul" id="employee">
-					<li>
-						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Aktif</span>
-						<span>:</span>
-						<span id="employee-active" style="width:50px; text-align:right; display:inline-block">
-							<i class="button-icon-loader"></i>
-						</span>
-					</li>
-					<li>
-						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime</span>
-						<span>:</span>
-						<span id="employee-fulltime" style="width:50px; text-align:right; display:inline-block">
-							<i class="button-icon-loader"></i>
-						</span>
-					</li>
-					<li>
-						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime Kotrak thn 2</span>
-						<span>:</span>
-						<span id="employee-fulltime-contract-2" style="width:50px; text-align:right; display:inline-block">
-							<i class="button-icon-loader"></i>
-						</span>
-					</li>
-					<li>
-						<span style="min-width:215px; white-space:nowrap; display:inline-block">Karyawan Fulltime Kotrak thn 1</span>
-						<span>:</span>
-						<span id="employee-fulltime-contract-1" style="width:50px; text-align:right; display:inline-block">
-							<i class="button-icon-loader"></i>
-						</span>
-					</li>
-				</ul>
+			<div class="w3-col s12 m12 l7">
+				<table class="w3-table w3-bordered">
+					<tbody>
+						<tr>
+							<td>Aktif</td>
+							<td>:</td>
+							<td id="employee-active" style="text-align:right"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td>Fulltime</td>
+							<td>:</td>
+							<td id="employee-fulltime" style="text-align:right"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td>Fulltime Kontrak thn ke 2</td>
+							<td>:</td>
+							<td id="employee-fulltime-contract-2" style="text-align:right"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td>Fulltime Kontrak thn ke 1</td>
+							<td>:</td>
+							<td id="employee-fulltime-contract-1" style="text-align:right"><i class="button-icon-loader"></i></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -100,7 +94,7 @@
 	width: 5em;
 	line-height: 5em;
 	font-size: 0.2em;
-	color: #cccccc;
+	color: #307bbb;
 	display: block;
 	text-align: center;
 	white-space: nowrap;

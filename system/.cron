@@ -1,0 +1,2 @@
+cd /home/jiwanala/GIT-JIWANALA && /usr/local/bin/php /home/jiwanala/GIT-JIWANALA/system/artisan schedule:run >> /home/jiwanala/cron-schedule_run.txt 2>&1
+cd /home/jiwanala/GIT-JIWANALA && /usr/local/bin/php /home/jiwanala/GIT-JIWANALA/system/artisan queue:work --stop-when-empty >> /home/jiwanala/cron-queue_work.txt 2>&1

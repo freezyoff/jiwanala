@@ -7,7 +7,7 @@ class Schedules{
 	public static function getOutputLogPath(){
 		$outputPath = './storage/logs/';
 		if (env('APP_ENV') === 'production') {
-			$outputPath = '/home/jiwanala/GIT-JIWANALA/storage/logs/';
+			$outputPath = config('server.logs.path');
 		}
 		return $outputPath;
 	}
