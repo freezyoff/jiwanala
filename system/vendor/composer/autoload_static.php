@@ -552,6 +552,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\My\\AdministratorController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/AdministratorController.php',
         'App\\Http\\Controllers\\My\\BaukController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/BaukController.php',
+        'App\\Http\\Controllers\\My\\Bauk\\APIAttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/APIAttendanceController.php',
         'App\\Http\\Controllers\\My\\Bauk\\AttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/AttendanceController.php',
         'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceConsentController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceConsentController.php',
         'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceFingerController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceFingerController.php',

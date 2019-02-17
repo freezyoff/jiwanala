@@ -28,6 +28,10 @@ class Employee extends Model
 		return $this->asPerson()->with('phones');
 	}
 	
+	public function asUser(){
+		return $this->belongsTo('\\App\Libraries\Service\Auth\User', 'user_id');
+	}
+	
 	public function asPerson(){
 		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
 	}

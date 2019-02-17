@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullabe();
             $table->boolean('activated')->default(true);
             $table->rememberToken();
-            $table->string('api_token')->nullable();
+			$table->string('api_token',60)->nullabe();
 			
 			$table->foreign('creator')->references('id')->on('users');
         });

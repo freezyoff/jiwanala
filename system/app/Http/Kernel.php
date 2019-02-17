@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
 		//override default auth middleware
         //'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
 		'auth' => \App\Http\Middleware\Service\Auth::class,
+		'auth.api' => \App\Http\Middleware\Service\AuthApi::class,
 		
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,

@@ -24,6 +24,7 @@ return array(
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\My\\AdministratorController' => $baseDir . '/app/Http/Controllers/My/AdministratorController.php',
     'App\\Http\\Controllers\\My\\BaukController' => $baseDir . '/app/Http/Controllers/My/BaukController.php',
+    'App\\Http\\Controllers\\My\\Bauk\\APIAttendanceController' => $baseDir . '/app/Http/Controllers/My/Bauk/APIAttendanceController.php',
     'App\\Http\\Controllers\\My\\Bauk\\AttendanceController' => $baseDir . '/app/Http/Controllers/My/Bauk/AttendanceController.php',
     'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceConsentController' => $baseDir . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceConsentController.php',
     'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceFingerController' => $baseDir . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceFingerController.php',

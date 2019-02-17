@@ -21,21 +21,13 @@ $domain = 'jiwa-nala';
 $domain .= App::environment('production')? '.org' : '.local';
 
 Route::domain('service.'.$domain)
-	->name('service.')
+	->name('api.service.')
 	->group(base_path('routes/api/api_service.php'));
 
 Route::domain('my.'.$domain)
-	->name('my.')
-	->middleware(['auth', 'timezone'])
+	->name('api.my.')
+	->middleware('auth.api')
 	->group(base_path('routes/api/api_my.php'));
-
-Route::get('/test', function(){
-	$hh = Hash::make(now()->format('Y-m-d H:i:s'));
-	return json_encode([
-		'hash'=>$hh,
-		'length'=>strlen($hh)
-	]);
-});
 
 /*
 |--------------------------------------------------------------------------
