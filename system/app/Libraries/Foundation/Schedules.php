@@ -17,5 +17,9 @@ class Schedules{
 		$schedule->command('jiwanala:employee-attendance-lock')
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jiwanala.employee-attendance-lock.txt");
+			
+		$schedule->command('jiwanala:work-year-sync')
+			->daily()
+			->appendOutputTo($outputPath."scheduleLog.jiwanala.work-year-sync.txt");
 	}
 }
