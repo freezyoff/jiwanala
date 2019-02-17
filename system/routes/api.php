@@ -18,30 +18,26 @@ use Illuminate\Http\Request;
 */
 
 $domain = 'jiwa-nala';
-if (App::environment('local')){
-	$domain .= '.local';
+$routeFilePath = false;
+if (App::environment('production')){
+	//modify to your remote domain setting
+	$domain .= '.org';
+	//modify to your remote route file path
+	$routeFilePath = config('server.paths.routes');
 }
 else{
-	$domain .= '.org';
+	//modify to your local domain setting
+	$domain .= '.local';
+	//modify to your remote route file path
+	$routeFilePath = '../system/routes/';
 }
 
-$appversion = str_replace('.','',config('app.version'));
-
-Route::domain('bimbel.'.$domain)->group(function () {
-	Route::post('signin', function( Request $req ){
-		$username = $req->input('username', false);
-		$password = $req->input('password', false);
-		
-		$student = \App\DBModels\JNBimbel\Student::where('username','=',$username)->first();
-		if (!$student) return response()->json(['signin'=>false]);
-		return response()->json( $student->signin($username, $password) );
-	});
-});
-
-Route::domain('my.'.$domain)->group(function () {
-	Route::get('/', function(){
-		return 'my.jiwa-nala.local|org/api/';
-	});
+Route::get('/test', function(){
+	$hh = Hash::make(now()->format('Y-m-d H:i:s'));
+	return json_encode([
+		'hash'=>$hh,
+		'length'=>strlen($hh)
+	]);
 });
 
 /*

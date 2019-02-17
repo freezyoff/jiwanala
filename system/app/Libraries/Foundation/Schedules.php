@@ -7,7 +7,7 @@ class Schedules{
 	public static function getOutputLogPath(){
 		$outputPath = './storage/logs/';
 		if (env('APP_ENV') === 'production') {
-			$outputPath = config('server.logs.path');
+			$outputPath = config('server.paths.logs');
 		}
 		return $outputPath;
 	}

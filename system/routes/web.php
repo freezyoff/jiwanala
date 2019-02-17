@@ -26,18 +26,19 @@ if (App::environment('production')){
 	//modify to your remote domain setting
 	$domain .= '.org';
 	//modify to your remote route file path
-	$routeFilePath = '../GIT-JIWANALA/system/routes';
+	$routeFilePath = config('server.paths.routes');
+	
 }
 else{
 	//modify to your local domain setting
 	$domain .= '.local';
 	//modify to your remote route file path
-	$routeFilePath = '../system/routes';
+	$routeFilePath = '../system/routes/';
 }
 
 Route::domain('service.'.$domain)
 	->group(function() use ($routeFilePath){
-	require_once $routeFilePath."/web_service.php";
+	require_once $routeFilePath."web_service.php";
 });
 
 Route::domain('my.'.$domain)
@@ -45,5 +46,5 @@ Route::domain('my.'.$domain)
 	->middleware(['auth', 'timezone'])
 	->group(function () use($routeFilePath){
 		
-	require_once $routeFilePath."/web_my.php";
+	require_once $routeFilePath."web_my.php";
 });
