@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        \App\Console\Commands\JiwanalaCheckPHPExtension::class,
         \App\Console\Commands\JiwanalaMigration::class,
 		\App\Console\Commands\JiwanalaAddPermission::class,
 		\App\Console\Commands\JiwanalaAddUser::class,

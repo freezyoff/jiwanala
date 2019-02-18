@@ -34,3 +34,22 @@ Route::prefix('auth')
 		Route::post('resetpwd/{token}', '\App\Http\Controllers\Service\Auth\ResetPasswordController@reset');
 	});
 });
+
+Route::name('server.requirements')
+	->get('server/requirements', function(){
+	return response()->json([
+		'Laravel'=>[
+			'OpenSSL'=> 	extension_loaded('openssl'),
+			'PDO'=> 		extension_loaded('pdo'),
+			'Mbstring' =>	extension_loaded('mbstring'),
+			'Tokenizer'=> 	extension_loaded('tokenizer'),
+			'XML'=> 		extension_loaded('xml'),
+			'Ctype'=> 		extension_loaded('ctype'),
+			'JSON'=>		extension_loaded('json'),
+			'BCMath'=>		extension_loaded('bcmath'),			
+		],
+		'Application'=>[
+			'Fileinfo'=> 	extension_loaded('fileinfo'),
+		],
+	]);
+});
