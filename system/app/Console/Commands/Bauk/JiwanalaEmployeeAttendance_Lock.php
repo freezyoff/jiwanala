@@ -49,7 +49,10 @@ class JiwanalaEmployeeAttendance_Lock extends Command
 			if (!$rec->locked){
 				$rec->locked = true;
 				$rec->save();
-				$this->info('Save -> id:'.$rec->id.' date: '.$rec->date. ' locked: '.$rec->locked);
+				$this->info(
+					'['.now()->format('Y-m-d H:i:s').'] '.
+					'Lock: id='.$rec->id.' date= '.$rec->date. ' locked= '.$rec->locked
+				);
 			}
 		}
     }

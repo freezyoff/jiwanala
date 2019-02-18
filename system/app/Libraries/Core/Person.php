@@ -49,6 +49,18 @@ class Person extends Model{
 		$this->addresses()->attach($addr);
 	}
 	
+	public function emails(){
+		return $this->hasMany('\App\Libraries\Core\Email');
+	}
+	
+	public function emailDefault(){
+		$default = $this->emails()->where('default','=',1)->first();
+		if (!$default){
+			$default = $this->emails()->first();
+		}
+		return $default;
+	}
+	
 	public function asEmployee(){
 		return $this->hasOne('\App\Libraries\Bauk\Employee', 'person_id');
 	}
