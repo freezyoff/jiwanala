@@ -77,6 +77,14 @@
 							'icon'=>false 
 						], 
 						'href'=>'my.bauk.attendance.upload',
+					],
+					[
+						'permission'=>'bauk.attendance.report',
+						'display'=>[ 				
+							'name'=>'Laporan', 
+							'icon'=>false 
+						], 
+						'href'=>'my.bauk.attendance.report',
 					]
 				]
 			],

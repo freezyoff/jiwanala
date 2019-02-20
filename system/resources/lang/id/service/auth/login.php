@@ -5,6 +5,7 @@
 	],
 	'error'=>[
 		'login'=>'Kombinasi Nomor dan Sandi tidak ditemukan',
+		'token_expired'=>'Session Expired',
 		'connection'=>'Tidak dapat berkomunikasi dengan server',
 	],
 ];

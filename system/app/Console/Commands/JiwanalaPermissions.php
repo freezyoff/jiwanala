@@ -12,7 +12,7 @@ class JiwanalaPermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:permission {do}';
+    protected $signature = 'jiwanala:permission {do : diff|sync|list}';
 
     /**
      * The console command description.

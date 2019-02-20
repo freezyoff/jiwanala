@@ -116,27 +116,36 @@ Route::prefix('attendance')
 		
 	Route::prefix('histories')
 		->group(function(){
-			Route::name('.landing')
-				->middleware('permission:bauk.attendance.list')
-				->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
-				
-			Route::prefix('fingers')
-				->name('.fingers')
-				->middleware('permission:bauk.attendance.post')
-				->group(function(){	
-				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
-				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
-			});
+		Route::name('.landing')
+			->middleware('permission:bauk.attendance.list')
+			->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
 			
-			Route::prefix('consent')
-				->name('.consents')
-				->middleware('permission:bauk.attendance.post')
-				->group(function(){	
-				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
-				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
-				
-				Route::name('.preview')
-					->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
-			});
+		Route::prefix('fingers')
+			->name('.fingers')
+			->middleware('permission:bauk.attendance.post')
+			->group(function(){	
+			Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
+			Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
 		});
+		
+		Route::prefix('consent')
+			->name('.consents')
+			->middleware('permission:bauk.attendance.post')
+			->group(function(){	
+			Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
+			Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
+			
+			Route::name('.preview')
+				->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
+		});
+	});
+		
+	Route::name('.report')
+		->middleware('permission:bauk.attendance.report')
+		->group(function(){
+		Route::get('report', function(){
+			return "REPORT";
+		});
+	});
+	
 });
