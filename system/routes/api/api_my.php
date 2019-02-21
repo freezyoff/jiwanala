@@ -1,20 +1,12 @@
 <?php 
 
-Route::prefix('bauk')
-	->name('bauk.')
+Route::prefix('android')
+	->name('android')
 	->group(function(){
+	//Route::apiResource('attendance','\App\Http\Controllers\My\Api\APIAttendanceController');
 	
-	Route::apiResource('attendance','\App\Http\Controllers\My\Bauk\APIAttendanceController');
+	Route::get('attendance/histories', '\App\Http\Controllers\My\Api\APIAttendanceController@index');
 	
-	Route::name('attendance.fingers')
-		->get('attendance/finger/{year}/{month}/{day}', function(){
-			
-		});
-		
-	Route::name('attendance.consents')
-		->get('attendance/consents/{year}/{month}/{day}', function(){
-			
-		});
 });
 
 Route::get('/test', function(\Illuminate\Http\Request $request){
