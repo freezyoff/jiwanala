@@ -26,7 +26,7 @@ class APIAttendanceController extends Controller
 				\Carbon\Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01')
 			),
 		];
-		return response()->json($success,200);
+		return response()->json(['success'=>$success], 200);
     }
 
     /**

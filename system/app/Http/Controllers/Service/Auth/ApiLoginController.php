@@ -36,8 +36,8 @@ class ApiLoginController{
 		}
 		
 		$user->destroyApiToken();
-		$json['code']= 200;
-		return response()->json($json, 200);
+		$success['code']= 200;
+		return response()->json(['success'=>$success], 200);
 	}
 	
 	public function relogin(\Illuminate\Http\Request $request){
