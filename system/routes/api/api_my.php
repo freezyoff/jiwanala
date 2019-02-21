@@ -5,7 +5,7 @@ Route::prefix('android')
 	->group(function(){
 	//Route::apiResource('attendance','\App\Http\Controllers\My\Api\APIAttendanceController');
 	
-	Route::get('attendance/histories', '\App\Http\Controllers\My\Api\APIAttendanceController@index');
+	Route::any('attendance/histories', '\App\Http\Controllers\My\Api\APIAttendanceController@index');
 	
 });
 

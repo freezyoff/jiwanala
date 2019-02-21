@@ -16,14 +16,17 @@ class APIAttendanceController extends Controller
     public function index(Request $request){
 		$month = request('month',now()->format('m'));
 		$year = request('year',now()->format('Y'));
-		return response()->json([
+		
+		$success['code']=200;
+		$success['message']=[
 			'month'=>$month,
 			'year'=>$year,
 			'records'=>$this->getAttendanceRecordsByPeriode(
 				\Auth::user()->asEmployee,
 				\Carbon\Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01')
 			),
-		],200);
+		];
+		return response()->json($success,200);
     }
 
     /**
