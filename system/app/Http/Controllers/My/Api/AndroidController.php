@@ -5,7 +5,7 @@ namespace App\Http\Controllers\My\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class APIAttendanceController extends Controller
+class AndroidController extends Controller
 {
 	
     /**
@@ -18,7 +18,7 @@ class APIAttendanceController extends Controller
 		$year = request('year',now()->format('Y'));
 		
 		$success['code']=200;
-		$success['message']=[
+		$success['msg']=[
 			'month'=>$month,
 			'year'=>$year,
 			'records'=>$this->getAttendanceRecordsByPeriode(
@@ -26,7 +26,7 @@ class APIAttendanceController extends Controller
 				\Carbon\Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01')
 			),
 		];
-		return response()->json(['success'=>$success], 200);
+		return response()->json(['success'=>$success], 200); 
     }
 
     /**
@@ -168,4 +168,18 @@ class APIAttendanceController extends Controller
 		}
 	}
 	
+	public function statistics(Request $request){
+		$month = request('month',now()->format('m'));
+		$year = request('year',now()->format('Y'));
+		$user = \Auth::user();
+		
+		//@TODO: persentasi kehadiran pada bulan ini
+		//@TODO: persentasi kehadiran 1 tahun akademik
+		//@TODO: Jumlah Izin/Cuti hingga bulan ini
+		//@TODO: Sisa Izin/Cuti Tahunan hingga bulan ini
+		
+		$data['code']=200;
+		$data['msg']=[];
+		return response()->json(['success'=>$data], 200);
+	}
 }

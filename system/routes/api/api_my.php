@@ -3,9 +3,9 @@
 Route::prefix('android')
 	->name('android')
 	->group(function(){
-	//Route::apiResource('attendance','\App\Http\Controllers\My\Api\APIAttendanceController');
-	
-	Route::any('attendance/histories', '\App\Http\Controllers\My\Api\APIAttendanceController@index');
+		
+	Route::any('attendance/histories', '\App\Http\Controllers\My\Api\AndroidController@index');
+	Route::any('attendance/statistics', '\App\Http\Controllers\My\Api\AndroidController@statistics');
 	
 });
 
