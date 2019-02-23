@@ -19,18 +19,18 @@ class MinifyReponseOutputString
 				
 				//	JAVASCRIPT & CSS
 				'/|(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:)\/\/.*))|/'	=>'',		//js comment // & /* */
-				'/[^\S]+\{/'														=>'{',		//js & css start brackets
-				'/\{[^\S]+/'														=>'{',		//js & css start brackets
-				'/[^\S]+\;/'														=>';',		//space before ;
-				'/\;[^\S]+/'														=>';',		//space after ;
+				'/[^\S]{2,}\{/'														=>'{',		//js & css start brackets
+				'/\{[^\S]{2,}/'														=>'{',		//js & css start brackets
+				'/[^\S]{2,}\;/'														=>';',		//space before ;
+				'/\;[^\S]{2,}/'														=>';',		//space after ;
 				'/[^\S]+\}/'														=>'}',		//js & css end brackets
-				'/\}[^\S]+/'														=>'}',		//js & css end brackets
-				'/\)[^\S]+\./'														=> ').',
-				'/\)[^\S]+/'														=> ')',
-				'/\,[^\S]+/'														=> ',',
+				'/\}[^\S]{2,}/'														=>'}',		//js & css end brackets
+				'/\)[^\S]{2,}\./'														=> ').',
+				'/\)[^\S]{2,}/'														=> ')',
+				'/\,[^\S]{2,}/'														=> ',',
 				
 				//	WHITE SPACE
-				'/([^}])\s+/'														=> '$1 ',	//white space with ended
+				'/([^}])\s{2,}/'													=> '$1 ',	//white space with ended
 			];
             $response->setContent(preg_replace(array_keys($replace), array_values($replace), $response->getContent()));
         }

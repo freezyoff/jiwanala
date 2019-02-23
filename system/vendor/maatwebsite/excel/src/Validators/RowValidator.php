@@ -49,7 +49,8 @@ class RowValidator
                 $failures[] = new Failure(
                     $row,
                     $attributeName,
-                    str_replace($attribute, $attributeName, $messages)
+                    str_replace($attribute, $attributeName, $messages),
+					$rows[$row]	//hack @freezyoff - for row datas
                 );
             }
 
@@ -129,7 +130,7 @@ class RowValidator
         }
 		
 		/**
-		 *
+		 *	@freezyoff - hack for closure rule validation
 		 */
 		if (is_object($rules) && is_callable($rules)) return $rules;
 		

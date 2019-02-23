@@ -11,26 +11,21 @@
 				<table class="w3-table w3-table-all">
 					<thead id="heading">
 						<tr class="w3-theme-l1">
-							<td>Baris</td>
-							<td>Kesalahan</td>
+							<td width="10%" valign="center">{{trans('my/bauk/attendance/hints.table.upload_report.0')}}</td>
+							<td>{{trans('my/bauk/attendance/hints.table.upload_report.1')}}</td>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach($import as $row=>$report)
 						<tr>
-							<td>{{$row-$lineOffset}}</td>
 							<td>
-								@if ($report['imported'])
-									<div><span class="w3-tag w3-indigo">{{trans('my/bauk/attendance/hints.tags.upload_success')}}</span></div>
+								<div align="center">{{$row-$lineOffset}}</div>
+							</td>
+							<td>
+								@if ($report['imported']>=0)
+									@include('my.bauk.attendance.upload_report_table_success')
 								@else
-									<div><span class="w3-tag w3-orange">{{trans('my/bauk/attendance/hints.tags.upload_fail')}}</span></div>
-									@foreach(array_except($report,['imported']) as $error=>$message)	
-										<div>
-											<span style="width:140px;display:inline-block">{{ $error=='nip'? strtoupper($error) : ucwords(str_replace('_',' ',$error)) }}</span>
-											<span style="display:inline-block">:&nbsp;</span>
-											<span class="w3-text-red" style="white-space:nowrap;display:inline-block">{{$message}}</span>
-										</div>
-									@endforeach
+									@include('my.bauk.attendance.upload_report_table_failed')
 								@endif
 							</td>
 						</tr>

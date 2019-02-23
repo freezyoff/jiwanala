@@ -66,7 +66,11 @@
 						'permission'=>'bauk.attendance.list',
 						'display'=>[ 				
 							'name'=>'Riwayat', 
-							'icon'=>false 
+							'icon'=>false ,
+							'tag'=>[
+								'label'=>"update",
+								'color'=>'w3-blue'
+							]
 						], 
 						'href'=>'my.bauk.attendance.landing',
 					],
@@ -74,7 +78,11 @@
 						'permission'=>'bauk.attendance.post',
 						'display'=>[ 				
 							'name'=>'Upload Finger', 
-							'icon'=>false 
+							'icon'=>false,
+							'tag'=>[
+								'label'=>"update",
+								'color'=>'w3-blue'
+							]
 						], 
 						'href'=>'my.bauk.attendance.upload',
 					],

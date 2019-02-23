@@ -263,12 +263,7 @@ app.misc = {
 			app.misc.fileContainer.empty().css('width','');
 			app.misc.fileContainer.append(tag).children().css('width','100%');
 			
-			var offset = parseInt($('#viewer-modal').css('padding-top')),
-				maxHeight = $(window).height() - (offset*2);
-			if (mime.includes('image')) {
-				app.misc.fileContainer.children().css('max-height', maxHeight);
-			}
-			else if (mime.includes('pdf')) {
+			if (mime.includes('pdf')) {
 				app.misc.fileContainer.children().css(app.misc.calcPdfViewSize());
 			}
 		});

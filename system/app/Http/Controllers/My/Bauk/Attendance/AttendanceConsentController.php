@@ -33,6 +33,7 @@ class AttendanceConsentController extends Controller{
 			'date'=> $date,
 			'employee'=> $employee,
 			'consent'=> $employee->consentRecord($formattedDate),
+			'hasAttendance'=> $employee->attendanceRecord($formattedDate)? true:false,
 			'post_action'=>route('my.bauk.attendance.consents',[$nip,$year,$month,$day]),
 			'back_action'=>route('my.bauk.attendance.landing',[$nip,$year,$month]),
 			'upload_action'=>route('my.misc.upload'),

@@ -23,17 +23,37 @@
 						@endif
 						@if (isset($attendance['attendance']))
 							<div class="w3-row">
-							@foreach([1,2,3,4] as $index)
+								<div class="w3-col s12 m6 l3">
+									<i class="fas fa-sign-in-alt fa-fw"></i>
+									<span class="padding-left-8">{{$attendance['attendance']->time1}}</span>
+								</div>
+							@forelse([2, 3,4] as $index)
 								@if ( $attendance['attendance']->{'time'.$index} )
 								<div class="w3-col s12 m6 l3">
 									<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
 									<span class="padding-left-8">{{$attendance['attendance']->{'time'.$index} }}</span>
 								</div>
 								@endif
+							@empty
+								<div class="w3-col s12 m6 l3">
+									<i class="fas fa-sign-out-alt fa-fw"></i>
+									<span class="padding-left-8">{{$attendance['attendance']->time2 }}</span>
+								</div>
+							@endforelse
+							</div>
+						@endif
+						@if (isset($attendance['hasWarning']) && $attendance['hasWarning'])
+							<div class="w3-row">
+							@foreach($attendance['warning'] as $tag)
+								<div class="margin-top-8 margin-none-large margin-none-medium" style="display:inline-block">
+									<span 
+										class="margin-right-8 w3-tag w3-amber" 
+										style="white-space:nowrap">{{$tag}}</span>
+								</div>
 							@endforeach
 							</div>
 						@endif
-						@if (isset($attendance['consent']))
+						@if (isset($attendance['consent']) && $attendance['consent'])
 							<div class="w3-row">
 								<i class="fas fa-exclamation-circle fa-fw"></i>
 								<span class="padding-left-8">{{ trans('my/bauk/attendance/consent.types.'.$attendance['consent']->consent) }}</span>
@@ -43,12 +63,12 @@
 					
 					<td style="text-align:right">
 						{{-- data kehadiran tidak dikunci --}}
-						@if (!$attendance['holiday'])
+						@if (!$attendance['holiday'] && !$attendance['locked'])
 							@if (isset($attendance['link_finger']))
-							<a 	href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
+							<a class="w3-hover-text-blue" href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
 							@endif
 							@if(isset($attendance['link_consent']))
-							<a href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti"><i class="far fa-calendar-check"></i></a>
+							<a class="w3-hover-text-green padding-left-8" href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti"><i class="far fa-calendar-check"></i></a>
 							@endif
 						@endif
 					</td>

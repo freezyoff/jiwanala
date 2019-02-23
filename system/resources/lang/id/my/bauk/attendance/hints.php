@@ -1,7 +1,10 @@
 <?php return[
 	'tags'=>[
 		'upload_success'=>'Impor Sukses',
-		'upload_fail'=>'Impor Gagal',
+		'upload_failed'=>'Impor Gagal',
+		'upload_ignored'=>'Impor Diabaikan',
+		'upload_item_uploaded'=>'diimpor',
+		'upload_item_ignored'=>'diabaikan',
 	],
 	'table'=>[
 		'head'=>[
@@ -9,6 +12,10 @@
 			'Kehadiran / Izin'
 		],
 		'empty'=>'Masukkan NIP dan Periode untuk melihat data.',
+		'upload_report'=>[
+			'Baris',
+			'Sukses / Gagal'
+		]
 	],
 	'buttons'=>[
 		'upload-file'=>'Unggah Berkas',
@@ -71,12 +78,14 @@
 			'nip.exists'=>'NIP tidak terdaftar',
 			'tanggal.required'=>'Isi Tanggal dengan format: [tgl]/[bln]/[thn]',
 			'tanggal.date_format'=>'Gunakan format Tanggal: [tgl]/[bln]/[thn]',
-			'finger_masuk.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
-			'finger_masuk.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
-			'finger_keluar_1.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
-			'finger_keluar_1.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
-			'finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
-			'finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'finger_masuk.required'=>'Isi dengan format Waktu 12 Jam : 00:00:00 AM/PM',
+			'finger_masuk.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
+			'finger_masuk.required_if'=>'Isi salah satu (Finger Masuk, Finger Keluar 1, Finger Keluar 2 atau Finger Keluar 3)',
+			'finger_keluar_1.required'=>'Isi dengan format Waktu 12 Jam : 00:00:00 AM/PM',
+			'finger_keluar_1.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
+			'finger_keluar_1.required_if'=>'Isi salah satu (Finger Masuk, Finger Keluar 1, Finger Keluar 2 atau Finger Keluar 3)',
+			'finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
+			'finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
 			
 			'*.nip.required'=>'Isi NIP',
 			'*.nip.numeric'=>'Isi NIP dengan angka',
@@ -85,8 +94,10 @@
 			'*.tanggal.date_format'=>'Gunakan format Tanggal: [tgl]/[bln]/[thn]',
 			'*.finger_masuk.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 			'*.finger_masuk.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_masuk.required_if'=>'Isi salah satu (Finger Masuk, Finger Keluar 1, Finger Keluar 2 atau Finger Keluar 3)',
 			'*.finger_keluar_1.required'=>'Isi dengan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 			'*.finger_keluar_1.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
+			'*.finger_keluar_1.required_if'=>'Isi salah satu (Finger Masuk, Finger Keluar 1, Finger Keluar 2 atau Finger Keluar 3)',
 			'*.finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 			'*.finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : [jam]:[menit]:[detik] AM/PM',
 		],
@@ -128,8 +139,18 @@
 			],
 			[
 				'h4'=>'Unduh Berkas Format Tabel',
-				'p1'=>'Saat mengisi data,&nbsp;pastikan tidak merubah format kolom dan baris. Unduh berkas,&nbsp;modifikasi,&nbsp;dan simpan (save as)&nbsp;dengan ekstensi .csv .',
-				'p2'=>'Klik icon berkas untuk mengunduh.'
+				'p1'=>'Saat mengisi data, pastikan tidak merubah format kolom dan baris. Unduh berkas, modifikasi, dan simpan (save as) dengan ekstensi .csv .',
+				'p2'=>'Untuk menghindari kesalahan saat proses upload, baca tabel berikut:',
+				'p3'=>'<code>No</code>',
+				'p4'=>'Sesuai urutan data untuk memudahkan cek ulang.',
+				'p5'=>'<code>NIP</code>',
+				'p6'=>'Pastikan NIP terdaftar. Cari nomor <code>NIP</code> pada halaman riwayat jika dirasa perlu.',
+				'p7'=>'<code>Tanggal</code>',
+				'p8'=>'Pastikan menggunakan format 00-00-0000 (tgl-bln-thn) dan pastikan tidak ada pengulangan tanggal pada baris lainnya. Apabila ada, data akan ditumpuk secara berurutan dari baris paling atas ke bawah',
+				'p9'=>'<code>Finger Masuk</code>',
+				'p10'=>'Pastikan menggunakan format 00:00:00 AM/PM (jam:menit:detik Ante/Post Meridiem).',
+				'p11'=>'<code>Finger Keluar</code>',
+				'p12'=>'Pastikan menggunakan format 00:00:00 AM/PM (jam:menit:detik Ante/Post Meridiem).',
 			],
 			[
 				'h4'=>'Unggah Berkas Tabel',
@@ -144,6 +165,14 @@
 			['h6'=>'Tanggal Izin/Cuti', 'p'=>'Pilih tanggal minimal sama dengan tanggal awal. Jika melewati tanggal libur (sesuai kalender hari libur),&nbsp;sistem otomatis menghitung jumlah cuti tanpa menghiraukan hari libur.'],
 			['h6'=>'Jenis Izin/Cuti', 'p'=>'Sesuaikan jenis izin/cuti.'],
 			['h6'=>'Berkas Izin/Cuti', 'p'=>'Unggah berkas sebagai bukti izin/cuti. Unggah berkas dengan ekstensi PDF atau JPG/JPEG. Berkas.'],
-		]
+		],
+	],
+	
+	'warnings'=>[
+		'lateArrival'=>'Datang terlambat :jam Jam :menit Menit :detik Detik.',
+		'earlyDeparture'=>'Pulang awal :jam Jam :menit Menit :detik Detik.',
+		'noArrival'=>'Tidak finger datang.',
+		'noDeparture'=>'Tidak finger pulang.',
+		'noConsent'=>'Belum melaporkan dokumen Cuti / Izin.',
 	],
 ];

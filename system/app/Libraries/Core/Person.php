@@ -58,7 +58,7 @@ class Person extends Model{
 		if (!$default){
 			$default = $this->emails()->first();
 		}
-		return $default;
+		return $default? $default->email :false ;
 	}
 	
 	public function asEmployee(){

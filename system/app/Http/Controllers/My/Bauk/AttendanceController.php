@@ -71,6 +71,10 @@ class AttendanceController extends Controller
 			$list[$key]['attendance'] = $employee->attendanceRecord($key);
 			$list[$key]['consent'] = $employee->consentRecord($key);
 			
+			$warning = $this->attendanceWarning($date, $list[$key]['attendance'], $list[$key]['consent']);
+			$list[$key]['hasWarning'] = is_array($warning)? true : false;
+			$list[$key]['warning'] = $warning;
+			
 			if (!$list[$key]['locked']){	
 				$list[$key]['link_finger']=route('my.bauk.attendance.fingers',[
 					'nip'=>$nip, 
@@ -92,6 +96,90 @@ class AttendanceController extends Controller
 		}
 		
 		return $list;
+	}
+	
+	public function attendanceWarning($recordDate, $record, $consent){
+		//record tanggal hari lalu
+		$recordDateDaysBefore = $recordDate->lessThan(now());
+		
+		if (!$record) {
+			if (!$consent) return $recordDateDaysBefore? [trans('my/bauk/attendance/hints.warnings.noConsent')] : false;
+			return false;
+		}
+		
+		if (!$record->time1) {
+			return $recordDateDaysBefore? 
+				[
+					trans('my/bauk/attendance/hints.warnings.noArrival'),
+					trans('my/bauk/attendance/hints.warnings.noConsent') 
+				]
+				:
+				false;
+		}
+		
+		if (!$record->time2 && !$record->time3 && !$record->time4) {
+			return $recordDateDaysBefore?
+				[
+					trans('my/bauk/attendance/hints.warnings.noDeparture'),
+					trans('my/bauk/attendance/hints.warnings.noConsent')
+				]
+				:
+				false;
+		}
+				
+		//
+		//	Cek kedatangan
+		//
+		$start = \Carbon\Carbon::createFromFormat('H:i:s', config('jiwanala.work_hours.max_arrival'));
+		$in = \Carbon\Carbon::createFromFormat('H:i:s', $record->time1);
+		if ( $in->greaterThan($start) ){
+			$seconds = $start->diffInSeconds( $in );
+			$msg = trans('my/bauk/attendance/hints.warnings.lateArrival');
+			
+			$lhours = floor($seconds/(60*60));
+			$seconds -= $lhours*(60*60);
+			$lminutes = floor($seconds/60);
+			$seconds -= $lminutes*60;
+			$lseconds = $seconds;
+			$msg = $lhours>0? 	str_replace(':jam',$lhours,$msg) : 
+								str_replace(':jam Jam',"",$msg);
+			$msg = $lminutes>0? str_replace(':menit',$lminutes,$msg) : 
+								str_replace(':menit Menit',"",$msg);
+			$msg = $lseconds>0? str_replace(':detik',$lseconds,$msg) : 
+								str_replace(':detik Detik',"",$msg);
+								
+			return $consent? 	[$msg] : 
+								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
+		}
+		
+		//pulang awal
+		$end = \Carbon\Carbon::createFromFormat(
+			'H:i:s', 
+			$recordDate->dayOfWeek == 6 ? 
+				config('jiwanala.work_hours.min_departure') : 
+				config('jiwanala.work_hours.min_departure_saturday')
+		);
+		$out = $record->time4?: $record->time3?: $record->time2;
+		$out = \Carbon\Carbon::createFromFormat('H:i:s', $out);
+		if ( $out->lessThan($end)) {
+			$seconds = $start->diffInSeconds( $in );
+			$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
+			
+			$lhours = floor($seconds/(60*60));
+			$seconds -= $lhours*(60*60);
+			$lminutes = floor($seconds/60);
+			$seconds -= $lminutes*60;
+			$lseconds = $seconds;
+			$msg = $lhours>0? 	str_replace(':jam',$lhours,$msg) : 
+								str_replace(':jam Jam',"",$msg);
+			$msg = $lminutes>0? str_replace(':menit',$lminutes,$msg) : 
+								str_replace(':menit Menit',"",$msg);
+			$msg = $lseconds>0? str_replace(':detik',$lseconds,$msg) : 
+								str_replace(':detik Detik',"",$msg);
+								
+			return $consent? 	[$msg] : 
+								[$msg,trans('my/bauk/attendance/hints.warnings.noConsent')];
+		}
 	}
 	
 	public function searchEmployee(Request $req){

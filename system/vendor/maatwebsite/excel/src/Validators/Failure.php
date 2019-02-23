@@ -21,16 +21,23 @@ class Failure implements Arrayable
      */
     protected $errors;
 
+	/**
+	 *	hack @freezyoff
+     * @var array
+     */
+	protected $data;
+	
     /**
      * @param int    $row
      * @param string $attribute
      * @param array  $errors
      */
-    public function __construct(int $row, string $attribute, array $errors)
+    public function __construct(int $row, string $attribute, array $errors, array $rowData)
     {
         $this->row       = $row;
         $this->attribute = $attribute;
         $this->errors    = $errors;
+		$this->data		 = $rowData;	//hack @freezyoff
     }
 
     /**
@@ -66,4 +73,8 @@ class Failure implements Arrayable
             return __('There was an error on row :row. :message', ['row' => $this->row, 'message' => $message]);
         })->all();
     }
+	
+	public function data(): array{
+		return $this->data;
+	}
 }

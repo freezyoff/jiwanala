@@ -23,14 +23,14 @@ class UserController extends Controller
 		$employees = null;
 		if ($active_status > -1){
 			$employees = $employees? 
-				$employees->where('active','=',$active_status) : 
-				Employee::where('active','=',$active_status);
+				$employees->where('activated','=',$active_status) : 
+				Employee::where('activated','=',$active_status);
 		}
 		
 		if ($keywords){
 			$employees = $employees? 
-				$employees->where('active','=',$active_status) : 
-				Employee::where('active','=',$active_status);
+				$employees->where('activated','=',$active_status) : 
+				Employee::where('activated','=',$active_status);
 		}
 		
 		

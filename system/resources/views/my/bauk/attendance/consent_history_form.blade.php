@@ -150,7 +150,13 @@
 					</tr>
 				</thead>
 				<tbody id="upload-file-table-body"></tbody>
-				<tbody id="upload-file-table-body"></tbody>
+				@if (!$consent)
+				<tbody id="empty-table-body">
+					<tr>
+						<td colspan="4">Upload dokumen Cuti/Izin</td>
+					</tr>
+				</tbody>
+				@endif
 			</table>
 		</div>
 	</div>

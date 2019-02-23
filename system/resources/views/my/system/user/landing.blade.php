@@ -73,6 +73,7 @@
 								<td class="w3-hide-large"></td>
 								<td>{{ $empl->nip }}</td>
 								<td>{{ $empl->getFullName() }}</td>
+								<td>{{$empl->asPerson->emailDefault()}}</td>
 								<td>
 									@if ($empl->asUser)
 										<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
@@ -80,7 +81,6 @@
 										<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
 									@endif
 								</td>
-								<td class="w3-hide-small w3-hide-medium"></td>
 							</tr>
 						@empty
 							<tr>

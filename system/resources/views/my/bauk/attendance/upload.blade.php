@@ -37,8 +37,19 @@
 				<div class="w3-container padding-top-16">
 					<h4>2. {{trans('my/bauk/attendance/hints.info.upload_step.1.h4')}}</h4>
 					<div class="padding-left-16">
-						<p>{!!trans('my/bauk/attendance/hints.info.upload_step.1.p1')!!}</p>
-						<p class="padding-top-8">{!!trans('my/bauk/attendance/hints.info.upload_step.1.p2')!!}</p>
+						@for($i=1;$i<3;$i++)
+						<p class="padding-top-8">{!! trans('my/bauk/attendance/hints.info.upload_step.1.p'.$i) !!}</p>
+						@endfor
+						<table class="w3-table w3-table-all margin-bottom-16">
+							<tbody>
+							@for($i=3;$i<count(trans('my/bauk/attendance/hints.info.upload_step.1'));$i++)
+								<tr>
+									<td width="25%">{!! trans('my/bauk/attendance/hints.info.upload_step.1.p'.($i++)) !!}</td>
+									<td>{!! trans('my/bauk/attendance/hints.info.upload_step.1.p'.($i)) !!}</td>
+								</tr>
+							@endfor
+							</tbody>
+						</table>
 						<div class="padding-top-8">
 							<div class="w3-col s12 m6 l4">
 								<a href="{{route('my.bauk.attendance.download.template',['xls'])}}" 

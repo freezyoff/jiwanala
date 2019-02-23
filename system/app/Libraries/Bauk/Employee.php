@@ -114,8 +114,13 @@ class Employee extends Model
 	 *	@param $date (String) - formatted date "Y-m-d"
 	 *	@return (Array of App\Libraries\Bauk\EmployeeConsent|Boolean) the records or false
 	 */
-	public function consentRecord($date){
-		return $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`')->first();
+	public function consentRecord($date, $type=false){
+		if (!$type) return $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`')->first();
+		
+		return $this->consents()->where(function($query){
+			$query->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`');
+			$query->where('consent','=',$type);
+		})->first();
 	}
 	
 	/**

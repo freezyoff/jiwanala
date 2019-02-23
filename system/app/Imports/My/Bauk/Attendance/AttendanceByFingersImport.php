@@ -71,20 +71,20 @@ class AttendanceByFingersImport implements
 		};
 		
         return [
-			'no' =>				['required','numeric'],
-			'nip'=> 			['required','numeric','exists:bauk.employees,nip'],
-            'tanggal' => 		['required','date_format:'.$dateFormat, $isAllowed, $isHoliday],
-			'finger_masuk' => 	['required',$regexTimeFormat],
-			'finger_keluar_1' =>['required',$regexTimeFormat],
-			'finger_keluar_2' =>['nullable',$regexTimeFormat],
-			'finger_keluar_3' =>['nullable',$regexTimeFormat],
+			'no' =>					['required','numeric'],
+			'nip'=> 				['required','numeric','exists:bauk.employees,nip'],
+            'tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday],
+			'*.finger_masuk' => 	['nullable', 'required_if:finger_keluar_1,',$regexTimeFormat],
+			'*.finger_keluar_1' =>	['nullable', 'required_if:finger_masuk,',$regexTimeFormat],
+			'finger_keluar_2' =>	['nullable',$regexTimeFormat],
+			'finger_keluar_3' =>	['nullable',$regexTimeFormat],
 
             //	Above is alias for as it always validates in batches
 			'*.no' =>				['required','numeric'],
 			'*.nip'=> 				['required','numeric','exists:bauk.employees,nip'],
 			'*.tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday],
-			'*.finger_masuk' => 	['required',$regexTimeFormat],
-			'*.finger_keluar_1' =>	['required',$regexTimeFormat],
+			'*.finger_masuk' => 	['nullable','required_if:*.finger_keluar_1,',$regexTimeFormat],
+			'*.finger_keluar_1' =>	['nullable','required_if:*.finger_masuk,',$regexTimeFormat],
 			'*.finger_keluar_2' =>	['nullable',$regexTimeFormat],
 			'*.finger_keluar_3' =>	['nullable',$regexTimeFormat],
         ];
@@ -114,33 +114,32 @@ class AttendanceByFingersImport implements
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row){
-		//try{
-			$employeeId = \App\Libraries\Bauk\Employee::findByNIP($row['nip'])->id;
-			$date = $this->convertToDatabaseDateFormat($row['tanggal'], $this->dateformat);
-			
-			$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
-			$record = $record?: new EmployeeAttendance();
-			$record->fill([
-				'creator'		=> $this->user->id,
-				'employee_id'	=> $employeeId,
-				'date' 			=> $date,
-				'time1' 		=> $this->convertToDatabaseDateFormat($row['finger_masuk'], $this->timeformat),
-				'time2'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat),
-				'time3'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat),
-				'time4'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat),
-			]);
-			
-			//save the success
-			$this->onSuccess($row);
-			return $record;
-		//}
-		//catch(\Exception $e){
-			//$this->errors[$this->currentRow] = trans('my/bauk/attendance/hints.errors.invalidTableFile');
-		//}
+		$employeeId = \App\Libraries\Bauk\Employee::findByNIP($row['nip'])->id;
+		$date = $this->convertToDatabaseDateFormat($row['tanggal'], $this->dateformat, false);
+		
+		$record = EmployeeAttendance::where('employee_id', $employeeId)->where('date', $date)->first();
+		$record = $record?: new EmployeeAttendance();
+		$record->fill([
+			'creator'		=> $this->user->id,
+			'employee_id'	=> $employeeId,
+			'date' 			=> $date,
+			//'time1' 		=> $this->convertToDatabaseDateFormat($row['finger_masuk'], $this->timeformat, $record->time1),
+			//'time2'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat, $record->time2),
+			//'time3'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat, $record->time3),
+			//'time4'			=> $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat, $record->time4),
+		]);
+		$record->time1 = $this->convertToDatabaseDateFormat($row['finger_masuk'], $this->timeformat, $record->time1);
+		$record->time2 = $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat, $record->time2);
+		$record->time3 = $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat, $record->time3);
+		$record->time4 = $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat, $record->time4);
+		
+		//save the success
+		$this->onSuccess($row, $record);
+		return $record;
     }
 	
-	private function convertToDatabaseDateFormat($value, $formatDateTime){
-		if ($value == null && $value =='') return null;
+	private function convertToDatabaseDateFormat($value, $formatDateTime, $defaultValue){
+		if ($value == null && $value =='') return $defaultValue;
 		
 		$carbon = \Carbon\Carbon::createFromFormat($formatDateTime, $value);
 		return $formatDateTime==$this->dateformat? 
@@ -154,21 +153,40 @@ class AttendanceByFingersImport implements
     public function onFailure(Failure ...$failures)
     {
 		foreach($failures as $f){
-			$ind = $f->row();
-			$this->report[$ind][$f->attribute()] = $f->errors()[0];
-			if (!isset($this->report[$ind]['type'])){
-				$this->report[$ind]['imported'] = false;
-			}
+			$this->onFailureImport($f);
 		}
     }
 	
-	private function onSuccess(Array $row){
+	public function onFailureImport(Failure $f){
+		$ind = $f->row();
+		foreach(array_except($f->data(),['no']) as $key=>$value){
+			$this->report[$ind][$key]['data'] = $value;
+			$this->report[$ind][$key]['error'] = 0;
+		}
+		$this->report[$ind][$f->attribute()]['error'] = $f->errors()[0];
+		$this->report[$ind]['imported'] = -1;
+	}
+	
+	private function onSuccess(Array $row, EmployeeAttendance $record){
 		$ind = $row['no'] + $this->headingRow();
 		$keys = ['nip','tanggal','finger_masuk','finger_keluar_1','finger_keluar_2','finger_keluar_3'];
-		foreach($keys as $k){
-			$this->report[$ind][$k] = $row[$k];
+		$recordKeys = ['finger_masuk'=>'time1','finger_keluar_1'=>'time2','finger_keluar_2'=>'time3','finger_keluar_3'=>'time4'];
+		$imported = 0;
+		
+		$this->report[$ind]['nip']['import'] = $row['nip'];
+		$this->report[$ind]['nip']['record'] = $record->employee()->first()->asPerson()->first()->name_full;
+		$this->report[$ind]['tanggal']['import'] = \Carbon\Carbon::parse($record->date)->format('d-m-Y');
+		$this->report[$ind]['tanggal']['record'] = '';
+		foreach(['finger_masuk','finger_keluar_1','finger_keluar_2','finger_keluar_3'] as $k){
+			$this->report[$ind][$k]['record'] = $record->getOriginal($recordKeys[$k]);
+			$this->report[$ind][$k]['import'] = $record->{$recordKeys[$k]};
+			$this->report[$ind][$k]['overwrite'] = $record->getOriginal($recordKeys[$k]) && $record->{$recordKeys[$k]} && 
+													$record->getOriginal($recordKeys[$k]) != $record->{$recordKeys[$k]};
+													
+			$imported = $this->report[$ind][$k]['overwrite']? 1 : $imported;
 		}
-		$this->report[$ind]['imported'] = true;
+		
+		$this->report[$ind]['imported'] = $imported;
 	}
 	
 	public function getReport(){

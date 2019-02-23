@@ -111,14 +111,14 @@ class AndroidController extends Controller
 			
 			//java use strict variable type
 			$rec = $employee->attendanceRecord($key);
-			$list[$key]['hasAttendance'] = $rec? true : false;		
+			$list[$key]['hasAttendance'] = $rec? true : false;
 			$list[$key]['attendance'] = !$rec? false : [
 				'id'=> $rec->id,
 				'fin'=>$rec->time1,
 				'fout1'=>$rec->time2,
 				'fout2'=>$rec->time3,
 				'fout3'=>$rec->time4,
-				'message'=> $this->getAttendanceMessage($rec->time1, $rec->time2),
+				'message'=> $this->getAttendanceMessage($rec->time1, $rec->time2)
 			];
 			
 			//java use strict variable type
@@ -141,8 +141,8 @@ class AndroidController extends Controller
 	function getAttendanceMessage($time1, $time2, $time3=false, $time4=false){
 		if (!$time1 || !$time2) return "Belum ada rekaman kehadiran";
 		
-		$start = \Carbon\Carbon::createFromFormat('H:i:s', "06:50:00");
-		$end = \Carbon\Carbon::createFromFormat('H:i:s', "15:45:00");
+		$start = config('jiwanala.work_hours.max_arrival');	//\Carbon\Carbon::createFromFormat('H:i:s', "06:50:00");
+		$end = config('jiwanala.work_hours.min_departure');	//\Carbon\Carbon::createFromFormat('H:i:s', "15:45:00");
 		
 		//datang terlambat
 		$in = \Carbon\Carbon::createFromFormat('H:i:s', $time1);
@@ -152,7 +152,7 @@ class AndroidController extends Controller
 			$res =  "Terlambat ".
 					($lhours? $lhours." Jam" : "") .
 					($lminutes? $lminutes." Menit" : "");
-			return $res;
+			return $res.". ".trans('my/bauk/attendance/hints.noConsentForLateArrival');
 		}
 		
 		//pulang awal
@@ -164,7 +164,7 @@ class AndroidController extends Controller
 			$res =  "Terlambat ".
 					($lhours? $lhours." Jam" : "") .
 					($lminutes? $lminutes." Menit" : "");
-			return $res;
+			return $res.". ".trans('my/bauk/attendance/hints.noConsentForLateArrival');
 		}
 	}
 	

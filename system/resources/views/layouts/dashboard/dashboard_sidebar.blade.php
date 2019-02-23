@@ -37,16 +37,25 @@
 	</a>
 	@foreach($sidebarItems as $item)
 		@if ( (!isset($item['group']) || !$item['group']) && \Auth::user()->hasPermission($item['permission']) )
-		<?php 
-			$href = route($item['href']);
-			$icon = $item['display']['icon'];
-			$name = $item['display']['name'];
-		?>
 			<!-- begin: sidebar item -->
-			<a class="w3-bar-item {{ str_contains( url()->current(), $href)? 'selected' : '' }}" 
-				href="{{ $href }}">
-				<div class="icon"><i class="{{ $icon }} fa-fw"></i></div>
-				<span class="">{{ $name }}</span>
+			<a class="w3-bar-item {{ str_contains( url()->current(), route($item['href']))? 'selected' : '' }}" 
+				href="{{ route($item['href']) }}">
+				<div class="icon"><i class="{{ $item['display']['icon'] }} fa-fw"></i></div>
+				<span class="">
+					{{ $item['display']['name'] }}
+					@if (isset($item['display']['tag']))
+						<span class="w3-tag margin-left-8 {{$item['display']['tag']['color']}}" 
+							style="font-size:.8em">
+							{{ $item['display']['tag']['label'] }}
+						</span>
+					@endif
+					@if (isset($item['display']['badge']))
+						<span class="w3-tag margin-left-8 {{$item['display']['badge']['color']}}" 
+							style="font-size:.8em">
+							{{ $item['display']['badge']['label'] }}
+						</span>
+					@endif
+				</span>
 			</a>
 			<!-- end: sidebar item -->
 		@elseif (isset($item['group']))
@@ -78,7 +87,21 @@
 					<div class="icon">
 						<i class="fas fa-caret-right fa-fw"></i>
 					</div>
-					<span style="flex-grow: 1;">{{ $lItem['display']['name'] }}</span>
+					<span style="flex-grow: 1;">
+						{{ $lItem['display']['name'] }}
+						@if (isset($lItem['display']['tag']))
+							<span class="w3-tag margin-left-8 {{$lItem['display']['tag']['color']}}" 
+								style="font-size:.8em">
+								{{ $lItem['display']['tag']['label'] }}
+							</span>
+						@endif
+						@if (isset($lItem['display']['badge']))
+							<span class="w3-tag margin-left-8 {{$lItem['display']['badge']['color']}}" 
+								style="font-size:.8em">
+								{{ $lItem['display']['badge']['label'] }}
+							</span>
+						@endif
+					</span>
 				</a>
 			@endforeach
 			</div>

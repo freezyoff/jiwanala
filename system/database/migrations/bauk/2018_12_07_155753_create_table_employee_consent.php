@@ -33,6 +33,8 @@ class CreateTableEmployeeConsent extends Migration
 				'ch',	//cuti hamil
 				'cp',	//cuti penting
 				'td',	//Tugas / Dinas
+				'tl',	//Izin Datang Terlambat / Pulang Awal
+				'tf',	//Izin Tidak Finger Datang / Pulang
 			])->nullable()->comment('izin tidak masuk');
 			$table->date('start')->comment('tanggal mulai cuti/izin');
 			$table->date('end')->comment('tanggal selesai cuti/izin');
