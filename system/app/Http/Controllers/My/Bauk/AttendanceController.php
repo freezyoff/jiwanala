@@ -156,8 +156,8 @@ class AttendanceController extends Controller
 		$end = \Carbon\Carbon::createFromFormat(
 			'H:i:s', 
 			$recordDate->dayOfWeek == 6 ? 
-				config('jiwanala.work_hours.min_departure') : 
-				config('jiwanala.work_hours.min_departure_saturday')
+				config('jiwanala.work_hours.min_departure_saturday') : 
+				config('jiwanala.work_hours.min_departure')
 		);
 		$out = $record->time4?: $record->time3?: $record->time2;
 		$out = \Carbon\Carbon::createFromFormat('H:i:s', $out);
