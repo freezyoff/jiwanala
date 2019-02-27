@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,31 +16,37 @@ use Illuminate\Http\Request;
 */
 
 $domain = 'jiwa-nala';
-$domain .= App::environment('production')? '.org' : '.local';
+$domain .= \App::environment('production')? '.org' : '.local';
+$filePath = 'routes/api';
 
+/*
+|--------------------------------------------------------------------------
+|	Untuk client yang mengenali Nama Domain Server 
+|--------------------------------------------------------------------------
+|
+*/
 Route::domain('service.'.$domain)
 	->name('api.service.')
-	->group(base_path('routes/api/api_service.php'));
+	->group(base_path($filePath.'/api_service.php'));
 
 Route::domain('my.'.$domain)
 	->name('api.my.')
 	->middleware('auth.api')
-	->group(base_path('routes/api/api_my.php'));
+	->group(base_path($filePath.'/api_my.php'));
 
 /*
 |--------------------------------------------------------------------------
-| LOCAL DEVELOPMENT ONLY - Remove on deployment
+| 	Untuk client yang tidak bisa mengenali Nama Domain Server
 |--------------------------------------------------------------------------
 |
 */
-//192.168.0.4
-Route::domain('192.168.0.4')->group(function(){
-	Route::post('signin', function( Request $req ){
-		$username = $req->input('username', false);
-		$password = $req->input('password', false);
-		
-		$student = \App\DBModels\JNBimbel\Student::where('username','=',$username)->first();
-		if (!$student) return response()->json(['signin'=>false]);
-		return response()->json( $student->signin($username, $password) );
-	});
-});
+if (!App::environment('production')){
+	Route::domain(\Request::server('SERVER_ADDR'))->group(function() use($filePath){
+		Route::name('api.service.')
+			->group(base_path($filePath.'/api_service.php'));
+
+		Route::name('api.my.')
+			->middleware('auth.api')
+			->group(base_path($filePath.'/api_my.php'));
+	});	
+}

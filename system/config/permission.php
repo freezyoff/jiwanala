@@ -1,12 +1,12 @@
 <?php return [
     'default_install' => [
-        0 => 'service.grant.permission',
-        1 => 'service.revoke.permission',
-        2 => 'service.list.permission',
-        3 => 'service.post.permission',
-        4 => 'service.patch.permission',
-        5 => 'service.put.permission',
-        6 => 'service.delete.permission',
+        'service.grant.permission',
+        'service.revoke.permission',
+        'service.list.permission',
+        'service.post.permission',
+        'service.patch.permission',
+        'service.put.permission',
+        'service.delete.permission',
     ],
     'list' => [
 		'profile.patch.own'	=>	['profile', 'Patch owned Profile record', 'Permission to update owned profile record'],
@@ -36,7 +36,6 @@
         'bauk.attendance.post' => ['bauk', 'Post Employee attendance', 'Menambah data kehadiran karyawan'],
         'bauk.attendance.patch' => ['bauk', 'Patch Employee attendance', 'Meng-update data kehadiran karyawan'],
         'bauk.attendance.delete' => ['bauk', 'Delete Employee attendance', 'Menghapus data kehadiran karyawan'],
-        'bauk.attendance.lock' => ['bauk', 'Lock Employee attendance', 'Mengunci data kehadiran karyawan untuk persiapan laporan'],
         'bauk.attendance.report' => ['bauk', 'Generate Report', 'Menyusun laporan kehadiran'],
 		
 		//holiday
@@ -44,5 +43,11 @@
 		'bauk.holiday.post'=>['bauk', 'Post Holiday', 'Menambahkan hari libur'],
 		'bauk.holiday.patch'=>['bauk', 'Patch Holiday', 'Merubah data hari libur'],
 		'bauk.holiday.delete'=>['bauk', 'Delete Holiday', 'Menghapus data hari libur'],
+		
+		//schedule
+		'bauk.schedule.list'=>['bauk', 'List Employee Schedule', 'Melihat daftar jadwal kerja'],
+		'bauk.schedule.post'=>['bauk', 'Post Employee Schedule', 'Menambah jadwal kerja'],
+		'bauk.schedule.patch'=>['bauk', 'Patch Employee Schedule', 'Merubah jadwal kerja'],
+		'bauk.schedule.delete'=>['bauk', 'Delete Employee Schedule', 'Menghapus jadwal kerja'],
     ],
 ];

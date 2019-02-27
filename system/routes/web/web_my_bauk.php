@@ -12,8 +12,8 @@ Route::name('landing')
 			->post('employeesCount', '\App\Http\Controllers\My\BaukController@employeesCount');	
 		Route::name('.attendanceProgress')
 			->post('attendanceProgress', '\App\Http\Controllers\My\BaukController@attendanceProgress');
-		Route::name('.attendanceStatistics')
-			->post('attendanceStatistics', '\App\Http\Controllers\My\BaukController@attendanceStatistics');
+		Route::name('.fingerConsent')
+			->post('fingerConsent', '\App\Http\Controllers\My\BaukController@fingerConsent');
 	});
 });
 	
@@ -21,7 +21,8 @@ Route::prefix('employee')
 	->name('employee')
 	->group(function(){
 	
-	Route::any('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
+	Route::name('.landing')
+		->any('/', '\App\Http\Controllers\My\Bauk\EmployeeController@landing');
 	
 	Route::prefix('add')
 		->name('.add')
@@ -52,6 +53,16 @@ Route::prefix('employee')
 		->group(function(){
 		Route::get('{id}/{activationFlag?}', '\App\Http\Controllers\My\Bauk\EmployeeController@activate');
 	});
+});
+
+Route::prefix('schedule')
+	->name('schedule')
+	->middleware(['permission:bauk.schedule.post','permission:bauk.schedule.delete'])
+	->group(function(){
+	Route::name('.landing')
+		->any('/', '\App\Http\Controllers\My\Bauk\ScheduleController@index');
+	Route::name('.store')
+		->post('/add', '\App\Http\Controllers\My\Bauk\ScheduleController@store');
 });
 
 Route::prefix('holiday')

@@ -1,5 +1,5 @@
 {
-    "name": "JN/my",
+    "name": "freezybits/jiwanala",
     "description": "Administration System for JIWANALA Foundation.",
     "keywords": ["jiwanala", "foundation", "yayasan", "enteprise", "system"],
     "license": "MIT",
@@ -23,7 +23,8 @@
     },
     "autoload": {
 		"files": [
-			"app/Libraries/Foundation/AttendanceAndConsentHelper.php"
+			"app/Libraries/Foundation/AttendanceAndConsentHelper.php",
+			"app/Libraries/Foundation/DateHelper.php"
 		],
         "classmap": [
             "database/seeds",

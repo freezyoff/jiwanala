@@ -95,7 +95,7 @@
 						<!-- end: input work time & registered -->
 				</div>
 				<div class="w3-hide-small padding-bottom-16 padding-top-16" style="text-align:right">
-					<button id="btn-cancel-large" class="w3-button w3-red w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">
+					<button id="btn-cancel-large" class="w3-button w3-red w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee.landing')}}'">
 						<i class="fas fa-times"></i>
 						<span class="padding-left-8">Batal</span>
 					</button>
@@ -109,7 +109,7 @@
 					</button>
 				</div>
 				<div class="w3-hide-large w3-hide-medium padding-top-8 padding-bottom-16" style="text-align:right">
-					<button id="btn-cancel-small" class="w3-button w3-red w3-mobile w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee')}}'">
+					<button id="btn-cancel-small" class="w3-button w3-red w3-mobile w3-hover-red" type="button" onclick="document.location='{{route('my.bauk.employee.landing')}}'">
 						<i class="fas fa-times"></i>
 						<span class="padding-left-8">Batal</span>
 					</button>

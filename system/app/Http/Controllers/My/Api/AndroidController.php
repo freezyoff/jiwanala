@@ -4,6 +4,7 @@ namespace App\Http\Controllers\My\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Libraries\Bauk\EmployeeAttendance;
 
 class AndroidController extends Controller
 {
@@ -141,8 +142,8 @@ class AndroidController extends Controller
 	function getAttendanceMessage($time1, $time2, $time3=false, $time4=false){
 		if (!$time1 || !$time2) return "Belum ada rekaman kehadiran";
 		
-		$start = config('jiwanala.work_hours.max_arrival');	//\Carbon\Carbon::createFromFormat('H:i:s', "06:50:00");
-		$end = config('jiwanala.work_hours.min_departure');	//\Carbon\Carbon::createFromFormat('H:i:s', "15:45:00");
+		$start = EmployeeAttendance::getArrivalTimeBound();	//\Carbon\Carbon::createFromFormat('H:i:s', "06:50:00");
+		$end = EmployeeAttendance::getDepartureTimeBound();	//\Carbon\Carbon::createFromFormat('H:i:s', "15:45:00");
 		
 		//datang terlambat
 		$in = \Carbon\Carbon::createFromFormat('H:i:s', $time1);

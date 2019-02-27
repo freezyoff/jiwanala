@@ -40,8 +40,12 @@ class Employee extends Model
 		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
 	}
 	
-	public static function findByNIP($nip){
-		return Employee::where('nip','=',$nip)->first();
+	public function consents(){
+		return $this->hasMany('App\Libraries\Bauk\EmployeeConsent', 'employee_id', 'id');
+	}
+	
+	public function schedules(){
+		return $this->hasMany('App\Libraries\Bauk\EmployeeSchedule', 'employee_id', 'id');
 	}
 	
 	public function workTime($key=false){
@@ -105,10 +109,6 @@ class Employee extends Model
 					->orderBy('date', $sort);
 	}
 	
-	public function consents(){
-		return $this->hasMany('App\Libraries\Bauk\EmployeeConsent', 'employee_id', 'id');
-	}
-	
 	/**
 	 *	return consent record for current employee between given $date
 	 *	@param $date (String) - formatted date "Y-m-d"
@@ -136,4 +136,29 @@ class Employee extends Model
 			->orderBy('start', $sort);
 	}
 	
+	public function hasSchedule(String $dayOfWeek){
+		return $this->getSchedule($dayOfWeek)? true : false;
+	}
+	
+	public function getSchedule(String $dayOfWeek){
+		return $this->schedules()->where('day','=',$dayOfWeek)->first();
+	}
+	
+	public function getScheduleDaysOfWeek(){
+		return EmployeeSchedule::getScheduleDaysOfWeek($this->id);
+	}
+	
+	public function getOffScheduleDaysOfWeek(){
+		return EmployeeSchedule::getOffScheduleDaysOfWeek($this->id);
+	}
+	
+	public static function findByNIP($nip){
+		return Employee::where('nip','=',$nip)->first();
+	}
+	
+	public static function getActiveEmployee($fulltimeEmployeeOnly=false){
+		$qq = self::where('active','=',1);
+		if ($fulltimeEmployeeOnly) $qq->where('work_time','=','f');
+		return $qq->get();
+	}
 }

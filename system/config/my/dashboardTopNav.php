@@ -52,9 +52,32 @@
 				'href'=>'my.bauk.holiday.landing',
 			],
 			[
-				'display'=>[ 'name'=>'Manajemen Karyawan', 'icon'=>'fas fa-user-circle' ], 
-				'permission'=>'bauk.list.employee',
-				'href'=>'my.bauk.employee',
+				'display'=>[ 'name'=>'Manajemen Karyawan', 'icon'=>'fas fa-user-circle' ],
+				'permission'=>'',
+				'href'=>'my.bauk.employee.landing',
+				'group'=> true,
+				'items'=> [
+					[
+						'permission'=>'bauk.list.employee',
+						'display'=>[ 				
+							'name'=>'Daftar Karyawan', 
+							'icon'=>false,
+						], 
+						'href'=>'my.bauk.employee.landing',
+					],
+					[
+						'permission'=>'bauk.schedule.list',
+						'display'=>[ 				
+							'name'=>'Jadwal Kerja', 
+							'icon'=>false,
+							'tag'=>[
+								'label'=>"new",
+								'color'=>'w3-green'
+							]
+						], 
+						'href'=>'my.bauk.schedule.landing',
+					],
+				]
 			],
 			[
 				'display'=>[ 'name'=>'Absensi Kehadiran', 'icon'=>'far fa-eye' ], 

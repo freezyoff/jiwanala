@@ -4,6 +4,8 @@ namespace App\Libraries\Bauk;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use App\Libraries\Bauk\EmployeeSchedule;
+use Carbon\Carbon;
 
 class EmployeeAttendance extends Model
 {
@@ -20,47 +22,63 @@ class EmployeeAttendance extends Model
 		'locked',
 	];
 	
-	public function getAttendArrivalTime(){
-		return $this->time1;
-	}
-	
-	public function getAttendReturnTimes(){
-		return [$this->time2, $this->time3, $this->time4];
-	}
-	
-	public function getAttendTimes(){
-		return [$this->time1, $this->time2, $this->time3, $this->time4];
-	}
-	
 	public function employee(){
 		return $this->belongsTo('\App\Libraries\Bauk\Employee', 'employee_id', 'id');
 	}
 	
-	//count records for given year and month
-	public static function countRecords($year, $month){
-		return EmployeeAttendance::whereRaw('DATE_FORMAT(`date`,"%Y-%m") = "'.$year.'-'.$month.'"')->count();
+	public function getDate(): Carbon{
+		return Carbon::parse($this->date);
 	}
 	
-	public function isLateArrival(){
-		$arrival = config('bauk.work_hours.max_arrival');
-		$current = \Carbon\Carbon::createFromFormat('H:i:s', $this->time1);
-		return $current.greaterThan($arrival);
+	public function getArrival():Carbon{
+		return Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time1);
 	}
 	
-	public static function getLateArrival($year, $month, $fields=false){
-		$maxArrival = config('bauk.work_hours.max_arrival');
-		$fields = !$fields?:'employee_id, date, time1, TIMESTAMPDIFF(MINUTE,`time1`,STR_TO_DATE("'.$maxArrival.'","%H:%i:%s")) as diff';
-		return EmployeeAttendance::select($fields)
-			->whereRaw('DATE_FORMAT(`date`,"%Y-%m") = "'.$year.'-'.$month.'"')
-			->whereRaw('TIMESTAMPDIFF(MINUTE,`time1`,STR_TO_DATE("'.$maxArrival.'","%H:%i:%s")) < 0')
-			->groupBy($groupBy)
-			->get();
+	public function getDeparture(): Array { 
+		return [
+			Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time2), 
+			Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time3),
+			Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time4),
+		]; 
 	}
 	
-	public static function getLateArrivalCount($year, $month){
-		$maxArrival = config('bauk.work_hours.max_arrival')->format('H:i:s');
-		return EmployeeAttendance::whereRaw('DATE_FORMAT(`date`,"%Y-%m") = "'.$year.'-'.$month.'"')
-			->whereRaw('TIMESTAMPDIFF(MINUTE,`time1`,STR_TO_DATE("'.$maxArrival.'","%H:%i:%s")) < 0')
-			->count();
+	public function getLatestDeparture(): Carbon {
+		$time2 = $this->time2;
+		$time3 = $this->time3;
+		$time4 = $this->time4;
+		
+		if ($time2) $time2 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time2);
+		if ($time3) $time3 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time3);
+		if ($time4) $time4 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time4);
+		$max = $time2->greaterThan($time3)? $time2 : $time3;
+		return $max->greaterThan($time4)? $max : $time4;
+	}
+	
+	public function isLateArrival() {
+		$arrival = $this->getArrival();
+		$scheduleTime = $this->getScheduleArrival();
+		return $arrival->greaterThan($scheduleTime);
+	}
+	
+	public function isEarlyDeparture() {
+		$departure = $this->getLatestDeparture();
+		$scheduleTime = $this->getScheduleDeparture();
+		return $departure->lessThan($scheduleTime);
+	}
+	
+	/**
+	 *	return current date schedule
+	 *	@return schedule base on attribute date
+	 */
+	public function getSchedule(): EmployeeSchedule{
+		return EmployeeSchedule::getSchedule($this->employee_id, $this->getDate()->dayOfWeek);
+	}
+	
+	public function getScheduleArrival():Carbon{
+		return Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->getSchedule()->arrival);
+	}
+	
+	public function getScheduleDeparture():Carbon{
+		return Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->getSchedule()->departure);
 	}
 }

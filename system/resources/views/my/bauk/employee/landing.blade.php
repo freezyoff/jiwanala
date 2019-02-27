@@ -67,8 +67,7 @@
 						<td>{{$data->nip?: ''}}</td>
 						<td>{{$data->name_front_titles.' '.$data->name_full.' '.$data->name_back_titles?: ''}}</td>
 						<td class="w3-center">
-							<span class="padding-left-8 padding-right-8" 
-								title="{{$data->workTime()}}">
+							<span title="{{$data->workTime()}}">
 							@if($data->isWorkTime('f'))
 								<i class="fas fa-handshake w3-large w3-text-brown"></i>
 							@elseif($data->isWorkTime('p'))
@@ -77,19 +76,13 @@
 							</span>
 							
 							@if ($data->isActive())
-								<a href="{{route('my.bauk.employee.activate',[$data->id,0])}}" 
-									style="text-decoration:none;"
-									class="w3-large w3-hover-text-indigo" 
-									title="Klik untuk menonaktifkan karyawan">
+								<span class="padding-left-8 w3-text-indigo" title="Karyawan Aktif" style="font-size:1em">
 									<i class="fas fa-lightbulb"></i>
-								</a>
+								</span>
 							@else
-								<a href="{{route('my.bauk.employee.activate',[$data->id,1])}}" 
-									style="text-decoration:none;"
-									class="w3-large w3-hover-text-black" 
-									title="Klik untuk mengaktifkan karyawan">
+								<span class="padding-left-8 w3-text-black" title="Karyawan Non Aktif" style="font-size:1em">
 									<i class="far fa-lightbulb"></i>
-								</a>
+								</span>
 							@endif
 						</td>
 						<td><span>+62 </span>{{$data->phone}}</td>

@@ -40,18 +40,18 @@
 		};
 		thoursInp.on('focus click ', stopPropagation)
 			.on('keydown', function(event){ throttle("h",event); })
-			.on('keyup', $.debounce( 250, function(event){
+			.on('keyup', $.debounce( 500, function(event){
 				event.stopPropagation();
 				change('h',$(this).val(), event);
 			}));
 		tminutesInp.on('focus click ', stopPropagation)
 			.on('keydown', function(event){ throttle("m",event); })
-			.on('keyup', $.debounce( 250, function(event){
+			.on('keyup', $.debounce( 500, function(event){
 				change('m',$(this).val(), event);
 			}));
 		tsecondsInp.on('focus click ', stopPropagation)
 			.on('keydown', function(event){ throttle("s",event); })
-			.on('keyup', $.debounce( 250, function(event){
+			.on('keyup', $.debounce( 500, function(event){
 				change('s',$(this).val(), event);
 			}));
 		

@@ -70,6 +70,7 @@
 		'file_format'=>'Format CSV invalid, periksa baris :line',
 		'notAllowedByPeriode'=>'Tanggal :value sudah melewati periode pelaporan.',
 		'holiday'=>'Tanggal :value hari libur :name',
+		'dayoff'=>'Tidak memiliki jadwal kerja pada hari :day tanggal :date',
 		
 		//import
 		'import'=>[
@@ -174,5 +175,6 @@
 		'noArrival'=>'Tidak finger datang.',
 		'noDeparture'=>'Tidak finger pulang.',
 		'noConsent'=>'Belum melaporkan dokumen Cuti / Izin.',
+		'offschedule'=>'Libur hari :day'
 	],
 ];

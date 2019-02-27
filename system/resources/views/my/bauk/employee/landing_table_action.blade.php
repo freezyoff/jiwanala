@@ -1,17 +1,31 @@
+@if ($data->isActive())
+<a href="{{route('my.bauk.employee.activate',[$data->id,0])}}" 
+	style="text-decoration:none;"
+	class="w3-large w3-text-black w3-hover-text-indigo" 
+	title="Klik untuk menonaktifkan karyawan">
+	<i class="far fa-lightbulb"></i>
+</a>
+@else
+<a href="{{route('my.bauk.employee.activate',[$data->id,1])}}" 
+	style="text-decoration:none;"
+	class="w3-large w3-text-indigo w3-hover-text-black" 
+	title="Klik untuk mengaktifkan karyawan">
+	<i class="fas fa-lightbulb"></i>
+</a>
+@endif
+
 @if(Auth::user()->hasPermission('bauk.patch.employee'))
 <a href="{{route('my.bauk.employee.edit',['id'=>$data->id])}}" 
 	style="text-decoration:none;"
-	class="w3-large w3-hover-text-green" 
+	class="w3-large w3-text-green w3-hover-text-black padding-left-8" 
 	title="Rubah data">
 	<i class="fas fa-edit"></i>
 </a>
 @endif
+
 @if(Auth::user()->hasPermission('bauk.delete.employee'))
 <a href="#" onclick="$('.delete-modal-{{$data->id}}').show()" 
-	class="w3-large w3-hover-text-red padding-left-8" 
-	@if (!$data->isActive())
-		style="display:none"
-	@endif
+	class="w3-large w3-text-red w3-hover-text-black padding-left-8" 
 	title="Hapus data"><i class="fas fa-trash"></i></a>
 	<!-- begin: action delete modal -->
 	<div class="delete-modal-{{$data->id}} w3-modal w3-display-container" onclick="$(this).hide()">

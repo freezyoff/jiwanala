@@ -1,4 +1,4 @@
-<form name="searchkey" class="w3-form padding-none margin-none" method="POST" action="{{route('my.bauk.employee')}}">
+<form name="searchkey" class="w3-form padding-none margin-none" method="POST" action="{{route('my.bauk.employee.landing')}}">
 	@csrf
 	<input name="keyactive" type="hidden" value="{{isset($keyactive)? $keyactive: '1'}}" />
 	<div class="w3-col s12 m7 l8">
@@ -64,7 +64,7 @@
 						<li style="cursor:pointer">
 							<a class="w3-text-theme w3-mobile" 
 								select-role="item" select-value="1">
-								<i class="fas fa-lightbulb "></i>
+								<i class="fas fa-lightbulb"></i>
 								<span style="padding-left:12px">{{trans('my/bauk/employee/landing.hints.key_active_items.active')}}</span>
 							</a>
 						</li>

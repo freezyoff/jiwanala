@@ -136,7 +136,7 @@ class EmployeeController extends Controller
 		]);
 		$employee->save();
 		
-		return redirect()->route('my.bauk.employee');
+		return redirect()->route('my.bauk.employee.landing');
 	}
 	
 	public function patchView($id){
@@ -182,7 +182,7 @@ class EmployeeController extends Controller
 		$employee->fill($req->only(['nip', 'work_time', 'registered_at']));
 		$employee->save();
 		
-		return redirect()->route('my.bauk.employee');
+		return redirect()->route('my.bauk.employee.landing');
 	}
 	
 	private function patch_updateAddress(PatchRequest $req, \App\Libraries\Core\Person $person){

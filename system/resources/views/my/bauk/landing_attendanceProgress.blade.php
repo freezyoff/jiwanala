@@ -4,12 +4,46 @@
 			<h4>Progres Rekaman Finger Kehadiran</h4>
 		</header>
 		<div class="w3-container padding-top-16 padding-bottom-16">
+			<div class="w3-row">
+				<div class="w3-col s12 m6 l6">
+					<div class="input-group">
+						<label><i class="fas fa-calendar fa-fw"></i></label>
+						<input id="attendanceProgress-month" 
+							value="{{ $month }}"
+							type="text" 
+							class="w3-input" 
+							role="select"
+							select-dropdown="#attendanceProgress-month-dropdown"
+							select-modal="#attendanceProgress-month-modal"
+							select-modal-container="#attendanceProgress-month-modal-container" />
+					</div>
+					@include('my.bauk.landing_attendanceProgress_month_dropdown')
+					@include('my.bauk.landing_attendanceProgress_month_modal')
+					<label>&nbsp;</label>
+				</div>
+				<div class="w3-col s12 m6 l6 padding-left-8 padding-none-small">
+					<div class="input-group">
+						<label><i class="fas fa-calendar fa-fw"></i></label>
+						<input id="attendanceProgress-year" 
+							value="{{ $year }}"
+							type="text" 
+							class="w3-input" 
+							role="select"
+							select-dropdown="#attendanceProgress-year-dropdown"
+							select-modal="#attendanceProgress-year-modal"
+							select-modal-container="#attendanceProgress-year-modal-container" />
+					</div>
+					@include('my.bauk.landing_attendanceProgress_year_dropdown')
+					@include('my.bauk.landing_attendanceProgress_year_modal')
+					<label>&nbsp;</label>
+				</div>
+			</div>
 			<div class="w3-col s12 m12 l5 margin-bottom-8 margin-none-large" style="min-width:135px">
 				<div style="display:flex; flex-direction:column;align-items:center;">
 					<div id="progressbar-radial" 
 						class="progressbar radial xlarge" 
 						style="font-size:9em;box-shadow:2px 1px 10px .1px #898383 inset; ">
-						<span><i class="button-icon-loader"></i></span>
+						<span id="progressbar-radial-label"><i class="button-icon-loader"></i></span>
 						<div class="slice">
 							<div class="bar"></div>
 							<div class="fill"></div>
@@ -133,39 +167,63 @@
 
 </style>
 <script>
-var attendanceProgress = function(){
-	$.ajax({
-		method: "POST",
-		url: '{{route('my.bauk.landing.info.attendanceProgress')}}',
-		data: { '_token': '{{csrf_token()}}' },
-		dataType: "json",
-		beforeSend: function() {},
-		success: function(response){
-			var duration =  1000,
-				percent = response,
-				angel = (percent/100)*360,
-				pbar = $('#progressbar-radial'),
-				span = pbar.find('span'),
-				slice = pbar.find('.slice');
+var attendanceProgress = {
+	init: function(){
+		$('#attendanceProgress-year, #attendanceProgress-month').on('select.pick', function(event, oldValue, newValue){
+			if (oldValue != newValue){
+				attendanceProgress.send();				
+			}
+		});
+		attendanceProgress.send();
+	},
+	send: function(){
+		$.ajax({
+			method: "POST",
+			url: '{{route('my.bauk.landing.info.attendanceProgress')}}',
+			data: { 
+				'_token': '{{csrf_token()}}',
+				'year': $('#attendanceProgress-year').val(),
+				'month': $('#attendanceProgress-month').val(),
+			},
+			dataType: "json",
+			beforeSend: function() {
+				$('#progressbar-radial-label').html($('<i class="button-icon-loader"></i>'));
+			},
+			success: function(response){
+				attendanceProgress.setProgressbar(response.percent);
+			}
+		});
+	},
+	setProgressbar: function(percent){
+		var duration =  1000,
+			percent = percent,
+			angel = (percent/100)*360,
+			pbar = $('#progressbar-radial'),
+			span = $('#progressbar-radial-label'),
+			slice = pbar.find('.slice'),
+			startAngel = parseInt(pbar.attr('angel')),
+			startCount = parseInt(pbar.attr('percent'));
 			
-			$({countNum: 0, deg: 0}).animate({countNum: percent, deg: angel}, {
-				duration: duration,
-				easing:'linear',
-				step: function() {
-					span.html(Math.floor(this.countNum)+'%');
-					slice.find('.bar').css('transform','rotate('+ this.deg +'deg)');
-					
-					if (this.deg>180){
-						slice.addClass('full');
-						slice.find('.fill').css('transform','rotate(180deg)');
-					} 
-					else{
-						slice.find('.fill').css('transform','rotate('+ this.deg +'deg)');
-					}
+		$({countNum: isNaN(startAngel)? 0 : startAngel, deg: isNaN(startCount)? 0 : startCount}).animate({countNum: percent, deg: angel}, {
+			duration: duration,
+			easing:'linear',
+			step: function() {
+				span.html(Math.floor(this.countNum)+'%');
+				slice.find('.bar').css('transform','rotate('+ this.deg +'deg)');
+				
+				if (this.deg>180){
+					slice.addClass('full');
+					slice.find('.fill').css('transform','rotate(180deg)');
+				} 
+				else{
+					slice.removeClass('full');
+					slice.find('.fill').css('transform','rotate('+ this.deg +'deg)');
 				}
-			});
-		}
-	});
+				pbar.attr('angel',angel);
+				pbar.attr('percent',this.countNum);
+			}
+		});
+	}
 };
 
 var employeesCount = function(){
@@ -185,9 +243,10 @@ var employeesCount = function(){
 };
 
 $(document).ready(function(){
-	attendanceProgress();
+	attendanceProgress.init();
 	employeesCount();
-	setInterval(attendanceProgress, 1000*60*10);
-	setInterval(employeesCount, 1000*60*10);
+	//setInterval(attendanceProgress, 1000*60*10);
+	//setInterval(employeesCount, 1000*60*10);
+	$('[role="select"]').select();
 });
 </script>

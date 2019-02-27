@@ -11,6 +11,31 @@ class Holiday extends Model
 	protected $connection ="bauk";
 	protected $fillable=['creator', 'name','start','end','repeat'];
 	
+	public function getStartAttribute(){
+		if (config('app.locale') == 'id'){
+			$date = \Carbon\Carbon::parse($this->attributes['start']);
+			return $date->format('d-m-Y');
+		}
+		
+		return $this->attributes['start'];
+	}
+	
+	public function getEndAttribute(){
+		if (config('app.locale') == 'id'){
+			$date = \Carbon\Carbon::parse($this->attributes['end']);
+			return $date->format('d-m-Y');
+		}
+		
+		return $this->attributes['end'];
+	}
+	
+	public function getDateRange(){
+		return [
+			\Carbon\Carbon::parse($this->attributes['start']), 
+			\Carbon\Carbon::parse($this->attributes['end'])
+		];
+	}
+	
 	public static function getHolidaysByMonth($month, $year=false){
 		$year = $year? $year : now()->format('Y');
 		return 	Holiday::where(function($q) use ($year, $month){
@@ -41,7 +66,7 @@ class Holiday extends Model
 	public static function getHolidayName(\Carbon\Carbon $date){
 		$message = trans('calendar.holiday_name');
 		$name = [];
-		if ($date->dayOfWeek == \Carbon\Carbon::SUNDAY) $name[] = $message[0];
+		//if ($date->dayOfWeek == \Carbon\Carbon::SUNDAY) $name[] = $message[0];
 		
 		$holiday = Holiday::where(function($q) use ($date){
 					$q->where('repeat','<>',1);
@@ -53,30 +78,5 @@ class Holiday extends Model
 		if ($holiday) $name[] = str_replace(':attribute', $holiday->name, $message['custom']);
 		
 		return count($name)>0? implode(' / ', $name) : false;
-	}
-	
-	public function getStartAttribute(){
-		if (config('app.locale') == 'id'){
-			$date = \Carbon\Carbon::parse($this->attributes['start']);
-			return $date->format('d-m-Y');
-		}
-		
-		return $this->attributes['start'];
-	}
-	
-	public function getEndAttribute(){
-		if (config('app.locale') == 'id'){
-			$date = \Carbon\Carbon::parse($this->attributes['end']);
-			return $date->format('d-m-Y');
-		}
-		
-		return $this->attributes['end'];
-	}
-	
-	public function getDateRange(){
-		return [
-			\Carbon\Carbon::parse($this->attributes['start']), 
-			\Carbon\Carbon::parse($this->attributes['end'])
-		];
 	}
 }

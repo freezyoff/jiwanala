@@ -2,13 +2,17 @@
 namespace App\Http\Controllers\My\Bauk;
 
 use App\Http\Controllers\Controller;
-use App\Libraries\Bauk\Employee;
-use App\Libraries\Bauk\EmployeeAttendance;
 use App\Http\Requests\My\Bauk\Attendance\UploadRequest;
 use App\Imports\My\Bauk\Attendance\AttendanceByFingersImport;
+use App\Libraries\Bauk\Holiday;
+use App\Libraries\Bauk\Employee;
+use App\Libraries\Bauk\EmployeeAttendance;
+use App\Libraries\Bauk\EmployeeConsent;
+use App\Libraries\Bauk\EmployeeSchedule;
 use Illuminate\Http\Request;
 use Storage;
 use Validator;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -16,7 +20,7 @@ class AttendanceController extends Controller
 		//return [$year, $month, $nip];
 		if ($year && $month){
 			$periode = $year.'-'.$month.'-01';
-			$periode = \Carbon\Carbon::parse($periode);
+			$periode = Carbon::parse($periode);
 		}
 		else{
 			$periode = now();
@@ -24,7 +28,7 @@ class AttendanceController extends Controller
 			$month = $periode->format('m');
 		}
 		
-		$name = \App\Libraries\Bauk\Employee::findByNIP( $nip? $nip : -1 );
+		$name = Employee::findByNIP( $nip? $nip : -1 );
 		
 		$attendance = [];
 		if ($periode){
@@ -44,7 +48,7 @@ class AttendanceController extends Controller
 	protected function getAttendanceByPeriode($nip=false, $date=false){
 		if (!$nip || !$date) return [];
 		
-		$date = \Carbon\Carbon::parse($date);
+		$date = Carbon::parse($date);
 		$start = $date->format('Y-m-d');
 		
 		$date->day = $date->daysInMonth;
@@ -53,6 +57,7 @@ class AttendanceController extends Controller
 		
 		//create date array of current month
 		$employee = Employee::findByNIP($nip);
+		$employeeScheduleDaysOfWeek = EmployeeSchedule::getScheduleDaysOfWeek($employee->id);
 		$list = [];
 		$loop = $date->daysInMonth;
 		for($currentDay=1; $currentDay<=$loop; $currentDay++){
@@ -62,14 +67,28 @@ class AttendanceController extends Controller
 			$list[$key] = [
 				'label_dayofweek'=>	trans('calendar.days.long.'.($date->dayOfWeek)),
 				'label_date'=>		$date->format('d'),
-				'holiday'=>			\App\Libraries\Bauk\Holiday::getHolidayName($date),
+				'holiday'=>			Holiday::getHolidayName($date),
 			];
 			
-			if ($list[$key]['holiday']) continue;	//next record
+			//next record
+			if ($list[$key]['holiday']) {
+				continue;
+			}
 			
-			$list[$key]['locked'] = !isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date);
-			$list[$key]['attendance'] = $employee->attendanceRecord($key);
-			$list[$key]['consent'] = $employee->consentRecord($key);
+			$list[$key]['holiday'] = in_array($date->dayOfWeek, $employeeScheduleDaysOfWeek)? 
+										false : 
+										str_replace(
+											':day',
+											trans('calendar.days.long.'.$date->dayOfWeek),
+											trans('my/bauk/attendance/hints.warnings.offschedule')
+										);
+			if ($list[$key]['holiday']) {
+				continue;
+			}
+			
+			$list[$key]['locked']= 		!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date);
+			$list[$key]['attendance']=	$employee->attendanceRecord($key);
+			$list[$key]['consent']=		$employee->consentRecord($key);
 			
 			$warning = $this->attendanceWarning($date, $list[$key]['attendance'], $list[$key]['consent']);
 			$list[$key]['hasWarning'] = is_array($warning)? true : false;
@@ -98,16 +117,32 @@ class AttendanceController extends Controller
 		return $list;
 	}
 	
-	public function attendanceWarning($recordDate, $record, $consent){
+	function timeDiff(Carbon $start, Carbon $end): Object{
+		$seconds = $start->diffInSeconds( $end );
+		$lhours = floor($seconds/(60*60));
+		$seconds -= $lhours*(60*60);
+		$lminutes = floor($seconds/60);
+		$seconds -= $lminutes*60;
+		$lseconds = $seconds;
+		return (Object)['hours'=>$lhours, 'minutes'=>$lminutes, 'seconds'=>$lseconds];
+	}
+	
+	/**
+	 *	@param Carbon $recordDate
+	 *	@param EmployeeAttendance $attendance
+	 *	@param EmployeeConsent $consent
+	 *	
+	 */
+	function attendanceWarning($recordDate, $attendance, $consent){
 		//record tanggal hari lalu
 		$recordDateDaysBefore = $recordDate->lessThan(now());
 		
-		if (!$record) {
+		if (!$attendance) {
 			if (!$consent) return $recordDateDaysBefore? [trans('my/bauk/attendance/hints.warnings.noConsent')] : false;
 			return false;
 		}
 		
-		if (!$record->time1) {
+		if (!$attendance->time1) {
 			return $recordDateDaysBefore? 
 				[
 					trans('my/bauk/attendance/hints.warnings.noArrival'),
@@ -117,7 +152,7 @@ class AttendanceController extends Controller
 				false;
 		}
 		
-		if (!$record->time2 && !$record->time3 && !$record->time4) {
+		if (!$attendance->time2 && !$attendance->time3 && !$attendance->time4) {
 			return $recordDateDaysBefore?
 				[
 					trans('my/bauk/attendance/hints.warnings.noDeparture'),
@@ -127,58 +162,35 @@ class AttendanceController extends Controller
 				false;
 		}
 				
-		//
-		//	Cek kedatangan
-		//
-		$start = \Carbon\Carbon::createFromFormat('H:i:s', config('jiwanala.work_hours.max_arrival'));
-		$in = \Carbon\Carbon::createFromFormat('H:i:s', $record->time1);
-		if ( $in->greaterThan($start) ){
-			$seconds = $start->diffInSeconds( $in );
+		//	Datang terlambat
+		if ( $attendance->isLateArrival() ){
 			$msg = trans('my/bauk/attendance/hints.warnings.lateArrival');
-			
-			$lhours = floor($seconds/(60*60));
-			$seconds -= $lhours*(60*60);
-			$lminutes = floor($seconds/60);
-			$seconds -= $lminutes*60;
-			$lseconds = $seconds;
-			$msg = $lhours>0? 	str_replace(':jam',$lhours,$msg) : 
-								str_replace(':jam Jam',"",$msg);
-			$msg = $lminutes>0? str_replace(':menit',$lminutes,$msg) : 
-								str_replace(':menit Menit',"",$msg);
-			$msg = $lseconds>0? str_replace(':detik',$lseconds,$msg) : 
-								str_replace(':detik Detik',"",$msg);
+			$diff = $this->timeDiff($attendance->getArrival(), $attendance->getScheduleArrival());
+			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+										str_replace(':jam Jam', "", $msg);
+			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+										str_replace(':menit Menit', "", $msg);
+			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+										str_replace(':detik Detik', "", $msg);
 								
 			return $consent? 	[$msg] : 
 								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
 		
 		//pulang awal
-		$end = \Carbon\Carbon::createFromFormat(
-			'H:i:s', 
-			$recordDate->dayOfWeek == 6 ? 
-				config('jiwanala.work_hours.min_departure_saturday') : 
-				config('jiwanala.work_hours.min_departure')
-		);
-		$out = $record->time4?: $record->time3?: $record->time2;
-		$out = \Carbon\Carbon::createFromFormat('H:i:s', $out);
-		if ( $out->lessThan($end)) {
+		if ( $attendance->isEarlyDeparture() ) {
 			$seconds = $start->diffInSeconds( $in );
 			$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
-			
-			$lhours = floor($seconds/(60*60));
-			$seconds -= $lhours*(60*60);
-			$lminutes = floor($seconds/60);
-			$seconds -= $lminutes*60;
-			$lseconds = $seconds;
-			$msg = $lhours>0? 	str_replace(':jam',$lhours,$msg) : 
-								str_replace(':jam Jam',"",$msg);
-			$msg = $lminutes>0? str_replace(':menit',$lminutes,$msg) : 
-								str_replace(':menit Menit',"",$msg);
-			$msg = $lseconds>0? str_replace(':detik',$lseconds,$msg) : 
-								str_replace(':detik Detik',"",$msg);
+			$diff = $this->timeDiff($attendance->getLatestDeparture(), $attendance->getScheduleDeparture());
+			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+										str_replace(':jam Jam', "", $msg);
+			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+										str_replace(':menit Menit', "", $msg);
+			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+										str_replace(':detik Detik', "", $msg);
 								
 			return $consent? 	[$msg] : 
-								[$msg,trans('my/bauk/attendance/hints.warnings.noConsent')];
+								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
 	}
 	
@@ -190,10 +202,10 @@ class AttendanceController extends Controller
 		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
 		$schema = new \App\Libraries\Core\Phone();
 		$phoneSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
-		$schema = new \App\Libraries\Bauk\Employee();
+		$schema = new Employee();
 		$employeeSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
 		
-		$employee = \App\Libraries\Bauk\Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
+		$employee = Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
             ->join($phoneSchema, $personSchema.'.id', '=', $phoneSchema.'.person_id')
 			->where($phoneSchema.'.default','=',1)
 			->groupBy($employeeSchema.'.nip')

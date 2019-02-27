@@ -22,22 +22,21 @@ class Failure implements Arrayable
     protected $errors;
 
 	/**
-	 *	hack @freezyoff
      * @var array
      */
-	protected $data;
+	protected $values;
 	
     /**
      * @param int    $row
      * @param string $attribute
      * @param array  $errors
      */
-    public function __construct(int $row, string $attribute, array $errors, array $rowData)
+    public function __construct(int $row, string $attribute, array $errors, array $values)
     {
         $this->row       = $row;
         $this->attribute = $attribute;
         $this->errors    = $errors;
-		$this->data		 = $rowData;	//hack @freezyoff
+		$this->values	 = $values;
     }
 
     /**
@@ -74,7 +73,7 @@ class Failure implements Arrayable
         })->all();
     }
 	
-	public function data(): array{
-		return $this->data;
+	public function values(): array{
+		return $this->values;
 	}
 }

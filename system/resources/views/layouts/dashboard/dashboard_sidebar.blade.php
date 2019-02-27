@@ -75,7 +75,7 @@
 				
 				"
 				href="#" 
-				target="#{{ $accordionId }}">	
+				accordion="#{{ $accordionId }}">
 				<div class="icon"><i class="{{ $icon }} fa-fw"></i> </div>
 				<span class="">{{ $name }}</span>
 			</a>
@@ -110,10 +110,11 @@
 	@endforeach
 </div>
 <script>
+	/*
 	$(document).ready(function(){
 		$('.accordion').on('click', function(event){
 			event.preventDefault();
-			$(this.target).slideToggle();
+			$(this.accordion).slideToggle();
 			$(this).toggleClass('collapse');
 		});
 		 
@@ -123,4 +124,5 @@
 			}
 		})
 	});
+	*/
 </script>

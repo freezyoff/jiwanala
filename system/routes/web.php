@@ -22,12 +22,15 @@
 
 $domain = 'jiwa-nala';
 $domain .= App::environment('production')? '.org' : '.local';
+$locale = App::getLocale();
 
 Route::domain('service.'.$domain)
+	->prefix($locale)
 	->name('service.')
 	->group(base_path('routes/web/web_service.php'));
 
 Route::domain('my.'.$domain)
+	->prefix($locale)
 	->name('my.')
 	->middleware(['auth', 'timezone'])
 	->group(base_path('routes/web/web_my.php'));
