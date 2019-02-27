@@ -6,6 +6,7 @@
 		'upload'=>'Upload Finger Kehadiran',
 		'upload_import'=>'Impor File',
 		'upload_report'=>'Laporan Impor',
+		'report'=>'Laporan Kehadiran'
 	],
 	'subtitles'=>[
 		'year'=>'tahun',

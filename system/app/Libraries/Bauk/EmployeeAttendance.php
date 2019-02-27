@@ -56,7 +56,7 @@ class EmployeeAttendance extends Model
 	
 	public function isLateArrival() {
 		$arrival = $this->getArrival();
-		$scheduleTime = $this->getScheduleArrival();
+		$scheduleTime = $this->getScheduleArrival()->addMinutes(5);
 		return $arrival->greaterThan($scheduleTime);
 	}
 	

@@ -1,43 +1,41 @@
 <div id="attendanceProgress" class="w3-col s12 m6 l6 w3-light-grey">
-	<div class="w3-card w3-light-grey">
-		<header class="w3-container padding-top-8">
+	<div class="w3-card">
+		<header class="w3-container padding-top-8 padding-bottom-8 w3-indigo">
 			<h4>Progres Rekaman Finger Kehadiran</h4>
 		</header>
-		<div class="w3-container padding-top-16 padding-bottom-16">
-			<div class="w3-row">
-				<div class="w3-col s12 m6 l6">
-					<div class="input-group">
-						<label><i class="fas fa-calendar fa-fw"></i></label>
-						<input id="attendanceProgress-month" 
-							value="{{ $month }}"
-							type="text" 
-							class="w3-input" 
-							role="select"
-							select-dropdown="#attendanceProgress-month-dropdown"
-							select-modal="#attendanceProgress-month-modal"
-							select-modal-container="#attendanceProgress-month-modal-container" />
-					</div>
-					@include('my.bauk.landing_attendanceProgress_month_dropdown')
-					@include('my.bauk.landing_attendanceProgress_month_modal')
-					<label>&nbsp;</label>
+		<div class="w3-row w3-indigo padding-left-8 padding-right-8 padding-bottom-8">
+			<div class="w3-col s12 m6 l6">
+				<div class="input-group">
+					<label><i class="fas fa-calendar fa-fw"></i></label>
+					<input id="attendanceProgress-month" 
+						value="{{ $month }}"
+						type="text" 
+						class="w3-input" 
+						role="select"
+						select-dropdown="#attendanceProgress-month-dropdown"
+						select-modal="#attendanceProgress-month-modal"
+						select-modal-container="#attendanceProgress-month-modal-container" />
 				</div>
-				<div class="w3-col s12 m6 l6 padding-left-8 padding-none-small">
-					<div class="input-group">
-						<label><i class="fas fa-calendar fa-fw"></i></label>
-						<input id="attendanceProgress-year" 
-							value="{{ $year }}"
-							type="text" 
-							class="w3-input" 
-							role="select"
-							select-dropdown="#attendanceProgress-year-dropdown"
-							select-modal="#attendanceProgress-year-modal"
-							select-modal-container="#attendanceProgress-year-modal-container" />
-					</div>
-					@include('my.bauk.landing_attendanceProgress_year_dropdown')
-					@include('my.bauk.landing_attendanceProgress_year_modal')
-					<label>&nbsp;</label>
-				</div>
+				@include('my.bauk.landing_attendanceProgress_month_dropdown')
+				@include('my.bauk.landing_attendanceProgress_month_modal')
 			</div>
+			<div class="w3-col s12 m6 l6 padding-left-8 padding-none-small">
+				<div class="input-group">
+					<label><i class="fas fa-calendar fa-fw"></i></label>
+					<input id="attendanceProgress-year" 
+						value="{{ $year }}"
+						type="text" 
+						class="w3-input" 
+						role="select"
+						select-dropdown="#attendanceProgress-year-dropdown"
+						select-modal="#attendanceProgress-year-modal"
+						select-modal-container="#attendanceProgress-year-modal-container" />
+				</div>
+				@include('my.bauk.landing_attendanceProgress_year_dropdown')
+				@include('my.bauk.landing_attendanceProgress_year_modal')
+			</div>
+		</div>
+		<div class="w3-container padding-top-16 padding-bottom-16">
 			<div class="w3-col s12 m12 l5 margin-bottom-8 margin-none-large" style="min-width:135px">
 				<div style="display:flex; flex-direction:column;align-items:center;">
 					<div id="progressbar-radial" 
@@ -84,6 +82,15 @@
 	</div>
 </div>
 <style>
+.input-group{
+	border:none;
+	text-shadow:none;
+}
+.input-group:hover{
+	border:none;
+	text-shadow:1px 1px #253534;
+}
+
 .progressbar.radial *{box-sizing:content-box;}
 
 .progressbar.radial{
