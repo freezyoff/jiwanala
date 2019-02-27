@@ -14,7 +14,7 @@
 		<div id="attendanceProgress-year-modal-container" class="datepicker-inline-container">
 			<div class="w3-bar-block" style="width:100%">
 				<ul class="w3-ul w3-hoverable">
-					@for($i=now()->format('Y')-2;$i<now()->format('Y')+3;$i++)
+					@for($i=now()->format('Y')-2;$i<now()->format('Y')+1;$i++)
 					<li style="cursor:pointer;">
 						<a class="w3-text-theme w3-mobile" 
 							select-role="item" 

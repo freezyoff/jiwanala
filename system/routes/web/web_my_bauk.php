@@ -153,10 +153,6 @@ Route::prefix('attendance')
 		
 	Route::name('.report')
 		->middleware('permission:bauk.attendance.report')
-		->group(function(){
-		Route::get('report', function(){
-			return "REPORT";
-		});
-	});
+		->get('report', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@index');
 	
 });
