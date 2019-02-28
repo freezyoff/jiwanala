@@ -25,12 +25,28 @@ $domain .= App::environment('production')? '.org' : '.local';
 $locale = App::getLocale();
 
 Route::domain('service.'.$domain)
-	->prefix($locale)
 	->name('service.')
-	->group(base_path('routes/web/web_service.php'));
+	->group(function() use($locale){
+		
+		Route::get('', function(){
+			return redirect('service/'.$locale);
+		});
+	
+		Route::prefix($locale)->group(base_path('routes/web/web_service.php'));	
+			
+	}
+);
 
 Route::domain('my.'.$domain)
-	->prefix($locale)
 	->name('my.')
 	->middleware(['auth', 'timezone'])
-	->group(base_path('routes/web/web_my.php'));
+	->group(function() use($locale){
+		
+		Route::get('', function(){
+			return redirect('my/'.$locale);
+		});
+	
+		Route::prefix($locale)->group(base_path('routes/web/web_my.php'));
+			
+	}
+);

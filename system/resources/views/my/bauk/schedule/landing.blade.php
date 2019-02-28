@@ -119,7 +119,7 @@ $(document).ready(function(){
 				$('#search-keywords').val(json.nip);
 				$('#search-nip').val(json.nip);
 				$('#schedule-search').trigger('submit');
-			},
+			}
 		});
 	});
 });
