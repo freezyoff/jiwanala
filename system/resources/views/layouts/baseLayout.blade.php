@@ -36,7 +36,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 				//"Poppins:300,400,500,600,700,800,900",
 				WebFont.load({google: {families:["Roboto:300,400,500,600,700,800,900"]}, active: function() { sessionStorage.fonts = true; }});
 			</script>
-			<script src="{{url('js/app.js?{{csrf_token()}}')}}"></script>
+			<script src="{{url('js/app.js?'.csrf_token())}}"></script>
 		@show
 		<!--[endsection: html.head.scripts]/-->
 		
