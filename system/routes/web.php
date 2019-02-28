@@ -29,7 +29,7 @@ Route::domain('service.'.$domain)
 	->group(function() use($locale){
 		
 		Route::get('', function(){
-			return redirect('service/'.$locale);
+			return redirect($locale);
 		});
 	
 		Route::prefix($locale)->group(base_path('routes/web/web_service.php'));	
@@ -43,7 +43,7 @@ Route::domain('my.'.$domain)
 	->group(function() use($locale){
 		
 		Route::get('', function() use($locale){
-			return redirect('my/'.$locale);
+			return redirect($locale);
 		});
 	
 		Route::prefix($locale)->group(base_path('routes/web/web_my.php'));
