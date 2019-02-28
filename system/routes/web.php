@@ -42,7 +42,7 @@ Route::domain('my.'.$domain)
 	->middleware(['auth', 'timezone'])
 	->group(function() use($locale){
 		
-		Route::get('', function(){
+		Route::get('', function() use($locale){
 			return redirect('my/'.$locale);
 		});
 	

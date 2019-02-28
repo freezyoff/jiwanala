@@ -28,7 +28,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 		
 		<!--[section: html.head.scripts]/-->
 		@section('html.head.scripts')
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js?"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.23/moment-timezone-with-data.min.js"></script>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 			<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
@@ -36,7 +36,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 				//"Poppins:300,400,500,600,700,800,900",
 				WebFont.load({google: {families:["Roboto:300,400,500,600,700,800,900"]}, active: function() { sessionStorage.fonts = true; }});
 			</script>
-			<script src="{{url('js/app.js')}}"></script>
+			<script src="{{url('js/app.js?{{csrf_token()}}')}}"></script>
 		@show
 		<!--[endsection: html.head.scripts]/-->
 		
