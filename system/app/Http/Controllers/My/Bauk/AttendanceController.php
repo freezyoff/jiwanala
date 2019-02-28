@@ -179,7 +179,6 @@ class AttendanceController extends Controller
 		
 		//pulang awal
 		if ( $attendance->isEarlyDeparture() ) {
-			$seconds = $start->diffInSeconds( $in );
 			$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
 			$diff = $this->timeDiff($attendance->getLatestDeparture(), $attendance->getScheduleDeparture());
 			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :

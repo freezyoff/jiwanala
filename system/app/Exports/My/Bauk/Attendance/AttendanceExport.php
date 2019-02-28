@@ -59,7 +59,6 @@ class AttendanceExport implements FromView
 						
 			foreach($employee->attendanceRecordsByPeriode($start, $end)->get() as $att){
 				$rows[$employee->id][4]++;
-				
 				if ($att->isLateArrival()) $rows[$employee->id][5]++;
 				if ($att->isEarlyDeparture()) $rows[$employee->id][6]++;
 			}

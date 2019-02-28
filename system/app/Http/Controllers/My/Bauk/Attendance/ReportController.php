@@ -10,6 +10,8 @@ class ReportController extends Controller
     public function index(){
 		$cls = new \App\Exports\My\Bauk\Attendance\AttendanceExport();
 		$cls->setPeriode(now()->year, now()->month);
-		return $cls->view();
+		//return $cls->view();
+		
+		return $cls->download('Laporan Kehadiran.xls');
 	}
 }
