@@ -34,6 +34,14 @@ class EmployeeAttendance extends Model
 		return Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time1);
 	}
 	
+	public function getArrivalOffset(){
+		return 60*5;//5 minutes
+	}
+	
+	public function getDepartureOffset(){
+		return false;
+	}
+	
 	public function getDeparture(): Array { 
 		return [
 			Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time2), 
@@ -56,14 +64,42 @@ class EmployeeAttendance extends Model
 	
 	public function isLateArrival() {
 		$arrival = $this->getArrival();
-		$scheduleTime = $this->getScheduleArrival()->addMinutes(5);
+		$scheduleTime = $this->getScheduleArrival();
+		
+		//has arrival offset
+		if ($this->getArrivalOffset()){
+			$scheduleTime->addSeconds($this->getArrivalOffset());
+		}
+		
 		return $arrival->greaterThan($scheduleTime);
+	}
+	
+	public function getArrivalDifferent(){
+		if ($this->isLateArrival()){
+			$maxArrival = $this->getScheduleArrival();
+			
+			//has arrival offset
+			if ($this->getArrivalOffset()){
+				$maxArrival->addSeconds($this->getArrivalOffset());
+			}
+			
+			return self::timeDifferent($this->getArrival(), $maxArrival);			
+		}
+		return (Object)['hours'=>0, 'minutes'=>0, 'seconds'=>0];
 	}
 	
 	public function isEarlyDeparture() {
 		$departure = $this->getLatestDeparture();
 		$scheduleTime = $this->getScheduleDeparture();
 		return $departure->lessThan($scheduleTime);
+	}
+	
+	public function getDepartureDifferent(){
+		if ($this->isEarlyDeparture){
+			$minDeparture = $this->getScheduleDeparture();
+			return self::timeDifferent($this->getLatestDeparture(), $minDeparture);			
+		}
+		return (Object)['hours'=>0, 'minutes'=>0, 'seconds'=>0];
 	}
 	
 	/**
@@ -80,5 +116,15 @@ class EmployeeAttendance extends Model
 	
 	public function getScheduleDeparture():Carbon{
 		return Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->getSchedule()->departure);
+	}
+	
+	protected static function timeDifferent($start, $end){
+		$seconds = $start->diffInSeconds( $end );
+		$lhours = floor($seconds/(60*60));
+		$seconds -= $lhours*(60*60);
+		$lminutes = floor($seconds/60);
+		$seconds -= $lminutes*60;
+		$lseconds = $seconds;
+		return (Object)['hours'=>$lhours, 'minutes'=>$lminutes, 'seconds'=>$lseconds];
 	}
 }

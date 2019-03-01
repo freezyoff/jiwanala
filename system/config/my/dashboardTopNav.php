@@ -113,7 +113,11 @@
 						'permission'=>'bauk.attendance.report',
 						'display'=>[ 				
 							'name'=>'Laporan', 
-							'icon'=>false 
+							'icon'=>false,
+							'tag'=>[
+								'label'=>"new",
+								'color'=>'w3-green'
+							]
 						], 
 						'href'=>'my.bauk.attendance.report',
 					]
