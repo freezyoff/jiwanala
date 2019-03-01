@@ -70,7 +70,6 @@ class AttendanceController extends Controller
 				'holiday'=>			Holiday::getHolidayName($date),
 			];
 			
-			//next record
 			if ($list[$key]['holiday']) {
 				continue;
 			}
@@ -117,16 +116,6 @@ class AttendanceController extends Controller
 		return $list;
 	}
 	
-	function timeDiff(Carbon $start, Carbon $end): Object{
-		$seconds = $start->diffInSeconds( $end );
-		$lhours = floor($seconds/(60*60));
-		$seconds -= $lhours*(60*60);
-		$lminutes = floor($seconds/60);
-		$seconds -= $lminutes*60;
-		$lseconds = $seconds;
-		return (Object)['hours'=>$lhours, 'minutes'=>$lminutes, 'seconds'=>$lseconds];
-	}
-	
 	/**
 	 *	@param Carbon $recordDate
 	 *	@param EmployeeAttendance $attendance
@@ -165,7 +154,7 @@ class AttendanceController extends Controller
 		//	Datang terlambat
 		if ( $attendance->isLateArrival() ){
 			$msg = trans('my/bauk/attendance/hints.warnings.lateArrival');
-			$diff = $this->timeDiff($attendance->getArrival(), $attendance->getScheduleArrival());
+			$diff = $attendance->getArrivalDifferent();
 			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
 										str_replace(':jam Jam', "", $msg);
 			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
@@ -180,7 +169,7 @@ class AttendanceController extends Controller
 		//pulang awal
 		if ( $attendance->isEarlyDeparture() ) {
 			$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
-			$diff = $this->timeDiff($attendance->getLatestDeparture(), $attendance->getScheduleDeparture());
+			$diff = $attendance->getDepartureDifferent();
 			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
 										str_replace(':jam Jam', "", $msg);
 			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 

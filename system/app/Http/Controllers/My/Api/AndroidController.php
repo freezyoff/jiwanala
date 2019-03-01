@@ -5,6 +5,10 @@ namespace App\Http\Controllers\My\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Bauk\EmployeeAttendance;
+use App\Libraries\Bauk\EmployeeSchedule;
+use App\Libraries\Bauk\Holiday;
+
+use Carbon\Carbon;
 
 class AndroidController extends Controller
 {
@@ -17,13 +21,16 @@ class AndroidController extends Controller
     public function index(Request $request){
 		$month = request('month',now()->format('m'));
 		$year = request('year',now()->format('Y'));
+		$employee = \Auth::user()->asEmployee;
 		
 		$success['code']=200;
 		$success['msg']=[
+			'nip'=>$employee->nip,
+			'name'=>$employee->getFullName(),
 			'month'=>$month,
 			'year'=>$year,
 			'records'=>$this->getAttendanceRecordsByPeriode(
-				\Auth::user()->asEmployee,
+				$employee,
 				\Carbon\Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01')
 			),
 		];
@@ -75,99 +82,135 @@ class AndroidController extends Controller
         //
     }
 	
-	protected function getAttendanceRecordsByPeriode(
-		\App\Libraries\Bauk\Employee $employee, 
-		\Carbon\Carbon $date){
-		
+	protected function getAttendanceRecordsByPeriode($employee, $date){
 		$nip = $employee->nip;
 		
+		//start periode
 		$start = $date->format('Y-m-d');
 		
+		//end periode
 		$date->day = $date->daysInMonth;
 		$end = $date->format('Y-m-d');
 		
 		//create date array of current month
+		$employeeScheduleDaysOfWeek = EmployeeSchedule::getScheduleDaysOfWeek($employee->id);
 		$list = [];
 		$loop = $date->daysInMonth;
 		for($currentDay=1; $currentDay<=$loop; $currentDay++){
 			$date->day = $currentDay;
 			$key = $date->format('Y-m-d');
 			
-			$isHoliday = \App\Libraries\Bauk\Holiday::getHolidayName($date);
 			$list[$key] = [
-				'year'=>			$date->format('Y'), 
-				'month'=>			$date->format('m'),
-				'day'=>				$date->format('d'),
-				'dayOfWeek'=>		trans('calendar.days.long.'.($date->dayOfWeek)),
-				'isHoliday'=>		$isHoliday? true : false,
-				'hasAttendance'=>	false,
-				'hasConsent'=>		false,
-				'holiday'=>			$isHoliday,
+				'dayOfWeek'=>	trans('calendar.days.long.'.($date->dayOfWeek)),
+				'day'=>			$date->format('d'),
+				'month'=>		$date->format('m'),
+				'year'=>		$date->format('Y'),
+				'holiday'=>		Holiday::getHolidayName($date),
 			];
 			
-			if ($list[$key]['isHoliday']) {
-				$list[$key]['holiday'] = $isHoliday;
-				continue;	//next record
+			if ($list[$key]['holiday']) {
+				$list[$key]['isHoliday'] = true;
+				continue;
 			}
 			
-			//java use strict variable type
-			$rec = $employee->attendanceRecord($key);
-			$list[$key]['hasAttendance'] = $rec? true : false;
-			$list[$key]['attendance'] = !$rec? false : [
-				'id'=> $rec->id,
-				'fin'=>$rec->time1,
-				'fout1'=>$rec->time2,
-				'fout2'=>$rec->time3,
-				'fout3'=>$rec->time4,
-				'message'=> $this->getAttendanceMessage($rec->time1, $rec->time2)
-			];
+			$list[$key]['holiday'] = in_array($date->dayOfWeek, $employeeScheduleDaysOfWeek)? 
+										false : 
+										str_replace(
+											':day',
+											trans('calendar.days.long.'.$date->dayOfWeek),
+											trans('my/bauk/attendance/hints.warnings.offschedule')
+										);
+			if ($list[$key]['holiday']) {
+				$list[$key]['isHoliday'] = true;
+				continue;
+			}
+			$list[$key]['isHoliday'] = false;
 			
-			//java use strict variable type
-			$rec = $employee->consentRecord($key);
-			$list[$key]['hasConsent'] = $rec? true : false;
-			$list[$key]['consent'] = !$rec? false : [
-				'id'=> $rec->id,
-				'consent'=> trans('my/bauk/attendance/consent.types.'.$rec->consent),
-				//'url'=>route('api.my.bauk.attendance.consents',[
-				//	'year'=>$date->format('Y'), 
-				//	'month'=>$date->format('m'),
-				//	'day'=>$date->format('d'),
-				//])
-			];
+			$attendanceRecord = $employee->attendanceRecord($key);
+			$list[$key]['attendance']=		$this->createAttendanceData( $attendanceRecord );
+			$list[$key]['hasAttendance'] = 	!empty($list[$key]['attendance']);
+			$list[$key]['consent']=			$employee->consentRecord($key);
+			$list[$key]['hasConsent']=		!empty($list[$key]['consent']);
+			
+			$warning = $this->attendanceWarning($date, $attendanceRecord, $list[$key]['consent']);
+			$list[$key]['hasWarning'] = is_array($warning)? true : false;
+			$list[$key]['warning'] = $warning;
 		}
 		
 		return $list;
 	}
 	
-	function getAttendanceMessage($time1, $time2, $time3=false, $time4=false){
-		if (!$time1 || !$time2) return "Belum ada rekaman kehadiran";
+	function createAttendanceData($record){
+		if ($record) return ['fin'=>$record->time1, 'fout1'=>$record->time2, 'fout2'=>$record->time3, 'fout3'=>$record->time4];
+		return null;
+	}
+	
+	/**
+	 *	@param Carbon $recordDate
+	 *	@param EmployeeAttendance $attendance
+	 *	@param EmployeeConsent $consent
+	 *	
+	 */
+	function attendanceWarning($recordDate, $attendance, $consent){
+		//record tanggal hari lalu
+		$recordDateDaysBefore = $recordDate->lessThan(now());
 		
-		$start = EmployeeAttendance::getArrivalTimeBound();	//\Carbon\Carbon::createFromFormat('H:i:s', "06:50:00");
-		$end = EmployeeAttendance::getDepartureTimeBound();	//\Carbon\Carbon::createFromFormat('H:i:s', "15:45:00");
+		if (!$attendance) {
+			if (!$consent) return $recordDateDaysBefore? [trans('my/bauk/attendance/hints.warnings.noConsent')] : false;
+			return false;
+		}
 		
-		//datang terlambat
-		$in = \Carbon\Carbon::createFromFormat('H:i:s', $time1);
-		$lminutes = $start->diffInMinutes( $in );
-		$lhours = $start->diffInHours( $in );
-		if ( $lhours > 0 || $lminutes > 0){
-			$res =  "Terlambat ".
-					($lhours? $lhours." Jam" : "") .
-					($lminutes? $lminutes." Menit" : "");
-			return $res.". ".trans('my/bauk/attendance/hints.noConsentForLateArrival');
+		if (!$attendance->time1) {
+			return $recordDateDaysBefore? 
+				[
+					trans('my/bauk/attendance/hints.warnings.noArrival'),
+					trans('my/bauk/attendance/hints.warnings.noConsent') 
+				]
+				:
+				false;
+		}
+		
+		if (!$attendance->time2 && !$attendance->time3 && !$attendance->time4) {
+			return $recordDateDaysBefore?
+				[
+					trans('my/bauk/attendance/hints.warnings.noDeparture'),
+					trans('my/bauk/attendance/hints.warnings.noConsent')
+				]
+				:
+				false;
+		}
+				
+		//	Datang terlambat
+		if ( $attendance->isLateArrival() ){
+			$msg = trans('my/bauk/attendance/hints.warnings.lateArrival');
+			$diff = $attendance->getArrivalDifferent();
+			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+										str_replace(':jam Jam', "", $msg);
+			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+										str_replace(':menit Menit', "", $msg);
+			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+										str_replace(':detik Detik', "", $msg);
+								
+			return $consent? 	[$msg] : 
+								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
 		
 		//pulang awal
-		$out = $time4? $time4 : ($time3? $time3: $time2);
-		$out = \Carbon\Carbon::createFromFormat('H:i:s', $out);
-		$lminutes = $end->diffInMinutes( $out );
-		$lhours = $start->diffInHours( $out );
-		if ( $lminutes < 0) {
-			$res =  "Terlambat ".
-					($lhours? $lhours." Jam" : "") .
-					($lminutes? $lminutes." Menit" : "");
-			return $res.". ".trans('my/bauk/attendance/hints.noConsentForLateArrival');
+		if ( $attendance->isEarlyDeparture() ) {
+			$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
+			$diff = $attendance->getDepartureDifferent();
+			$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+										str_replace(':jam Jam', "", $msg);
+			$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+										str_replace(':menit Menit', "", $msg);
+			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+										str_replace(':detik Detik', "", $msg);
+								
+			return $consent? 	[$msg] : 
+								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
 	}
+	
 	
 	public function statistics(Request $request){
 		$month = request('month',now()->format('m'));
