@@ -52,6 +52,11 @@ class PostRequest extends FormRequest
 				$rules['extension.'.$counter] = 'numeric';				
 			}
 		}
+		
+		for ($counter=0; $counter<count($this->input('email')); $counter++){
+			$rules['email.'.$counter] = 'required|email|unique:core.emails,email';
+		}
+		
         return $rules;
     }
 	
@@ -122,6 +127,10 @@ class PostRequest extends FormRequest
 			'work_time.required'	=> 		trans($path.'.work_time.required'),
 			'registered_at.required'	=> 	trans($path.'.registered_at.required'),
 			'registered_at.date_format'	=> 	trans($path.'.registered_at.date_format'),
+			
+			'email.*.required' =>			trans($path.'.email.required'),
+			'email.*.email' =>				trans($path.'.email.email'),
+			'email.*.unique' =>				trans($path.'.email.unique'),
 		];
 		return $messages;
 	}

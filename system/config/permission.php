@@ -13,6 +13,10 @@
 		'profile.put.own'	=>	['profile', 'Put owned Profile record', 'Permission to store owned profile record'],
 		'profile.list.own'	=>	['profile', 'List owned Profile record', 'Permission to List owned profile record'],
         
+		/*
+		 *	Domain: My
+		 */
+		
 		//system 
 		'system.user.list' => ['system', 'List user', 'List registered user'],
 		

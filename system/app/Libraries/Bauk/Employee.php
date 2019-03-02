@@ -24,10 +24,6 @@ class Employee extends Model
 		return $person->name_front_titles .$spacer .$person->name_full .$spacer .$spacer.$person->name_back_titles;
 	}
 	
-	public function phones(){
-		return $this->asPerson()->with('phones');
-	}
-	
 	public function asUser(){
 		return $this->belongsTo('\\App\Libraries\Service\Auth\User', 'user_id');
 	}
@@ -160,5 +156,33 @@ class Employee extends Model
 		$qq = self::where('active','=',1);
 		if ($fulltimeEmployeeOnly) $qq->where('work_time','=','f');
 		return $qq->get();
+	}
+	
+	public static function search($keywords, $select=false, $orderBy=[]){
+		$schema = new \App\Libraries\Core\Person();
+		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new \App\Libraries\Bauk\Employee();
+		$employeeSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		
+		$employee = \App\Libraries\Bauk\Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id');
+		
+		if ($keywords){
+			$employee->where(function($q) use ($personSchema, $employeeSchema, $keywords){
+				$q->where($employeeSchema.'.nip','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_front_titles','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_full','like','%'.$keywords.'%');
+				$q->orWhere($personSchema.'.name_back_titles','like','%'.$keywords.'%');
+			});
+		}
+		
+		foreach($orderBy as $key=>$value){
+			$employee->orderBy($key, $value);
+		}
+			
+		if ($select){
+			$employee->select($select);
+		}
+		
+		return $employee;
 	}
 }

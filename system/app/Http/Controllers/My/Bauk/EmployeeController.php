@@ -84,8 +84,8 @@ class EmployeeController extends Controller
 		return view('my.bauk.employee.add',[]);
 	}
 	
-	protected function post(PostRequest $req){// 
-		//return '<pre>'.print_r($req->input(),true).'</pre>';
+	protected function post(PostRequest $req){
+		//return '<pre>'.print_r($req->all(),true).'</pre>';
 		// save new pass since it passed validation if we got here
 		
 		//save person
@@ -105,6 +105,16 @@ class EmployeeController extends Controller
 				'extension'=>	$req->input('extension.'.$i)
 			]);
 			$record->default = $person->phones()->count()>0? false : true;
+			$record->save();
+		}
+		
+		for($i=0; $i<count($req->input('email')); $i++){
+			$record = new \App\Libraries\Core\Email([
+				'creator'=>		$person->creator,
+				'person_id'=> 	$person->id,
+				'email'=> 		$req->input('email.'.$i),
+				'default'=>		$person->emails()->count()>0? false : true
+			]);
 			$record->save();
 		}
 		
@@ -170,6 +180,10 @@ class EmployeeController extends Controller
 		$phoneToDelete = $person->phones()->whereNotIn('id',$req->input('phone_id'))->delete();
 		//tambahkan jika ada 
 		$this->patch_updatePhone($req, $person);
+		
+		//update email
+		$phoneToDelete = $person->emails()->whereNotIn('id',$req->input('email_id'))->delete();
+		$this->patch_updateEmail($req, $person);
 		
 		//update person
 		$person->fill($req->only([
@@ -239,6 +253,7 @@ class EmployeeController extends Controller
 			$record = \App\Libraries\Core\Phone::find( $currentID );
 			if ($record){
 				$record->fill([
+					'creator'=> 	\Auth::user()->id,
 					'phone'=> 		$req->input('phone.'.$i),
 					'extension'=>	$req->input('extension.'.$i)
 				]);
@@ -255,6 +270,36 @@ class EmployeeController extends Controller
 		}
 	}
 	
+	private function patch_updateEmail(PatchRequest $req, \App\Libraries\Core\Person $person){
+		$ids = $req->input('email_id');
+		$emails = $req->input('email');
+		
+		$defaultEmail = $person->emailDefault();
+		
+		foreach($emails as $key=>$value){
+			$currentID = isset($ids[$key])? $ids[$key] : -1;
+			$i = $key;
+			
+			$record = \App\Libraries\Core\Email::find( $currentID );
+			if ($record){
+				$record->fill([
+					'email'=> 		$req->input('email.'.$i),
+				]);
+			}
+			else{
+				$record = new \App\Libraries\Core\Email([
+					'creator'=> \Auth::user()->id,
+					'person_id'=> $person->id,
+					'email'=>	$req->input('email.'.$i),
+					'default'=>	$defaultEmail? false : 1,
+				]);
+			}
+			$record->save();
+			
+			if (!$defaultEmail) $person->emailDefault();
+		}
+	}
+	
 	public function delete(Request $req, $id){
 		$employee = \App\Libraries\Bauk\Employee::find($id)->delete();
 		return redirect()->back();
@@ -264,6 +309,13 @@ class EmployeeController extends Controller
 		$employee = \App\Libraries\Bauk\Employee::find($id);
 		$employee->active = $activationFlag;
 		$employee->save();
+		
+		//when employee deactivated, we deactivate user
+		if ($activationFlag!=1){
+			$user = $employee->asUser()->first();
+			if ($user)$user->deactivate();
+		}
+		
 		return redirect()->back()->withInput($req->all());
 	}
 }

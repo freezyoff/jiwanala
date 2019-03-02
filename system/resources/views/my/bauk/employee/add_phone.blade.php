@@ -5,7 +5,10 @@
 				error
 			@endif
 			">
-			<label>+62</label>
+			<label>
+				<i class="fas fa-phone-square"></i>
+				<span class="padding-left-8">+62</span>
+			</label>
 			<input name="phone[]" type="text" value="{{old('phone.'.$index)}}" 
 				placeholder="{{trans('my/bauk/employee/add.hints.phone')}}" 
 				class="input w3-input"
@@ -31,7 +34,7 @@
 				error
 			@endif
 			">
-			<label>Ext:</label>
+			<label><i class="fas fa-external-link-square-alt"></i></label>
 			<input name="extension[]" type="text" value="{{old('extension.'.$index)}}" 
 				placeholder="{{trans('my/bauk/employee/add.hints.extension')}}" 
 				class="input w3-input"

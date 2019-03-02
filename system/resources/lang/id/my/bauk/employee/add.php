@@ -87,6 +87,11 @@
 			'required'=>				'Tanggal terdaftar wajib diisi.',
 			'date_format'=>				'Format Tanggal lahir <Tanggal> - <Bulan> - <Tahun>.',
 		],
+		'email'=>[
+			'required'=>				'Email wajib diisi.',
+			'email'=>					'Gunakan format email alamat_email@domain.com',
+			'unique'=>					'Email sudah terdaftar, gunakan email lain.'
+		]
 	],
 	'hints'=>[
 		'nip'=>'Nomor Induk Pegawai',
@@ -107,6 +112,7 @@
 		'phone'=>'Nomor Telepon / Handphone',
 		'extension'=>'Ekstensi',
 		'work_time'=>'Jam Kerja',
-		'registered_at'=>'Tanggal terdaftar'
+		'registered_at'=>'Tanggal terdaftar',
+		'email'=>'Email',
 	]
 ];

@@ -18,26 +18,15 @@ class UserController extends Controller
     {
 		$keywords = request('keywords', false);
 		$active_status = request('active_status', 1);
-		$varian = request('varian', 'a');
 		
-		$employees = null;
-		if ($active_status > -1){
-			$employees = $employees? 
-				$employees->where('activated','=',$active_status) : 
-				Employee::where('activated','=',$active_status);
-		}
+		$employees = Employee::search($keywords);
+	
+		if ($active_status > -1){ $employees->where('active', '=', $active_status); }
 		
-		if ($keywords){
-			$employees = $employees? 
-				$employees->where('activated','=',$active_status) : 
-				Employee::where('activated','=',$active_status);
-		}
-		
-		
-		$employees = Employee::paginate();
-		
-        return view('my.system.user.landing',[
-			'employees'=>$employees,
+		return view('my.system.user.landing',[
+			'employees'=>$employees->paginate(),
+			'active_status'=>$active_status,
+			'keywords'=>$keywords,
 		]);
     }
 

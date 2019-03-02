@@ -14,13 +14,16 @@
 				<div class="padding-top-16 padding-bottom-8">
 						@csrf
 						<!-- begin: input nip -->
-						<input name="nip" type="text" value="{{old('nip')}}" 
-							placeholder="{{trans('my/bauk/employee/add.hints.nip')}}" 
-							class="w3-input
-							@if(isset($errors) && $errors->has('nip'))
-								error
-							@endif
-							"/>
+						<div class="input-group">
+							<label><i class="fas fa-id-badge fa-fw"></i></label>
+							<input name="nip" type="text" value="{{old('nip')}}" 
+								placeholder="{{trans('my/bauk/employee/add.hints.nip')}}" 
+								class="w3-input
+								@if(isset($errors) && $errors->has('nip'))
+									error
+								@endif
+								"/>
+						</div>
 						@if(isset($errors) && $errors->has('nip'))
 							<label class="w3-text-red">{{$errors->first('nip')}}</label>
 						@else
@@ -28,13 +31,16 @@
 						@endif
 						<!-- end: input nip -->
 						<!-- begin: input nik -->
-						<input name="nik" type="text" value="{{old('nik')}}" 
-						placeholder="{{trans('my/bauk/employee/add.hints.nik')}}" 
-							class="w3-input
-							@if(isset($errors) && $errors->has('nik'))
-								error
-							@endif
-							"/>
+						<div class="input-group">
+							<label><i class="fas fa-id-card fa-fw"></i></label>
+							<input name="nik" type="text" value="{{old('nik')}}" 
+							placeholder="{{trans('my/bauk/employee/add.hints.nik')}}" 
+								class="w3-input
+								@if(isset($errors) && $errors->has('nik'))
+									error
+								@endif
+								"/>
+						</div>
 						@if(isset($errors) && $errors->has('nik'))
 							<label class="w3-text-red">{{$errors->first('nik')}}</label>
 						@else
@@ -47,7 +53,7 @@
 						<!-- begin: input name -->
 						<div id="birth-place">@include('my.bauk.employee.add_birth_place_and_date')</div>
 						<!-- end: input name -->
-						<!-- begin: input phone -->
+						<!-- begin: input address -->
 						<div id="address-container">
 							@for ($i = 0; $i < max(is_array(old('address'))?count(old('address')):0,1); $i++)
 								@include('my.bauk.employee.add_address',['index'=>$i])
@@ -60,7 +66,7 @@
 								<span class="padding-left-8">Tambah Alamat</span>
 							</a>
 						</div>
-						<!-- end: input phone -->
+						<!-- end: input address -->
 						<!-- begin: input phone -->
 						<div id="phone-container">
 							@for ($i = 0; $i < max(is_array(old('phone'))? count(old('phone')):0,1); $i++)
@@ -75,6 +81,20 @@
 							</a>
 						</div>
 						<!-- end: input phone -->
+						<!-- begin: input email -->
+						<div id="email-container" class="w3-row">
+							@for ($i = 0; $i < max(is_array(old('email'))? count(old('email')):0,1); $i++)
+								@include('my.bauk.employee.add_email',['index'=>$i])
+							@endfor
+						</div>
+						<div class="w3-row padding-bottom-16 padding-left-8">
+							<a href="#" class="w3-hover-text-blue" style="text-decoration:none; cursor:pointer" 
+								onclick="event.preventDefault(); UI.email.add();">
+								<i class="fas fa-plus-square"></i>
+								<span class="padding-left-8">Tambah Email</span>
+							</a>
+						</div>
+						<!-- end: input email -->
 						<!-- begin: input work time & registered-->
 						<div id="name-with-titles">@include('my.bauk.employee.add_worktime_and_registered_at')</div>
 						<!-- end: input work time & registered -->
@@ -133,6 +153,19 @@ var UI = {};
 UI.phone = {
 	add: function (){
 		$('#phone-container').append(@include('my.bauk.employee.add_phone_json'));
+	},
+	remove: function (inputGroup){
+		//inputGroup.next().remove();
+		inputGroup.remove();
+	},
+};
+
+UI.email = {
+	add: function (){
+		var line = $(@include('my.bauk.employee.add_email_json')),
+			count = $('#email-container').children().length;
+		if (count%2==0) line.removeClass('padding-left-8');
+		$('#email-container').append(line);
 	},
 	remove: function (inputGroup){
 		//inputGroup.next().remove();

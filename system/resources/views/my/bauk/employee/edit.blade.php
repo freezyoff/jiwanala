@@ -14,14 +14,17 @@
 			<div class="w3-container">
 				<div class="padding-top-16 padding-bottom-8">
 						<!-- begin: input nip -->
-						<input name="nip" type="text" 
-							value="{{old('nip', $data->nip)}}" 
-							placeholder="{{trans('my/bauk/employee/add.hints.nip')}}" 
-							class="w3-input
-							@if(isset($errors) && $errors->has('nip'))
-								error
-							@endif
-							" />
+						<div class="input-group">
+							<label><i class="fas fa-id-badge fa-fw"></i></label>
+							<input name="nip" type="text" 
+								value="{{old('nip', $data->nip)}}" 
+								placeholder="{{trans('my/bauk/employee/add.hints.nip')}}" 
+								class="w3-input
+								@if(isset($errors) && $errors->has('nip'))
+									error
+								@endif
+								" />
+						</div>
 						@if(isset($errors) && $errors->has('nip'))
 							<label class="w3-text-red">{{$errors->first('nip')}}</label>
 						@else
@@ -29,14 +32,17 @@
 						@endif
 						<!-- end: input nip -->
 						<!-- begin: input nik -->
-						<input name="nik" type="text" 
-							value="{{old('nik', $data->asPerson()->first()->nik)}}" 
-							placeholder="{{trans('my/bauk/employee/add.hints.nik')}}" 
-							class="w3-input
-							@if(isset($errors) && $errors->has('nik'))
-								error
-							@endif
-							"/>
+						<div class="input-group">
+							<label><i class="fas fa-id-card fa-fw"></i></label>
+							<input name="nik" type="text" 
+								value="{{old('nik', $data->asPerson()->first()->nik)}}" 
+								placeholder="{{trans('my/bauk/employee/add.hints.nik')}}" 
+								class="w3-input
+								@if(isset($errors) && $errors->has('nik'))
+									error
+								@endif
+								"/>
+						</div>
 						@if(isset($errors) && $errors->has('nik'))
 							<label class="w3-text-red">{{$errors->first('nik')}}</label>
 						@else
@@ -90,6 +96,26 @@
 							</a>
 						</div>
 						<!-- end: input phone -->
+						<!-- begin: input email -->
+						<div id="email-container" class="w3-row">
+						<?php
+							$loop = old('email',false);
+							if (!$loop){
+								$loop = $data->asPerson()->first()->emails()->get();
+							}
+						?>
+							@for ($i = 0; $i < count($loop); $i++)
+								@include('my.bauk.employee.edit_email',['index'=>$i, 'email'=>$loop[$i]])
+							@endfor
+						</div>
+						<div class="w3-row padding-bottom-16 padding-left-8">
+							<a href="#" class="w3-hover-text-blue" style="text-decoration:none; cursor:pointer" 
+								onclick="event.preventDefault(); UI.email.add();">
+								<i class="fas fa-plus-square"></i>
+								<span class="padding-left-8">Tambah Email</span>
+							</a>
+						</div>
+						<!-- end: input email -->
 						<!-- begin: input work time & registered-->
 						<div id="name-with-titles">@include('my.bauk.employee.edit_worktime_and_registered_at')</div>
 						<!-- end: input work time & registered -->
@@ -148,6 +174,19 @@ var UI = {};
 UI.phone = {
 	add: function (){
 		$('#phone-container').append(@include('my.bauk.employee.add_phone_json'));
+	},
+	remove: function (inputGroup){
+		//inputGroup.next().remove();
+		inputGroup.remove();
+	},
+};
+
+UI.email = {
+	add: function (){
+		var line = $(@include('my.bauk.employee.add_email_json')),
+			count = $('#email-container').children().length;
+		if (count%2==0) line.removeClass('padding-left-8');
+		$('#email-container').append(line);
 	},
 	remove: function (inputGroup){
 		//inputGroup.next().remove();

@@ -21,9 +21,12 @@ class PatchRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
+    {	
+		$employee = \App\Libraries\Bauk\Employee::find($this->input('employee_id'));
+		$personID = $employee->asPerson()->first()->id;
+		
 		$rules=[
-			'nip'				=> 'required|numeric|digits_between:8,10|unique:bauk.employees,nip,'.\App\Libraries\Bauk\Employee::find($this->input('employee_id'))->id,
+			'nip'				=> 'required|numeric|digits_between:8,10|unique:bauk.employees,nip,'.$employee->id,
 			'nik'				=> 'required|numeric|digits_between:2,20',
 			'name_front_titles'	=> 'max:50',
 			'name_full'			=> 'required|regex:/^[\pL\s\-]+$/u|max:100',
@@ -48,11 +51,16 @@ class PatchRequest extends FormRequest
 		
 		//for ($counter=0; $counter<count($this->input('phone')); $counter++){
 		foreach($this->input('phone') as $counter=>$value){
-			$rules['phone.'.$counter] = 'required|numeric|digits_between:6,20|starts_with:1,2,3,4,5,6,7,8,9';
+			$rules['phone.'.$counter] = 'required|numeric|digits_between:6,20|starts_with:1,2,3,4,5,6,7,8,9|unique:core.phones,phone,'.$personID.',person_id';
 			if ($this->input('extension.'.$counter)){
 				$rules['extension.'.$counter] = 'numeric';				
 			}
 		}
+		
+		foreach($this->input('email') as $counter=>$value){
+			$rules['email.'.$counter] = 'required|email|unique:core.emails,email,'.$personID.',person_id';
+		}
+		
         return $rules;
     }
 	
@@ -123,6 +131,10 @@ class PatchRequest extends FormRequest
 			'work_time.required'	=> 		trans($path.'.work_time.required'),
 			'registered_at.required'	=> 	trans($path.'.registered_at.required'),
 			'registered_at.date_format'	=> 	trans($path.'.registered_at.date_format'),
+			
+			'email.*.required' =>			trans($path.'.email.required'),
+			'email.*.email' =>				trans($path.'.email.email'),
+			'email.*.unique' =>				trans($path.'.email.unique'),
 		];
 		return $messages;
 	}

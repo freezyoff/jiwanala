@@ -1,14 +1,17 @@
 <div class="w3-row">
 	<div class="w3-col s12 m6">	
-		<input name="birth_place" 
-			value="{{old('birth_place',$data->birth_place)}}"
-			class="w3-input
-				@if(isset($errors) && $errors->has('birth_place'))
-					error
-				@endif
-			"
-			placeholder="{{trans('my/bauk/employee/add.hints.birth_place')}}"
-			type="text">
+		<div class="input-group">
+			<label><i class="fas fa-map-marker-alt"></i></label>
+			<input name="birth_place" 
+				value="{{old('birth_place',$data->birth_place)}}"
+				class="w3-input
+					@if(isset($errors) && $errors->has('birth_place'))
+						error
+					@endif
+				"
+				placeholder="{{trans('my/bauk/employee/add.hints.birth_place')}}"
+				type="text">
+		</div>
 		@if(isset($errors) && $errors->has('birth_place'))
 			<label class="w3-text-red">{{$errors->first('birth_place')}}</label>
 		@else
@@ -18,16 +21,19 @@
 	<div class="w3-col s12 m6 margin-padding-left-8">
 		<input id="birth_date" type="hidden" name="birth_date" value="{{old('birth_date',$data->birth_date)}}"/>
 		<div class="w3-hide-small w3-hide-medium padding-left-8">
-			<input name="birth_date_large" 
-				value="{{old('birth_date', $data->birth_date)}}"
-				class="w3-input 
-					@if(isset($errors) && $errors->has('birth_date'))
-						error
-					@endif
-				"
-				placeholder="{{trans('my/bauk/employee/add.hints.birth_date')}}" 
-				type="text" 
-				data-toggle="datepicker"/>
+			<div class="input-group">
+				<label><i class="far fa-calendar-alt"></i></label>
+				<input name="birth_date_large" 
+					value="{{old('birth_date', $data->birth_date)}}"
+					class="w3-input 
+						@if(isset($errors) && $errors->has('birth_date'))
+							error
+						@endif
+					"
+					placeholder="{{trans('my/bauk/employee/add.hints.birth_date')}}" 
+					type="text" 
+					data-toggle="datepicker"/>
+			</div>
 			@if(isset($errors) && $errors->has('birth_date'))
 				<label class="w3-text-red">{{$errors->first('birth_date')}}</label>
 			@else
@@ -35,17 +41,20 @@
 			@endif
 		</div>
 		<div class="w3-hide-large padding-left-8 padding-none-small">
-			<input name="birth_date_small" 
-				value="{{old('birth_date',$data->birth_date)}}"
-				class="w3-input
-					@if(isset($errors) && $errors->has('birth_date'))
-						error
-					@endif
-				"
-				placeholder="{{trans('my/bauk/employee/add.hints.birth_date')}}" 
-				type="text" 
-				data-toggle="datepicker-inline"
-				onfocus="$('#datepicker-modal').show()"/>
+			<div class="input-group">
+				<label><i class="far fa-calendar-alt"></i></label>
+				<input name="birth_date_small" 
+					value="{{old('birth_date',$data->birth_date)}}"
+					class="w3-input
+						@if(isset($errors) && $errors->has('birth_date'))
+							error
+						@endif
+					"
+					placeholder="{{trans('my/bauk/employee/add.hints.birth_date')}}" 
+					type="text" 
+					data-toggle="datepicker-inline"
+					onfocus="$('#datepicker-modal').show()"/>
+			</div>
 			@if(isset($errors) && $errors->has('birth_date'))
 				<label class="w3-text-red">{{$errors->first('birth_date')}}</label>
 			@else

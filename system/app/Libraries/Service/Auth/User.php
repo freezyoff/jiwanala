@@ -9,10 +9,20 @@ use Hash;
 class User extends BaseUserModel{
 	protected $table = 'users';
 	protected $connection = 'service';
-	protected $fillable=['creator','name','email','password'];
+	protected $fillable=['creator','name','email','password', 'activated'];
 
 	public function asEmployee(){
 		return $this->hasOne('\App\Libraries\Bauk\Employee','user_id');
+	}
+	
+	public function activate(){
+		$this->activated = 1;
+		$this->save();
+	}
+	
+	public function deactivate(){
+		$this->activated = 0;
+		$this->save();
 	}
 	
 	/**

@@ -7,7 +7,7 @@
 	</header>
 	<div class="padding-top-bottom-8">
 		<div class="w3-row w3-container">
-			<form name="search" action="{{route('my.system.user.index')}}" method="get">
+			<form name="search" action="{{route('my.system.user.index')}}" method="post">
 				@csrf
 				<div class="w3-col s12 m4 l4">
 					<div class="input-group">
@@ -17,32 +17,17 @@
 							type="text" 
 							class="w3-input" 
 							placeholder="{{trans('my/system/user.hints.keywords')}}"
-							value="{{old('keywords', '')}}" />
+							value="{{old('keywords', $keywords)}}" />
 					</div>
 				</div>
-				<div class="w3-col s12 m4 l4">
+				<div class="w3-col s12 m4 l4 padding-left-8 padding-none-small">
 					<div class="input-group padding-left-8 padding-none-small">
 						<label><i class="fas fa-lightbulb fa-fw"></i></label>
 						<input id="employeeActive" 
 							name="active_status" 
 							type="text"
 							class="w3-input" 
-							value="{{ old('active_status', '-1') }}" 
-							select-role="dropdown"
-							select-dropdown="#employeeActive-dropdown" 
-							select-modal="#employeeActive-modal"
-							select-modal-container="#employeeActive-modal-container" />
-					</div>
-					@include('my.system.user.landing_employeeActive_dropdown_modal')
-				</div>
-				<div class="w3-col s12 m4 l4">
-					<div class="input-group padding-left-8 padding-none-small">
-						<label><i class="fas fa-lightbulb fa-fw"></i></label>
-						<input id="employeeActive" 
-							name="employeeActive" 
-							type="text"
-							class="w3-input" 
-							value="{{ old('employeeActive', '-1') }}" 
+							value="{{ old('active_status', $active_status) }}" 
 							select-role="dropdown"
 							select-dropdown="#employeeActive-dropdown" 
 							select-modal="#employeeActive-modal"
@@ -63,23 +48,39 @@
 							<td class="w3-hide-large"></td>
 							<td>NIP</td>
 							<td>Nama</td>
-							<td></td>
+							<td>Email</td>
 							<td class="w3-hide-small w3-hide-medium"></td>
 						</tr>
 					</thead>
 					<tbody>
 						@forelse ($employees as $empl)
 							<tr>
-								<td class="w3-hide-large"></td>
-								<td>{{ $empl->nip }}</td>
-								<td>{{ $empl->getFullName() }}</td>
-								<td>{{$empl->asPerson->emailDefault()}}</td>
-								<td>
+								<td class="w3-hide-large">
 									@if ($empl->asUser)
-										<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
+										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
+											<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
+										</a>
 									@else
-										<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
+										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
+											<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
+										</a>
 									@endif
+									@include('my.system.user.landing_link_modal',['id'=>$empl->id])	
+								</td>
+								<td>{{$empl->nip }}</td>
+								<td>{{$empl->getFullName()}}</td>
+								<td>{{$empl->asUser? $empl->asUser->email: ""}}</td>
+								<td class="w3-hide-small w3-hide-medium" style="text-align:right">
+									@if ($empl->asUser)
+										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
+											<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
+										</a>
+									@else
+										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
+											<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
+										</a>
+									@endif
+									@include('my.system.user.landing_link_modal',['id'=>$empl->id])
 								</td>
 							</tr>
 						@empty

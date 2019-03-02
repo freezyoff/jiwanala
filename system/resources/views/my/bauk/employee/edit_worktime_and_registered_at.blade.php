@@ -5,6 +5,7 @@
 				error
 			@endif
 			">
+			<label><i class="fas fa-hand-point-right"></i></label>
 			<input name="work_time" type="hidden" value="{{old('work_time', $data->work_time)}}" />
 			<input name="work_time_small" 
 				value="{{old('work_time_small', $data->workTime(old('work_time', $data->work_time)))}}"
@@ -87,16 +88,19 @@
 	<div class="w3-col s12 m6 margin-padding-left-8">
 		<input id="registered_at" type="hidden" name="registered_at" value="{{old('registered_at', $data->registered_at)}}"/>
 		<div class="w3-hide-small w3-hide-medium padding-left-8">
-			<input name="registered_at_large" 
-				value="{{old('registered_at', $data->registered_at )}}"
-				class="w3-input 
-					@if(isset($errors) && $errors->has('registered_at'))
-						error
-					@endif
-				"
-				placeholder="{{trans('my/bauk/employee/add.hints.registered_at')}}" 
-				type="text" 
-				data-toggle="datepicker-registeredAt"/>
+			<div class="input-group">
+				<label><i class="far fa-calendar-alt"></i></label>
+				<input name="registered_at_large" 
+					value="{{old('registered_at', $data->registered_at )}}"
+					class="w3-input 
+						@if(isset($errors) && $errors->has('registered_at'))
+							error
+						@endif
+					"
+					placeholder="{{trans('my/bauk/employee/add.hints.registered_at')}}" 
+					type="text" 
+					data-toggle="datepicker-registeredAt"/>
+			</div>
 			@if(isset($errors) && $errors->has('registered_at'))
 				<label class="w3-text-red">{{$errors->first('registered_at')}}</label>
 			@else
@@ -104,17 +108,20 @@
 			@endif
 		</div>
 		<div class="w3-hide-large padding-left-8 padding-none-small">
-			<input name="registered_at_small" 
-				value="{{old('registered_at', $data->registered_at)}}"
-				class="w3-input
-					@if(isset($errors) && $errors->has('registered_at'))
-						error
-					@endif
-				"
-				placeholder="{{trans('my/bauk/employee/add.hints.registered_at')}}" 
-				type="text" 
-				data-toggle="datepicker-inline-registeredAt"
-				onfocus="$('#datepicker-modal-registeredAt').show()"/>
+			<div class="input-group">
+				<label><i class="far fa-calendar-alt"></i></label>
+				<input name="registered_at_small" 
+					value="{{old('registered_at', $data->registered_at)}}"
+					class="w3-input
+						@if(isset($errors) && $errors->has('registered_at'))
+							error
+						@endif
+					"
+					placeholder="{{trans('my/bauk/employee/add.hints.registered_at')}}" 
+					type="text" 
+					data-toggle="datepicker-inline-registeredAt"
+					onfocus="$('#datepicker-modal-registeredAt').show()"/>
+			</div>
 			@if(isset($errors) && $errors->has('registered_at'))
 				<label class="w3-text-red">{{$errors->first('registered_at')}}</label>
 			@else

@@ -57,6 +57,8 @@ class Person extends Model{
 		$default = $this->emails()->where('default','=',1)->first();
 		if (!$default){
 			$default = $this->emails()->first();
+			$default->default = 1;
+			$default->save();
 		}
 		return $default? $default->email :false ;
 	}
