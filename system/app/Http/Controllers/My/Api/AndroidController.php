@@ -127,10 +127,12 @@ class AndroidController extends Controller
 			$list[$key]['isHoliday'] = false;
 			
 			$attendanceRecord = $employee->attendanceRecord($key);
-			$list[$key]['attendance']=		$this->createAttendanceData( $attendanceRecord );
-			$list[$key]['hasAttendance'] = 	!empty($list[$key]['attendance']);
-			$list[$key]['consent']=			$employee->consentRecord($key);
-			$list[$key]['hasConsent']=		!empty($list[$key]['consent']);
+			$list[$key]['attendance']= $this->createAttendanceData( $attendanceRecord );
+			$list[$key]['hasAttendance'] = $attendanceRecord? true : false;
+			
+			$consentRecord = $employee->consentRecord($key);
+			$list[$key]['consent'] = $this->createConsentData($consentRecord);
+			$list[$key]['hasConsent'] =	$consentRecord? true : false;
 			
 			$warning = $this->attendanceWarning($date, $attendanceRecord, $list[$key]['consent']);
 			$list[$key]['hasWarning'] = is_array($warning)? true : false;
@@ -143,6 +145,11 @@ class AndroidController extends Controller
 	function createAttendanceData($record){
 		if ($record) return ['fin'=>$record->time1, 'fout1'=>$record->time2, 'fout2'=>$record->time3, 'fout3'=>$record->time4];
 		return null;
+	}
+	
+	function createConsentData($record){
+		if ($record) return trans('my/bauk/attendance/consent.types.'.$record->consent);
+		return false;
 	}
 	
 	/**
@@ -190,7 +197,7 @@ class AndroidController extends Controller
 										str_replace(':menit Menit', "", $msg);
 			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
 										str_replace(':detik Detik', "", $msg);
-								
+			$msg = preg_replace("/\s{2,}/"," ",$msg);
 			return $consent? 	[$msg] : 
 								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
@@ -205,7 +212,7 @@ class AndroidController extends Controller
 										str_replace(':menit Menit', "", $msg);
 			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
 										str_replace(':detik Detik', "", $msg);
-								
+			$msg = preg_replace("/\s{2,}/"," ",$msg);
 			return $consent? 	[$msg] : 
 								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}
@@ -213,8 +220,8 @@ class AndroidController extends Controller
 	
 	
 	public function statistics(Request $request){
-		$month = request('month',now()->format('m'));
-		$year = request('year',now()->format('Y'));
+		$month = request('month', now()->format('m'));
+		$year = request('year', now()->format('Y'));
 		$user = \Auth::user();
 		
 		//@TODO: persentasi kehadiran pada bulan ini

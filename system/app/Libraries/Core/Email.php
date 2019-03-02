@@ -14,16 +14,7 @@ class Email extends Model
 		return $this->belongsTo('App\Libraries\Core\Person','person_id');
 	}
 	
-	public function isUnique(){
-		$hasID = $this->attributes['id'];
-		$search = Email::where('email','=',$this->attributes['email']);
-		if ($hasID){
-			$search->where('id','<>',$hasID);
-		}
-		return !$search->first();
-	}
-	
-	public function save(array $options = Array()){
-		return $this->isUnique()? parent::save($options) : false;
+	public function isDefault(){
+		return $this->attributes['default'];
 	}
 }
