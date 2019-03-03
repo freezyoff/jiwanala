@@ -26,38 +26,48 @@ class AttendanceExport implements FromView
 	}
 	
 	function getHeaders(){
-		return ['NO', 'NIP', 'NAMA', 'JML HARI KERJA', 'JML HADIR', 'JML TERLAMBAT', 'JML PULANG AWAL'];
+		return ['NO', 'NIP', 'NAMA', 'HARI KERJA (jml)', 'HADIR (jml)', 'KEHADIRAN (%)', 'TERLAMBAT', 'PULANG AWAL'];
+	}
+	
+	public function getPeriodes(){
+		$now = now();
+		$start = $this->date->copy();
+		if ($start->month == $now->month && $start->year == $now->year){
+			$end = $now->copy();
+		}
+		else{
+			$end = $this->date->copy();
+			$end->day = $this->date->daysInMonth;
+		}
+		return [$start, $end];
 	}
 	
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function view():View {
-        return view('my.bauk.attendance.report_export_employee_attendance',[
+    public function view():View {	
+		$periodes = $this->getPeriodes();
+        return view('my.bauk.attendance.report_export',[
 			'headers'=> $this->getHeaders(),
 			'rows'=>$this->generateRows(),
+			'start'=>$periodes[0],
+			'end'=>$periodes[1],
 		]);
     }
 	
 	function generateRows(){
-		$now = now();
 		$rows = [];
 		$count = 1;
+		
+		$periodes = $this->getPeriodes();
+		$start = $periodes[0];
+		$end = $periodes[1];
+		
 		$employees = Employee::getActiveEmployee(true, $this->date->year, $this->date->month);
 		foreach($employees as $employee){
-			//['NO', 'NIP', 'NAMA', 'JML HARI KERJA', 'JML HADIR', 'JML TERLAMBAT', 'JML PULANG AWAL'];
 			$rows[$employee->id][0] = $count;
 			$rows[$employee->id][1] = $employee->nip;
 			$rows[$employee->id][2] = $employee->getFullName();
-			
-			$start = $this->date->copy();
-			if ($start->month == $now->month && $start->year == $now->year){
-				$end = $now->copy();
-			}
-			else{
-				$end = $this->date->copy();
-				$end->day = $this->date->daysInMonth;
-			}
 			
 			$loop = $start->copy();
 			$holidayCount=0;
@@ -69,15 +79,18 @@ class AttendanceExport implements FromView
 			}
 			
 			$rows[$employee->id][3] = $start->diffInDays($end) - $offScheduleDaysCount - $holidayCount + 1;
-			$rows[$employee->id][4] = 0;
-			$rows[$employee->id][5] = 0;
-			$rows[$employee->id][6] = 0;
 						
 			foreach($employee->attendanceRecordsByPeriode($start, $end)->get() as $att){
-				$rows[$employee->id][4]++;
-				if ($att->isLateArrival()) $rows[$employee->id][5]++;
-				if ($att->isEarlyDeparture()) $rows[$employee->id][6]++;
+				$rows[$employee->id][4] = isset($rows[$employee->id][4])? $rows[$employee->id][4]+1 : 1;
+				if ($att->isLateArrival()){
+					$rows[$employee->id][6] = isset($rows[$employee->id][6])? $rows[$employee->id][6]+1 : 1;
+				} 
+				if ($att->isEarlyDeparture()) {
+					$rows[$employee->id][7] = isset($rows[$employee->id][7])? $rows[$employee->id][7]+1 : 1;
+				}
 			}
+			
+			$rows[$employee->id][5] = $rows[$employee->id][3]>0? $rows[$employee->id][4]/$rows[$employee->id][3] : 0;
 			
 			$count++;
 		}
