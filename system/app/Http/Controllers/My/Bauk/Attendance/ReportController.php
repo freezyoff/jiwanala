@@ -7,11 +7,19 @@ use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
-    public function index(){
+	
+	public function index(){
+		return view('my.bauk.attendance.report');
+	}
+	
+    public function generate(Request $req){
+		$month = $req->input('month');
+		$year = $req->input('year');
+		
 		$cls = new \App\Exports\My\Bauk\Attendance\AttendanceExport();
-		$cls->setPeriode(now()->year, now()->month);
+		$cls->setPeriode($year, $month);
 		//return $cls->view();
 		
-		return $cls->download('Laporan Kehadiran.xls');
+		return $cls->download('Laporan Kehadiran '.$month.''.$year.'.xls');
 	}
 }

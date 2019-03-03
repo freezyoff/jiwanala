@@ -71,8 +71,8 @@
 							'name'=>'Jadwal Kerja', 
 							'icon'=>false,
 							'tag'=>[
-								'label'=>"new",
-								'color'=>'w3-green'
+								'label'=>"update",
+								'color'=>'w3-blue'
 							]
 						], 
 						'href'=>'my.bauk.schedule.landing',
@@ -115,11 +115,11 @@
 							'name'=>'Laporan', 
 							'icon'=>false,
 							'tag'=>[
-								'label'=>"new",
-								'color'=>'w3-green'
+								'label'=>"update",
+								'color'=>'w3-blue'
 							]
 						], 
-						'href'=>'my.bauk.attendance.report',
+						'href'=>'my.bauk.attendance.report.landing',
 					]
 				]
 			],

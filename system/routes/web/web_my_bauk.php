@@ -12,8 +12,12 @@ Route::name('landing')
 			->post('employeesCount', '\App\Http\Controllers\My\BaukController@employeesCount');	
 		Route::name('.attendanceProgress')
 			->post('attendanceProgress', '\App\Http\Controllers\My\BaukController@attendanceProgress');
+		Route::name('.employeeWithNoSchedules')
+			->post('employeeWithNoSchedules', '\App\Http\Controllers\My\BaukController@employeeWithNoSchedules');
+		
 		Route::name('.fingerConsent')
 			->post('fingerConsent', '\App\Http\Controllers\My\BaukController@fingerConsent');
+			
 	});
 });
 	
@@ -150,9 +154,17 @@ Route::prefix('attendance')
 				->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
 		});
 	});
-		
-	Route::name('.report')
-		->middleware('permission:bauk.attendance.report')
-		->get('report', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@index');
 	
+	Route::name('.report')
+		->prefix('report')
+		->group(function(){
+		
+		Route::name('.landing')
+			->middleware('permission:bauk.attendance.report')
+			->get('', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@index');
+		
+		Route::name('.generate')
+			->post('generate', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@generate');
+	});
+		
 });

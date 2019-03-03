@@ -55,14 +55,34 @@ class BaukController extends Controller
 	}
 	
 	public function employeesCount(){
+		$now = now();
+		
+		//get the periode
+		$month = \Request::input('month', $now->format('m'));
+		$year = \Request::input('year', $now->format('Y'));
+		$current = false;
+		
+		if ($month == $now->month && $year == $now->year){
+			$current = $now;
+		}
+		else{
+			$current = Carbon::parse($year.'-'.$month.'-01');
+			$current->day = $current->daysInMonth;
+		}
+		
 		return response()->json([
-			'count'=> Employee::where('active','=',1)->count(),
-			'fulltime'=> Employee::where('active','=',1)->where('work_time','=','f')->count(),
+			'count'=> Employee::getActiveEmployee(false, $year, $month)->count(),
+			'fulltime'=> Employee::getActiveEmployee(true, $current->format('Y'), $current->format('m'))->count(),
 			'contract1'=> Employee::where('active','=',1)->where('work_time','=','f')
-							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.now()->format('Y-m-d').'") < 1')->count(),
+							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.$current->format('Y-m-d').'") < 1')->count(),
 			'contract2'=> Employee::where('active','=',1)->where('work_time','=','f')
-							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.now()->format('Y-m-d').'") >= 1')
-							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.now()->format('Y-m-d').'") < 2')->count(),
+							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.$current->format('Y-m-d').'") >= 1')
+							->whereRaw('TIMESTAMPDIFF(YEAR,`registered_at`,"'.$current->format('Y-m-d').'") < 2')->count(),
+			'date'=>[
+				'day'=>$current->day,
+				'month'=>$current->month,
+				'year'=>$current->year,
+			]
 		]);
 	}
 	
@@ -104,6 +124,7 @@ class BaukController extends Controller
 		//get the employee registered at $startDate & $endDate periode
 		$employeeList = Employee::getActiveEmployee(true, $startDate->year, $startDate->month);
 		
+		$messages = [];
 		$allPercents = 0;
 		$allPercentsDevider = 0;
 		foreach($employeeList as $employee){
@@ -124,14 +145,17 @@ class BaukController extends Controller
 				$offScheduleDaysCount += EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek)? 0 : 1;
 				$loop->addDay();
 			}
-			
-			$workDaysCount = $startDate->diffInDays($endDate) - $offScheduleDaysCount - $holidayCount;
-			$allPercents += floor($attendsCount/($workDaysCount));
-			$allPercentsDevider++;
+		
+			$workDaysCount = $startDate->diffInDays($endDate) - $offScheduleDaysCount - $holidayCount + 1;
+		
+			if ($workDaysCount>0){
+				$allPercents += floor(($attendsCount/$workDaysCount)*100);
+				$allPercentsDevider++;				
+			}
 		}
 		
 		return [
-			'percent'=>floor($allPercents/$allPercentsDevider),
+			'percent'=>$allPercentsDevider? floor($allPercents/$allPercentsDevider) : $allPercentsDevider,
 			'start'=>[
 				'year'=>$startDate->year,
 				'month'=>$startDate->month,
@@ -141,7 +165,8 @@ class BaukController extends Controller
 				'year'=>$endDate->year,
 				'month'=>$endDate->month,
 				'day'=>$endDate->day
-			]
+			],
+			'title'=>'Finger Karyawan Fulltime<br>per '. $startDate->format('d-m-Y') .' s/d '. $endDate->format('d-m-Y'),
 		];
 	}
 	
@@ -149,7 +174,12 @@ class BaukController extends Controller
 	 *	Employee without schedule
 	 *
 	 */
-	public function scheduleInfo(){
+	public function employeeWithNoSchedules(){
+		//@TODO: buat ini
+		Employee::where(function($q){
+			$q->whereRaw('id NOT IN (SELECT employee_id FROM employee_schedules GROUP BY employee_id)');
+		});
 		
+		return false;
 	}
 }

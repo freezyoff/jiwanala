@@ -178,7 +178,8 @@ var attendanceProgress = {
 	init: function(){
 		$('#attendanceProgress-year, #attendanceProgress-month').on('select.pick', function(event, oldValue, newValue){
 			if (oldValue != newValue){
-				attendanceProgress.send();				
+				attendanceProgress.send();
+				employeesCount();
 			}
 		});
 		attendanceProgress.send();
@@ -237,7 +238,11 @@ var employeesCount = function(){
 	$.ajax({
 		method: "POST",
 		url: '{{route('my.bauk.landing.info.employeesCount')}}',
-		data: { '_token': '{{csrf_token()}}' },
+		data: { 
+			'_token': '{{csrf_token()}}',
+			'year': $('#attendanceProgress-year').val(),
+			'month': $('#attendanceProgress-month').val(),
+		},
 		dataType: "json",
 		beforeSend: function() {},
 		success: function(response){
@@ -252,8 +257,6 @@ var employeesCount = function(){
 $(document).ready(function(){
 	attendanceProgress.init();
 	employeesCount();
-	//setInterval(attendanceProgress, 1000*60*10);
-	//setInterval(employeesCount, 1000*60*10);
 	$('[role="select"]').select();
 });
 </script>

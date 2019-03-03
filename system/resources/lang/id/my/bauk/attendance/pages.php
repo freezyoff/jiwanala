@@ -11,6 +11,7 @@
 	'subtitles'=>[
 		'year'=>'tahun',
 		'month'=>'bulan',
-		'consent'=>'cuti / izin'
+		'consent'=>'cuti / izin',
+		'report'=>'Periode Laporan',
 	]
 ];

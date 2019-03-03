@@ -71,17 +71,41 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .padding-right-none{padding-right:0 !important;}
 @media only screen and (max-width: 600px){
 	.padding-none-small {padding:0 !important;}
-	.margin-none-small {margin:0 !important;}
+	.padding-left-none-small{padding-left:0 !important;}
+	.padding-right-none-small{padding-right:0 !important;}
+	.padding-top-none-small{padding-top:0 !important;}
+	.padding-bottom-none-small{padding-bottom:0 !important;}
+	.margin-none-small{margin:0 !important;}
+	.margin-left-none-small{margin-left:0 !important;}
+	.margin-right-none-small{margin-right:0 !important;}
+	.margin-top-none-small{margin-top:0 !important;}
+	.margin-bottom-none-small{margin-bottom:0 !important;}
 }
 @media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
 	.padding-none-medium {padding:0 !important;}
-	.margin-none-medium {margin:0 !important;}
+	.padding-left-none-medium{padding-left:0 !important;}
+	.padding-right-none-medium{padding-right:0 !important;}
+	.padding-top-none-medium{padding-top:0 !important;}
+	.padding-bottom-none-medium{padding-bottom:0 !important;}
+	.margin-none-medium{margin:0 !important;}
+	.margin-left-none-medium{margin-left:0 !important;}
+	.margin-right-none-medium{margin-right:0 !important;}
+	.margin-top-none-medium{margin-top:0 !important;}
+	.margin-bottom-none-medium{margin-bottom:0 !important;}
 }
 @media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
 	.padding-none-large {padding:0 !important;}
-	.margin-none-large {margin:0 !important;}
+	.padding-left-none-large{padding-left:0 !important;}
+	.padding-right-none-large{padding-right:0 !important;}
+	.padding-top-none-large{padding-top:0 !important;}
+	.padding-bottom-none-large{padding-bottom:0 !important;}
+	.margin-none-large{margin:0 !important;}
+	.margin-left-none-large{margin-left:0 !important;}
+	.margin-right-none-large{margin-right:0 !important;}
+	.margin-top-none-large{margin-top:0 !important;}
+	.margin-bottom-none-large{margin-bottom:0 !important;}
 }
 		
 .margin-left-8{margin-left:8px;}

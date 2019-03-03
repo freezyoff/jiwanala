@@ -156,7 +156,7 @@ class Employee extends Model
 		if ($registeredMonth && $registeredYear){
 			$carbonDate = Carbon::parse($registeredYear.'-'.$registeredMonth.'-01');
 			$carbonDate->day = $carbonDate->daysInMonth;
-			$qq->where('registered_at','<',$carbonDate->format('Y-m-d'));
+			$qq->where('registered_at','<=',$carbonDate->format('Y-m-d'));
 		}
 		return $qq->get();
 	}

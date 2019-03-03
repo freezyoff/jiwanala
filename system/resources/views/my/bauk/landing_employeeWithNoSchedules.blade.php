@@ -1,3 +1,4 @@
+@if ()
 <div id="nextHolidays" class="w3-col s12 m6 l6 padding-left-8 padding-none-small margin-top-16 margin-top-none-large margin-top-none-medium">
 	<div class="w3-card">
 		<header class="w3-container w3-red padding-top-8">

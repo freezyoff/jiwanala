@@ -17,6 +17,7 @@ class AttendanceExport implements FromView
 	protected $date;
 	
 	public function setPeriode(int $year, int $month){
+		$month = $month<10? '0'.$month:$month;
 		$this->date = Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01');
 	}
 	
@@ -39,19 +40,35 @@ class AttendanceExport implements FromView
     }
 	
 	function generateRows(){
+		$now = now();
 		$rows = [];
-		$employees = Employee::getActiveEmployee(true);
-		$holidaysCount = Holiday::getHolidaysByMonth($this->date->format('Y'), $this->date->format('m'))->count();
+		$count = 1;
+		$employees = Employee::getActiveEmployee(true, $this->date->year, $this->date->month);
 		foreach($employees as $employee){
-			$rows[$employee->id][0] = count($rows)+1;
+			//['NO', 'NIP', 'NAMA', 'JML HARI KERJA', 'JML HADIR', 'JML TERLAMBAT', 'JML PULANG AWAL'];
+			$rows[$employee->id][0] = $count+1;
 			$rows[$employee->id][1] = $employee->nip;
 			$rows[$employee->id][2] = $employee->getFullName();
 			
-			$start = $this->date->format('Y-m').'-01';
-			$end = $this->date->format('Y-m').'-'.$this->date->daysInMonth;
-			$dayOffCount = EmployeeSchedule::getOffScheduleDaysCount($employee->id, $this->date->format('Y'), $this->date->format('m'));
+			$start = $this->date->copy();
+			if ($start->month == $now->month && $start->year == $now->year){
+				$end = $now->copy();
+			}
+			else{
+				$end = $this->date->copy();
+				$end->day = $this->date->daysInMonth;
+			}
 			
-			$rows[$employee->id][3] = $this->date->daysInMonth - $holidaysCount - $dayOffCount;
+			$loop = $start->copy();
+			$holidayCount=0;
+			$offScheduleDaysCount=0;
+			while($loop->lessThanOrEqualTo($end)){
+				$holidayCount += Holiday::isHoliday($loop)? 1 : 0;
+				$offScheduleDaysCount += EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek)? 0 : 1;
+				$loop->addDay();
+			}
+			
+			$rows[$employee->id][3] = $start->diffInDays($end) - $offScheduleDaysCount - $holidayCount + 1;
 			$rows[$employee->id][4] = 0;
 			$rows[$employee->id][5] = 0;
 			$rows[$employee->id][6] = 0;
@@ -61,6 +78,8 @@ class AttendanceExport implements FromView
 				if ($att->isLateArrival()) $rows[$employee->id][5]++;
 				if ($att->isEarlyDeparture()) $rows[$employee->id][6]++;
 			}
+			
+			$count++;
 		}
 		return $rows;
 	}
