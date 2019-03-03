@@ -46,7 +46,7 @@ class AttendanceExport implements FromView
 		$employees = Employee::getActiveEmployee(true, $this->date->year, $this->date->month);
 		foreach($employees as $employee){
 			//['NO', 'NIP', 'NAMA', 'JML HARI KERJA', 'JML HADIR', 'JML TERLAMBAT', 'JML PULANG AWAL'];
-			$rows[$employee->id][0] = $count+1;
+			$rows[$employee->id][0] = $count;
 			$rows[$employee->id][1] = $employee->nip;
 			$rows[$employee->id][2] = $employee->getFullName();
 			
