@@ -26,7 +26,18 @@ class AttendanceExport implements FromView
 	}
 	
 	function getHeaders(){
-		return ['NO', 'NIP', 'NAMA', 'HARI KERJA (jml)', 'HADIR (jml)', 'KEHADIRAN (%)', 'TERLAMBAT', 'PULANG AWAL'];
+		return [
+			0=>'NO', 
+			1=>'NIP', 
+			2=>'NAMA', 
+			3=>'HARI KERJA (jml)', 
+			4=>'HADIR (jml)', 
+			5=>'KEHADIRAN (%)', 
+			6=>'TERLAMBAT (jml)', 
+			7=>'PULANG AWAL (jml)',
+			8=>'TANPA IZIN TERLAMBAT / PULANG AWAL (jml)',
+			9=>'TANPA KETERANGAN TIDAK HADIR (jml)',
+		];
 	}
 	
 	public function getPeriodes(){
@@ -63,34 +74,75 @@ class AttendanceExport implements FromView
 		$start = $periodes[0];
 		$end = $periodes[1];
 		
+		/*
+		return [
+			0=>'NO', 
+			1=>'NIP', 
+			2=>'NAMA', 
+			3=>'HARI KERJA (jml)', 
+			4=>'HADIR (jml)', 
+			5=>'KEHADIRAN (%)', 
+			6=>'TERLAMBAT (jml)', 
+			7=>'PULANG AWAL (jml)',
+			8=>'TANPA IZIN TERLAMBAT / PULANG AWAL (jml)',
+			9=>'TANPA KETERANGAN TIDAK HADIR (jml)',
+		];
+		*/
+		
 		$employees = Employee::getActiveEmployee(true, $this->date->year, $this->date->month);
 		foreach($employees as $employee){
 			$rows[$employee->id][0] = $count;
 			$rows[$employee->id][1] = $employee->nip;
 			$rows[$employee->id][2] = $employee->getFullName();
 			
+			for($i=3;$i<count($this->getHeaders());$i++) $rows[$employee->id][$i]=0;
+			
 			$loop = $start->copy();
-			$holidayCount=0;
 			$offScheduleDaysCount=0;
+			$scheduleDaysCount=0;
 			while($loop->lessThanOrEqualTo($end)){
-				$holidayCount += Holiday::isHoliday($loop)? 1 : 0;
-				$offScheduleDaysCount += EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek)? 0 : 1;
+				if (Holiday::isHoliday($loop)) {
+					$loop->addDay();
+					continue;
+				}
+				
+				$hasSchedule = EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek);
+				if (!$hasSchedule) {
+					$loop->addDay();
+					continue;
+				}
+				
+				$rows[$employee->id][3] += $hasSchedule? 1 : 0;
+				$attendRecord = $employee->attendanceRecord($loop);
+				$rows[$employee->id][4] += $attendRecord? 1 : 0;
+				
+				if ($attendRecord){
+					$lateOrEarly = false;
+					
+					if ($attendRecord->isLateArrival()){
+						$rows[$employee->id][6] += 1;
+						$lateOrEarly=true;
+					} 
+					if ($attendRecord->isEarlyDeparture()) {
+						$rows[$employee->id][7] +=1;
+						$lateOrEarly=true;
+					}
+					
+					if ($lateOrEarly){
+						$rows[$employee->id][8] += $employee->consentRecord($loop)? 0 : 1;
+					}					
+				}
+				else{
+					$rows[$employee->id][9] += $employee->consentRecord($loop)? 0 : 1;
+				}
+				
+				if ($rows[$employee->id][3]>0){
+					$rows[$employee->id][5] = $rows[$employee->id][4]/$rows[$employee->id][3];
+					$rows[$employee->id][5] = floor($rows[$employee->id][5] * 100);				
+				}
+				
 				$loop->addDay();
 			}
-			
-			$rows[$employee->id][3] = $start->diffInDays($end) - $offScheduleDaysCount - $holidayCount + 1;
-						
-			foreach($employee->attendanceRecordsByPeriode($start, $end)->get() as $att){
-				$rows[$employee->id][4] = isset($rows[$employee->id][4])? $rows[$employee->id][4]+1 : 1;
-				if ($att->isLateArrival()){
-					$rows[$employee->id][6] = isset($rows[$employee->id][6])? $rows[$employee->id][6]+1 : 1;
-				} 
-				if ($att->isEarlyDeparture()) {
-					$rows[$employee->id][7] = isset($rows[$employee->id][7])? $rows[$employee->id][7]+1 : 1;
-				}
-			}
-			
-			$rows[$employee->id][5] = $rows[$employee->id][3]>0? $rows[$employee->id][4]/$rows[$employee->id][3] : 0;
 			
 			$count++;
 		}

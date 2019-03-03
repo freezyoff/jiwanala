@@ -15,8 +15,8 @@
     <tbody>
     @foreach($rows as $cells)
         <tr>
-			@foreach($cells as $value)
-            <td>{{ $value }}</td>
+			@foreach(collect(array_keys($cells))->sort() as $index)
+            <td>{{ $cells[$index] }}</td>
 			@endforeach
         </tr>
     @endforeach

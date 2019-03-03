@@ -88,6 +88,9 @@ class Employee extends Model
 	 *	@return (App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
 	 */
 	public function attendanceRecord($date){
+		if($date instanceof Carbon){
+			$date = $date->format('Y-m-d');
+		}
 		return $this->attendances()->where('date','=',$date)->first();
 	}
 	
@@ -105,16 +108,20 @@ class Employee extends Model
 	
 	/**
 	 *	return consent record for current employee between given $date
-	 *	@param $date (String) - formatted date "Y-m-d"
+	 *	@param $date (String|Carbon) - formatted date "Y-m-d"
 	 *	@return (Array of App\Libraries\Bauk\EmployeeConsent|Boolean) the records or false
 	 */
 	public function consentRecord($date, $type=false){
-		if (!$type) return $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`')->first();
+		if ($date instanceof Carbon){
+			$date = $date->format('Y-m-d');
+		}
 		
-		return $this->consents()->where(function($query){
-			$query->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`');
-			$query->where('consent','=',$type);
-		})->first();
+		$consent = $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`');
+		if ($type){
+			$consent->where('consent','=',$type);
+		}
+		
+		return $consent->first();
 	}
 	
 	/**
