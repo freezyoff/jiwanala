@@ -15,7 +15,7 @@ return [
 	'hints'=>[
 		'arrivalTime'=>'Jam Masuk',
 		'departureTime'=>'Jam Pulang',
-		'searchKeywords'=>'Pencarian NIP / Nama',
+		'searchKeywords'=>'Pencarian NIP',
 		'nip'=>'NIP',
 		'name'=>'Nama',
 		'save'=>'Simpan',

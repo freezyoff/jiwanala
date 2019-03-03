@@ -8,14 +8,15 @@
 			</span>
 			<h4 class="padding-top-8 padding-bottom-8">
 				<i class="fas fa-lightbulb fa-fw"></i>
-				<span style="padding-left:12px;">{{trans('my/system/user.hints.active_status')}}</span>
+				<span style="padding-left:12px;">{{trans('my/system/user.hints.create')}}</span>
 			</h4>
 		</header>
 		<div id="link-modal-{{$empl->id}}-container" class="datepicker-inline-container">
 			<div class="w3-bar-block" style="width:100%">
 				<ul class="w3-ul w3-hoverable">
 					@forelse($empl->asPerson()->first()->emails()->get() as $email)
-					<li style="cursor:pointer;">
+					<li style="cursor:pointer;" 
+						onclick="document.location='{{route('my.system.user.create',['nip'=>$empl->nip,'email'=>$email->email])}}'">
 						<a class="w3-text-theme w3-mobile" 
 							select-role="item" 
 							select-value="{{$email->email}}">

@@ -32,7 +32,6 @@ class AttendanceExport implements FromView
     * @return \Illuminate\Support\Collection
     */
     public function view():View {
-		ini_set('max_execution_time', 300);
         return view('my.bauk.attendance.report_export_employee_attendance',[
 			'headers'=> $this->getHeaders(),
 			'rows'=>$this->generateRows(),
@@ -42,7 +41,7 @@ class AttendanceExport implements FromView
 	function generateRows(){
 		$rows = [];
 		$employees = Employee::getActiveEmployee(true);
-		$holidaysCount = Holiday::getHolidaysByMonth($this->date->format('m'), $this->date->format('Y'))->count();
+		$holidaysCount = Holiday::getHolidaysByMonth($this->date->format('Y'), $this->date->format('m'))->count();
 		foreach($employees as $employee){
 			$rows[$employee->id][0] = count($rows)+1;
 			$rows[$employee->id][1] = $employee->nip;

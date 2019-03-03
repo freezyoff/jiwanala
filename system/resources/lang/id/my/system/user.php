@@ -11,6 +11,12 @@
 		'keywords'=>'Kata kunci pencarian?',
 		'active_status'=>'Status Karyawan?',
 		'varian'=>'Akun?',
+		'delete'=>'Hapus Akun',
+		'create'=>'Buat Akun'
+	],
+	
+	'modals'=>[
+		'delete'=>'Hapus Akun'
 	],
 	
 	'list'=>[

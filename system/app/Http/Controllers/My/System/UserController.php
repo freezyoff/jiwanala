@@ -31,13 +31,28 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * create new user for given $NIP
+     * @param $nip - 
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($nip, $email)
     {
-        //
+		$nip = request('nip',$nip);
+		$email = request('email',$email);
+		
+        $employee = Employee::findByNIP($nip);
+		if (!$employee) return redirect()->back();
+		
+		$fill = [];
+		$fill['name'] = $employee->nip;
+		$fill['email'] = $email;
+		$fill['password'] = \Hash::make(rand(0,1000));
+		
+		$user = new \App\Libraries\Service\Auth\User($fill);
+		$user->save();
+		$user->sendNewUserInvitationNotification(\Password::broker()->getRepository()->create($user));
+		
+		return redirect()->back();
     }
 
     /**

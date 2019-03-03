@@ -48,12 +48,4 @@ class EmployeeSchedule extends Model
 	public static function getOffScheduleDaysOfWeek($employeeId){
 		return array_except([0,1,2,3,4,5,6],self::getScheduleDaysOfWeek($employeeId));
 	}
-	
-	public static function getOffScheduleDaysCount($employeeId, int $year, int $month){
-		$count = 0;
-		foreach(self::getOffScheduleDaysOfWeek($employeeId) as $day){
-			$count += numberOfDayInMonth($day, $year, $month);
-		}
-		return $count;
-	}
 }

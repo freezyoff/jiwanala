@@ -48,7 +48,7 @@
 						</div>
 					</div>
 					<span class="padding-top-8" style="font-size:.7em; text-align:center">
-						Progres rekaman kehadiran karyawan fulltime
+						Progres rekaman karyawan fulltime
 					</span>
 				</div>
 			</div>

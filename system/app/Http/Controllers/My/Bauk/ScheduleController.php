@@ -12,7 +12,9 @@ class ScheduleController extends Controller
 {
     public function index(Request $request){
 		$data = [];
-		$nip = $request->input('employee_nip', false);
+		$nip = $request->input('employee_nip');
+		$nip = $nip? $nip : $request->input('keywords');
+		
 		$employee = Employee::findByNIP($nip);
 		if ($employee){
 			$schedules = [];

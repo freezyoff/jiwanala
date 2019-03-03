@@ -3,6 +3,7 @@
 namespace App\Libraries\Bauk;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Employee extends Model
 {
@@ -58,30 +59,27 @@ class Employee extends Model
 	}
 	
 	public function getRegisteredAtAttribute(){
-		$date = \Carbon\Carbon::parse($this->attributes['registered_at']);
+		$date = Carbon::parse($this->attributes['registered_at']);
 		return $date->format('d-m-Y');
 	}
 	
 	public function setRegisteredAtAttribute($value){
 		$value = preg_replace('/\s+/', '', $value);
-		$this->attributes['registered_at'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+		$this->attributes['registered_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
 	}
 	
 	public function delete(){
 		$person = $this->asPerson()->first();
 		
-		//delete phone
-		$this->asPerson()->first()->phones()->delete();
+		if ($person){
+			$person->phones()->delete();	//delete phone
+			$person->emails()->delete();	//emails
+			$person->addresses()->detach();	//detach address first
+			$person->addresses()->delete();	//delete address
+			$person->delete();				//delete person
+		}
 		
-		//delete address
-		$this->asPerson()->first()->addresses()->detach();
-		$this->asPerson()->first()->addresses()->delete();
-		
-		//delete self
-		parent::delete();
-		
-		//delete person
-		$person->delete();
+		parent::delete();	//delete self
 	}
 	
 	/**
@@ -152,9 +150,14 @@ class Employee extends Model
 		return Employee::where('nip','=',$nip)->first();
 	}
 	
-	public static function getActiveEmployee($fulltimeEmployeeOnly=false){
+	public static function getActiveEmployee($fulltimeEmployeeOnly=false, $registeredYear=false, $registeredMonth=false){
 		$qq = self::where('active','=',1);
 		if ($fulltimeEmployeeOnly) $qq->where('work_time','=','f');
+		if ($registeredMonth && $registeredYear){
+			$carbonDate = Carbon::parse($registeredYear.'-'.$registeredMonth.'-01');
+			$carbonDate->day = $carbonDate->daysInMonth;
+			$qq->where('registered_at','<',$carbonDate->format('Y-m-d'));
+		}
 		return $qq->get();
 	}
 	

@@ -49,38 +49,43 @@
 							<td>NIP</td>
 							<td>Nama</td>
 							<td>Email</td>
+							<td>Status</td>
 							<td class="w3-hide-small w3-hide-medium"></td>
 						</tr>
 					</thead>
 					<tbody>
 						@forelse ($employees as $empl)
+						<?php $emailCount= $empl->asPerson->emails()->count(); ?>
 							<tr>
 								<td class="w3-hide-large">
 									@if ($empl->asUser)
-										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
-											<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
+										<a href="#" onclick="" alt="{{trans('my/system/user.hints.delete')}}">
+											<i class="fas fa-user-slash"></i>
 										</a>
+										@include('my.system.user.landing_delete_modal')
 									@else
-										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
-											<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
+										<a href="#" 
+											onclick="$('#link-modal-{{$empl->id}}').show()" 
+											alt="{{trans('my/system/user.hints.delete')}}">
+											<i class="fas fa-user-shield"></i>
 										</a>
+										@include('my.system.user.landing_create_modal')	
 									@endif
-									@include('my.system.user.landing_link_modal',['id'=>$empl->id])	
 								</td>
 								<td>{{$empl->nip }}</td>
 								<td>{{$empl->getFullName()}}</td>
 								<td>{{$empl->asUser? $empl->asUser->email: ""}}</td>
-								<td class="w3-hide-small w3-hide-medium" style="text-align:right">
+								<td>
 									@if ($empl->asUser)
-										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
-											<i class="fas fa-unlink fa-fw"  title="asdasdasdsa"></i>
-										</a>
-									@else
-										<a href="#" onclick="$('#link-modal-{{$empl->id}}').show()">
-											<i class="fas fa-link fa-fw" title="asdasdasdsa"></i>
-										</a>
+										@if($empl->asUser->activated)
+											<span class="w3-tag w3-green">aktif</span>
+										@else
+											<span class="w3-tag">terkunci</span>
+										@endif
 									@endif
-									@include('my.system.user.landing_link_modal',['id'=>$empl->id])
+								</td>
+								<td class="w3-hide-small w3-hide-medium" style="text-align:right">
+								
 								</td>
 							</tr>
 						@empty

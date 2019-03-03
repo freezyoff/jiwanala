@@ -35,6 +35,6 @@ var nextHolidays = function(){
 
 $(document).ready(function(){
 	nextHolidays();
-	setInterval(nextHolidays, 1000*10);
+	//setInterval(nextHolidays, 1000*10);
 });
 </script>
