@@ -18,6 +18,7 @@ class AttendanceController extends Controller
 {
     public function landing($nip=false, $year=false, $month=false){
 		//return [$year, $month, $nip];
+		
 		if ($year && $month){
 			$periode = $year.'-'.$month.'-01';
 			$periode = Carbon::parse($periode);
@@ -32,7 +33,7 @@ class AttendanceController extends Controller
 		
 		$attendance = [];
 		if ($periode){
-			$attendance = $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
+			$attendance = $this->getAttendanceByPeriode($nip, $periode);
 		}
 		
 		//return $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
@@ -48,69 +49,85 @@ class AttendanceController extends Controller
 	protected function getAttendanceByPeriode($nip=false, $date=false){
 		if (!$nip || !$date) return [];
 		
-		$date = Carbon::parse($date);
-		$start = $date->format('Y-m-d');
+		$now = now();
+		$date = $date instanceof Carbon? $date : Carbon::parse($date);
+		$start = $date->copy();
 		
-		$date->day = $date->daysInMonth;
-		$end = $date->format('Y-m-d');
+		if ($start->month == $now->month && $start->year == $now->year){
+			$end = $now->copy();
+		}
+		else{
+			$end = $start->copy();
+			$end->day = $start->daysInMonth;
+		}
 		
 		
 		//create date array of current month
 		$employee = Employee::findByNIP($nip);
-		$employeeScheduleDaysOfWeek = EmployeeSchedule::getScheduleDaysOfWeek($employee->id);
+		$registeredAt = Carbon::parse($employee->registeredAt);
+		$loop = $start->copy();
+		
 		$list = [];
-		$loop = $date->daysInMonth;
-		for($currentDay=1; $currentDay<=$loop; $currentDay++){
-			$date->day = $currentDay;
-			$key = $date->format('Y-m-d');
-			
+		while($loop->lessThanOrEqualTo($end)){
+			$key = $loop->format('Y-m-d');
+						
 			$list[$key] = [
-				'label_dayofweek'=>	trans('calendar.days.long.'.($date->dayOfWeek)),
-				'label_date'=>		$date->format('d'),
-				'holiday'=>			Holiday::getHolidayName($date),
+				'label_dayofweek'=>	trans('calendar.days.long.'.($loop->dayOfWeek)),
+				'label_date'=>		$loop->format('d'),
 			];
-			
-			if ($list[$key]['holiday']) {
+				
+			//not yet counted
+			if ($registeredAt->greaterThan($loop)){
+				$loop->addDay();
 				continue;
 			}
 			
-			$list[$key]['holiday'] = in_array($date->dayOfWeek, $employeeScheduleDaysOfWeek)? 
-										false : 
+			$list[$key]['holiday'] = Holiday::getHolidayName($loop);
+			if ($list[$key]['holiday']) {
+				$loop->addDay();
+				continue;
+			}
+			
+			$hasSchedule = EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek);
+			$list[$key]['holiday'] = $hasSchedule? false : 
 										str_replace(
 											':day',
-											trans('calendar.days.long.'.$date->dayOfWeek),
+											trans('calendar.days.long.'.$loop->dayOfWeek),
 											trans('my/bauk/attendance/hints.warnings.offschedule')
 										);
 			if ($list[$key]['holiday']) {
+				$loop->addDay();
 				continue;
 			}
 			
-			$list[$key]['locked']= 		!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date);
+			$list[$key]['locked']= 		!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($loop);
 			$list[$key]['attendance']=	$employee->attendanceRecord($key);
 			$list[$key]['consent']=		$employee->consentRecord($key);
 			
-			$warning = $this->attendanceWarning($date, $list[$key]['attendance'], $list[$key]['consent']);
+			$warning = $this->attendanceWarning($loop, $list[$key]['attendance'], $list[$key]['consent']);
 			$list[$key]['hasWarning'] = is_array($warning)? true : false;
 			$list[$key]['warning'] = $warning;
 			
 			if (!$list[$key]['locked']){	
 				$list[$key]['link_finger']=route('my.bauk.attendance.fingers',[
 					'nip'=>$nip, 
-					'year'=>$date->format('Y'), 
-					'month'=>$date->format('m'),
-					'day'=>$date->format('d'),
+					'year'=>$loop->format('Y'), 
+					'month'=>$loop->format('m'),
+					'day'=>$loop->format('d'),
 				]);
 				
-				if (($list[$key]['consent'] && $list[$key]['consent']->start == $date->format('Y-m-d')) ||
+				if (($list[$key]['consent'] && $list[$key]['consent']->start == $loop->format('Y-m-d')) ||
 					!$list[$key]['consent']){
 					$list[$key]['link_consent']=route('my.bauk.attendance.consents',[
 						'nip'=>$nip, 
-						'year'=>$date->format('Y'), 
-						'month'=>$date->format('m'),
-						'day'=>$date->format('d'),
+						'year'=>$loop->format('Y'), 
+						'month'=>$loop->format('m'),
+						'day'=>$loop->format('d'),
 					]);
 				}
 			}
+			
+			$loop->addDay();
 		}
 		
 		return $list;

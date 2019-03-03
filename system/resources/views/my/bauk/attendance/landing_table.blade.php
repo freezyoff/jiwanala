@@ -10,7 +10,13 @@
 	<tbody>
 		@if($nip)
 			@foreach($attendances as $attKey=>$attendance)
-				<tr class="{{$attendance['holiday']? 'w3-red' : ($attendance['consent']? 'w3-yellow' : '')}}">
+				<tr class="
+					@if (isset($attendance['holiday']) && $attendance['holiday'])
+						w3-red
+					@elseif (isset($attendance['consent']) && $attendance['consent'])
+						w3-yellow
+					@endif
+					">
 					<td>
 						<span style="width:60px;display:inline-block">{{$attendance['label_dayofweek']}}</span> 
 						<span style="padding-left:4px">{{$attendance['label_date']}}</span>
@@ -18,10 +24,10 @@
 					
 					{{-- ada data kehadiran --}}
 					<td>
-						@if ($attendance['holiday'])
+						@if (isset($attendance['holiday']) && $attendance['holiday'])
 							{{$attendance['holiday']}}	
 						@endif
-						@if (isset($attendance['attendance']))
+						@if (isset($attendance['attendance']) && $attendance['attendance'])
 							<div class="w3-row">
 								<div class="w3-col s12 m6 l3">
 									<i class="fas fa-sign-in-alt fa-fw"></i>
@@ -63,7 +69,7 @@
 					
 					<td style="text-align:right">
 						{{-- data kehadiran tidak dikunci --}}
-						@if (!$attendance['holiday'] && !$attendance['locked'])
+						@if (isset($attendance['holiday']) && !$attendance['holiday'] && isset($attendance['locked']) && !$attendance['locked'])
 							@if (isset($attendance['link_finger']))
 							<a class="w3-hover-text-blue" href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
 							@endif
