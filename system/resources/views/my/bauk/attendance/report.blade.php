@@ -15,7 +15,7 @@
 				</div>
 				<div class="w3-row padding-top-8 padding-bottom-16" style="text-align:right">
 					<button class="w3-button w3-mobile w3-blue w3-hover-blue" 
-						onclick="$('#report-form').trigger('submit'); $(this).find('i').attr('class','button-icon-loader')">
+						onclick="$('#report-form').trigger('submit');">
 							<i class="fas fa-cloud-download-alt"></i>
 							<span class="padding-left-8">Unduh</span>
 					</button>

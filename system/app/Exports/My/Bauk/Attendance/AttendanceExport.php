@@ -36,7 +36,11 @@ class AttendanceExport implements FromView
 			6=>'TERLAMBAT (jml)', 
 			7=>'PULANG AWAL (jml)',
 			8=>'TANPA IZIN TERLAMBAT / PULANG AWAL (jml)',
-			9=>'TANPA KETERANGAN TIDAK HADIR (jml)',
+			9=>'TIDAK HADIR (jml)',
+			10=>'Izin Sakit (jml)',
+			11=>'Izin Tugas Dinas (jml)',
+			12=>'Cuti (jml)',
+			13=>'TANPA KETERANGAN TIDAK HADIR (jml)',
 		];
 	}
 	
@@ -74,21 +78,6 @@ class AttendanceExport implements FromView
 		$start = $periodes[0];
 		$end = $periodes[1];
 		
-		/*
-		return [
-			0=>'NO', 
-			1=>'NIP', 
-			2=>'NAMA', 
-			3=>'HARI KERJA (jml)', 
-			4=>'HADIR (jml)', 
-			5=>'KEHADIRAN (%)', 
-			6=>'TERLAMBAT (jml)', 
-			7=>'PULANG AWAL (jml)',
-			8=>'TANPA IZIN TERLAMBAT / PULANG AWAL (jml)',
-			9=>'TANPA KETERANGAN TIDAK HADIR (jml)',
-		];
-		*/
-		
 		$employees = Employee::getActiveEmployee(true, $this->date->year, $this->date->month);
 		foreach($employees as $employee){
 			$rows[$employee->id][0] = $count;
@@ -97,7 +86,9 @@ class AttendanceExport implements FromView
 			
 			for($i=3;$i<count($this->getHeaders());$i++) $rows[$employee->id][$i]=0;
 			
-			$loop = $start->copy();
+			$registeredAt = Carbon::parse($employee->registeredAt);
+			$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
+			
 			$offScheduleDaysCount=0;
 			$scheduleDaysCount=0;
 			while($loop->lessThanOrEqualTo($end)){
@@ -133,7 +124,12 @@ class AttendanceExport implements FromView
 					}					
 				}
 				else{
-					$rows[$employee->id][9] += $employee->consentRecord($loop)? 0 : 1;
+					$rows[$employee->id][9] += 1;
+					$consent = $employee->consentRecord($loop);
+					if (!$consent)						$rows[$employee->id][13] += 1;
+					elseif ($consent->consent == 'cs') 	$rows[$employee->id][10] += 1;
+					elseif ($consent->consent == 'td') 	$rows[$employee->id][11] += 1;
+					else								$rows[$employee->id][12] += 1;
 				}
 				
 				if ($rows[$employee->id][3]>0){

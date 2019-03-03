@@ -1,10 +1,10 @@
 <table>
     <thead>
 		<tr>
-			<td colspan="8">Laporan Kehadiran</td>
+			<td colspan="{{$count($headers)}}">Laporan Kehadiran</td>
 		</tr>
 		<tr>
-			<td colspan="8">Per Tanggal: {{$start->format('d-m-Y')}} s/d {{$end->format('d-m-Y')}}</td>
+			<td colspan="{{$count($headers)}}">Per Tanggal: {{$start->format('d-m-Y')}} s/d {{$end->format('d-m-Y')}}</td>
 		</tr>
 		<tr style="background-color:#222222; color:#FEFEFE">
 		@foreach($headers as $head)

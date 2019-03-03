@@ -18,7 +18,6 @@ class ReportController extends Controller
 		
 		$cls = new \App\Exports\My\Bauk\Attendance\AttendanceExport();
 		$cls->setPeriode($year, $month);
-		//return $cls->view();
 		
 		return $cls->download('Laporan Kehadiran '.$month.''.$year.'.xls');
 	}
