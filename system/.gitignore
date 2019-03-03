@@ -12,6 +12,7 @@ yarn-error.log
 .env
 .env.org
 .env.local
+.env.testing
 .phpunit.result.cache
 .routelist
 .findstr
