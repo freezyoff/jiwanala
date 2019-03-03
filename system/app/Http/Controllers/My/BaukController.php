@@ -108,65 +108,66 @@ class BaukController extends Controller
 		$month = \Request::input('month', $now->format('m'));
 		$year = \Request::input('year', $now->format('Y'));
 		
-		//determine the date property
-		$startDate = Carbon::parse($year.'-'.$month.'-01');
-		$endDate = false;
-		
-		//selected date == now
-		if ($startDate->month == $now->month && $startDate->year == $now->year){
-			$endDate = $now;
+		$start = Carbon::parse($year.'-'.$month.'-01');
+		if ($start->month == $now->month && $start->year == $now->year){
+			$end = $now->copy();
 		}
 		else{
-			$endDate = $startDate->copy();
-			$endDate->day = $startDate->daysInMonth;
+			$end = $start->copy();
+			$end->day = $start->daysInMonth;
 		}
 		
-		//get the employee registered at $startDate & $endDate periode
-		$employeeList = Employee::getActiveEmployee(true, $startDate->year, $startDate->month);
-		
-		$messages = [];
-		$allPercents = 0;
-		$allPercentsDevider = 0;
-		foreach($employeeList as $employee){
-			//count attendance record
-			$daysWorkArray = EmployeeSchedule::getScheduleDaysOfWeekIso($employee->id);		//hari kerja 
-			$attendsCount = $employee->attendances()->where(function($q) use($startDate, $endDate, $daysWorkArray){
-					$q->whereRaw('`date` BETWEEN "'.$startDate->format('Y-m-d').'" AND "'.$endDate->format('Y-m-d').'"');				
-					if (count($daysWorkArray)>0){
-						$q->whereRaw('DAYOFWEEK(`date`) IN ('. implode(',', $daysWorkArray) .')');
-					}
-				})->count();
+		$count = 0;
+		$employees = Employee::getActiveEmployee(true, $end->year, $end->month);
+		$allPercent = 0;
+		foreach($employees as $employee){
+			$registeredAt = Carbon::parse($employee->registeredAt);
+			$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
 			
-			$offScheduleDaysCount = 0;	//jadwal libur 
-			$holidayCount = 0;		//libur kalender
-			$loop = $startDate->copy();
-			while($loop->lessThanOrEqualTo($endDate)){
-				$holidayCount += Holiday::isHoliday($loop)? 1 : 0;
-				$offScheduleDaysCount += EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek)? 0 : 1;
+			$holiday=0;
+			$offScheduleDaysCount=0;
+			$scheduleDaysCount=0;
+			$attends = 0;
+			while($loop->lessThanOrEqualTo($end)){
+				if (Holiday::isHoliday($loop)) {
+					$holiday++;
+					$loop->addDay();
+					continue;
+				}
+				
+				$hasSchedule = EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek);
+				if (!$hasSchedule) {
+					$offScheduleDaysCount++;
+					$loop->addDay();
+					continue;
+				}
+				
+				$scheduleDaysCount ++;
+				if($employee->attendanceRecord($loop)){
+					$attends++;
+				}
+				
 				$loop->addDay();
 			}
-		
-			$workDaysCount = $startDate->diffInDays($endDate) - $offScheduleDaysCount - $holidayCount + 1;
-		
-			if ($workDaysCount>0){
-				$allPercents += floor(($attendsCount/$workDaysCount)*100);
-				$allPercentsDevider++;				
-			}
+			
+			$subPercent = $scheduleDaysCount>0? floor($attends/($scheduleDaysCount)*100) : 0;
+			$allPercent += $subPercent;
+			$count++;
 		}
 		
 		return [
-			'percent'=>$allPercentsDevider? floor($allPercents/$allPercentsDevider) : $allPercentsDevider,
+			'percent'=>$count>0? $allPercent/$count : 0,
 			'start'=>[
-				'year'=>$startDate->year,
-				'month'=>$startDate->month,
-				'day'=>$startDate->day
+				'year'=>$start->year,
+				'month'=>$start->month,
+				'day'=>$start->day,
 			],
 			'end'=>[
-				'year'=>$endDate->year,
-				'month'=>$endDate->month,
-				'day'=>$endDate->day
+				'year'=>$end->year,
+				'month'=>$end->month,
+				'day'=>$end->day,
 			],
-			'title'=>'Finger Karyawan Fulltime<br>per '. $startDate->format('d-m-Y') .' s/d '. $endDate->format('d-m-Y'),
+			'title'=>'Finger Karyawan Fulltime<br>per '. $start->format('d-m-Y') .' s/d '. $end->format('d-m-Y'),
 		];
 	}
 	
