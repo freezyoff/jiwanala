@@ -247,5 +247,5 @@ class AndroidController extends Controller
 		$data['code']=200;
 		$data['msg']=[];
 		return response()->json(['success'=>$data], 200);
-	}y
+	}
 }
