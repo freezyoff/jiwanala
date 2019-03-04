@@ -31,7 +31,7 @@ class AndroidController extends Controller
 			'year'=>$year,
 			'records'=>$this->getAttendanceRecordsByPeriode(
 				$employee,
-				\Carbon\Carbon::createFromFormat('Y-m-d',$year.'-'.$month.'-01')
+				Carbon::parse($year.'-'.$month.'-01')
 			),
 		];
 		return response()->json(['success'=>$success], 200); 
@@ -85,43 +85,56 @@ class AndroidController extends Controller
 	protected function getAttendanceRecordsByPeriode($employee, $date){
 		$nip = $employee->nip;
 		
-		//start periode
-		$start = $date->format('Y-m-d');
+		$now = now();
+		$date = $date instanceof Carbon? $date : Carbon::parse($date);
+		$start = $date->copy();
 		
-		//end periode
-		$date->day = $date->daysInMonth;
-		$end = $date->format('Y-m-d');
+		if ($start->month == $now->month && $start->year == $now->year){
+			$end = $now->copy();
+		}
+		else{
+			$end = $start->copy();
+			$end->day = $start->daysInMonth;
+		}
 		
 		//create date array of current month
-		$employeeScheduleDaysOfWeek = EmployeeSchedule::getScheduleDaysOfWeek($employee->id);
+		$registeredAt = Carbon::parse($employee->registeredAt);
+		$loop = $start->copy();
+		
 		$list = [];
-		$loop = $date->daysInMonth;
-		for($currentDay=1; $currentDay<=$loop; $currentDay++){
-			$date->day = $currentDay;
-			$key = $date->format('Y-m-d');
+		while($loop->lessThanOrEqualTo($end)){
+			$key = $loop->format('Y-m-d');
 			
 			$list[$key] = [
-				'dayOfWeek'=>	trans('calendar.days.long.'.($date->dayOfWeek)),
-				'day'=>			$date->format('d'),
-				'month'=>		$date->format('m'),
-				'year'=>		$date->format('Y'),
-				'holiday'=>		Holiday::getHolidayName($date),
+				'dayOfWeek'=>	trans('calendar.days.long.'.($loop->dayOfWeek)),
+				'day'=>			$loop->format('d'),
+				'month'=>		$loop->format('m'),
+				'year'=>		$loop->format('Y'),
 			];
 			
-			if ($list[$key]['holiday']) {
-				$list[$key]['isHoliday'] = true;
+			//not yet counted
+			if ($registeredAt->greaterThan($loop)){
+				$loop->addDay();
 				continue;
 			}
 			
-			$list[$key]['holiday'] = in_array($date->dayOfWeek, $employeeScheduleDaysOfWeek)? 
-										false : 
+			$list[$key]['holiday'] = Holiday::getHolidayName($loop);
+			if ($list[$key]['holiday']) {
+				$list[$key]['isHoliday'] = true;
+				$loop->addDay();
+				continue;
+			}
+			
+			$hasSchedule = EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek);
+			$list[$key]['holiday'] = $hasSchedule? false : 
 										str_replace(
 											':day',
-											trans('calendar.days.long.'.$date->dayOfWeek),
+											trans('calendar.days.long.'.$loop->dayOfWeek),
 											trans('my/bauk/attendance/hints.warnings.offschedule')
 										);
 			if ($list[$key]['holiday']) {
 				$list[$key]['isHoliday'] = true;
+				$loop->addDay();
 				continue;
 			}
 			$list[$key]['isHoliday'] = false;
@@ -137,6 +150,8 @@ class AndroidController extends Controller
 			$warning = $this->attendanceWarning($date, $attendanceRecord, $list[$key]['consent']);
 			$list[$key]['hasWarning'] = is_array($warning)? true : false;
 			$list[$key]['warning'] = $warning;
+			
+			$loop->addDay();
 		}
 		
 		return $list;
@@ -232,5 +247,5 @@ class AndroidController extends Controller
 		$data['code']=200;
 		$data['msg']=[];
 		return response()->json(['success'=>$data], 200);
-	}
+	}y
 }

@@ -38,7 +38,7 @@ class PatchRequest extends FormRequest
         ];
 		
 		//for ($counter=0; $counter<count($this->input('address')); $counter++){
-		foreach($this->input('address') as $counter=>$value){
+		foreach($this->input('address',[]) as $counter=>$value){
 			$rules['address.'.$counter] = 'required|regex:/^[0-9A-Za-z.\-_\:\s]+$/';
 			$rules['neighbourhood.'.$counter] = 'required|numeric|digits_between:1,3';
 			$rules['hamlet.'.$counter] = 'required|numeric|digits_between:1,3';
@@ -50,14 +50,14 @@ class PatchRequest extends FormRequest
 		}
 		
 		//for ($counter=0; $counter<count($this->input('phone')); $counter++){
-		foreach($this->input('phone') as $counter=>$value){
+		foreach($this->input('phone',[]) as $counter=>$value){
 			$rules['phone.'.$counter] = 'required|numeric|digits_between:6,20|starts_with:1,2,3,4,5,6,7,8,9|unique:core.phones,phone,'.$personID.',person_id';
 			if ($this->input('extension.'.$counter)){
 				$rules['extension.'.$counter] = 'numeric';				
 			}
 		}
 		
-		foreach($this->input('email') as $counter=>$value){
+		foreach($this->input('email',[]) as $counter=>$value){
 			$rules['email.'.$counter] = 'required|email|unique:core.emails,email,'.$personID.',person_id';
 		}
 		

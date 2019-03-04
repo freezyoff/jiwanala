@@ -103,10 +103,13 @@
 							if (!$loop){
 								$loop = $data->asPerson()->first()->emails()->get();
 							}
+							$counter=0;
 						?>
-							@for ($i = 0; $i < count($loop); $i++)
-								@include('my.bauk.employee.edit_email',['index'=>$i, 'email'=>$loop[$i]])
-							@endfor
+							@forelse ($loop as $loopItem)
+								@include('my.bauk.employee.edit_email',['index'=>$counter++, 'email'=>$loopItem])
+							@empty
+								@include('my.bauk.employee.add_email',['index'=>$counter])
+							@endforelse
 						</div>
 						<div class="w3-row padding-bottom-16 padding-left-8">
 							<a href="#" class="w3-hover-text-blue" style="text-decoration:none; cursor:pointer" 

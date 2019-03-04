@@ -171,18 +171,18 @@ class EmployeeController extends Controller
 		
 		//update address
 		//cari yang ada di record tapi tidak ada di input. delete
-		$AddressToDelete = $person->addresses()->whereNotIn('address_id',$req->input('address_id'))->delete();
+		$AddressToDelete = $person->addresses()->whereNotIn('address_id',$req->input('address_id',[-1]))->delete();
 		//tambahkan address jika ada
 		$this->patch_updateAddress($req, $person);
 		
 		//update phone
 		//cari yang ada di record tapi tidak ada di input. delete
-		$phoneToDelete = $person->phones()->whereNotIn('id',$req->input('phone_id'))->delete();
+		$phoneToDelete = $person->phones()->whereNotIn('id',$req->input('phone_id',[-1]))->delete();
 		//tambahkan jika ada 
 		$this->patch_updatePhone($req, $person);
 		
 		//update email
-		$phoneToDelete = $person->emails()->whereNotIn('id',$req->input('email_id'))->delete();
+		$emailToDelete = $person->emails()->whereNotIn('id',$req->input('email_id',[-1]))->delete();
 		$this->patch_updateEmail($req, $person);
 		
 		//update person
@@ -291,12 +291,12 @@ class EmployeeController extends Controller
 					'creator'=> \Auth::user()->id,
 					'person_id'=> $person->id,
 					'email'=>	$req->input('email.'.$i),
-					'default'=>	$defaultEmail? false : 1,
+					'default'=>	$defaultEmail? false : true,
 				]);
 			}
 			$record->save();
 			
-			if (!$defaultEmail) $person->emailDefault();
+			if (!$defaultEmail) $defaultEmail = $person->emailDefault();
 		}
 	}
 	
