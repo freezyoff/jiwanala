@@ -122,7 +122,7 @@ class ResetPasswordController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     protected function sendResetResponse($response){
-        return redirect()->route($this->redirectTo);
+		return route(self::$redirectTo);
     }
 
     /**

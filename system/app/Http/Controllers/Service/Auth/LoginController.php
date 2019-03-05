@@ -75,6 +75,6 @@ class LoginController extends Controller
      */
     protected function loggedOut(\Illuminate\Http\Request $request)
     {
-        return redirect(LoginController::redirectTo());
+        return route(LoginController::redirectTo());
     }
 }

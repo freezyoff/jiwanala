@@ -50,6 +50,11 @@ class UserController extends Controller
 		
 		$user = new \App\Libraries\Service\Auth\User($fill);
 		$user->save();
+		
+		//attach to employee
+		$employee->user_id = $user->id;
+		$employee->save();
+		
 		$user->sendNewUserInvitationNotification(\Password::broker()->getRepository()->create($user));
 		
 		return redirect()->back();
