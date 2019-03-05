@@ -19,6 +19,10 @@ class Person extends Model{
 		'marital',
 	];
 	
+	public function getFullName($spacer=' '){
+		return $this->name_front_titles. $spacer .$this->name_full. $spacer .$this->name_back_titles;
+	}
+	
 	public function getBirthDateAttribute(){
 		$date = \Carbon\Carbon::parse($this->attributes['birth_date']);
 		return $date->format('d-m-Y');

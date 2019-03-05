@@ -43,7 +43,7 @@
 		
 		#jn-topbar.w3-card{box-shadow:0 2px 5px 0 rgba(0,0,0,.3),0 2px 10px 0 rgba(0,0,0,0.26)}
 		.w3-bar-item {float:none !important; display:inline-block !important;}
-		.top-nav{display:flex;flex-grow:2;flex-direction:row-reverse;align-items:stretch;}
+		.top-nav{display:flex;flex-grow:2;flex-direction:row;align-items:stretch;justify-content:right;}
 		#jn-topbar .top-nav>button:hover{
 			background-color:rgba(255, 255, 255, 0.2) !important;
 			color:rgb(241,241,241) !important;
@@ -127,9 +127,11 @@
 	<!-- begin: Main / Page  -->
 	<div class="w3-main" id="jn-main">
 		<!-- begin: Main / Page Header -->
+		@section('dashboard.header')
 		<header class="w3-container" style="padding-top:8px; padding-bottom:8px;">
 			<h3 style="font-weight:bold;">{!!isset($title)? $title : 'Page Title'!!}</h3>
 		</header>
+		@show
 		<!-- end: Main / Page Header -->
 		<!-- begin: Main / Page content -->
 		<content class="w3-padding" style="display:block">

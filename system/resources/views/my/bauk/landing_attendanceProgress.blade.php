@@ -47,7 +47,9 @@
 							<div class="fill"></div>
 						</div>
 					</div>
-					<span class="padding-top-8" style="font-size:.7em; text-align:center">
+					<span id="progressbar-title"
+						class="padding-top-8" 
+						style="font-size:.7em; text-align:center">
 						Progres rekaman karyawan fulltime
 					</span>
 				</div>
@@ -199,6 +201,7 @@ var attendanceProgress = {
 			},
 			success: function(response){
 				attendanceProgress.setProgressbar(response.percent);
+				$('#progressbar-title').html(response.title);
 			}
 		});
 	},

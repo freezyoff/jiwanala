@@ -106,7 +106,15 @@
 }( jQuery ));
 
 (function( $ ) {
-    $.fn.select = function() {
+    $.fn.select = function(options) {
+		defOpt={
+			style:{
+				cursor: 'pointer',
+				overflow: 'hidden'
+			},
+			hideCevron:false
+		};
+		options = $.extend(defOpt, options );
 		$(this).each(function(){
 			
 			var origin = $(this);
@@ -130,10 +138,7 @@
 			toggleContainer = $(toggleContainer.join(','));
 			
 			var label = $('<label class="w3-input" for="'+ origin.attr('id') +'"></label>')
-				.css({
-					cursor: 'pointer',
-					overflow: 'hidden'
-				})
+				.css(options.style)
 				.insertBefore(this)
 				.html( origin.val()==''? 
 					$('<span></span>').css('color','rgb(120,120,120)').html(origin.attr('placeholder')).prop('outerHTML') : 
@@ -145,8 +150,11 @@
 						'<i class="fas fa-chevron-down fa-fw w3-hide-small w3-hide-medium"></i>'+
 						'<i class="fas fa-square fa-fw w3-hide-large"></i>'+
 					'</label>'
-				).css('cursor','pointer')
-				.insertBefore(origin);
+				).css('cursor','pointer');
+				
+			if(!options.hideCevron) {
+				chevron.insertBefore(origin);
+			}
 			
 			//event 
 			var chevronToggle = function(){

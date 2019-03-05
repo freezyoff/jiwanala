@@ -46,7 +46,7 @@ class AttendanceController extends Controller
 		]);
 	}
 	
-	protected function getAttendanceByPeriode($nip=false, $date=false){
+	public function getAttendanceByPeriode($nip=false, $date=false){
 		if (!$nip || !$date) return [];
 		
 		$now = now();

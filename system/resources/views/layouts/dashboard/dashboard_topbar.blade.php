@@ -34,9 +34,13 @@
 			</header>
 			<ul class="w3-ul">
 				@foreach(config('my.dashboardTopNav') as $key=>$item)
-					@if( Auth::user()->hasPermissionContext($key) )
+					@if( !isset($item['permission_context']) || Auth::user()->hasPermissionContext($key) )
 						<li class="w3-hover-light-grey" style="cursor:pointer;">
-							<a class="w3-text-theme w3-mobile"
+							<a class="w3-text-theme w3-mobile
+								@if(isset($item['display']['class']))
+									{{$item['display']['class']}}
+								@endif
+								"
 								style="text-decoration:none;"
 								href="{{$item['href']? route($item['href']) : ''}}">
 								<i class="{{$item['display']['icon']}}"></i>
@@ -74,20 +78,24 @@
 		</div>
 	</a>
 	<div class="top-nav">
-		<button class="w3-bar-item w3-button w3-hover-none" 
-			onclick="document.location='{{route('service.auth.logout')}}'">
-			<i class="fas fa-power-off"></i>
-			<span>Log out</span>
-		</button>
 		@foreach(config('my.dashboardTopNav') as $key=>$item)
-			@if( Auth::user()->hasPermissionContext($item['permission_context']) )
-				<button class="w3-bar-item w3-button w3-hover-none"
+			@if( !isset($item['permission_context']) || Auth::user()->hasPermissionContext($item['permission_context']) )
+				<button class="w3-bar-item w3-button w3-hover-none 
+					@if(isset($item['display']['class']))
+						{{$item['display']['class']}}
+					@endif
+					"
 					onclick="{{$item['href']? 'document.location=\''.route($item['href']).'\'' : ''}}">
 					<i class="{{$item['display']['icon']}}"></i>
 					<span>{{ucfirst($item['display']['name'])}}</span>
 				</button>
 			@endif
 		@endforeach
+		<button class="w3-bar-item w3-button w3-hover-none" 
+			onclick="document.location='{{route('service.auth.logout')}}'">
+			<i class="fas fa-power-off"></i>
+			<span>Log out</span>
+		</button>
 	</div>
 </div>
 <!-- end: Top Bar Medium && Large Screen style -->

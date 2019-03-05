@@ -33,11 +33,19 @@
 	 */
 	
 	'my'=>[
-		'display'=>[ 'name'=>'Profile', 'icon'=>'fas fa-id-badge'],
-		'href'=>'',
-		'permission_context'=>'profile',
+		'display'=>[ 'name'=>'', 'icon'=>'fas fa-home','class'=>'w3-text-light-green'],
+		'href'=>'my.dashboard.landing',
+	],
+	
+	'system'=>[
+		'display'=>[ 'name'=>'System', 'icon'=>'fas fa-server'],
+		'href'=>'my.system.landing',
+		'permission_context'=>'system',
 		'sideNav'=>[
-			['display'=>[ 'name'=>'Permission', 'icon'=>false ], 'href'=>'','permission'=>'']
+			[
+				'display'=>[ 'name'=>'Akun', 'icon'=>'fas fa-users'], 
+				'href'=>'my.system.user.index',
+				'permission'=>'system.user.list']
 		]
 	],
 	
@@ -143,17 +151,5 @@
 		'display'=>[ 'name'=>'BAKU', 'icon'=>'fas fa-donate'],
 		'href'=>'',
 		'permission_context'=>'baku',
-	],
-	
-	'system'=>[
-		'display'=>[ 'name'=>'System', 'icon'=>'fas fa-server'],
-		'href'=>'my.system.landing',
-		'permission_context'=>'system',
-		'sideNav'=>[
-			[
-				'display'=>[ 'name'=>'Akun', 'icon'=>'fas fa-users'], 
-				'href'=>'my.system.user.index',
-				'permission'=>'system.user.list']
-		]
 	],
 ];

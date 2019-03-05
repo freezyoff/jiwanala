@@ -1,11 +1,13 @@
-<table class="w3-table-all">
+<div class="w3-col s12 m12 l8 padding-left-8 padding-none-small padding-none-medium">
+	<table class="w3-table-all">
 	<thead>
+		<tr style="border:none;">
+			<td class="w3-indigo" colspan="2"><h4>Detil Kehadiran</h4></td>
+		</tr>
 		<tr class="w3-theme-l1">
 			<?php $head = trans('my/bauk/attendance/hints.table.head'); ?>
-			<th width="60px" class="w3-hide-medium w3-hide-large"></th>
 			<th width="150px">{{$head[0]}}</th>
 			<th>{{$head[1]}}</th>
-			<th width="60px" class="w3-hide-small"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,18 +20,6 @@
 						w3-yellow
 					@endif
 					">
-					<td style="white-space:nowrap" class="w3-hide-medium w3-hide-large">
-						{{-- data kehadiran tidak dikunci --}}
-						@if (isset($attendance['holiday']) && !$attendance['holiday'] && isset($attendance['locked']) && !$attendance['locked'])
-							@if (isset($attendance['link_finger']))
-							<a class="w3-hover-text-blue" href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
-							@endif
-							@if(isset($attendance['link_consent']))
-							<a class="w3-hover-text-green padding-left-8" href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti"><i class="far fa-calendar-check"></i></a>
-							@endif
-						@endif
-					</td>
-					
 					<td>
 						<span style="width:60px;display:inline-block">{{$attendance['label_dayofweek']}}</span> 
 						<span style="padding-left:4px">{{$attendance['label_date']}}</span>
@@ -79,18 +69,6 @@
 							</div>
 						@endif
 					</td>
-					
-					<td style="white-space:nowrap; text-align:right" class="w3-hide-small">
-						{{-- data kehadiran tidak dikunci --}}
-						@if (isset($attendance['holiday']) && !$attendance['holiday'] && isset($attendance['locked']) && !$attendance['locked'])
-							@if (isset($attendance['link_finger']))
-							<a class="w3-hover-text-blue" href="{{$attendance['link_finger']}}" title="kehadiran/finger"><i class="fas fa-fingerprint"></i></a>
-							@endif
-							@if(isset($attendance['link_consent']))
-							<a class="w3-hover-text-green padding-left-8" href="{{$attendance['link_consent']}}" class="padding-left-8" title="izin/cuti"><i class="far fa-calendar-check"></i></a>
-							@endif
-						@endif
-					</td>
 				</tr>
 			@endforeach
 		@else
@@ -100,3 +78,4 @@
 		@endif
 	</tbody>
 </table>
+</div>

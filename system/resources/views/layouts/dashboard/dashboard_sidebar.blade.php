@@ -30,7 +30,7 @@
 		<div class="icon"><i class="fas fa-clock fa-fw"></i></div>
 		<span id="serverTime" class="padding-left-16"></sspan>
 	</div>
-	<a class="w3-bar-item dashboard {{ (url()->current() == route('my.dashboard'))? 'active' : '' }}" 
+	<a class="w3-bar-item dashboard {{ (url()->current() == route('my.dashboard.landing'))? 'active' : '' }}" 
 		href="{{ route('my.'.$sidebar.'.landing') }}">
 		<div class="icon"><i class="fas fa-tachometer-alt fa-fw"></i></div>
 		<span class="">{{strtoupper($sidebar)}} Dashboard</span>

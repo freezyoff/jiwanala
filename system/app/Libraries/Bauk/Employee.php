@@ -21,8 +21,7 @@ class Employee extends Model
 	
 	public function getFullName($spacer=' '){
 		//return $this->id .'-'. $this->person_id;
-		$person = $this->asPerson()->first();
-		return $person->name_front_titles .$spacer .$person->name_full .$spacer .$spacer.$person->name_back_titles;
+		return $this->asPerson()->first()->getFullName($spacer);
 	}
 	
 	public function asUser(){
