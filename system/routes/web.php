@@ -22,13 +22,13 @@
 ini_set('max_execution_time', 300);
 $domain = 'jiwa-nala';
 $domain .= App::environment('production')? '.org' : '.local';
-$locale = App::getLocale();
+$locale = Session::get('locale', App::getLocale());
 
 Route::domain('service.'.$domain)
 	->name('service.')
 	->group(function() use($locale){
 		
-		Route::get('', function(){
+		Route::get('', function() use($locale){
 			return redirect($locale);
 		});
 	

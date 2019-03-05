@@ -18,7 +18,10 @@ class NewUserInvitationNotification extends Notification
      *
      * @return void
      */
-    public function __construct($token){ $this->token = 'service.jiwa-nala.org/auth/resetpwd/'.$token; }
+    public function __construct($token){ 
+		$this->token = route('service.auth.reset',[$token]);
+		$this->token = str_replace(["https://",'http://'],"",$this->token);
+	}
 
     /**
      * Get the notification's delivery channels.
