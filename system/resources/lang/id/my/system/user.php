@@ -12,7 +12,8 @@
 		'active_status'=>'Status Karyawan?',
 		'varian'=>'Akun?',
 		'delete'=>'Hapus Akun',
-		'create'=>'Buat Akun'
+		'create'=>'Buat Akun',
+		'cancel'=>'Batal',
 	],
 	
 	'modals'=>[

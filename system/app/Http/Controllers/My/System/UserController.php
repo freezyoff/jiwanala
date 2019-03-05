@@ -43,19 +43,26 @@ class UserController extends Controller
         $employee = Employee::findByNIP($nip);
 		if (!$employee) return redirect()->back();
 		
-		$fill = [];
-		$fill['name'] = $employee->nip;
-		$fill['email'] = $email;
-		$fill['password'] = \Hash::make(rand(0,1000));
-		
-		$user = new \App\Libraries\Service\Auth\User($fill);
-		$user->save();
+		$registeredUser = User::where('name','=',$employee->nip)->first();
+		if ($registeredUser){
+			//update email
+			$registeredUser->email = $email;			
+		}
+		else{
+			//create new record
+			$registeredUser = new \App\Libraries\Service\Auth\User([
+				'name'=>$employee->nip,
+				'email'=>$email,
+				'password'=>\Hash::make(rand(0,1000)),
+			]);
+		}
+		$registeredUser->save();
 		
 		//attach to employee
-		$employee->user_id = $user->id;
+		$employee->user_id = $registeredUser->id;
 		$employee->save();
 		
-		$user->sendNewUserInvitationNotification(\Password::broker()->getRepository()->create($user));
+		$registeredUser->sendNewUserInvitationNotification(\Password::broker()->getRepository()->create($registeredUser));
 		
 		return redirect()->back();
     }
@@ -113,6 +120,20 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $registeredUser = User::find($id);
+		if ($registeredUser){
+			
+			//unlink employee with this user
+			$employee = $registeredUser->asEmployee;
+			if ($employee){
+				$employee->user_id = null;
+				$employee->save();
+			}
+			
+			//remove user
+			$registeredUser->delete();
+		}
+		
+		return redirect()->back();
     }
 }

@@ -12,5 +12,6 @@ Route::prefix('user')
 		->any('', '\App\Http\Controllers\My\System\UserController@index');
 	Route::name('create')
 		->any('create/{nip}/{email}', '\App\Http\Controllers\My\System\UserController@create');
-			
+	Route::name('delete')
+		->any('delete/{id}', '\App\Http\Controllers\My\System\UserController@destroy');
 });

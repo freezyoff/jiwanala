@@ -19,14 +19,21 @@ class DashboardController extends Controller{
 		$periode = Carbon::parse($year.'-'.$month.'-01');
 		$employee = \Auth::user()->asEmployee()->first();
 		
+		$nip = isset($employee->nip)? $employee->nip : '';
 		$attendanceCtrl = new AttendanceController();
-		return view('my.dashboard.landing',[
-			'nip'=>$employee->nip,
-			'month'=>$month,
-			'year'=>$year,
-			'attendances'=>$attendanceCtrl->getAttendanceByPeriode($employee->nip, $periode),
-			'progress'=>$this->getAttendanceProgress($employee),
-		]);
+		
+		//link to employee
+		if ($nip){			
+			return view('my.dashboard.landing',[
+				'nip'=>$nip,
+				'month'=>$month,
+				'year'=>$year,
+				'attendances'=>$attendanceCtrl->getAttendanceByPeriode($nip, $periode),
+				'progress'=>$this->getAttendanceProgress($employee),
+			]);
+		}
+		
+		return view('my.landing');
 	}
 
 	function getAttendanceProgress(Employee $employee){

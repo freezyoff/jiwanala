@@ -1,4 +1,4 @@
-<div id="delete-modal-{{$empl->id}}" class="w3-modal w3-display-container w3-hide-large" onclick="$(this).hide()">
+<div id="delete-modal-{{$empl->id}}" class="w3-modal w3-display-container" onclick="$(this).hide()">
 	<div class="w3-modal-content w3-animate-top w3-card-4">
 		<header class="w3-container w3-theme">
 			<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
@@ -7,12 +7,12 @@
 				×
 			</span>
 			<h4 class="padding-top-8 padding-bottom-8">
-				<i class="fas fa-lightbulb fa-fw"></i>
-				<span style="padding-left:12px;">{{trans('my/system/user.hints.modals.delete')}}</span>
+				<i class="fas fa-user-slash"></i>
+				<span style="padding-left:12px;">{{trans('my/system/user.modals.delete')}}</span>
 			</h4>
 		</header>
 		<div id="delete-modal-{{$empl->id}}-container" class="datepicker-inline-container">
-			<table>
+			<table class="w3-table w3-table-all">
 				<tbody>
 					<tr>
 						<td>NIP</td>
@@ -27,5 +27,21 @@
 				</tbody>
 			</table>
 		</div>
+		<footer class="padding-top-bottom-8">
+			<div align="right">
+				<button
+					class="w3-button w3-blue w3-hover-blue margin-right-8"
+					onclick="$('#delete-modal-{{$empl->id}}').hide()">
+					<i class="fas fa-times"></i>
+					<span class="padding-left-8">{{trans('my/system/user.hints.cancel')}}</span>
+				</button>
+				<button
+					class="w3-button w3-red w3-hover-red margin-right-8"
+					onclick="document.location='{{route('my.system.user.delete',['nip'=>$empl->asUser->id])}}'">
+					<i class="fas fa-user-minus"></i>
+					<span class="padding-left-8">{{trans('my/system/user.hints.delete')}}</span>
+				</button>
+			</div>
+		</footer>
 	</div>
 </div>

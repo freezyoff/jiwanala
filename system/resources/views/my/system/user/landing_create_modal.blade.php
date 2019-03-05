@@ -7,7 +7,7 @@
 				×
 			</span>
 			<h4 class="padding-top-8 padding-bottom-8">
-				<i class="fas fa-lightbulb fa-fw"></i>
+				<i class="fas fa-user-shield"></i>
 				<span style="padding-left:12px;">{{trans('my/system/user.hints.create')}}</span>
 			</h4>
 		</header>

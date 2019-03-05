@@ -59,13 +59,16 @@
 							<tr>
 								<td class="w3-hide-large">
 									@if ($empl->asUser)
-										<a href="#" onclick="" alt="{{trans('my/system/user.hints.delete')}}">
+										<a class="action"
+											href="#" 
+											toggle="delete-modal-{{$empl->id}}"
+											alt="{{trans('my/system/user.hints.delete')}}">
 											<i class="fas fa-user-slash"></i>
 										</a>
-										@include('my.system.user.landing_delete_modal')
 									@else
-										<a href="#" 
-											onclick="$('#link-modal-{{$empl->id}}').show()" 
+										<a class="action"
+											href="#" 
+											toggle="link-modal-{{$empl->id}}" 
 											alt="{{trans('my/system/user.hints.delete')}}">
 											<i class="fas fa-user-shield"></i>
 										</a>
@@ -82,10 +85,27 @@
 										@else
 											<span class="w3-tag">terkunci</span>
 										@endif
+										@include('my.system.user.landing_delete_modal')
 									@endif
 								</td>
 								<td class="w3-hide-small w3-hide-medium" style="text-align:right">
-								
+									@if ($empl->asUser)
+										<a class="action"
+											href="#" 
+											toggle="delete-modal-{{$empl->id}}"
+											alt="{{trans('my/system/user.hints.delete')}}">
+											<i class="fas fa-user-slash"></i>
+										</a>
+									@else
+										<a class="action" 
+											href="#" 
+											toggle="link-dropdown-{{$empl->id}}"
+											alt="{{trans('my/system/user.hints.create')}}">
+											<i class="fas fa-user-shield"></i>
+										</a>
+										@include('my.system.user.landing_create_dropdown')	
+										@include('my.system.user.landing_create_modal')	
+									@endif
 								</td>
 							</tr>
 						@empty
@@ -110,6 +130,17 @@
 $(document).ready(function(){
 	$('[select-role="dropdown"]').select().on('select.pick', function(){
 		$('form[name="search"]').submit();
+	});
+	
+	$('a.action').click(function(event){
+		event.stopPropagation();
+		$('.w3-dropdown-content').hide();
+		$('#'+$(this).attr('toggle')).show();
+		console.log($(this).attr('toggle'));
+	});
+	
+	$(window).click(function(){
+		$('.w3-dropdown-content').hide();
 	});
 });
 </script>
