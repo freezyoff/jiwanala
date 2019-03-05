@@ -58,7 +58,8 @@ class DashboardController extends Controller{
 		
 		$holiday = $offScheduleDaysCount = 
 		$scheduleDaysCount = $attends = 
-		$absents = $lateArrivalOrEarlyDeparture = 0;
+		$absents = $lateArrivalOrEarlyDeparture = 
+		$consents = $noConsentDocs = $noLateOrEarlyDocs = 0;
 		while($loop->lessThanOrEqualTo($end)){
 			if (Holiday::isHoliday($loop)) {
 				$holiday++;
@@ -79,10 +80,19 @@ class DashboardController extends Controller{
 				$attends++;
 				if ($record->isLateArrival() || $record->isEarlyDeparture()) {
 					$lateArrivalOrEarlyDeparture++;
+					if (!$employee->consentRecord($loop)){
+						$noLateOrEarlyDocs++;
+					}
 				}
 			}
 			else{
-				$absents++;
+				if ($employee->consentRecord($loop)){
+					$consents++;
+				}
+				else{
+					$absents++;
+					$noDocuments++;
+				}
 			}
 			
 			$loop->addDay();
@@ -94,6 +104,9 @@ class DashboardController extends Controller{
 			'scheduleDaysCount'=>$scheduleDaysCount,
 			'attends'=>$attends,
 			'absents'=>$absents,
+			'consents'=>$consents,
+			'noConsentDocs'=>$noConsentDocs,
+			'noLateOrEarlyDocs'=>$noLateOrEarlyDocs,
 			'lateArrivalOrEarlyDeparture'=>$lateArrivalOrEarlyDeparture,
 			'title'=>'Finger Karyawan Fulltime<br>per '. $start->format('d-m-Y') .' s/d '. $end->format('d-m-Y'),
 		];

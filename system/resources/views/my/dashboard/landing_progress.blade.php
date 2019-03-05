@@ -40,6 +40,24 @@
 						</td>
 					</tr>
 					<tr>
+						<td>Terlambat / Pulang Awal</td>
+						<td>:</td>
+						<td style="text-align:right">
+						@if ($progress['lateArrivalOrEarlyDeparture']>0)
+							{{$progress['lateArrivalOrEarlyDeparture']}} hari
+						@endif
+						</td>
+					</tr>
+					<tr>
+						<td>Cuti / Izin</td>
+						<td>:</td>
+						<td style="text-align:right">
+						@if ($progress['consents']>0)
+							{{$progress['consents']}} hari
+						@endif
+						</td>
+					</tr>
+					<tr>
 						<td>Tanpa Keterangan</td>
 						<td>:</td>
 						<td style="text-align:right">
@@ -49,11 +67,33 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Terlambat / Pulang Awal</td>
+						<td colspan="3">Tanpa dokumen Cuti / Izin</td>
+					</tr>
+					<tr class="
+						@if ($progress['noLateOrEarlyDocs']>0)
+							w3-text-red
+						@endif
+						"
+					>
+						<td><span class="padding-left-16">Terlambat / Pulang Awal</span></td>
 						<td>:</td>
 						<td style="text-align:right">
-						@if ($progress['lateArrivalOrEarlyDeparture']>0)
-							{{$progress['lateArrivalOrEarlyDeparture']}} hari
+						@if ($progress['noLateOrEarlyDocs']>0)
+							{{$progress['noLateOrEarlyDocs']}} hari
+						@endif
+						</td>
+					</tr>
+					<tr class="
+						@if ($progress['noConsentDocs']>0)
+							w3-text-red
+						@endif
+						"
+					>
+						<td><span class="padding-left-16">Cuti / Izin</span></td>
+						<td>:</td>
+						<td style="text-align:right">
+						@if ($progress['noConsentDocs']>0)
+							{{$progress['noConsentDocs']}} hari
 						@endif
 						</td>
 					</tr>
