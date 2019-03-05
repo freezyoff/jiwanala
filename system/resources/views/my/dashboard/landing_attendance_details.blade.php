@@ -1,4 +1,4 @@
-<div class="w3-col s12 m12 l8 padding-left-8 padding-none-small padding-none-medium">
+<div class="w3-col s12 m12 l8 margin-top-16 margin-none-large padding-left-16-large">
 	<table class="w3-table-all">
 	<thead>
 		<tr style="border:none;">
@@ -32,19 +32,19 @@
 						@endif
 						@if (isset($attendance['attendance']) && $attendance['attendance'])
 							<div class="w3-row">
-								<div class="w3-col s12 m6 l3">
+								<div class="w3-col s6 m6 l3">
 									<i class="fas fa-sign-in-alt fa-fw"></i>
 									<span class="padding-left-8">{{$attendance['attendance']->time1}}</span>
 								</div>
 							@forelse([2, 3,4] as $index)
 								@if ( $attendance['attendance']->{'time'.$index} )
-								<div class="w3-col s12 m6 l3">
+								<div class="w3-col s6 m6 l3">
 									<i class="fas fa-sign-{{$index>1? 'out' : 'in'}}-alt fa-fw"></i>
 									<span class="padding-left-8">{{$attendance['attendance']->{'time'.$index} }}</span>
 								</div>
 								@endif
 							@empty
-								<div class="w3-col s12 m6 l3">
+								<div class="w3-col s6 m6 l3">
 									<i class="fas fa-sign-out-alt fa-fw"></i>
 									<span class="padding-left-8">{{$attendance['attendance']->time2 }}</span>
 								</div>
@@ -54,7 +54,7 @@
 						@if (isset($attendance['hasWarning']) && $attendance['hasWarning'])
 							<div class="w3-row">
 							@foreach($attendance['warning'] as $tag)
-								<div class="margin-top-8 margin-none-large margin-none-medium" style="display:inline-block">
+								<div class="margin-top-8" style="display:inline-block">
 									<span 
 										class="margin-right-8 w3-tag w3-amber" 
 										style="white-space:nowrap">{{$tag}}</span>

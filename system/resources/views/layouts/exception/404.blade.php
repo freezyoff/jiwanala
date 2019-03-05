@@ -2,11 +2,13 @@
 
 @section('html.head.styles')
 	@parent
+	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
 	<link rel="stylesheet" href="{{url('css/app.css')}}">
 	<style>
+	{{asd}}
 		.brand>img {position:relative;}
 		.brand>.brand-text {position:relative;}
-		.brand>.brand-text>.title {font-family:gotham-medium; font-weight:bold;}
+		.brand>.brand-text>.title {font-family:'Proxima Nova'; font-weight:bold;}
 		.brand>.brand-text>.subtitle {line-height:.5;}
 			
 		@media only screen and (max-width: 600px) {

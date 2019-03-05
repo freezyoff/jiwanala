@@ -16,4 +16,3 @@ Route::prefix ('bauk')
 
 Route::name('dashboard.')
 	->group(base_path('routes/web/web_my_dashboard.php'));
-

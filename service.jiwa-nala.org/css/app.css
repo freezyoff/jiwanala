@@ -36,7 +36,7 @@ button>i.button-icon-loader-red{
 
 body, html,
 h1,h2,h3,h4,h5,h6,
-div,span,pre,p,ul{ margin:0; padding:0; font-family:roboto;}
+div,span,pre,p,ul{ margin:0; padding:0; font-family:roboto; }
 
 input,textarea,select,
 input:focus,select:focus,textarea:focus,button:focus {outline: none; background-color:transparent; min-width:25px;}
@@ -69,45 +69,7 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .padding-right-32{padding-right:32px;}
 .padding-left-none{padding-left:0 !important;}
 .padding-right-none{padding-right:0 !important;}
-@media only screen and (max-width: 600px){
-	.padding-none-small {padding:0 !important;}
-	.padding-left-none-small{padding-left:0 !important;}
-	.padding-right-none-small{padding-right:0 !important;}
-	.padding-top-none-small{padding-top:0 !important;}
-	.padding-bottom-none-small{padding-bottom:0 !important;}
-	.margin-none-small{margin:0 !important;}
-	.margin-left-none-small{margin-left:0 !important;}
-	.margin-right-none-small{margin-right:0 !important;}
-	.margin-top-none-small{margin-top:0 !important;}
-	.margin-bottom-none-small{margin-bottom:0 !important;}
-}
-@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
-	.padding-none-medium {padding:0 !important;}
-	.padding-left-none-medium{padding-left:0 !important;}
-	.padding-right-none-medium{padding-right:0 !important;}
-	.padding-top-none-medium{padding-top:0 !important;}
-	.padding-bottom-none-medium{padding-bottom:0 !important;}
-	.margin-none-medium{margin:0 !important;}
-	.margin-left-none-medium{margin-left:0 !important;}
-	.margin-right-none-medium{margin-right:0 !important;}
-	.margin-top-none-medium{margin-top:0 !important;}
-	.margin-bottom-none-medium{margin-bottom:0 !important;}
-}
-@media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
-	.padding-none-large {padding:0 !important;}
-	.padding-left-none-large{padding-left:0 !important;}
-	.padding-right-none-large{padding-right:0 !important;}
-	.padding-top-none-large{padding-top:0 !important;}
-	.padding-bottom-none-large{padding-bottom:0 !important;}
-	.margin-none-large{margin:0 !important;}
-	.margin-left-none-large{margin-left:0 !important;}
-	.margin-right-none-large{margin-right:0 !important;}
-	.margin-top-none-large{margin-top:0 !important;}
-	.margin-bottom-none-large{margin-bottom:0 !important;}
-}
-		
+
 .margin-left-8{margin-left:8px;}
 .margin-left-16{margin-left:16px;}
 .margin-right-8{margin-right:8px;}
@@ -120,6 +82,49 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .margin-bottom-32{margin-bottom:32px;}
 .margin-top-bottom-8{margin-top:8px;margin-bottom:8px;}
 .margin-top-bottom-16{margin-top:16px;margin-bottom:16px;}
+
+@media (max-width: 600px){
+	.padding-none-small {padding:0 !important;}
+	.padding-left-none-small{padding-left:0 !important;}
+	.padding-right-none-small{padding-right:0 !important;}
+	.padding-top-none-small{padding-top:0 !important;}
+	.padding-bottom-none-small{padding-bottom:0 !important;}
+	.margin-none-small{margin:0 !important;}
+	.margin-left-none-small{margin-left:0 !important;}
+	.margin-right-none-small{margin-right:0 !important;}
+	.margin-top-none-small{margin-top:0 !important;}
+	.margin-bottom-none-small{margin-bottom:0 !important;}
+}
+@media (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
+@media (min-width: 768px),			/* Medium devices (landscape tablets, 768px and up) */
+@media (max-width: 992){
+	.padding-none-medium {padding:0 !important;}
+	.padding-left-none-medium{padding-left:0 !important;}
+	.padding-right-none-medium{padding-right:0 !important;}
+	.padding-top-none-medium{padding-top:0 !important;}
+	.padding-bottom-none-medium{padding-bottom:0 !important;}
+	.margin-none-medium{margin:0 !important;}
+	.margin-left-none-medium{margin-left:0 !important;}
+	.margin-right-none-medium{margin-right:0 !important;}
+	.margin-top-none-medium{margin-top:0 !important;}
+	.margin-bottom-none-medium{margin-bottom:0 !important;}
+}
+@media (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
+@media (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
+	.padding-none-large {padding:0 !important;}
+	.padding-left-none-large{padding-left:0 !important;}
+	.padding-right-none-large{padding-right:0 !important;}
+	.padding-top-none-large{padding-top:0 !important;}
+	.padding-bottom-none-large{padding-bottom:0 !important;}
+	.margin-none-large{margin:0 !important;}
+	.margin-left-none-large{margin-left:0 !important;}
+	.margin-right-none-large{margin-right:0 !important;}
+	.margin-top-none-large{margin-top:0 !important;}
+	.margin-bottom-none-large{margin-bottom:0 !important;}
+	
+	.padding-left-8-large{padding-left:8px;}
+	.padding-left-16-large{padding-left:16px;}
+}
 
 /* Input Group */
 .input-group{border-bottom:1px solid #ccc;display:flex;justify-content:center;}

@@ -14,7 +14,7 @@
 		.brand>.brand-text>.subtitle {line-height:1.3; letter-spacing:.2px;}
 		.brand>img {padding: 0;margin: 0;top:0;position:relative; vertical-align:middle;}
 		.brand>.brand-text {position:relative; display:inline-block; vertical-align:middle;}
-		.brand>.brand-text>.title {font-family:gotham; font-weight:bold; line-height:1;}
+		.brand>.brand-text>.title {font-family:'Proxima Nova'; font-weight:bold; line-height:1;}
 		.brand>.brand-text>.subtitle {font-family:roboto}
 		
 		#jn-sidebar{font-size:1.2em;}
@@ -43,7 +43,7 @@
 		
 		#jn-topbar.w3-card{box-shadow:0 2px 5px 0 rgba(0,0,0,.3),0 2px 10px 0 rgba(0,0,0,0.26)}
 		.w3-bar-item {float:none !important; display:inline-block !important;}
-		.top-nav{display:flex;flex-grow:2;flex-direction:row;align-items:stretch;justify-content:right;}
+		.top-nav{display:flex;flex-grow:2;flex-direction:row;align-items:stretch;justify-content:flex-end;}
 		#jn-topbar .top-nav>button:hover{
 			background-color:rgba(255, 255, 255, 0.2) !important;
 			color:rgb(241,241,241) !important;
@@ -56,31 +56,35 @@
 			.w3-main{margin-left:300px;}
 		@endif
 		
-		@media only screen and (max-width: 600px) {
+		@media (max-width: 600px) {
 			.brand{}
 			.brand>img {width: 2em;}
 			.brand>.brand-text {margin-left:.5em;}
-			.brand>.brand-text>.title {font-size:1.1em}
+			.brand>.brand-text>.title {font-size:1.2em}
 			.brand>.brand-text>.subtitle {font-size:.6em;}	
 			#jn-topbar>.w3-bar>.brand:first-child{padding-left:16px;}
+			#jn-main>header>h3 {font-size:1.2em;}
 		}
 		
-		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
-		@media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
-			.brand>img {width: 2.5em;}
+		@media (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
+		@media (min-width: 768px),			/* Medium devices (landscape tablets, 768px and up) */
+		@media (max-width: 992){
+			.brand>img {width: 2.25em;}
 			.brand>.brand-text {margin-left:.5em;}
-			.brand>.brand-text>.title {font-size:1.3em;}
-			.brand>.brand-text>.subtitle {font-size:.75em;}
+			.brand>.brand-text>.title {font-size:1.4em;}
+			.brand>.brand-text>.subtitle {font-size:.7em;}
 			.top-nav>button>span{display:none;}
+			#jn-main>header>h3 {font-size:1.4em;}
 		}
 		
-		@media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
-		@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
+		@media (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
+		@media (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
 			.brand>img {width: 2.5em;}
 			.brand>.brand-text {margin-left:.5em;}
-			.brand>.brand-text>.title {font-size:1.3em}
+			.brand>.brand-text>.title {font-size:1.5em}
 			.brand>.brand-text>.subtitle {font-size:.75em;}
-			.top-nav>button>span{padding-left:4px; display:inline-block;}
+			.top-nav>button>span{padding-left:6px; display:inline-block;}
+			#jn-main>header>h3 {font-size:1.5em;}
 		}
 	</style>
 @endSection
@@ -189,7 +193,7 @@
 		$( window ).resize(dashboard.initSideBar);
 		$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
 		$('#jn-sidebar-overlay').on('click', function(){ dashboard.closeSideBar(); });
-		fontSpy('gotham', {
+		fontSpy('Proxima Nova', {
 			success: function(){ dashboard.initSideBar(); }, 
 			failure: function(){ dashboard.initSideBar(); }
 		});

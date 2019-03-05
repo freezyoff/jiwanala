@@ -33,7 +33,7 @@
 	 */
 	
 	'my'=>[
-		'display'=>[ 'name'=>'', 'icon'=>'fas fa-home','class'=>'w3-text-light-green'],
+		'display'=>[ 'name'=>'Dashboard', 'icon'=>'fas fa-home','class'=>'w3-text-light-green'],
 		'href'=>'my.dashboard.landing',
 	],
 	

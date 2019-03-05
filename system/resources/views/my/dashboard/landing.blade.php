@@ -1,14 +1,25 @@
-@extends('layouts.dashboard.dashboard',['sidebar'=>false])
+@extends('layouts.dashboard.dashboard',['sidebar'=>false,'title'=>'Dashboard'])
 
-@section('dashboard.header')
-<header class="w3-container" style="padding-top:8px; padding-bottom:8px;">
-	<div style="display:flex">
-		<h3 style="font-weight:bold;flex-grow:1;">{{\Auth::user()->asEmployee->nip}} {{\Auth::user()->asEmployee->getFullName()}}</h3>
-		<div class="input-group periode-container">
-			<label><i class="far fa-calendar-check w3-large"></i></label>
-			<form action="{{route('my.dashboard.landing')}}" method="post">
-				@csrf
-				<div class="input-group periode-control w3-text-blue">
+@section('dashboard.main')
+<div class="w3-row">
+	<form action="{{route('my.dashboard.landing')}}" method="post">
+		@csrf
+		<div class="w3-col s12 m4 l4">
+			<div class="w3-teal w3-text-white"
+				style="border:1px solid #ccc; border-radius:4px; padding:8px; display:flex;">
+				<div style="font-size:2em; padding:0 8px;">
+					<i class="fas fa-user"></i>
+				</div>
+				<div class="margin-left-8">
+					<div>{{\Auth::user()->asEmployee->nip}}</div>
+					<div>{{\Auth::user()->asEmployee->getFullName()}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="padding-left-16 w3-col s12 m8 l8 padding-none-small">
+			<div class="w3-col s12 m6 l4">
+				<div class="input-group padding-top-8">
+					<label><i class="far fa-calendar-check w3-large"></i></label>
 					<input id="dashboard-periode-month" 
 						name="month"
 						value="{{ $month }}"
@@ -18,6 +29,11 @@
 						select-dropdown="#attendanceProgress-month-dropdown"
 						select-modal="#attendanceProgress-month-modal"
 						select-modal-container="#attendanceProgress-month-modal-container" />
+				</div>
+			</div>
+			<div class="w3-col s12 m6 l4">
+				<div class="input-group margin-left-8 margin-none-small padding-top-8">
+					<label><i class="far fa-calendar-check w3-large"></i></label>
 					<input id="dashboard-periode-year" 
 						name="year"
 						value="{{ $year }}"
@@ -28,18 +44,15 @@
 						select-modal="#attendanceProgress-year-modal"
 						select-modal-container="#attendanceProgress-year-modal-container" />
 				</div>
-			</form>
-			@include('my.dashboard.landing_month_dropdown')
-			@include('my.dashboard.landing_month_modal')
-			@include('my.dashboard.landing_year_dropdown')
-			@include('my.dashboard.landing_year_modal')
+				@include('my.dashboard.landing_month_dropdown')
+				@include('my.dashboard.landing_month_modal')
+				@include('my.dashboard.landing_year_dropdown')
+				@include('my.dashboard.landing_year_modal')
+			</div>
 		</div>
-	</div>
-</header>
-@endsection
-
-@section('dashboard.main')
-<div class="w3-row">
+	</form>
+</div>
+<div class="w3-row margin-top-16">
 	@include('my.dashboard.landing_progress')
 	@include('my.dashboard.landing_attendance_details')
 </div>
@@ -86,8 +99,7 @@ $(document).ready(function(){
 		style:{
 			cursor:'pointer',
 			overflow:'visible'
-		},
-		hideCevron:true
+		}
 	}).on('change', function(){
 		$(this).parents('form').trigger('submit');
 	});
@@ -102,8 +114,8 @@ $(document).ready(function(){
 @section('html.head.styles')
 @parent
 <style>
-.input-group.periode-container{border:none;}
-.input-group.periode-control {border:1px solid #ccc; border-radius:4px; text-align:right;  align-items:center;}
+.input-group.periode-container{border:1px solid #ccc; border-radius:4px; text-align:right; max-width:175px; align-items:center; justify-content:center}
+.input-group.periode-control {border:none; align-items:center;}
 .input-group.periode-control>#dashboard-periode-month{width:125px;text-align:center;}
 .input-group.periode-control>#dashboard-periode-year{width:50px;text-align:center;}
 .input-group.periode-control>#dashboard-periode-month>label,

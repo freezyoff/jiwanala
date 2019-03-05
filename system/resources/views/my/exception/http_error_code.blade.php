@@ -6,7 +6,7 @@
 	<style>
 		.brand>img {position:relative;}
 		.brand>.brand-text {position:relative;}
-		.brand>.brand-text>.title {font-family:gotham-medium; font-weight:bold;}
+		.brand>.brand-text>.title {font-family:'Proxima Nova'; font-weight:bold;}
 		.brand>.brand-text>.subtitle {line-height:.5;}
 			
 		@media only screen and (max-width: 600px) {
@@ -15,7 +15,7 @@
 			.smallContainer .errorContainer:first-child {border-top:transparent; padding-bottom:24px;}
 			
 			.brand>img {width: 4.5em;}
-			.brand>.brand-text>.title {font-size:1.2em;}
+			.brand>.brand-text>.title {font-size:1.4em; letter-spacing:.02em;}
 			.brand>.brand-text>.subtitle {font-size:.75em; color:#f5f5f5;}
 			
 			.errorCode>h1{line-height:1;}
@@ -33,7 +33,7 @@
 			
 			.brand {display:inline-block; vertical-align:middle;}
 			.brand>img {width: 6em;}
-			.brand>.brand-text>.title {font-size:1.5em;}
+			.brand>.brand-text>.title {font-size:1.8em; letter-spacing:.02em;}
 			.brand>.brand-text>.subtitle {font-size:.85em; color:#f5f5f5;}
 			
 			.errorCode>h1{line-height:1;}
@@ -52,7 +52,7 @@
 @section('html.body.content')
 	<div class="w3-card w3-display-middle w3-hide-medium w3-hide-large smallContainer">
 		<div class="w3-center brand errorContainer">
-			<img src="{{url('media/img/brand.png')}}">					
+			<img src="{{url('media/img/brand.png')}}">
 			<div class="brand-text">
 				<div class="title">JIWANALA</div>
 				<div class="subtitle">Learn . Explore . Lead</div>
