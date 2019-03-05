@@ -3,7 +3,7 @@
 @section('html.head.styles')
 	@parent
 	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
-	<link rel="stylesheet" href="{{url('css/app.css')}}">
+	<link rel="stylesheet" href="{{url('css/app.css?'.csrf_token())}}">
 	<style>
 		@media only screen and (max-width: 600px) {
 			.w3-theme {background-color:#f1f1f1 !important; color:#333 !important;}

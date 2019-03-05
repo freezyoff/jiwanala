@@ -3,7 +3,7 @@
 @section('html.head.styles')
 	@parent
 	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
-	<link rel="stylesheet" href="{{url('css/app.css')}}">
+	<link rel="stylesheet" href="{{url('css/app.min.css?'.csrf_token())}}">
 	<style>
 	{{asd}}
 		.brand>img {position:relative;}
