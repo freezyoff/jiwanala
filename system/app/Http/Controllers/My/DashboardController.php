@@ -91,7 +91,7 @@ class DashboardController extends Controller{
 				}
 				else{
 					$absents++;
-					$noDocuments++;
+					$noConsentDocs++;
 				}
 			}
 			
