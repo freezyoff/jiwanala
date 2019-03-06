@@ -119,7 +119,7 @@ class BaukController extends Controller
 		
 		$count = 0;
 		$employees = Employee::getActiveEmployee(true, $end->year, $end->month);
-		$allPercent = 0;
+		$allPercent = $absents = $consents = $noConsentDocs = $noLateOrEarlyDocs = $lateArrivalOrEarlyDeparture = 0 ;
 		foreach($employees as $employee){
 			$registeredAt = Carbon::parse($employee->registeredAt);
 			$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
@@ -143,8 +143,24 @@ class BaukController extends Controller
 				}
 				
 				$scheduleDaysCount ++;
-				if($employee->attendanceRecord($loop)){
+				$record = $employee->attendanceRecord($loop);
+				if($record){
 					$attends++;
+					if ($record->isLateArrival() || $record->isEarlyDeparture()) {
+						$lateArrivalOrEarlyDeparture++;
+						if (!$employee->consentRecord($loop)){
+							$noLateOrEarlyDocs++;
+						}
+					}
+				}
+				else{
+					if ($employee->consentRecord($loop)){
+						$consents++;
+					}
+					else{
+						$absents++;
+						$noConsentDocs++;
+					}
 				}
 				
 				$loop->addDay();
@@ -157,6 +173,11 @@ class BaukController extends Controller
 		
 		return [
 			'percent'=>$count>0? $allPercent/$count : 0,
+			'absents'=>$absents,
+			'consents'=>$consents,
+			'noConsentDocs'=>$noConsentDocs,
+			'noLateOrEarlyDocs'=>$noLateOrEarlyDocs,
+			'lateArrivalOrEarlyDeparture'=>$lateArrivalOrEarlyDeparture,
 			'start'=>[
 				'year'=>$start->year,
 				'month'=>$start->month,

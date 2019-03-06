@@ -79,6 +79,33 @@
 						</tr>
 					</tbody>
 				</table>
+				<table class="w3-table w3-bordered">
+					<tbody>
+						<tr>
+							<td>Cuti / Izin</td>
+							<td>:</td>
+							<td style="text-align:right" id="empoyee-consents"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td>Terlambat / Pulang Awal</td>
+							<td>:</td>
+							<td style="text-align:right" id="empoyee-lateArrivalOrEarlyDeparture"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td colspan="3">Tanpa dokumen Cuti / Izin</td>
+						</tr>
+						<tr>
+							<td><span class="padding-left-16">Terlambat / Pulang Awal</span></td>
+							<td>:</td>
+							<td style="text-align:right" id="employee-noLateOrEarlyDocs"><i class="button-icon-loader"></i></td>
+						</tr>
+						<tr>
+							<td><span class="padding-left-16">Cuti / Izin</span></td>
+							<td>:</td>
+							<td style="text-align:right" id="employee-noConsentDocs"><i class="button-icon-loader"></i></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -202,6 +229,10 @@ var attendanceProgress = {
 			success: function(response){
 				attendanceProgress.setProgressbar(response.percent);
 				$('#progressbar-title').html(response.title);
+				$('#empoyee-consents').html(response.consents);
+				$('#empoyee-lateArrivalOrEarlyDeparture').html(response.lateArrivalOrEarlyDeparture);
+				$("#employee-noLateOrEarlyDocs").html(response.noLateOrEarlyDocs);
+				$("#employee-noConsentDocs").html(response.noConsentDocs);
 			}
 		});
 	},
