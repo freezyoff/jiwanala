@@ -3,9 +3,11 @@
 @section('dashboard.main')
 <div class="w3-row">
 	@include('my.bauk.landing_attendanceProgress')
-	<div id="statistics" class="w3-col s12 m5 l5 w3-light-grey padding-left-8 padding-left-none-small">
+	<div id="statistics" 
+		class="w3-col s12 m5 l5 w3-light-grey padding-left-8 padding-left-none-small 
+				margin-top-8 margin-top-none-large margin-top-none-medium">
 	<div class="w3-card">
-		<header class="w3-container padding-top-8 padding-bottom-8 w3-blue">
+		<header class="w3-container padding-top-8 w3-blue">
 			<h4>Statistik Karyawan Fulltime</h4>
 		</header>
 		<table class="w3-table w3-bordered">

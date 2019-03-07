@@ -21,6 +21,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 		<!--[section: html.head.metas]/-->
 		@section('html.head.metas')
 			<meta charset="UTF-8">
+			<meta name="theme-color" content="#000000" />
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<meta name="csrf-token" content="{{ csrf_token() }}">
 		@show
