@@ -42,79 +42,99 @@
 				<div class="w3-container">
 					{{$employees->links('layouts.dashboard.pagination')}}
 				</div>
-				<table class="w3-table w3-table-all">
-					<thead>
-						<tr class="w3-theme-l1">
-							<td class="w3-hide-large"></td>
-							<td>NIP</td>
-							<td>Nama</td>
-							<td>Email</td>
-							<td>Status</td>
-							<td class="w3-hide-small w3-hide-medium"></td>
-						</tr>
-					</thead>
-					<tbody>
-						@forelse ($employees as $empl)
-						<?php $emailCount= $empl->asPerson->emails()->count(); ?>
-							<tr>
-								<td class="w3-hide-large">
-									@if ($empl->asUser)
-										<a class="action"
-											href="#" 
-											toggle="delete-modal-{{$empl->id}}"
-											alt="{{trans('my/system/user.hints.delete')}}">
-											<i class="fas fa-user-slash"></i>
-										</a>
-									@else
-										<a class="action"
-											href="#" 
-											toggle="link-modal-{{$empl->id}}" 
-											alt="{{trans('my/system/user.hints.delete')}}">
-											<i class="fas fa-user-shield"></i>
-										</a>
-										@include('my.system.user.landing_create_modal')	
-									@endif
-								</td>
-								<td>{{$empl->nip }}</td>
-								<td>{{$empl->getFullName()}}</td>
-								<td>{{$empl->asUser? $empl->asUser->email: ""}}</td>
-								<td>
-									@if ($empl->asUser)
-										@if($empl->asUser->activated)
-											<span class="w3-tag w3-green">aktif</span>
-										@else
-											<span class="w3-tag">terkunci</span>
+				<div class="w3-responsive">
+					<table class="w3-table w3-table-all">
+						<thead>
+							<tr class="w3-theme-l1">
+								<td class="w3-hide-large"></td>
+								<td>NIP</td>
+								<td>Nama</td>
+								<td>Email</td>
+								<td>Status</td>
+								<td class="w3-hide-small w3-hide-medium"></td>
+							</tr>
+						</thead>
+						<tbody>
+							@forelse ($employees as $empl)
+							<?php $emailCount= $empl->asPerson->emails()->count(); ?>
+								<tr>
+									<td class="w3-hide-large" style="white-space:nowrap;">
+										@if ($empl->asUser)
+											<a class="action padding-right-8"
+												style="cursor:pointer"
+												alt="{{trans('my/system/user.hints.reset')}}"
+												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
+												<i class="fas fa-undo"></i>
+											</a>
+											<a class="action"
+												style="cursor:pointer"
+												toggle="delete-modal-{{$empl->id}}"
+												alt="{{trans('my/system/user.hints.delete')}}">
+												<i class="fas fa-user-slash"></i>
+											</a>
+										@elseif ($empl->asPerson->emailDefault())
+											<a class="action"
+												style="cursor:pointer"
+												toggle="link-modal-{{$empl->id}}" 
+												alt="{{trans('my/system/user.hints.delete')}}">
+												<i class="fas fa-user-shield"></i>
+											</a>
+											@include('my.system.user.landing_create_modal')	
 										@endif
-										@include('my.system.user.landing_delete_modal')
-									@endif
-								</td>
-								<td class="w3-hide-small w3-hide-medium" style="text-align:right">
-									@if ($empl->asUser)
-										<a class="action"
-											href="#" 
-											toggle="delete-modal-{{$empl->id}}"
-											alt="{{trans('my/system/user.hints.delete')}}">
-											<i class="fas fa-user-slash"></i>
-										</a>
-									@else
-										<a class="action" 
-											href="#" 
-											toggle="link-dropdown-{{$empl->id}}"
-											alt="{{trans('my/system/user.hints.create')}}">
-											<i class="fas fa-user-shield"></i>
-										</a>
-										@include('my.system.user.landing_create_dropdown')	
-										@include('my.system.user.landing_create_modal')	
-									@endif
-								</td>
-							</tr>
-						@empty
-							<tr>
-								<td colspan="5">Belum ada data</td>
-							</tr>
-						@endforelse
-					</tbody>
-				</table>
+									</td>
+									<td>{{$empl->nip }}</td>
+									<td>{{$empl->getFullName()}}</td>
+									<td>
+										@if ($empl->asUser && $empl->asUser->email)
+											{{$empl->asUser->email}}
+										@elseif ($empl->asPerson && !$empl->asPerson->emailDefault())
+											<span class="w3-tag w3-orange">{{trans('my/system/user.info.noEmail')}}</span>
+										@endif
+									</td>
+									<td>
+										@if ($empl->asUser)
+											@if($empl->asUser->activated)
+												<span class="w3-tag w3-green">aktif</span>
+											@else
+												<span class="w3-tag">terkunci</span>
+											@endif
+											@include('my.system.user.landing_delete_modal')
+										@endif
+									</td>
+									<td class="w3-hide-small w3-hide-medium" style="text-align:right;white-space:nowrap">
+										@if ($empl->asUser)
+											<a class="action"
+												style="cursor:pointer"
+												alt="{{trans('my/system/user.hints.reset')}}"
+												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
+												<i class="fas fa-undo"></i>
+											</a>
+											<a class="action padding-left-8"
+												style="cursor:pointer"
+												toggle="delete-modal-{{$empl->id}}"
+												alt="{{trans('my/system/user.hints.delete')}}">
+												<i class="fas fa-user-slash"></i>
+											</a>
+										@elseif ($empl->asPerson->emailDefault())
+											<a class="action padding-left-8" 
+												style="cursor:pointer"
+												toggle="link-dropdown-{{$empl->id}}"
+												alt="{{trans('my/system/user.hints.create')}}">
+												<i class="fas fa-user-shield"></i>
+											</a>
+											@include('my.system.user.landing_create_dropdown')	
+											@include('my.system.user.landing_create_modal')	
+										@endif
+									</td>
+								</tr>
+							@empty
+								<tr>
+									<td colspan="5">Belum ada data</td>
+								</tr>
+							@endforelse
+						</tbody>
+					</table>
+				</div>
 				<div class="w3-container">
 					{{$employees->links('layouts.dashboard.pagination')}}
 				</div>

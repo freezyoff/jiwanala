@@ -14,6 +14,7 @@
 		'delete'=>'Hapus Akun',
 		'create'=>'Buat Akun',
 		'cancel'=>'Batal',
+		'reset'=>'Rubah Password'
 	],
 	
 	'modals'=>[
@@ -31,5 +32,8 @@
 			'l'=>'Akun Terhubung',
 			'u'=>'Akun Belum Terhubung',
 		]
+	],
+	'info'=>[
+		'noEmail'=>'Belum mendaftarkan email'
 	]
 ];

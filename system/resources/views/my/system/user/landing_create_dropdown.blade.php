@@ -7,7 +7,7 @@
 				<span class="padding-left-8">Email:</span>
 			</a>
 		</li>
-		@forelse($empl->asPerson()->first()->emails()->get() as $email)
+		@foreach($empl->asPerson()->first()->emails()->get() as $email)
 		<li style="cursor:pointer;" 
 			onclick="document.location='{{route('my.system.user.create',['nip'=>$empl->nip,'email'=>$email->email])}}'">
 			<a class="w3-text-theme w3-mobile" 
@@ -16,14 +16,6 @@
 				{{ $email->email }}
 			</a>
 		</li>
-		@empty
-			<li style="cursor:pointer;">
-				<a class="w3-text-theme w3-mobile" 
-					select-role="item" 
-					select-value="-1">
-					Belum mendaftarkan email
-				</a>
-			</li>
-		@endforelse
+		@endforeach
 	</ul>
 </div>
