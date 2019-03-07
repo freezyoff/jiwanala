@@ -1,4 +1,4 @@
-<div id="attendanceProgress" class="w3-col s12 m6 l6 w3-light-grey">
+<div id="attendanceProgress" class="w3-col s12 m7 l7 w3-light-grey">
 	<div class="w3-card">
 		<header class="w3-container padding-top-8 padding-bottom-8 w3-indigo">
 			<h4>Progres Rekaman Finger Kehadiran</h4>
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div class="w3-container padding-top-16 padding-bottom-16">
-			<div class="w3-col s12 m12 l5 margin-bottom-8 margin-none-large" style="min-width:135px">
+			<div class="w3-col s12 m12 l5 margin-bottom-8 margin-none-large padding-top-8" style="min-width:135px">
 				<div style="display:flex; flex-direction:column;align-items:center;">
 					<div id="progressbar-radial" 
 						class="progressbar radial xlarge" 
@@ -55,30 +55,6 @@
 				</div>
 			</div>
 			<div class="w3-col s12 m12 l7">
-				<table class="w3-table w3-bordered">
-					<tbody>
-						<tr>
-							<td>Aktif</td>
-							<td>:</td>
-							<td id="employee-active" style="text-align:right"><i class="button-icon-loader"></i></td>
-						</tr>
-						<tr>
-							<td>Fulltime</td>
-							<td>:</td>
-							<td id="employee-fulltime" style="text-align:right"><i class="button-icon-loader"></i></td>
-						</tr>
-						<tr>
-							<td>Fulltime Kontrak thn ke 2</td>
-							<td>:</td>
-							<td id="employee-fulltime-contract-2" style="text-align:right"><i class="button-icon-loader"></i></td>
-						</tr>
-						<tr>
-							<td>Fulltime Kontrak thn ke 1</td>
-							<td>:</td>
-							<td id="employee-fulltime-contract-1" style="text-align:right"><i class="button-icon-loader"></i></td>
-						</tr>
-					</tbody>
-				</table>
 				<table class="w3-table w3-bordered">
 					<tbody>
 						<tr>
@@ -208,7 +184,6 @@ var attendanceProgress = {
 		$('#attendanceProgress-year, #attendanceProgress-month').on('select.pick', function(event, oldValue, newValue){
 			if (oldValue != newValue){
 				attendanceProgress.send();
-				employeesCount();
 			}
 		});
 		attendanceProgress.send();
@@ -268,29 +243,8 @@ var attendanceProgress = {
 	}
 };
 
-var employeesCount = function(){
-	$.ajax({
-		method: "POST",
-		url: '{{route('my.bauk.landing.info.employeesCount')}}',
-		data: { 
-			'_token': '{{csrf_token()}}',
-			'year': $('#attendanceProgress-year').val(),
-			'month': $('#attendanceProgress-month').val(),
-		},
-		dataType: "json",
-		beforeSend: function() {},
-		success: function(response){
-			$('#employee-active').html(response.count+' org');
-			$('#employee-fulltime').html(response.fulltime+' org');
-			$('#employee-fulltime-contract-1').html(response.contract1+' org');
-			$('#employee-fulltime-contract-2').html(response.contract2+' org');
-		}
-	});
-};
-
 $(document).ready(function(){
 	attendanceProgress.init();
-	employeesCount();
 	$('[role="select"]').select();
 });
 </script>

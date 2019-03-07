@@ -78,10 +78,10 @@
 						'display'=>[ 				
 							'name'=>'Jadwal Kerja', 
 							'icon'=>false,
-							'tag'=>[
-								'label'=>"update",
-								'color'=>'w3-blue'
-							]
+							//'tag'=>[
+							//	'label'=>"update",
+							//	'color'=>'w3-blue'
+							//]
 						], 
 						'href'=>'my.bauk.schedule.landing',
 					],
@@ -98,10 +98,10 @@
 						'display'=>[ 				
 							'name'=>'Riwayat', 
 							'icon'=>false ,
-							'tag'=>[
-								'label'=>"update",
-								'color'=>'w3-blue'
-							]
+							//'tag'=>[
+							//	'label'=>"update",
+							//	'color'=>'w3-blue'
+							//]
 						], 
 						'href'=>'my.bauk.attendance.landing',
 					],
@@ -110,10 +110,10 @@
 						'display'=>[ 				
 							'name'=>'Upload Finger', 
 							'icon'=>false,
-							'tag'=>[
-								'label'=>"update",
-								'color'=>'w3-blue'
-							]
+							//'tag'=>[
+							//	'label'=>"update",
+							//	'color'=>'w3-blue'
+							//]
 						], 
 						'href'=>'my.bauk.attendance.upload',
 					],
@@ -122,10 +122,10 @@
 						'display'=>[ 				
 							'name'=>'Laporan', 
 							'icon'=>false,
-							'tag'=>[
-								'label'=>"update",
-								'color'=>'w3-blue'
-							]
+							//'tag'=>[
+							//	'label'=>"update",
+							//	'color'=>'w3-blue'
+							//]
 						], 
 						'href'=>'my.bauk.attendance.report.landing',
 					]

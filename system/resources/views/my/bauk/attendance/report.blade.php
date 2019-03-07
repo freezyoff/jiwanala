@@ -32,8 +32,7 @@ var attendanceProgress = {
 	init: function(){
 		$('#attendanceProgress-year, #attendanceProgress-month').on('select.pick', function(event, oldValue, newValue){
 			if (oldValue != newValue){
-				attendanceProgress.send();				
-				employeesCount();
+				attendanceProgress.send();	
 			}
 		});
 		attendanceProgress.send();
@@ -55,6 +54,10 @@ var attendanceProgress = {
 			success: function(response){
 				attendanceProgress.setProgressbar(response.percent);
 				$('#progressbar-title').html(response.title);
+				$('#empoyee-consents').html(response.consents);
+				$('#empoyee-lateArrivalOrEarlyDeparture').html(response.lateArrivalOrEarlyDeparture);
+				$("#employee-noLateOrEarlyDocs").html(response.noLateOrEarlyDocs);
+				$("#employee-noConsentDocs").html(response.noConsentDocs);
 			}
 		});
 	},
@@ -88,26 +91,6 @@ var attendanceProgress = {
 			}
 		});
 	}
-};
-
-var employeesCount = function(){
-	$.ajax({
-		method: "POST",
-		url: '{{route('my.bauk.landing.info.employeesCount')}}',
-		data: { 
-			'_token': '{{csrf_token()}}',
-			'year': $('#attendanceProgress-year').val(),
-			'month': $('#attendanceProgress-month').val(),
-		},
-		dataType: "json",
-		beforeSend: function() {},
-		success: function(response){
-			$('#employee-active').html(response.count+' org');
-			$('#employee-fulltime').html(response.fulltime+' org');
-			$('#employee-fulltime-contract-1').html(response.contract1+' org');
-			$('#employee-fulltime-contract-2').html(response.contract2+' org');
-		}
-	});
 };
 
 $(document).ready(function(){
