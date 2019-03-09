@@ -19,7 +19,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue{
      */
     public function __construct($token){
 		$this->token = route('service.auth.reset',[$token]);
-		$this->token = str_replace(["https://",'http://'],"",$this->token);
+		//$this->token = str_replace(["https://",'http://'],"",$this->token);
     }
 
     /**

@@ -1,0 +1,12 @@
+/* Time Picker */
+.timepicker {display:flex; justify-content:center; align-items:stretch;}
+.timepicker>.hours {display:flex; flex-direction:column; width:2.5em;}
+.timepicker>.minutes,
+.timepicker>.seconds {display:flex; flex-direction:column; width:2.5em; margin-left:1em;}
+.timepicker input {border-bottom:1px solid transparent; text-align:center; letter-spacing:1px; min-width:inherit !important;}
+.timepicker input:hover,
+.timepicker input:focus {border-bottom:1px solid #2196F3;}
+.timepicker button.next,
+.timepicker button.prev {padding:8px; border:none; cursor:pointer; background-color:transparent;}
+.timepicker button.next:hover,
+.timepicker button.prev:hover {background-color:#2196F34D;}

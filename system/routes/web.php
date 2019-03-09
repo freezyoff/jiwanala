@@ -19,7 +19,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-ini_set('max_execution_time', 300);
+if (!App::environment('production')) {
+	ini_set('max_execution_time', 300);	
+}
 $domain = App::environment('production')? config('jiwanala.domain.production') : config('jiwanala.domain.local');
 $locale = Session::get('locale', App::getLocale());
 
@@ -49,3 +51,8 @@ Route::domain('my.'.$domain)
 			
 	}
 );
+
+Route::domain('ppdb.'.$domain)
+	->name('ppdb.')
+	->prefix($locale)
+	->group(base_path('routes/web/web_ppdb.php'));
