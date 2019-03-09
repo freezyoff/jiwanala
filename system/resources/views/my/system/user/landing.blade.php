@@ -60,19 +60,22 @@
 								<tr>
 									<td class="w3-hide-large" style="white-space:nowrap;">
 										@if ($empl->asUser)
+											@if(\Auth::user()->hasPermission('system.user.patch'))
 											<a class="action padding-right-8"
 												style="cursor:pointer"
 												alt="{{trans('my/system/user.hints.reset')}}"
 												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
 												<i class="fas fa-undo"></i>
 											</a>
+											@elseif(\Auth::user()->hasPermission('system.user.delete'))
 											<a class="action"
 												style="cursor:pointer"
 												toggle="delete-modal-{{$empl->id}}"
 												alt="{{trans('my/system/user.hints.delete')}}">
 												<i class="fas fa-user-slash"></i>
 											</a>
-										@elseif ($empl->asPerson->emailDefault())
+											@endif
+										@elseif ($empl->asPerson->emailDefault() && \Auth::user()->hasPermission('system.user.post'))
 											<a class="action"
 												style="cursor:pointer"
 												toggle="link-modal-{{$empl->id}}" 
@@ -99,23 +102,27 @@
 												<span class="w3-tag">terkunci</span>
 											@endif
 											@include('my.system.user.landing_delete_modal')
+											@include('my.system.user.landing_create_modal')	
 										@endif
 									</td>
 									<td class="w3-hide-small w3-hide-medium" style="text-align:right;white-space:nowrap">
 										@if ($empl->asUser)
+											@if(\Auth::user()->hasPermission('system.user.patch'))
 											<a class="action"
 												style="cursor:pointer"
 												alt="{{trans('my/system/user.hints.reset')}}"
 												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
 												<i class="fas fa-undo"></i>
 											</a>
+											@elseif(\Auth::user()->hasPermission('system.user.delete'))
 											<a class="action padding-left-8"
 												style="cursor:pointer"
 												toggle="delete-modal-{{$empl->id}}"
 												alt="{{trans('my/system/user.hints.delete')}}">
 												<i class="fas fa-user-slash"></i>
 											</a>
-										@elseif ($empl->asPerson->emailDefault())
+											@endif
+										@elseif ($empl->asPerson->emailDefault() && \Auth::user()->hasPermission('system.user.post'))
 											<a class="action padding-left-8" 
 												style="cursor:pointer"
 												toggle="link-dropdown-{{$empl->id}}"
@@ -123,7 +130,6 @@
 												<i class="fas fa-user-shield"></i>
 											</a>
 											@include('my.system.user.landing_create_dropdown')	
-											@include('my.system.user.landing_create_modal')	
 										@endif
 									</td>
 								</tr>

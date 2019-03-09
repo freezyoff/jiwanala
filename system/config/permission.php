@@ -12,13 +12,6 @@
 		'profile.patch.own'	=>	['profile', 'Patch owned Profile record', 'Permission to update owned profile record'],
 		'profile.put.own'	=>	['profile', 'Put owned Profile record', 'Permission to store owned profile record'],
 		'profile.list.own'	=>	['profile', 'List owned Profile record', 'Permission to List owned profile record'],
-        
-		/*
-		 *	Domain: My
-		 */
-		
-		//system 
-		'system.user.list' => ['system', 'List user', 'List registered user'],
 		
 		'service.grant.permission' => ['service', 'Grant Service Feature Permission', 'Grant Application Level Permission ke user lain'],
         'service.revoke.permission' => ['service', 'Revoke Service Feature Permission', 'Revoke Application Level Permission ke user lain'],
@@ -27,6 +20,18 @@
         'service.patch.permission' => ['service', 'Patch Service Feature Permission', '-'],
         'service.put.permission' => ['service', 'Put Service Feature Permission', '-'],
         'service.delete.permission' => ['service', 'Delete Service Feature Permission', '-'],
+		
+		/*
+		 *	Domain: My - System
+		 */
+		'system.user.list' => ['system', 'List user', 'List registered user'],
+		'system.user.post' => ['system', 'List user', 'List registered user'],
+		'system.user.patch' => ['system', 'List user', 'List registered user'],
+		'system.user.delete' => ['system', 'List user', 'List registered user'],
+		'system.division.list'=>['corp','List Corporate division', 'Melihat daftar unit/divisi'],
+		'system.division.post'=>['corp','Post Corporate division', 'Menambah daftar unit/divisi'],
+		'system.division.patch'=>['corp','Patch Corporate division', 'Merubah daftar unit/divisi'],
+		'system.division.delete'=>['corp','Delete Corporate division', 'Menghapus daftar unit/divisi'],
 		
 		/*
 		 *	Domain: My - BAUK
@@ -57,13 +62,5 @@
 		'bauk.schedule.post'=>['bauk', 'Post Employee Schedule', 'Menambah jadwal kerja'],
 		'bauk.schedule.patch'=>['bauk', 'Patch Employee Schedule', 'Merubah jadwal kerja'],
 		'bauk.schedule.delete'=>['bauk', 'Delete Employee Schedule', 'Menghapus jadwal kerja'],
-		
-		/*
-		 *	Domain: My - Corp
-		 */
-		'corp.division.list'=>['corp','List Corporate division', 'Melihat daftar unit/divisi'],
-		'corp.division.post'=>['corp','Post Corporate division', 'Menambah daftar unit/divisi'],
-		'corp.division.patch'=>['corp','Patch Corporate division', 'Merubah daftar unit/divisi'],
-		'corp.division.delete'=>['corp','Delete Corporate division', 'Menghapus daftar unit/divisi'],
     ],
 ];

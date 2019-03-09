@@ -45,7 +45,13 @@
 			[
 				'display'=>[ 'name'=>'Akun', 'icon'=>'fas fa-users'], 
 				'href'=>'my.system.user.index',
-				'permission'=>'system.user.list']
+				'permission'=>'system.user.list'
+			],
+			[
+				'display'=>[ 'name'=>'Unit / Divisi', 'icon'=>'fas fa-users'], 
+				'href'=>'my.system.user.index',
+				'permission'=>'system.user.list'
+			]
 		]
 	],
 	
