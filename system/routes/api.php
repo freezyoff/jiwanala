@@ -16,7 +16,7 @@
 */
 
 $domain = 'jiwa-nala';
-$domain .= \App::environment('production')? '.org' : '.local';
+$domain = App::environment('production')? config('jiwanala.domain.production') : config('jiwanala.domain.local');
 $filePath = 'routes/api';
 
 /*

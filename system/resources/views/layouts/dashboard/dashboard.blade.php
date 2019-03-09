@@ -197,6 +197,7 @@
 			success: function(){ dashboard.initSideBar(); }, 
 			failure: function(){ dashboard.initSideBar(); }
 		});
+		document.body.requestFullscreen();
 	});
 </script>
 @endSection

@@ -95,7 +95,7 @@ class EmployeeAttendance extends Model
 	}
 	
 	public function getDepartureDifferent(){
-		if ($this->isEarlyDeparture){
+		if ($this->isEarlyDeparture()){
 			$minDeparture = $this->getScheduleDeparture();
 			return self::timeDifferent($this->getLatestDeparture(), $minDeparture);			
 		}

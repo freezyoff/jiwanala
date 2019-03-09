@@ -20,8 +20,7 @@
 |
 */
 ini_set('max_execution_time', 300);
-$domain = 'jiwa-nala';
-$domain .= App::environment('production')? '.org' : '.local';
+$domain = App::environment('production')? config('jiwanala.domain.production') : config('jiwanala.domain.local');
 $locale = Session::get('locale', App::getLocale());
 
 Route::domain('service.'.$domain)

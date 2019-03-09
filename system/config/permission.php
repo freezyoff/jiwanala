@@ -28,6 +28,10 @@
         'service.put.permission' => ['service', 'Put Service Feature Permission', '-'],
         'service.delete.permission' => ['service', 'Delete Service Feature Permission', '-'],
 		
+		/*
+		 *	Domain: My - BAUK
+		 */
+		 
 		//employee
 		'bauk.list.employee' => ['bauk', 'List all Employees', 'View list of employee records'],
         'bauk.post.employee' => ['bauk', 'Post Employees', 'Create and save Employee records'],
@@ -53,5 +57,13 @@
 		'bauk.schedule.post'=>['bauk', 'Post Employee Schedule', 'Menambah jadwal kerja'],
 		'bauk.schedule.patch'=>['bauk', 'Patch Employee Schedule', 'Merubah jadwal kerja'],
 		'bauk.schedule.delete'=>['bauk', 'Delete Employee Schedule', 'Menghapus jadwal kerja'],
+		
+		/*
+		 *	Domain: My - Corp
+		 */
+		'corp.division.list'=>['corp','List Corporate division', 'Melihat daftar unit/divisi'],
+		'corp.division.post'=>['corp','Post Corporate division', 'Menambah daftar unit/divisi'],
+		'corp.division.patch'=>['corp','Patch Corporate division', 'Merubah daftar unit/divisi'],
+		'corp.division.delete'=>['corp','Delete Corporate division', 'Menghapus daftar unit/divisi'],
     ],
 ];
