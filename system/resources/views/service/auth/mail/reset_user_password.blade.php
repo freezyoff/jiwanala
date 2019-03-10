@@ -7,6 +7,17 @@ Kami menerima permintaan Atur Ulang Sandi. Klik tombol dibawah ini untuk mengara
 Reset Password
 @endcomponent
 
+Apabila mengalami kesulitan klik tombol <b>Reset Password</b>, klik tautan dibawah ini untuk mengarahkan kehalaman atur ulang sandi.
+@component('mail::panel')
+<table>
+    <tbody>
+        <tr>
+            <td><a href="{{$token}}" alt="Reset Password" title="Reset Password">Reset Password</a></td>
+        </tr>
+    </tbody>
+</table>
+@endcomponent
+
 Sistem akan meminta password baru. Ganti password sesuai keinginan dan pastikan mengganti password secara berkala.
 
 Terimakasih,<br>
