@@ -102,8 +102,8 @@
 	<!-- end: Top Bar -->
 	
 	<!-- begin: Sidebar/menu -->
-	@if($sidebar)
-		@section('dashboard.sidebar')
+	@section('dashboard.sidebar')
+		@if($sidebar)
 		<div id="jn-sidebar"
 			class="w3-sidebar w3-collapse w3-theme-l1 w3-animate-left" 
 			style="z-index:3;width:300px;" >
@@ -113,8 +113,8 @@
 			@show
 			
 		</div>
-		@show
-	@endif
+		@endif
+	@show
 	
 	<!-- end: Sidebar/menu -->
 	

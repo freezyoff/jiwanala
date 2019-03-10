@@ -36,7 +36,7 @@
 		<span class="">{{strtoupper($sidebar)}} Dashboard</span>
 	</a>
 	@foreach($sidebarItems as $item)
-		@if ( (!isset($item['group']) || !$item['group']) && \Auth::user()->hasPermission($item['permission']) )
+		@if ( (!isset($item['group']) || !$item['group']) && \Auth::user() && \Auth::user()->hasPermission($item['permission']) )
 			<!-- begin: sidebar item -->
 			<a class="w3-bar-item {{ str_contains( url()->current(), route($item['href']))? 'selected' : '' }}" 
 				href="{{ route($item['href']) }}">

@@ -54,5 +54,10 @@ Route::domain('my.'.$domain)
 
 Route::domain('ppdb.'.$domain)
 	->name('ppdb.')
-	->prefix($locale)
-	->group(base_path('routes/web/web_ppdb.php'));
+	->group(function() use($locale){
+		Route::get('', function() use($locale){
+			return redirect($locale);
+		});
+		Route::prefix($locale)->group(base_path('routes/web/web_ppdb.php'));
+	}
+);

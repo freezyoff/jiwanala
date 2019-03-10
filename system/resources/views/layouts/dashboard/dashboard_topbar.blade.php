@@ -34,7 +34,7 @@
 			</header>
 			<ul class="w3-ul">
 				@foreach(config('my.dashboardTopNav') as $key=>$item)
-					@if( !isset($item['permission_context']) || Auth::user()->hasPermissionContext($key) )
+					@if( !isset($item['permission_context']) || (Auth::user() && Auth::user()->hasPermissionContext($key)) )
 						<li class="w3-hover-light-grey" style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile
 								@if(isset($item['display']['class']))
@@ -79,7 +79,7 @@
 	</a>
 	<div class="top-nav">
 		@foreach(config('my.dashboardTopNav') as $key=>$item)
-			@if( !isset($item['permission_context']) || Auth::user()->hasPermissionContext($item['permission_context']) )
+			@if( !isset($item['permission_context']) || ( Auth::user() && Auth::user()->hasPermissionContext($item['permission_context'])) )
 				<button class="w3-bar-item w3-button w3-hover-none 
 					@if(isset($item['display']['class']))
 						{{$item['display']['class']}}

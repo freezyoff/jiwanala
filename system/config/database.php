@@ -124,6 +124,29 @@ return [
 				'NO_ENGINE_SUBSTITUTION'
 			],
         ],
+		'ppdb' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE_PPDB', 'forge'),
+            'username' => env('DB_USERNAME_PPDB', 'forge'),
+            'password' => env('DB_PASSWORD_PPDB', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8_unicode_ci'),
+            'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+			'modes' => [
+				//'ONLY_FULL_GROUP_BY', // Disable this to allow grouping by one column
+				'STRICT_TRANS_TABLES',
+				'NO_ZERO_IN_DATE',
+				'NO_ZERO_DATE',
+				'ERROR_FOR_DIVISION_BY_ZERO',
+				'NO_AUTO_CREATE_USER',
+				'NO_ENGINE_SUBSTITUTION'
+			],
+        ],
     ],
 
     /*

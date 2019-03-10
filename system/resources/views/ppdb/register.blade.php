@@ -17,16 +17,22 @@
 			.w3-theme {background-color:#f1f1f1 !important; color:#333 !important;}
 		}
 		
-		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
-		@media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
+		@media (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
+		@media (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
+			.w3-display-middle{min-width:400px;}
 		
+			img.brand {width: 5em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top;}
+			.brand-title {font-family:'Proxima Nova'; font-size:1.65em; letter-spacing:.5px; font-weight:bold; line-height:1.2; }
+			.brand-subtitle {line-height:1; font-size:.9em;}
+			.w3-card.boxContainer{padding: 16px 32px 16px 32px;box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)}
+			.w3-panel.error{padding: 16px 0 16px 0;}
 		}
 		@media only screen and (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
 		@media only screen and (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
 			.w3-display-middle{min-width:400px;}
 		
-			img.brand {width: 6em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top;}
-			.brand-title {font-family:'Proxima Nova'; font-size:1.9em; letter-spacing:.5px; font-weight:bold; line-height:1.2; }
+			img.brand {width: 5.5em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top;}
+			.brand-title {font-family:'Proxima Nova'; font-size:1.8em; letter-spacing:.5px; font-weight:bold; line-height:1.2; }
 			.brand-subtitle {line-height:1; font-size:1em;}
 			.w3-card.boxContainer{padding: 16px 32px 16px 32px;box-shadow: 0 2px 5px 0 rgba(200,200,200,0.26),0 2px 10px 0 rgba(200,200,200,0.22)}
 			.w3-panel.error{padding: 16px 0 16px 0;}
@@ -49,38 +55,27 @@
 			</div>
 			@if ($errors->any())
 			<div class="w3-panel w3-border-red w3-round-small w3-red w3-center error" style="margin-top:32px">
-				<p>@lang('service/auth/login.error.login')</p>	
+				<p>{{$errors->first('email')}}</p>	
 			</div>
 			@endif
-			<form method="POST" action="{{route('service.auth.login')}}">
+			<form method="POST" action="{{route('ppdb.register')}}">
 				@csrf
-				<div class="w3-padding-16">
-					<input name="name" 
-						value="{{Request::old('name')}}"
-						class="w3-input
+				<div class="padding-top-bottom-16">
+					<div class="input-group
 						@if ($errors->any())
 							error
 						@endif"
-						type="text" 
-						placeholder="@lang('service/auth/login.hints.name')" />
+					">
+						<label><i class="fas fa-envelope"></i></label>
+						<input name="email" 
+							value="{{old('email', '')}}"
+							class="w3-input
+							type="text" 
+							placeholder="{{trans('ppdb.hints.email')}}" />
+					</div>
 				</div>
 				<div class="w3-padding-16">
-					<input name="password" 
-						class="w3-input
-						@if ($errors->any())
-							error
-						@endif" 
-						type="password" 
-						placeholder="@lang('service/auth/login.hints.password')" />
-				</div>
-				<div>
-					<a class="w3-text-red" style="text-decoration:none;"
-						href="{{route('service.auth.forgot')}}" 
-						target="_blank"
-						>Lupa sandi?</a>
-				</div>
-				<div class="w3-padding-16">
-					<button class="w3-block w3-button w3-blue w3-hover-indigo">Masuk</button>
+					<button class="w3-block w3-button w3-blue w3-hover-indigo">{{trans('ppdb.hints.register')}}</button>
 				</div>
 			</form>
 		</div>
@@ -99,5 +94,12 @@
 		</footer>
 	</div>
 </div>
+@endSection
+
+@section('html.body.scripts')
+<script>
+$(document).ready(function(){
 	
+});
+</script>
 @endSection
