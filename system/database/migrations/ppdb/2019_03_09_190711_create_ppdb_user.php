@@ -20,10 +20,12 @@ class CreatePpdbUser extends Migration
     {
         $this->createSchema(function (Blueprint $table) {
 			$table->timestamps();
-			$table->string('email')->comment('username');
-			$table->string('token',6)->comment('kode verifikasi');
-			
-			$table->primary('email');
+			$table->integer('creator')->unsigned()->nullable();
+            $table->increments('id');
+            $table->string('email')->unique();
+            $table->string('password')->nullabe();
+            $table->boolean('activated')->default(true);
+            $table->rememberToken();
 		}, 'user');
     }
 

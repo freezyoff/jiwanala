@@ -1,10 +1,14 @@
 <?php
-Route::get('', function(){
-	return view('ppdb.landing');
-});
 
-Route::name('register')
-	->group(function(){
-	Route::get('register', '\App\Http\Controllers\PPDBController@showRegister');
-	Route::post('register', '\App\Http\Controllers\PPDBController@register');
+Route::name('landing')
+	->middleware(['guest:ppdb'])
+	->get('', function(){
+		return view('ppdb.landing');
+	});
+
+Route::name('dashboard.landing')
+	->middleware(['auth:ppdb'])
+	->any('dashboard', function(){
+		\Auth::guard('ppdb')->logout();
+	return "dashboard";
 });

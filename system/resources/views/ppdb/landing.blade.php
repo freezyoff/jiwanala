@@ -5,18 +5,23 @@
 	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
 	<link rel="stylesheet" href="{{url('css/app.css?'.csrf_token())}}">
 	<style>
-		@media (max-width: 600px) {
-			.w3-display-middle{position:relative;transform: none;left:0; min-width:300px}
-			
-			img.brand {width: 4em; padding: 0;margin: 0;top:0;position:relative; vertical-align:top; }
-			.brand-title {font-family:'Proxima Nova'; font-size:1.4em; letter-spacing:.5px; font-weight:bold; line-height:1.2; }
-			.brand-subtitle {line-height:1; font-size:.8em;}
-			.w3-container{background:transparent !important;}
-			.w3-card.boxContainer{box-shadow: none !important;}
-			
-			.w3-theme {background-color:#f1f1f1 !important; color:#333 !important;}
-		}
+		body {background:#fefefe;}
+		h2 {font-size:19px;}
+		h3 {font-size:16px;}
+		h4 {font-size:14px;}
 		
+		@media (max-width: 600px) {
+			.w3-theme {background-color:#f1f1f1 !important; color:#333 !important;}
+			
+			#brandTag {
+				display:flex; align-items:center; padding:8px 16px; background:#222222; color:#fefefe; 
+				box-shadow:0 0 4px 1px #0003;
+			}
+			#brandTag img.image {width:2.8em;}
+			#brandTag .title {font-family:'Proxima Nova'; font-size:1.4em; letter-spacing:.5px; font-weight:bold; line-height:1.2; }
+			#brandTag .subtitle {line-height:1; font-size:.75em;}
+		}
+			
 		@media only screen and (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 		@media only screen and (min-width: 768px){			/* Medium devices (landscape tablets, 768px and up) */
 		
@@ -39,50 +44,18 @@
 @endSection
 
 @section('html.body.content')
-<div class="w3-display-middle">
+<div id="brandTag">
+	<img class="image" src="{{url('media/img/brand.png')}}" width="3em">
+	<div class="padding-left-8" style="">
+		<h1 class="title">JIWANALA</h1>
+		<div class="subtitle">Learn . Explore . Lead</div>
+	</div>
+</div>
+
+<div class="">
 	<div class="w3-row">
-		<div class="w3-col s12 m12 l12 w3-container w3-card w3-light-grey w3-round-small boxContainer">
-			<div class="w3-section w3-center">
-				<img class="brand" src="{{url('media/img/brand.png')}}">
-				<h1 class="brand-title">JIWANALA</h1>
-				<div class="brand-subtitle">Learn . Explore . Lead</div>
-			</div>
-			@if ($errors->any())
-			<div class="w3-panel w3-border-red w3-round-small w3-red w3-center error" style="margin-top:32px">
-				<p>@lang('service/auth/login.error.login')</p>	
-			</div>
-			@endif
-			<form method="POST" action="{{route('service.auth.login')}}">
-				@csrf
-				<div class="w3-padding-16">
-					<input name="name" 
-						value="{{Request::old('name')}}"
-						class="w3-input
-						@if ($errors->any())
-							error
-						@endif"
-						type="text" 
-						placeholder="@lang('service/auth/login.hints.name')" />
-				</div>
-				<div class="w3-padding-16">
-					<input name="password" 
-						class="w3-input
-						@if ($errors->any())
-							error
-						@endif" 
-						type="password" 
-						placeholder="@lang('service/auth/login.hints.password')" />
-				</div>
-				<div>
-					<a class="w3-text-red" style="text-decoration:none;"
-						href="{{route('service.auth.forgot')}}" 
-						target="_blank"
-						>Lupa sandi?</a>
-				</div>
-				<div class="w3-padding-16">
-					<button class="w3-block w3-button w3-blue w3-hover-indigo">Masuk</button>
-				</div>
-			</form>
+		<div class="w3-container padding-top-bottom-16">
+			<h2>PPDB 2019/2020<h2>
 		</div>
 	</div>
 	<div class="w3-row padding-top-16 w3-center" style="">

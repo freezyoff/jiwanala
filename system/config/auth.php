@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'my',
+        'passwords' => 'my',
     ],
 
     /*
@@ -36,15 +36,20 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'my' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'my',
         ],
 
-        'api' => [
+        'my-api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'my',
         ],
+		
+		'ppdb'=>[
+			'driver' => 'session',
+            'provider' => 'ppdb',
+		]
     ],
 
     /*
@@ -65,10 +70,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'my' => [
             'driver' => 'eloquent',
             'model' => App\Libraries\Service\Auth\User::class,
         ],
+		
+		'ppdb' =>[
+			'driver' => 'eloquent',
+            'model' => App\Libraries\PPDB\User::class,
+		]
 
         // 'users' => [
         //     'driver' => 'database',
@@ -92,8 +102,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'my' => [
+            'provider' => 'my',
             'table' => 'password_resets',
             'expire' => 60,
         ],

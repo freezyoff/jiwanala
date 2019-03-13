@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\PPDB;
+namespace App\Notifications\Service\Auth\PPDB;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -11,12 +11,15 @@ class RegisterTokenEmail extends Notification
 {
     use Queueable;
 	
+	protected $token;
+	
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(){
+    public function __construct($token){
+		$this->token = $token;
     }
 
     /**
@@ -40,7 +43,7 @@ class RegisterTokenEmail extends Notification
     {
         return (new MailMessage)
 			->subject('PPDB JIWANALA')
-			->markdown('ppdb.mail.register', ['user'=>$notifiable]);
+			->markdown('ppdb.mail.register', ['user'=>$notifiable, 'token'=>$this->token]);
     }
 
     /**

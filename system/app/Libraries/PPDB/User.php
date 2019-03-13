@@ -3,15 +3,13 @@
 namespace App\Libraries\PPDB;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User as BaseUser;
 
-class User extends Model
+class User extends BaseUser
 {
     protected $connection = 'ppdb';
 	protected $table='users';
-	protected $primaryKey = 'email';
-	protected $fillable= ['email','token'];
-	
-    public $incrementing = false;
+	protected $fillable = ['email', 'password'];
 	
 	public function getToken(){
 		return $this->token;
@@ -28,7 +26,7 @@ class User extends Model
 		return $randomString;
 	}
 	
-	public function routeNotificationFor(){
-		return $this->email;
+	public function sendPasswordNotification($token){
+		$this->notify(new \App\Notifications\PPDB\RegisterTokenEmail($token));
 	}
 }

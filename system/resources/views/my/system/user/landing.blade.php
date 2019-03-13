@@ -106,7 +106,7 @@
 										@endif
 									</td>
 									<td class="w3-hide-small w3-hide-medium" style="text-align:right;white-space:nowrap">
-										@if ($empl->asUser)
+										@if($empl->asUser)
 											@if(\Auth::user()->hasPermission('system.user.patch'))
 											<a class="action"
 												style="cursor:pointer"
@@ -114,7 +114,8 @@
 												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
 												<i class="fas fa-undo"></i>
 											</a>
-											@elseif(\Auth::user()->hasPermission('system.user.delete'))
+											@endif
+											@if(\Auth::user()->hasPermission('system.user.delete'))
 											<a class="action padding-left-8"
 												style="cursor:pointer"
 												toggle="delete-modal-{{$empl->id}}"

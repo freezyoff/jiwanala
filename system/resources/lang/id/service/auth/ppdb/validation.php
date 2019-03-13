@@ -1,11 +1,4 @@
 <?php return[
-	'hints'=>[
-		'email'=>'Alamat Email',
-		'password'=>'Kode Verifikasi',
-		'register'=>'Daftar',
-		'signin'=>'Masuk'
-	],
-	
 	'validation'=>[
 		'email.unique'=>'Email sudah terdaftar.',
 		'email.email'=>'Gunakan format email: email@domain.com.',

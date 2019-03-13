@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PPDB;
+namespace App\Http\Requests\Service\PPDB;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class SignInRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,12 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'required|email|unique:ppdb.users,email'
+            'email'=>'required|email|exists:ppdb.users,email',
+			'password'=>'required|alpha_num',
         ];
     }
 	
 	public function messages(){
-		return trans('ppdb.validation');
+		return trans('service/auth/ppdb/validation');
 	}
 }

@@ -5,20 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Notification;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PPDB\RegisterRequest;
 use App\Libraries\PPDB\User;
+use App\Http\Requests\PPDB\RegisterRequest;
+use App\Http\Requests\PPDB\SignInRequest;
 
 class PPDBController extends Controller
 {
-    public function showRegister(){
-		return view('ppdb.register');
+	public static function redirectToDashboard(){
+		return route('ppdb.dashboard.landing');
 	}
 	
-	public function register(RegisterRequest $request){
-		//save user
-		$user = new User($request->only(['email']));
-		$user->token = User::createToken();
-		//$user->save();
-		Notification::send($user, new \App\Notifications\PPDB\RegisterTokenEmail());
+	public static function sendRedirectToDashboard(){
+		return redirect(self::redirectToDashboard());
+	}
+	
+    public function showSignInOrRegister(){
+		return view('ppdb.register');
 	}
 }

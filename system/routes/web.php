@@ -40,7 +40,7 @@ Route::domain('service.'.$domain)
 
 Route::domain('my.'.$domain)
 	->name('my.')
-	->middleware(['auth', 'timezone'])
+	->middleware(['auth:my', 'timezone'])
 	->group(function() use($locale){
 		
 		Route::get('', function() use($locale){
@@ -54,6 +54,7 @@ Route::domain('my.'.$domain)
 
 Route::domain('ppdb.'.$domain)
 	->name('ppdb.')
+	->middleware(['timezone'])
 	->group(function() use($locale){
 		Route::get('', function() use($locale){
 			return redirect($locale);

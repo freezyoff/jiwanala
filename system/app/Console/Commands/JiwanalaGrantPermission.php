@@ -53,8 +53,13 @@ class JiwanalaGrantPermission extends Command
 	function doGrant($user, $permissions){
 		$this->comment('Process granting permission(s):');
 		foreach($permissions as $permissionKey){
-			$user->grantPermissions($permissionKey);
-			$this->info('Permission key: '.$permissionKey.' added.');
+			if (\App\Libraries\Service\Permission::exists($permissionKey)){
+				$user->grantPermissions($permissionKey);
+				$this->info('Permission key: '.$permissionKey.' added.');				
+			}
+			else{
+				$this->error('Permission key: '.$permissionKey.' not found.');
+			}
 		}
 	}
 }

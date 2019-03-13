@@ -14,16 +14,25 @@ class Auth
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard= null)
     {
-        if (!LaravelAuth::check()) {
-            return redirect()->route('service.auth.login');
-        }
-		
-		if (\Auth::user()->activated != 1){
-			return abort(403,trans('http_error.403'));
+		//if logged in
+		if (\Auth::guard($guard)->check()){
+			
+			//check activated
+			if (\Auth::guard($guard)->user()->activated != 1){
+				return abort(403,trans('http_error.403'));
+			}
+			return $next($request);
+			
 		}
-
-        return $next($request);
+		
+		//not logged in, redirect to login page
+		if ($guard == 'my'){
+			return redirect()->route('service.auth.login');
+		}
+		elseif ($guard == 'ppdb'){
+			return \App\Http\Controllers\Service\Auth\PPDBController::sendRedirectNotSignedIn();
+		}
     }
 }
