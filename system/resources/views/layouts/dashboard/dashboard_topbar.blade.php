@@ -36,15 +36,15 @@
 				@foreach(config('my.dashboardTopNav') as $key=>$item)
 					<?php
 						$isSetPermissionContext = isset($item['permission_context']);
-						$isClosureAndTrue = $isSetPermissionContext && 
-											$item['permission_context'] instanceof Closure && 
-											$item['permission_context']();
+						$isClosure = $isSetPermissionContext && 
+											$item['permission_context'] instanceof Closure;
+						$isClosureTrue = $isClosure && $item['permission_context']()? true : false;
 						$isUserHasPermissionContext = $isSetPermissionContext && 
-														!$isClosureAndTrue && 
+														!$isClosure && 
 														Auth::user() && 
 														Auth::user()->hasPermissionContext($item['permission_context']);
 					?>
-					@if( !$isSetPermissionContext || $isClosureAndTrue || $isUserHasPermissionContext )
+					@if( !$isSetPermissionContext || $isClosureTrue || $isUserHasPermissionContext )
 						<li class="w3-hover-light-grey" style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile
 								@if(isset($item['display']['class']))
@@ -91,15 +91,15 @@
 		@foreach(config('my.dashboardTopNav') as $key=>$item)
 			<?php
 				$isSetPermissionContext = isset($item['permission_context']);
-				$isClosureAndTrue = $isSetPermissionContext && 
-									$item['permission_context'] instanceof Closure && 
-									$item['permission_context']();
+				$isClosure = $isSetPermissionContext && 
+									$item['permission_context'] instanceof Closure;
+				$isClosureTrue = $isClosure && $item['permission_context']()? true : false;
 				$isUserHasPermissionContext = $isSetPermissionContext && 
-												!$isClosureAndTrue && 
+												!$isClosure && 
 												Auth::user() && 
 												Auth::user()->hasPermissionContext($item['permission_context']);
 			?>
-			@if( !$isSetPermissionContext || $isClosureAndTrue || $isUserHasPermissionContext )
+			@if( !$isSetPermissionContext || $isClosureTrue || $isUserHasPermissionContext )
 				<button class="w3-bar-item w3-button w3-hover-none 
 					@if(isset($item['display']['class']))
 						{{$item['display']['class']}}
