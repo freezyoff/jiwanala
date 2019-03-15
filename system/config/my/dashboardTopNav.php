@@ -80,6 +80,17 @@
 						'href'=>'my.bauk.employee.landing',
 					],
 					[
+						'permission'=>'bauk.assignment.list',
+						'display'=>[ 
+							'name'=>'Penugasan',
+							'tag'=>[
+								'label'=>"new",
+								'color'=>'w3-green'
+							]
+						], 
+						'href'=>'my.bauk.assignment.landing',
+					],
+					[
 						'permission'=>'bauk.schedule.list',
 						'display'=>[ 				
 							'name'=>'Jadwal Kerja', 
@@ -137,18 +148,13 @@
 					]
 				]
 			],
-			[
-				'display'=>[ 'name'=>'Penugasan', 'icon'=>'fas fa-running fa-fw' ], 
-				'permission'=>'bauk.assignment.list',
-				'href'=>'my.bauk.assignment.landing',
-			],
 		]
 	],
 	
 	'head-master'=>[
 		'display'=>[ 'name'=>'Kepala Sekolah', 'icon'=>'fas fa-chess-rook'],
 		'href'=>'my.head-master.landing',
-		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->isDivisionManager(); },
+		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->getAssignmentAs('2.4'); },
 	],
 	
 	'baak'=>[

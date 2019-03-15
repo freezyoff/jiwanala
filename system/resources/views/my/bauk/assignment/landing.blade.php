@@ -31,8 +31,22 @@
 		</div>
 		<div class="w3-container">
 			<div id="unassigned" class="employee-list">
-			  <h2>London</h2>
-			  <p>London is the capital of England.</p>
+				<table>
+					<thead>
+						<tr>
+							<td>NIP</td>
+							<td>Nama</td>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($unassigned as $employee)
+						<tr>
+							<td>{{ $employee->nip }}</td>
+							<td>{{ $employee->asPerson->getFullName() }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
 			</div>
 
 			<div id="assigned" class="employee-list" style="display:none">

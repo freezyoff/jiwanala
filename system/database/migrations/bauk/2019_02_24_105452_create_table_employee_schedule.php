@@ -6,7 +6,7 @@ use App\Libraries\Foundation\Migration;
 
 class CreateTableEmployeeSchedule extends Migration
 {
- protected $connection = 'bauk';
+	protected $connection = 'bauk';
 	protected $tables = [
 		'user'=>'users',
 		'employee'=>'employees',

@@ -4,12 +4,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Libraries\Foundation\Migration;
 
-class CreateTableDivisions extends Migration
+class CreateTableJobPositions extends Migration
 {
     protected $connection = "core";
 	protected $tables = [
-		"division"=>"divisions",
-		"employee"=>"employees",
+		"job-position"=>"job_positions",
 	];
 	
     /**
@@ -22,12 +21,12 @@ class CreateTableDivisions extends Migration
         $this->createSchema(function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
-			$table->integer('code');
+			$table->string('code',20);
 			$table->string('name');
 			$table->string('alias');
 			
 			$table->primary('code');
-        }, 'division');
+        }, 'job-position');
     }
 
     /**
@@ -37,6 +36,6 @@ class CreateTableDivisions extends Migration
      */
     public function down()
     {
-        $this->dropSchema('division');
+        $this->dropSchema('job-position');
     }
 }

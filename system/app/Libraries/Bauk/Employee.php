@@ -2,11 +2,25 @@
 
 namespace App\Libraries\Bauk;
 
+use App\Libraries\Foundation\Employee\AsPerson;
+use App\Libraries\Foundation\Employee\AsUser;
+use App\Libraries\Foundation\Employee\HaveAttendanceRecords;
+use App\Libraries\Foundation\Employee\HaveConsentRecords;
+use App\Libraries\Foundation\Employee\HaveWorkSchedules;
+use App\Libraries\Foundation\Employee\HaveAssignments;
+
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class Employee extends Model
 {
+	use AsPerson, 
+		AsUser, 
+		HaveAttendanceRecords, 
+		HaveConsentRecords, 
+		HaveWorkSchedules,
+		HaveAssignments;
+	
     protected $table="employees";
 	protected $connection ="bauk";
 	protected $fillable=[
@@ -18,40 +32,6 @@ class Employee extends Model
 		'resign_at',
 		'active',
 	];
-	
-	public function getFullName($spacer=' '){
-		//return $this->id .'-'. $this->person_id;
-		return $this->asPerson()->first()->getFullName($spacer);
-	}
-	
-	public function asUser(){
-		return $this->belongsTo('\\App\Libraries\Service\Auth\User', 'user_id');
-	}
-	
-	public function asPerson(){
-		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
-	}
-	
-	public function asDivisionManager(){
-		return $this->hasMany('App\Libraries\Core\Division', 'leader_employee_id', 'id');
-	}
-	
-	public function isDivisionManager(){
-		$division = $this->asDivisionManager()->get();
-		return count($division)>0;
-	}
-	
-	public function attendances(){
-		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
-	}
-	
-	public function consents(){
-		return $this->hasMany('App\Libraries\Bauk\EmployeeConsent', 'employee_id', 'id');
-	}
-	
-	public function schedules(){
-		return $this->hasMany('App\Libraries\Bauk\EmployeeSchedule', 'employee_id', 'id');
-	}
 	
 	public function workTime($key=false){
 		if ($key) return $key== "f"? "Full Time" : "Part Time";
@@ -88,77 +68,6 @@ class Employee extends Model
 		}
 		
 		parent::delete();	//delete self
-	}
-	
-	/**
-	 *	return attendance record for current employee by given date
-	 *	@param $date (String) - formatted date "Y-m-d"
-	 *	@return (App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
-	 */
-	public function attendanceRecord($date){
-		if($date instanceof Carbon){
-			$date = $date->format('Y-m-d');
-		}
-		return $this->attendances()->where('date','=',$date)->first();
-	}
-	
-	/**
-	 *	return attendance record for current employee between given start & end date
-	 *	@param $start (String) - formatted date "Y-m-d"
-	 *	@param $end (String) - formatted date "Y-m-d"
-	 *	@return (Array of App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
-	 */
-	public function attendanceRecordsByPeriode($start, $end, $sort='asc'){
-		return $this->attendances()
-					->whereBetween('date', [$start, $end])
-					->orderBy('date', $sort);
-	}
-	
-	/**
-	 *	return consent record for current employee between given $date
-	 *	@param $date (String|Carbon) - formatted date "Y-m-d"
-	 *	@return (Array of App\Libraries\Bauk\EmployeeConsent|Boolean) the records or false
-	 */
-	public function consentRecord($date, $type=false){
-		if ($date instanceof Carbon){
-			$date = $date->format('Y-m-d');
-		}
-		
-		$consent = $this->consents()->whereRaw('\''.$date.'\' BETWEEN `start` AND `end`');
-		if ($type){
-			$consent->where('consent','=',$type);
-		}
-		
-		return $consent->first();
-	}
-	
-	/**
-	 *	return consent records for current employee between given start & end date
-	 *	@param $start (String) - formatted date "Y-m-d"
-	 *	@param $end (String) - formatted date "Y-m-d"
-	 *	@return (Array of App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
-	 */
-	public function consentRecordsByPeriode($start, $end, $sort='asc'){
-		return $this->consents()
-			->whereBetween('start', [$start, $end])
-			->whereBetween('end', [$start, $end])
-			->orderBy('start', $sort);
-	}
-	
-	public function hasSchedule(String $dayOfWeek){
-		return $this->getSchedule($dayOfWeek)? true : false;
-	}
-	
-	public function getSchedule(String $dayOfWeek){
-		return $this->schedules()->where('day','=',$dayOfWeek)->first();
-	}
-	
-	public function getScheduleDaysOfWeek(){
-		return EmployeeSchedule::getScheduleDaysOfWeek($this->id);
-	}
-	
-	public function getOffScheduleDaysOfWeek(){
-		return EmployeeSchedule::getOffScheduleDaysOfWeek($this->id);
 	}
 	
 	public static function findByNIP($nip){

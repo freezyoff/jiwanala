@@ -9,9 +9,12 @@ class Division extends Model
     protected $table = 'divisions';
 	protected $connection = 'core';
 	protected $fillable = [
+		'creator',
 		'code',
 		'name',
-		'alias',
-		'leader_employee_id'
+		'alias'
 	];
+	
+	protected $primary = 'code';
+    public $incrementing = false;
 }
