@@ -9,7 +9,7 @@ class MinifyReponseOutputString
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-		
+		return $response;
         if ($this->isResponseObject($response) && $this->isHtmlResponse($response) && !$this->isResponseStackTrace($response)) {
 			$replace = [
 				

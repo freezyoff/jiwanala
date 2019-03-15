@@ -62,5 +62,11 @@
 		'bauk.schedule.post'=>['bauk', 'Post Employee Schedule', 'Menambah jadwal kerja'],
 		'bauk.schedule.patch'=>['bauk', 'Patch Employee Schedule', 'Merubah jadwal kerja'],
 		'bauk.schedule.delete'=>['bauk', 'Delete Employee Schedule', 'Menghapus jadwal kerja'],
+		
+		//assignment
+		'bauk.assignment.list'=>['bauk', 'List Employee Assignment', 'Melihat daftar penugasan karyawan'],
+		'bauk.assignment.post'=>['bauk', 'Post Employee Assignment', 'Menambah penugasan karyawan'],
+		'bauk.assignment.patch'=>['bauk', 'Patch Employee Assignment', 'Merubah penugasan karyawan'],
+		'bauk.assignment.delete'=>['bauk', 'Delete Employee Assignment', 'Menghapus penugasan karyawan'],
     ],
 ];

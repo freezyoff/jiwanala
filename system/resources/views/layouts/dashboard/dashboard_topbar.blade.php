@@ -34,7 +34,17 @@
 			</header>
 			<ul class="w3-ul">
 				@foreach(config('my.dashboardTopNav') as $key=>$item)
-					@if( !isset($item['permission_context']) || (Auth::user() && Auth::user()->hasPermissionContext($key)) )
+					<?php
+						$isSetPermissionContext = isset($item['permission_context']);
+						$isClosureAndTrue = $isSetPermissionContext && 
+											$item['permission_context'] instanceof Closure && 
+											$item['permission_context']();
+						$isUserHasPermissionContext = $isSetPermissionContext && 
+														!$isClosureAndTrue && 
+														Auth::user() && 
+														Auth::user()->hasPermissionContext($item['permission_context']);
+					?>
+					@if( !$isSetPermissionContext || $isClosureAndTrue || $isUserHasPermissionContext )
 						<li class="w3-hover-light-grey" style="cursor:pointer;">
 							<a class="w3-text-theme w3-mobile
 								@if(isset($item['display']['class']))
@@ -79,7 +89,17 @@
 	</a>
 	<div class="top-nav">
 		@foreach(config('my.dashboardTopNav') as $key=>$item)
-			@if( !isset($item['permission_context']) || ( Auth::user() && Auth::user()->hasPermissionContext($item['permission_context'])) )
+			<?php
+				$isSetPermissionContext = isset($item['permission_context']);
+				$isClosureAndTrue = $isSetPermissionContext && 
+									$item['permission_context'] instanceof Closure && 
+									$item['permission_context']();
+				$isUserHasPermissionContext = $isSetPermissionContext && 
+												!$isClosureAndTrue && 
+												Auth::user() && 
+												Auth::user()->hasPermissionContext($item['permission_context']);
+			?>
+			@if( !$isSetPermissionContext || $isClosureAndTrue || $isUserHasPermissionContext )
 				<button class="w3-bar-item w3-button w3-hover-none 
 					@if(isset($item['display']['class']))
 						{{$item['display']['class']}}

@@ -50,14 +50,22 @@ class EmployeeAttendance extends Model
 		]; 
 	}
 	
+	/**
+	 *	
+	 *	@return (Carbon) latest departure time if set. otherwise arrival time (@see getArrival())
+	 */
 	public function getLatestDeparture(): Carbon {
 		$time2 = $this->time2;
 		$time3 = $this->time3;
 		$time4 = $this->time4;
 		
-		if ($time2) $time2 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time2);
-		if ($time3) $time3 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time3);
 		if ($time4) $time4 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time4);
+		if ($time3) $time3 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time3);
+		if ($time2) $time2 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time2);
+		
+		//if departure time not set, we return arrival time
+		if (!$time2 && !$time3 && !$time4) return $this->getArrival();
+		
 		$max = $time2->greaterThan($time3)? $time2 : $time3;
 		return $max->greaterThan($time4)? $max : $time4;
 	}

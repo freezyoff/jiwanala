@@ -168,3 +168,13 @@ Route::prefix('attendance')
 	});
 		
 });
+
+Route::name('assignment.')
+	->prefix('assignment')
+	->group(function(){
+	
+	Route::name('landing')
+		->middleware('permission:bauk.assignment.list')
+		->get('', '\App\Http\Controllers\My\Bauk\AssignmentController@index');
+	
+});

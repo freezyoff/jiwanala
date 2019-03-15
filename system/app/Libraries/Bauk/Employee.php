@@ -32,6 +32,15 @@ class Employee extends Model
 		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
 	}
 	
+	public function asDivisionManager(){
+		return $this->hasMany('App\Libraries\Core\Division', 'leader_employee_id', 'id');
+	}
+	
+	public function isDivisionManager(){
+		$division = $this->asDivisionManager()->get();
+		return count($division)>0;
+	}
+	
 	public function attendances(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
 	}

@@ -39,7 +39,7 @@ class PPDBController extends Controller
 		$user->password = \Hash::make($token);
 		$user->save();
 		$user->sendPasswordNotification($token);
-		return self::redirect()
+		return self::redirect();
 	}
 	
 	public function signin(SignInRequest $request){

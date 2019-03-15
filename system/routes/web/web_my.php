@@ -16,3 +16,7 @@ Route::prefix ('bauk')
 	
 Route::name('dashboard.')
 	->group(base_path('routes/web/web_my_dashboard.php'));
+	
+Route::prefix('manager')
+	->name('head-master.')
+	->group(base_path('routes/web/web_my_head_master.php'));

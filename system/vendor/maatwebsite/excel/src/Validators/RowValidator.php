@@ -33,7 +33,7 @@ class RowValidator
      */
     public function validate(array $rows, WithValidation $import)
     {
-        $rules      = $this->rules($import, $rows);
+        $rules      = $this->rules($import);
         $messages   = $this->messages($import);
         $attributes = $this->attributes($import);
 
@@ -45,12 +45,12 @@ class RowValidator
                 $row           = strtok($attribute, '.');
                 $attributeName = strtok('');
                 $attributeName = $attributes['*.' . $attributeName] ?? $attributeName;
-		
+
                 $failures[] = new Failure(
                     $row,
                     $attributeName,
                     str_replace($attribute, $attributeName, $messages),
-					$rows[$row]	//<---- cells of current failure line
+                    $rows[$row]
                 );
             }
 
@@ -95,9 +95,9 @@ class RowValidator
      *
      * @return array
      */
-    private function rules(WithValidation $import, Array $rows): array
+    private function rules(WithValidation $import): array
     {
-        return $this->formatKey($import->rules($rows));
+        return $this->formatKey($import->rules());
     }
 
     /**
@@ -115,7 +115,7 @@ class RowValidator
     }
 
     /**
-     * @param string|array $rules
+     * @param string|object|callable|array $rules
      *
      * @return string|array
      */
@@ -128,11 +128,11 @@ class RowValidator
 
             return $formatted ?? [];
         }
-		
-		// check if given $rules is closure.
-		// if closure, do nothing. Let Illuminate\Contracts\Validation\Factory handle the rest;
-		if (is_object($rules) && is_callable($rules)) return $rules;
-		
+
+        if (is_object($rules) || is_callable($rules)) {
+            return $rules;
+        }
+
         if (Str::contains($rules, 'required_if') && preg_match('/(.*):(.*),(.*)/', $rules, $matches)) {
             $column = Str::startsWith($matches[2], '*.') ? $matches[2] : '*.' . $matches[2];
 
