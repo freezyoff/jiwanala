@@ -97,7 +97,7 @@ class RowValidator
      */
     private function rules(WithValidation $import, $rows): array
     {
-        return $this->formatKey($import->rules());
+        return $this->formatKey($import->rules($rows));
     }
 
     /**
