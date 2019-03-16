@@ -33,7 +33,7 @@ class RowValidator
      */
     public function validate(array $rows, WithValidation $import)
     {
-        $rules      = $this->rules($import);
+        $rules      = $this->rules($import, $rows);
         $messages   = $this->messages($import);
         $attributes = $this->attributes($import);
 
@@ -95,7 +95,7 @@ class RowValidator
      *
      * @return array
      */
-    private function rules(WithValidation $import): array
+    private function rules(WithValidation $import, $rows): array
     {
         return $this->formatKey($import->rules());
     }

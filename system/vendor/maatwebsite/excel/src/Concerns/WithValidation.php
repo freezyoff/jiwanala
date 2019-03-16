@@ -7,5 +7,5 @@ interface WithValidation
     /**
      * @return array
      */
-    public function rules(): array;
+    public function rules($rows): array;
 }
