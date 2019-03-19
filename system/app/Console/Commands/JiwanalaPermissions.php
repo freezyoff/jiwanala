@@ -12,7 +12,8 @@ class JiwanalaPermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala:permission {do : diff|sync|list}';
+    protected $signature = 'jiwanala:permission {cmd : [list|diff|sync]} 
+												{user? : the user name}';
 
     /**
      * The console command description.
@@ -37,12 +38,19 @@ class JiwanalaPermissions extends Command
      * @return mixed
      */
     public function handle(){
-		$command = $this->argument('do');
+		$command = $this->argument('cmd');
+		
 		if (strtolower($command) == 'diff'){
 			$this->doDiff();
 		}
 		elseif (strtolower($command) == 'ls' || strtolower($command) == 'list'){
-			$this->doList();
+			$user = $this->argument('user');
+			if ($user){
+				$this->doListUser($user);
+			}
+			else{
+				$this->doList();
+			}
 		}
 		elseif (strtolower($command) == 'sync'){
 			$this->doSync();
@@ -75,17 +83,33 @@ class JiwanalaPermissions extends Command
 	}
 	
 	protected function doSync(){
+		//delete from database
+		$config = $this->getConfig();
+		foreach(\App\Libraries\Service\Permission::all() as $item){
+			$exists = isset($config[$item->key])? true : false;
+			if (!$exists){
+				$this->info('delete permission key: '.$key);
+				$item->delete();
+			}
+		}
+		
+		//add to database
 		foreach($this->getConfig() as $key=>$value){
 			$record = \App\Libraries\Service\Permission::where('key','=',$key)->first();
+			$values = [
+				'key'		=>	$key,
+				'context'	=>	$value[0],
+				'display_name'=>$value[1],
+				'description'=>	$value[2],
+			];
 			if (!$record){
-				$record = new \App\Libraries\Service\Permission([
-					'key'		=>	$key,
-					'context'	=>	$value[0],
-					'display_name'=>$value[1],
-					'description'=>	$value[2],
-				]);
+				$record = new \App\Libraries\Service\Permission($values);
 				$record->save();
 				$this->info('add permission key: '.$key);
+			}
+			else{
+				$record->fill($values);
+				$record->save();
 			}
 		}
 		
@@ -105,22 +129,44 @@ class JiwanalaPermissions extends Command
 		
 		$loopCount = max(count($table['cf']), count($table['db']));
 		$keys = array_merge(array_keys($table['db']), array_keys($table['cf']));
+		
 		$rows = [];
 		foreach($keys as $key){
 			$cf = isset($table['cf'][$key])? $table['cf'][$key] : false;
 			$db = isset($table['db'][$key])? $table['db'][$key] : false;
-			$op = isset($table['cf'][$key]) && isset($table['db'][$key])? '' : '-';
-			$op .= isset($table['cf'][$key]) && !isset($table['db'][$key])? '>' : '';
-			$op .= !isset($table['cf'][$key]) && isset($table['db'][$key])? '<' : '';
-			$rows[] = [$cf,$op,$db]; 
+			
+			if (isset($table['cf'][$key]) && !isset($table['db'][$key])){
+				$op = "+";
+			}
+			elseif (!isset($table['cf'][$key]) && isset($table['db'][$key])){
+				$op = "-";
+			}
+			else{
+				$op = "";
+			}
+			
+			$rows[$key] = [$cf,$op,$db];
 		}
+		ksort($rows);
 		$this->table(['Config', 'diff', 'Database'], $rows);
+		$this->info('"-" : will be delete from database');
+		$this->info('"+" : will be add to database');
 	}
 	
 	protected function doList(){
 		$table = [];
 		foreach($this->getConfig() as $key=>$item){
 			$table[] = [$key, $item[0], $item[1], $item[2]];
+		}
+		$this->table(['key', 'context', 'display', 'desc'], $table);
+	}
+	
+	protected function doListUser($user){
+		$user = \App\Libraries\Service\Auth\User::findByName($user);
+		
+		$table = [];
+		foreach($user->permissions()->orderBy('key','asc')->get() as $permission){
+			$table[] = [$permission->key, $permission->context, $permission->display_name, $permission->description];
 		}
 		$this->table(['key', 'context', 'display', 'desc'], $table);
 	}

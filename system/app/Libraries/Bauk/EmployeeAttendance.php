@@ -31,7 +31,11 @@ class EmployeeAttendance extends Model
 	}
 	
 	public function getArrival():Carbon{
-		return Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time1);
+		if ($this->date && $this->time1) {
+			return Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time1);
+		}
+		
+		return $this->getLatestDeparture();
 	}
 	
 	public function getArrivalOffset(){

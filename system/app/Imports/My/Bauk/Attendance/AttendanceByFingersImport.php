@@ -93,8 +93,8 @@ class AttendanceByFingersImport implements
 			'no' =>					['required','numeric'],
 			'nip'=> 				['required','numeric','exists:bauk.employees,nip'],
             'tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isScheduleDayOff],
-			'finger_masuk' => 		['nullable', 'required_if:finger_keluar_1,',$regexTimeFormat],
-			'finger_keluar_1' =>	['nullable', 'required_if:finger_masuk,',$regexTimeFormat],
+			'finger_masuk' => 		['required',$regexTimeFormat],
+			'finger_keluar_1' =>	['required',$regexTimeFormat],
 			'finger_keluar_2' =>	['nullable',$regexTimeFormat],
 			'finger_keluar_3' =>	['nullable',$regexTimeFormat],
 
@@ -102,8 +102,8 @@ class AttendanceByFingersImport implements
 			'*.no' =>				['required','numeric'],
 			'*.nip'=> 				['required','numeric','exists:bauk.employees,nip'],
 			'*.tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isScheduleDayOff],
-			'*.finger_masuk' => 	['nullable','required_if:*.finger_keluar_1,',$regexTimeFormat],
-			'*.finger_keluar_1' =>	['nullable','required_if:*.finger_masuk,',$regexTimeFormat],
+			'*.finger_masuk' => 	['required',$regexTimeFormat],
+			'*.finger_keluar_1' =>	['required',$regexTimeFormat],
 			'*.finger_keluar_2' =>	['nullable',$regexTimeFormat],
 			'*.finger_keluar_3' =>	['nullable',$regexTimeFormat],
         ];

@@ -4,10 +4,10 @@ namespace App\Libraries\Bauk;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeAssignments extends Model{
+class EmployeeAssignment extends Model{
     
 	protected $connection = 'bauk';
-	protected $table = "employees_divisions";
+	protected $table = "employees_assignments";
 	protected $primaryKey = ['division_id','employee_id'];
     public $incrementing = false;
 	protected $fillable = [

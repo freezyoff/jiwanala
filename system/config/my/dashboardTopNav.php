@@ -154,7 +154,7 @@
 	'head-master'=>[
 		'display'=>[ 'name'=>'Kepala Sekolah', 'icon'=>'fas fa-chess-rook'],
 		'href'=>'my.head-master.landing',
-		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->getAssignmentAs('2.4'); },
+		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->isAssignedAs('2.4'); },
 	],
 	
 	'baak'=>[

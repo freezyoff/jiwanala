@@ -11,6 +11,10 @@ class User extends BaseUserModel{
 	protected $connection = 'service';
 	protected $fillable=['creator','name','email','password', 'activated'];
 
+	public static function findByName($name){
+		return self::where('name',$name)->first();
+	}
+	
 	public function asEmployee(){
 		return $this->hasOne('\App\Libraries\Bauk\Employee','user_id');
 	}

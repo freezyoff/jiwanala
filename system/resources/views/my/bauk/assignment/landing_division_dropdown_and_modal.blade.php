@@ -4,7 +4,7 @@
 		<li style="cursor:pointer;">
 			<a class="w3-text-theme w3-mobile" 
 				select-role="item" 
-				select-value="{{$dd->id}}">
+				select-value="{{$dd->code}}">
 				({{$dd->code}}) {{$dd->name}}
 			</a>
 		</li>
@@ -31,7 +31,7 @@
 					<li style="cursor:pointer;">
 						<a class="w3-text-theme w3-mobile" 
 							select-role="item" 
-							select-value="{{$dd->id}}">
+							select-value="{{$dd->code}}">
 							({{$dd->code}}) {{$dd->name}}
 						</a>
 					</li>

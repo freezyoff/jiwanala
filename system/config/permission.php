@@ -65,8 +65,7 @@
 		
 		//assignment
 		'bauk.assignment.list'=>['bauk', 'List Employee Assignment', 'Melihat daftar penugasan karyawan'],
-		'bauk.assignment.post'=>['bauk', 'Post Employee Assignment', 'Menambah penugasan karyawan'],
-		'bauk.assignment.patch'=>['bauk', 'Patch Employee Assignment', 'Merubah penugasan karyawan'],
-		'bauk.assignment.delete'=>['bauk', 'Delete Employee Assignment', 'Menghapus penugasan karyawan'],
+		'bauk.assignment.assign'=>['bauk', 'Give Employee Assignment', 'Memberikan penugasan karyawan'],
+		'bauk.assignment.release'=>['bauk', 'Release Employee Assignment', 'Mencabut penugasan karyawan'],
     ],
 ];

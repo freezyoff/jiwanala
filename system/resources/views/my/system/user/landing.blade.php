@@ -63,6 +63,7 @@
 											@if(\Auth::user()->hasPermission('system.user.patch'))
 											<a class="action padding-right-8"
 												style="cursor:pointer"
+												title="{{trans('my/system/user.hints.reset')}}"
 												alt="{{trans('my/system/user.hints.reset')}}"
 												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
 												<i class="fas fa-undo"></i>
@@ -71,6 +72,7 @@
 											<a class="action"
 												style="cursor:pointer"
 												toggle="delete-modal-{{$empl->id}}"
+												title="{{trans('my/system/user.hints.delete')}}"
 												alt="{{trans('my/system/user.hints.delete')}}">
 												<i class="fas fa-user-slash"></i>
 											</a>
@@ -79,6 +81,7 @@
 											<a class="action"
 												style="cursor:pointer"
 												toggle="link-modal-{{$empl->id}}" 
+												title="{{trans('my/system/user.hints.delete')}}"
 												alt="{{trans('my/system/user.hints.delete')}}">
 												<i class="fas fa-user-shield"></i>
 											</a>
@@ -110,6 +113,7 @@
 											@if(\Auth::user()->hasPermission('system.user.patch'))
 											<a class="action"
 												style="cursor:pointer"
+												title="{{trans('my/system/user.hints.reset')}}"
 												alt="{{trans('my/system/user.hints.reset')}}"
 												href="{{route('my.system.user.resetPwd',['id'=>$empl->asUser->id])}}">
 												<i class="fas fa-undo"></i>
@@ -119,6 +123,7 @@
 											<a class="action padding-left-8"
 												style="cursor:pointer"
 												toggle="delete-modal-{{$empl->id}}"
+												title="{{trans('my/system/user.hints.delete')}}"
 												alt="{{trans('my/system/user.hints.delete')}}">
 												<i class="fas fa-user-slash"></i>
 											</a>
@@ -127,6 +132,7 @@
 											<a class="action padding-left-8" 
 												style="cursor:pointer"
 												toggle="link-dropdown-{{$empl->id}}"
+												title="{{trans('my/system/user.hints.create')}}"
 												alt="{{trans('my/system/user.hints.create')}}">
 												<i class="fas fa-user-shield"></i>
 											</a>

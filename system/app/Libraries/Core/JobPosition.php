@@ -4,9 +4,9 @@ namespace App\Libraries\Core;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Division extends Model
+class JobPosition extends Model
 {
-    protected $table = 'divisions';
+    protected $table = 'job_positions';
 	protected $connection = 'core';
 	protected $fillable = [
 		'creator',
