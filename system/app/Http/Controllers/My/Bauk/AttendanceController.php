@@ -148,24 +148,16 @@ class AttendanceController extends Controller
 			return false;
 		}
 		
-		if (!$attendance->time1) {
-			return $recordDateDaysBefore? 
-				[
-					trans('my/bauk/attendance/hints.warnings.noArrival'),
-					trans('my/bauk/attendance/hints.warnings.noConsent') 
-				]
-				:
-				false;
+		if (!$attendance->getArrival()) {
+			$warning = [trans('my/bauk/attendance/hints.warnings.noArrival')];
+			if (!$consent) $warning[] = trans('my/bauk/attendance/hints.warnings.noConsent');
+			return $recordDateDaysBefore? $warning : false;
 		}
 		
-		if (!$attendance->time2 && !$attendance->time3 && !$attendance->time4) {
-			return $recordDateDaysBefore?
-				[
-					trans('my/bauk/attendance/hints.warnings.noDeparture'),
-					trans('my/bauk/attendance/hints.warnings.noConsent')
-				]
-				:
-				false;
+		if (!$attendance->getLatestDeparture()) {
+			$warning = [trans('my/bauk/attendance/hints.warnings.noDeparture')];
+			if (!$consent) $warning[] = trans('my/bauk/attendance/hints.warnings.noConsent');
+			return $recordDateDaysBefore? $warning : false;
 		}
 				
 		//	Datang terlambat
@@ -178,7 +170,7 @@ class AttendanceController extends Controller
 										str_replace(':menit Menit', "", $msg);
 			$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
 										str_replace(':detik Detik', "", $msg);
-								
+						
 			return $consent? 	[$msg] : 
 								[$msg, trans('my/bauk/attendance/hints.warnings.noConsent')];
 		}

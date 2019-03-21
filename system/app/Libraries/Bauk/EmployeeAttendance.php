@@ -30,12 +30,12 @@ class EmployeeAttendance extends Model
 		return Carbon::parse($this->date);
 	}
 	
-	public function getArrival():Carbon{
+	public function getArrival(){
 		if ($this->date && $this->time1) {
 			return Carbon::createFromFormat("Y-m-d H:i:s", $this->date.' '.$this->time1);
 		}
 		
-		return $this->getLatestDeparture();
+		return false;
 	}
 	
 	public function getArrivalOffset(){
@@ -56,19 +56,19 @@ class EmployeeAttendance extends Model
 	
 	/**
 	 *	
-	 *	@return (Carbon) latest departure time if set. otherwise arrival time (@see getArrival())
+	 *	@return (Carbon|Boolean) latest departure time if set. otherwise arrival time (@see getArrival())
 	 */
-	public function getLatestDeparture(): Carbon {
+	public function getLatestDeparture(){
 		$time2 = $this->time2;
 		$time3 = $this->time3;
 		$time4 = $this->time4;
 		
+		//if departure time not set, we return arrival time
+		if (!$time2 && !$time3 && !$time4) return false;
+		
 		if ($time4) $time4 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time4);
 		if ($time3) $time3 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time3);
 		if ($time2) $time2 = Carbon::createFromFormat('Y-m-d H:i:s', $this->date.' '.$this->time2);
-		
-		//if departure time not set, we return arrival time
-		if (!$time2 && !$time3 && !$time4) return $this->getArrival();
 		
 		$max = $time2->greaterThan($time3)? $time2 : $time3;
 		return $max->greaterThan($time4)? $max : $time4;
@@ -76,6 +76,8 @@ class EmployeeAttendance extends Model
 	
 	public function isLateArrival() {
 		$arrival = $this->getArrival();
+		if (!$arrival) return false;
+		
 		$scheduleTime = $this->getScheduleArrival();
 		
 		//has arrival offset
@@ -102,6 +104,8 @@ class EmployeeAttendance extends Model
 	
 	public function isEarlyDeparture() {
 		$departure = $this->getLatestDeparture();
+		if (!$departure) return false;
+		
 		$scheduleTime = $this->getScheduleDeparture();
 		return $departure->lessThan($scheduleTime);
 	}
