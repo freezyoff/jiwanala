@@ -86,9 +86,8 @@ class AttendanceExport implements FromView
 			
 			for($i=3;$i<count($this->getHeaders());$i++) $rows[$employee->id][$i]=0;
 			
-			$loop = $registeredAt->between($start, $end)? 
-						Carbon::parse($employee->registeredAt) : 
-						$start->copy();
+			$registeredAt = Carbon::parse($employee->registeredAt);
+			$loop = $registeredAt->between($start, $end)? $registeredAt : $start->copy();
 			
 			$offScheduleDaysCount=0;
 			$scheduleDaysCount=0;
