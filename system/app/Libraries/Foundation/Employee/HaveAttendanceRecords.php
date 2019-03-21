@@ -12,11 +12,10 @@ trait HaveAttendanceRecords{
 	 *	@return (App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
 	 */
 	public function attendanceRecord($date){
-		$stringDate=$date;
 		if($date instanceof Carbon){
-			$stringDate = $date->format('Y-m-d');
+			return $this->attendances()->where('date',$date->format('Y-m-d'))->first();
 		}
-		return $this->attendances()->where('date',$stringDate)->first();
+		return $this->attendances()->where('date',$date)->first();
 	}
 	
 	/**
