@@ -98,7 +98,7 @@ class AndroidController extends Controller
 		}
 		
 		//create date array of current month
-		$registeredAt = Carbon::parse($employee->registeredAt);
+		$registeredAt = $employee->registeredAt;
 		$loop = $start->copy();
 		
 		$list = [];

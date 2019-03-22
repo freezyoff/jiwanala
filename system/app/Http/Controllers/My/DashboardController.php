@@ -53,14 +53,15 @@ class DashboardController extends Controller{
 			$end->day = $start->daysInMonth;
 		}
 		
-		$registeredAt = Carbon::parse($employee->registeredAt);
+		$registeredAt = $employee->registeredAt;
 		$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
+		$loopStop = $employee->resignAt? $employee->resignAt : $end;
 		
 		$holiday = $offScheduleDaysCount = 
 		$scheduleDaysCount = $attends = 
 		$absents = $lateArrivalOrEarlyDeparture = 
 		$consents = $noConsentDocs = $noLateOrEarlyDocs = 0;
-		while($loop->lessThanOrEqualTo($end)){
+		while($loop->lessThanOrEqualTo($loopStop)){
 			if (Holiday::isHoliday($loop)) {
 				$holiday++;
 				$loop->addDay();

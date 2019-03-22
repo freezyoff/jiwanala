@@ -64,7 +64,8 @@ class AttendanceController extends Controller
 		
 		//create date array of current month
 		$employee = Employee::findByNIP($nip);
-		$registeredAt = Carbon::parse($employee->registeredAt);
+		$registeredAt = $employee->registeredAt;
+		$resignAt = $employee->resignAt? $employee->resignAt : $end;
 		$loop = $start->copy();
 		
 		$list = [];
@@ -77,7 +78,7 @@ class AttendanceController extends Controller
 			];
 				
 			//not yet counted
-			if ($registeredAt->greaterThan($loop)){
+			if ($registeredAt->greaterThan($loop) || $resignAt->lessThanOrEqualTo($loop)){
 				$loop->addDay();
 				continue;
 			}

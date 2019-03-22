@@ -86,12 +86,12 @@ class AttendanceExport implements FromView
 			
 			for($i=3;$i<count($this->getHeaders());$i++) $rows[$employee->id][$i]=0;
 			
-			$registeredAt = Carbon::parse($employee->registeredAt);
-			$loop = $registeredAt->between($start, $end)? $registeredAt : $start->copy();
+			$loop = $registeredAt->between($start, $end)? $employee->registeredAt : $start->copy();
+			$loopStop = $employee->resignAt? $employee->resignAt : $end;
 			
 			$offScheduleDaysCount=0;
 			$scheduleDaysCount=0;
-			while($loop->lessThanOrEqualTo($end)){
+			while($loop->lessThanOrEqualTo($loopStop)){
 				if (Holiday::isHoliday($loop)) {
 					$loop->addDay();
 					continue;
@@ -114,14 +114,15 @@ class AttendanceExport implements FromView
 						$rows[$employee->id][6] += 1;
 						$lateOrEarly=true;
 					} 
+					
 					if ($attendRecord->isEarlyDeparture()) {
 						$rows[$employee->id][7] +=1;
 						$lateOrEarly=true;
 					}
 					
 					if ($lateOrEarly){
-						$rows[$employee->id][8] += $employee->consentRecord($loop)? 0 : 1;
-					}					
+						$rows[$employee->id][8] += $employee->consentRecord($loop->format('Y-m-d'))? 0 : 1;
+					}
 				}
 				else{
 					$rows[$employee->id][9] += 1;
@@ -134,7 +135,7 @@ class AttendanceExport implements FromView
 				
 				if ($rows[$employee->id][3]>0){
 					$rows[$employee->id][5] = $rows[$employee->id][4]/$rows[$employee->id][3];
-					$rows[$employee->id][5] = floor($rows[$employee->id][5] * 100);				
+					$rows[$employee->id][5] = floor($rows[$employee->id][5] * 100);
 				}
 				
 				$loop->addDay();

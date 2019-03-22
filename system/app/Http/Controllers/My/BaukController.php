@@ -121,14 +121,15 @@ class BaukController extends Controller
 		$employees = Employee::getActiveEmployee(true, $end->year, $end->month);
 		$allPercent = $absents = $consents = $noConsentDocs = $noLateOrEarlyDocs = $lateArrivalOrEarlyDeparture = 0 ;
 		foreach($employees as $employee){
-			$registeredAt = Carbon::parse($employee->registeredAt);
+			$registeredAt = $employee->registeredAt;
 			$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
+			$loopStop = $employee->resignAt? $employee->resignAt : $end;
 			
 			$holiday=0;
 			$offScheduleDaysCount=0;
 			$scheduleDaysCount=0;
 			$attends = 0;
-			while($loop->lessThanOrEqualTo($end)){
+			while($loop->lessThanOrEqualTo($loopStop)){
 				if (Holiday::isHoliday($loop)) {
 					$holiday++;
 					$loop->addDay();

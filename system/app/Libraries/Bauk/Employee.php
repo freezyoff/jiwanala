@@ -46,14 +46,28 @@ class Employee extends Model
 		return $this->active;
 	}
 	
-	public function getRegisteredAtAttribute(){
-		$date = Carbon::parse($this->attributes['registered_at']);
-		return $date->format('d-m-Y');
+	public function getRegisteredAtAttribute() {
+		if ($this->attributes['registered_at']){
+			return Carbon::parse($this->attributes['registered_at']);
+		}
+		return false;
 	}
 	
 	public function setRegisteredAtAttribute($value){
 		$value = preg_replace('/\s+/', '', $value);
 		$this->attributes['registered_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+	}
+	
+	public function getResignAtAttribute(){
+		if ($this->attributes['resign_at']){
+			return Carbon::parse($this->attributes['registered_at']);
+		}
+		return false;
+	}
+	
+	public function setResignAtAttribute($value){
+		$value = preg_replace('/\s+/', '', $value);
+		$this->attributes['resign_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
 	}
 	
 	public function delete(){
