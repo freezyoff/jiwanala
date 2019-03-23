@@ -28,8 +28,8 @@
 		</div>
 		<div class="w3-container margin-top-16">
 			<div class="w3-bar w3-theme-l2">
-				<button class="w3-bar-item w3-button w3-blue" target="#unassigned">Belum Bertugas</button>
-				<button class="w3-bar-item w3-button" target="#assigned">Telah Bertugas</button>
+				<button class="w3-bar-item w3-button w3-blue w3-hover-blue" target="#unassigned">Belum Bertugas</button>
+				<button class="w3-bar-item w3-button w3-hover-blue" target="#assigned">Telah Bertugas</button>
 			</div>
 		</div>
 		<div class="w3-container padding-bottom-16">
