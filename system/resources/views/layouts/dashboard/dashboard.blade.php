@@ -189,15 +189,21 @@
 	};
 
 	$(document).ready(function(){
-		setInterval(function(){$('#serverTime').text( moment().tz('Asia/Jakarta').format("DD-MM-YYYY HH:mm:ss") );}, 1000);
+		setInterval(function(){
+			$('#serverTime').text( moment().tz('Asia/Jakarta').format("DD-MM-YYYY HH:mm:ss") );
+		}, 1000);
 		$( window ).resize(dashboard.initSideBar);
 		$('.jn-sidebar-toggle').on('click', function(){ dashboard.toggleSideBar(); });
 		$('#jn-sidebar-overlay').on('click', function(){ dashboard.closeSideBar(); });
 		fontSpy('Proxima Nova', {
-			success: function(){ dashboard.initSideBar(); }, 
-			failure: function(){ dashboard.initSideBar(); }
+			success: function(){ 
+				dashboard.initSideBar(); 
+			}, 
+			failure: function(){ 
+				dashboard.initSideBar(); 
+			}
 		});
-		document.body.requestFullscreen();
+		//document.body.requestFullscreen();
 	});
 </script>
 @endSection

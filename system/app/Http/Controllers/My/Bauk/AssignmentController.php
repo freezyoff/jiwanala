@@ -8,26 +8,88 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class AssignmentController extends Controller{
-    
+	
 	public function index(){
 		$cDivision = request('division', '11');
 		return view('my.bauk.assignment.landing',[
 			'division'=> Division::find($cDivision),
 			'divisions'=> Division::all(),
-			'unassigned'=> Employee::selectNotAssignedAt($cDivision, [['nip','asc']]),
-			'assigned'=> Employee::selectAssignedAt($cDivision, [['nip','asc']]),
+			'unassigned'=> Employee::getNotAssignedAt($cDivision, [['nip','asc']]),
+			'assigned'=> Employee::getAssignedAt($cDivision, [['nip','asc']]),
+			'hasLeader'=> Division::hasEmployeeAs($cDivision, '2.4'),
+			'leader'=> Division::getEmployeeAs($cDivision, '2.4'),
 		]);
 	}
 	
-	public function assignAt($divisionCode, $employeeNIP){
+	public function assignAt($employeeNIP, $divisionCode){
 		$employee = Employee::findByNIP($employeeNIP);
 		$employee->assignAt($divisionCode);
-		return $this->index();
+		return view('my.bauk.assignment.landing_table', [
+			'division'=> Division::find($divisionCode),
+			'employees'=> Employee::getAssignedAt($divisionCode, [['nip','asc']]),
+			'mode'=>'release',
+			'hasLeader'=> Division::hasEmployeeAs($divisionCode, '2.4'),
+			'leader'=> Division::getEmployeeAs($divisionCode, '2.4'),
+		]);
+	}
+	
+	public function assignAs($employeeNIP, $divisionCode, $jobPosition){
+		$employee = Employee::findByNIP($employeeNIP);
+		$employee->assignAs($divisionCode, $jobPosition);
+		
+		$division = Division::find($divisionCode);
+		$hasLeader = Division::hasEmployeeAs($divisionCode, '2.4');
+		$leader = Division::getEmployeeAs($divisionCode, '2.4');
+		$assigned = view('my.bauk.assignment.landing_table', [
+				'division'=> $division,
+				'employees'=> Employee::getAssignedAt($divisionCode, [['nip','asc']]),
+				'mode'=>'release',
+				'hasLeader'=> $hasLeader,
+				'leader'=> $leader,
+			])->render();
+		$unassigned = view('my.bauk.assignment.landing_table', [
+				'division'=> $division,
+				'employees'=> Employee::getNotAssignedAt($divisionCode, [['nip','asc']]),
+				'mode'=>'assign',
+				'hasLeader'=> $hasLeader,
+				'leader'=> $leader,
+			])->render();
+		return json_encode(['assigned'=> $assigned,'unassigned'=> $unassigned]);
 	}
 	
 	public function releaseFrom($employeeNIP, $divisionCode){
 		$employee = Employee::findByNIP($employeeNIP);
-		$employee->assignAt($divisionCode);
-		return $this->index();
+		$employee->releaseFrom($divisionCode);
+		return view('my.bauk.assignment.landing_table', [
+			'division'=> Division::find($divisionCode),
+			'employees'=> Employee::getNotAssignedAt($divisionCode, [['nip','asc']]),
+			'mode'=>'assign',
+			'hasLeader'=> Division::hasEmployeeAs($divisionCode, '2.4'),
+			'leader'=> Division::getEmployeeAs($divisionCode, '2.4'),
+		]);
+	}
+	
+	public function releaseAs($employeeNIP, $divisionCode, $jobPosition){
+		$employee = Employee::findByNIP($employeeNIP);
+		$employee->releaseAs($divisionCode, $jobPosition);
+		
+		$division = Division::find($divisionCode);
+		$hasLeader = Division::hasEmployeeAs($divisionCode, '2.4');
+		$leader = Division::getEmployeeAs($divisionCode, '2.4');
+		$assigned = view('my.bauk.assignment.landing_table', [
+				'division'=> $division,
+				'employees'=> Employee::getAssignedAt($divisionCode, [['nip','asc']]),
+				'mode'=>'release',
+				'hasLeader'=> $hasLeader,
+				'leader'=> $leader,
+			])->render();
+		$unassigned = view('my.bauk.assignment.landing_table', [
+				'division'=> $division,
+				'employees'=> Employee::getNotAssignedAt($divisionCode, [['nip','asc']]),
+				'mode'=>'assign',
+				'hasLeader'=> $hasLeader,
+				'leader'=> $leader,
+			])->render();
+		return json_encode(['assigned'=> $assigned,'unassigned'=> $unassigned]);
 	}
 }

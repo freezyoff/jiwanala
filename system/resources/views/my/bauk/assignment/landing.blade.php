@@ -33,61 +33,113 @@
 			</div>
 		</div>
 		<div class="w3-container padding-bottom-16">
-			<div id="unassigned" class="employee-list">
-				<table class="w3-table w3-table-all">
-					<thead>
-						<tr class="w3-theme">
-							<td>NIP</td>
-							<td>Nama</td>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($unassigned as $employee)
-						<tr>
-							<td>{{ $employee->nip }}</td>
-							<td>{{ $employee->getFullName() }}</td>
-							<td>
-								@if (\Auth::guard('my')->user()->hasPermission('bauk.assignment.assign'))
-								<a class="action" 
-									title="{{"tugaskan ke ".$division->name}}"
-									toggle="#action-dropdown-{{$employee->id}}"
-									style="cursor:pointer">
-									<i class="fas fa-running"></i>
-								</a>
-								@endif
-							</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
+			<div id="unassigned" class="employee-list w3-responsive">
+				@include('my.bauk.assignment.landing_table',['mode'=>'assign', 'employees'=>$unassigned])
 			</div>
-			<div id="assigned" class="employee-list" style="display:none">
-			  <table class="w3-table w3-table-all">
-					<thead>
-						<tr class="w3-theme">
-							<td>NIP</td>
-							<td>Nama</td>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($assigned as $employee)
-						<tr>
-							<td>{{ $employee->nip }}</td>
-							<td>{{ $employee->getFullName() }}</td>
-							<td></td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
+			<div id="assigned" class="employee-list w3-responsive" style="display:none">
+			  @include('my.bauk.assignment.landing_table',['mode'=>'release', 'employees'=>$assigned])
 			</div>
 		</div>
 	</div>
 </div>
+@include('my.bauk.assignment.landing_error_modal')
+@endSection
+
+@section('html.head.styles')
+@parent
+<style>
+	a.action + a.action,
+	a.action + a.action { padding-left:8px; }
+</style>
 @endSection
 
 @section('html.body.scripts')
 @parent
 <script>
+var toggleClickable = function(clickable){
+	var icon = $(clickable).find('i');
+	if (icon.attr('class') == 'button-icon-loader'){
+		var icon = $(clickable).find('i');
+		icon.attr('class', icon.attr('def-class') );
+	}
+	else{		
+		icon.attr('def-class', icon.attr('class') );
+		icon.attr('class','button-icon-loader');
+	}
+};
+
+var handleError = function(statusCode){
+	var msg = "";
+	switch(statusCode){
+		case 500: msg = "{{trans('my/bauk/assignment.errors.500')}}"; break;
+		default: msg = "{{trans('my/bauk/assignment.errors.default')}}";
+	}
+	$('#error-modal-container>p').html(msg);
+	$('#error-modal').show();
+};
+
+var doAssign = function(clickable){
+	$.ajax({
+		url: $(clickable).attr('trigger-href'),
+		beforeSend: function(){ toggleClickable(clickable); },
+		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
+		success: function(data){
+			$('div#assigned').html(data);
+			$(clickable).parents('tr').remove();
+		}
+	});
+};
+
+var doRelease = function(clickable){
+	$.ajax({
+		url: $(clickable).attr('trigger-href'),
+		beforeSend: function(){ toggleClickable(clickable); },
+		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
+		success: function(data){
+			$('div#unassigned').html(data);
+			$(clickable).parents('tr').remove();
+		}
+	});
+};
+
+var doAssignAs = function(clickable){
+	$.ajax({
+		url: $(clickable).attr('trigger-href'),
+		beforeSend: function(){ 
+			toggleClickable(clickable); 
+			var citem = $(clickable);
+			$($('a.action')).each(function(index, item){
+				if (!citem.is(item)) $(item).hide();
+			});
+		},
+		error: function(xhr, status, error) { 
+			toggleClickabel(clickable); 
+			handleError(xhr.status); 
+			$($('a.action')).each(function(index, item){
+				$(item).show();
+			});
+		},
+		success: function(data){
+			var json = JSON.parse(data);
+			$('div#assigned').html(json.assigned);
+			$('div#unassigned').html(json.unassigned);
+		}
+	});
+};
+
+var doReleaseAs = function(clickable){
+	$.ajax({
+		url: $(clickable).attr('trigger-href'),
+		beforeSend: function(){ toggleClickable(clickable); },
+		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
+		success: function(data){
+			var json = JSON.parse(data);
+			$('div#assigned').html(json.assigned);
+			$('div#unassigned').html(json.unassigned);
+		}
+	});
+};
+
 $(document).ready(function(){
 	$('#division').change(function(){
 		$(this).parents('form').trigger('submit');
@@ -100,10 +152,6 @@ $(document).ready(function(){
 		});
 		$(this).toggleClass('w3-blue');
 		$($(this).attr('target')).css('display','block');
-	});
-	
-	$('.action').click(function(){
-		$($(this).attr('toggle')).toggle();
 	});
 });
 </script>

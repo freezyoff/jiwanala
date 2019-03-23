@@ -14,12 +14,14 @@ trait HaveAssignments{
 			'division_id', 
 			'id',								//employees table exact primary column name
 			'code'								//divisions table exact primary column name
-		)->withPivot('job_position_id')
+		)->withPivot('creator', 'job_position_id')
 		->withTimestamps();
 	}
 	
 	public function assignAt($division){
-		$this->assignments()->attach($division);
+		$this->assignments()->attach($division, [
+			'creator'=>\Auth::user()->id,
+		]);
 	}
 	
 	/**
@@ -27,7 +29,15 @@ trait HaveAssignments{
 	 * @param $job_position - code of job_position
 	 */
 	public function assignAs($division, $job_position){
-		$this->assignments()->attach($division, ['job_position_id'=>$job_position]);
+		if (!$this->isAssignedAt($division)){
+			$this->assignments()->attach($division, [
+				'creator'=>\Auth::user()->id,
+				'job_position_id'=>$job_position,
+			]);
+		}
+		else{
+			$this->assignments()->updateExistingPivot($division, ['job_position_id'=>$job_position]);
+		}
 	}
 	
 	/**
@@ -106,7 +116,7 @@ trait HaveAssignments{
 		return count($assignment)>0? $assignment : false;
 	}
 	
-	public static function selectNotAssignedAt($division, $orderby=false){
+	public static function getNotAssignedAt($division, $orderby=false){
 		$ids = EmployeeAssignment::select('employee_id')->distinct()->where('division_id',$division)->get();
 		$result = self::where('active',1)->whereNotIn('id',$ids);
 		if (is_array($orderby)) {
@@ -117,7 +127,7 @@ trait HaveAssignments{
 		return $result->get();
 	}
 	
-	public static function selectAssignedAt($division, $orderby=false){
+	public static function getAssignedAt($division, $orderby=false){
 		$ids = EmployeeAssignment::select('employee_id')->distinct()->where('division_id',$division)->get();
 		$result = self::where('active',1)->whereIn('id',$ids);
 		if (is_array($orderby)) {

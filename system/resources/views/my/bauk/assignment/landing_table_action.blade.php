@@ -9,11 +9,15 @@
 				]);
 			?>
 			<a class="w3-text-theme w3-mobile" 
-				href="{{$assignAction}}">
+				href="{{$assignAction}}"
+				title="{{"tugaskan ke ".$division->name}}"
+				alt="{{"tugaskan ke ".$division->name}}">
 				{{"tugaskan ke ".$division->name}}
 			</a>
 			<a class="w3-text-theme w3-mobile" 
-				href="{{$assignAction}}">
+				href="{{$assignAction}}"
+				title="tugaskan sebagai {{\App\Libraries\Core\JobPosition::find('2.4')->alias}} di {{$division->name}}"
+				alt="tugaskan sebagai {{\App\Libraries\Core\JobPosition::find('2.4')->alias}} di {{$division->name}}">
 				{{"tugaskan ke ".$division->name." sebagai ". \App\Libraries\Core\JobPosition::find('2.4')->alias}}
 			</a>
 		</li>

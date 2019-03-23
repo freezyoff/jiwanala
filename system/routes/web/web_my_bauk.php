@@ -178,12 +178,12 @@ Route::name('assignment.')
 		->any('', '\App\Http\Controllers\My\Bauk\AssignmentController@index');
 	
 	Route::name('assign')
-		->middleware('permission:bauk.assignment.post')
+		->middleware('permission:bauk.assignment.assign')
 		->get('assign/{employeeNIP}/at/{divisionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@assignAt');
 	
 	Route::name('assign.as')
-		->middleware('permission:bauk.assignment.patch')
-		->get('assign/{employeeNIP}/at/{divisionCode}/as/{jobPositionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@assignAt');
+		->middleware('permission:bauk.assignment.assign')
+		->get('assign/{employeeNIP}/at/{divisionCode}/as/{jobPositionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@assignAs');
 	
 	Route::name('release')
 		->middleware('permission:bauk.assignment.release')
@@ -191,5 +191,5 @@ Route::name('assignment.')
 		
 	Route::name('release.as')
 		->middleware('permission:bauk.assignment.release')
-		->get('release/{employeeNIP}/from/{divisionCode}/as/{jobPositionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@releaseFrom');
+		->get('release/{employeeNIP}/from/{divisionCode}/as/{jobPositionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@releaseAs');
 });
