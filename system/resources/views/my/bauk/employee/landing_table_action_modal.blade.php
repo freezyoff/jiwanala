@@ -20,7 +20,7 @@
 				</div>
 				<div class="input-group">
 					<label><i class="fas fa-font"></i></label>
-					<label class="input w3-input">{{$data->getFullName()}}</label>
+					<label class="input w3-input">{{$data->name_front_titles.' '.$data->name_full.' '.$data->name_back_titles?: ''}}</label>
 				</div>
 				<div class="input-group">
 					<label><i class="fas fa-calendar-day"></i></label>
