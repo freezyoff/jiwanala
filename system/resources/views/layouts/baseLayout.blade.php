@@ -31,10 +31,7 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 		@section('html.head.scripts')
 			<script src="https://momentjs.com/downloads/moment.js"></script>
 			<script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
-			<script
-			  src="http://code.jquery.com/jquery-3.3.1.min.js"
-			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			  crossorigin="anonymous"></script>
+			<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 			<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
 			<script>
 				//"Poppins:300,400,500,600,700,800,900",
