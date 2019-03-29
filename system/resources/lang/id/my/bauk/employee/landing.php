@@ -5,6 +5,7 @@
 	],
 	'hints'=>[
 		'modal'=>'Hapus Karyawan',
+		'modal_deactivate'=>'Tanggal Non-Aktif?',
 		'btn_cancel'=>'Batal',
 		'btn_submit'=>'Hapus',
 		'key_words'=>'Kata kunci pencarian',
@@ -14,7 +15,9 @@
 			'active'=>'Karyawan Aktif',
 			'inactive'=>'Karyawan Non Aktif',
 		],
-		'keyactive_modal'=>'Pencarian Karyawan'
+		'keyactive_modal'=>'Pencarian Karyawan',
+		'deactivate_date'=>'Tanggal Non-Aktif',
+		'btn_deactivate'=>'Simpan',
 	],
 	'btn-add'=>'Karyawan Baru',
 ];

@@ -106,9 +106,18 @@
 </div> 
 @endSection
 
-@section('html.body.scripts')
-<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
+@section('html.head.styles')
 @parent
+<link rel="stylesheet" href="{{url('css/datepicker.css')}}">
+<style>
+.datepicker-modal .datepicker-inline{font-size:12px !important;}
+</style>
+@endSection
+
+@section('html.body.scripts')
+@parent
+<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
+<script src="{{url('js/datepicker.js')}}"></script>
 <script>
 App.UI.keywords = function(){
 	$('input[name="keywords"]').on('change', $.debounce(250, function(){
@@ -177,17 +186,34 @@ App.deactivated = {
 	hide:function(id){
 		$('#deactivated-modal-'+id).hide();
 	},
-	install: function(id){
-		$('[data-toggle="datepicker-inline"]').datepicker(
-			$.extend(UI.datepicker.format.inline, {container: '#datepicker-inline-container'})
-		).on('pick.datepicker', UI.datepicker.click.inline)
-		 .on('date-change change keyup', datepickerValueChange.birthDate);
+	install: function(item){
+		$(item).datepicker({ 
+			format: 'dd-mm-yyyy', 
+			offset: 5, 
+			container: '#deactivated-modal-container-'+ $(item).attr('data-id'), 
+			inline: true, 
+			language: 'id-ID'
+		}).on('click focus', function(event){
+			event.stopPropagation();
+		});
+	},
+	init: function(){
+		$('input.datepicker').each(function(index,item){
+			App.deactivated.install(item);
+		});
+	},
+	submit:function(id){
+		var url = '{{route('my.bauk.employee.deactivate',['id'=>':id', 'date'=>':date'])}}';
+		url = url.replace(':id', id);
+		url = url.replace(':date', $('#deactivated-input-'+id).val());
+		document.location=url;
 	}
 };
 
 $(document).ready(function(){
 	App.UI.keywords();
 	$('[role="select"]').on('select.pick', App.submitSearch).select();
+	App.deactivated.init();
 });
 </script>
 @endSection

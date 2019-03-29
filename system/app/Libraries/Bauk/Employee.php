@@ -54,8 +54,13 @@ class Employee extends Model
 	}
 	
 	public function setRegisteredAtAttribute($value){
-		$value = preg_replace('/\s+/', '', $value);
-		$this->attributes['registered_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+		if ($value){
+			$value = preg_replace('/\s+/', '', $value);
+			$this->attributes['registered_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+		}
+		else{
+			$this->attributes['registered_at'] = $value;
+		}
 	}
 	
 	public function getResignAtAttribute(){
@@ -66,8 +71,13 @@ class Employee extends Model
 	}
 	
 	public function setResignAtAttribute($value){
-		$value = preg_replace('/\s+/', '', $value);
-		$this->attributes['resign_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+		if ($value){
+			$value = preg_replace('/\s+/', '', $value);
+			$this->attributes['resign_at'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');			
+		}
+		else {
+			$this->attributes['resign_at'] = $value;
+		}
 	}
 	
 	public function delete(){

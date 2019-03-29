@@ -29,9 +29,12 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 		
 		<!--[section: html.head.scripts]/-->
 		@section('html.head.scripts')
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js?"></script>
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.23/moment-timezone-with-data.min.js"></script>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+			<script src="https://momentjs.com/downloads/moment.js"></script>
+			<script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+			<script
+			  src="http://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
 			<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
 			<script>
 				//"Poppins:300,400,500,600,700,800,900",
@@ -43,9 +46,9 @@ client-time="{{\Carbon\Carbon::now(session()->get('timezone'))}}"
 		
 		<!--[section: html.head.styles]/-->
 		@section('html.head.styles')
-			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-			<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+			<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css" />
 		@show
 		<!--[endsection: html.head.styles]/-->
 	
