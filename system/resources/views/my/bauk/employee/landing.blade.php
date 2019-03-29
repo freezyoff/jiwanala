@@ -85,7 +85,10 @@
 								</span>
 							@endif
 						</td>
-						<td><span>+62 </span>{{$data->phone}}</td>
+						<td>
+							<span>+62 </span>{{$data->phone}}
+							@include('my.bauk.employee.landing_table_action_modal')
+						</td>
 						<td class="w3-hide-small w3-hide-medium w3-right-align">@include('my.bauk.employee.landing_table_action')</td>
 					@endforeach
 					<tr>
@@ -165,6 +168,21 @@ App.UI.searchActivation = function(){
 
 App.submitSearch = function(){
 	$('form[name=searchkey]').submit();
+};
+
+App.deactivated = {
+	show: function(id){
+		$('#deactivated-modal-'+id).show();
+	},
+	hide:function(id){
+		$('#deactivated-modal-'+id).hide();
+	},
+	install: function(id){
+		$('[data-toggle="datepicker-inline"]').datepicker(
+			$.extend(UI.datepicker.format.inline, {container: '#datepicker-inline-container'})
+		).on('pick.datepicker', UI.datepicker.click.inline)
+		 .on('date-change change keyup', datepickerValueChange.birthDate);
+	}
 };
 
 $(document).ready(function(){

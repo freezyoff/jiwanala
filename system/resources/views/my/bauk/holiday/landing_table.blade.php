@@ -11,7 +11,7 @@
 	<tbody>
 		@forelse($holidays as $holiday)
 		<tr>
-			<td class="w3-hide-medium w3-hide-large" style="text-align:right">
+			<td class="w3-hide-medium w3-hide-large" style="white-space:nowrap;">
 				<a class="w3-hover-text-green loader" 
 					style="cursor:pointer" 
 					onclick="
@@ -52,7 +52,7 @@
 					<i class="fas fa-redo fa-fw"></i>
 				@endif
 			</td>
-			<td class="w3-hide-small" style="text-align:right">
+			<td class="w3-hide-small" style="text-align:right; white-space:nowrap;">
 				<a class="w3-hover-text-green loader" 
 					style="cursor:pointer" 
 					onclick="

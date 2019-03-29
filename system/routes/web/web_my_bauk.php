@@ -57,6 +57,13 @@ Route::prefix('employee')
 		->group(function(){
 		Route::get('{id}/{activationFlag?}', '\App\Http\Controllers\My\Bauk\EmployeeController@activate');
 	});
+	
+	Route::prefix('deactivate')
+		->name('.deactivate')
+		->middleware('permission:bauk.patch.employee')
+		->group(function(){
+		Route::get('deactivate/{id}/{date}', '\App\Http\Controllers\My\Bauk\EmployeeController@deactivate');
+	});
 });
 
 Route::prefix('schedule')

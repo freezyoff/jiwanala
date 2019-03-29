@@ -307,15 +307,30 @@ class EmployeeController extends Controller
 	
 	public function activate(Request $req, $id, $activationFlag=1){
 		$employee = \App\Libraries\Bauk\Employee::find($id);
-		$employee->active = $activationFlag;
-		$employee->save();
 		
 		//when employee deactivated, we deactivate user
 		if ($activationFlag!=1){
+			$employee->active = $activationFlag;
+			$employee->resign_at = now()->format('Y-m-d');
+			$employee->save();
+			
 			$user = $employee->asUser()->first();
 			if ($user)$user->deactivate();
 		}
+		else{
+			$employee->active = $activationFlag;
+			$employee->resign_at = null;
+			$employee->save();
+		}
 		
+		return redirect()->back()->withInput($req->all());
+	}
+	
+	public function deactivate(Request $req, $id, $date){
+		$employee = \App\Libraries\Bauk\Employee::find($id);
+		$employee->active = false;
+		$employee->resign_at = $date;
+		$employee->save();
 		return redirect()->back()->withInput($req->all());
 	}
 }

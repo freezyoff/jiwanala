@@ -12,7 +12,7 @@
 			<td>{{ $employee->nip }}</td>
 			<td>{{ $employee->getFullName() }}</td>
 			@if ($mode == 'assign')
-			<td style="text-align:right; white-space:no-wrap;">
+			<td style="text-align:right; white-space: nowrap;">
 				@if (\Auth::guard('my')->user()->hasPermission('bauk.assignment.assign'))
 				<a class="action assign" 
 					title="{{"tugaskan ke ".$division->name}}"
@@ -35,7 +35,7 @@
 				@endif
 			</td>
 			@elseif ($mode == 'release')
-			<td style="text-align:right; white-space:no-wrap;">
+			<td style="text-align:right; white-space: nowrap;">
 				@if (\Auth::guard('my')->user()->hasPermission('bauk.assignment.release'))
 				<a class="action release" 
 					title="Pindahkan dari {{$division->name}}"
