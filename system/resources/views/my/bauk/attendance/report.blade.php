@@ -36,7 +36,6 @@ var attendanceProgress = {
 			}
 		});
 		attendanceProgress.send();
-		employeesCount();
 	},
 	send: function(){
 		$.ajax({
