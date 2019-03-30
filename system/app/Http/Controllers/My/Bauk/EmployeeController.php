@@ -108,6 +108,7 @@ class EmployeeController extends Controller
 			$record->save();
 		}
 		
+		//save email
 		for($i=0; $i<count($req->input('email')); $i++){
 			$record = new \App\Libraries\Core\Email([
 				'creator'=>		$person->creator,
@@ -297,6 +298,16 @@ class EmployeeController extends Controller
 			$record->save();
 			
 			if (!$defaultEmail) $defaultEmail = $person->emailDefault();
+		}
+		
+		//check if Person is Employee
+		$employee = $person->asEmployee;
+		//check if Employee has User Account
+		$user = $employee? $employee->asUser : false;
+		if ($user){
+			//employee has User Account, we change the email if necessary
+			$user->email = $person->emailDefault();
+			$user->save();
 		}
 	}
 	
