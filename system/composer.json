@@ -1,9 +1,15 @@
 {
     "name": "freezybits/jiwanala",
-    "description": "Administration System for JIWANALA Foundation.",
+    "description": " JIWANALA Foundation Enteprise System.",
     "keywords": ["jiwanala", "foundation", "yayasan", "enteprise", "system"],
     "license": "MIT",
     "type": "project",
+	"repositories":[
+		{
+			"type": "vcs", 
+			"url": "https://github.com/freezyoff/Laravel-Excel.git"
+		}
+	],
     "require": {
         "php": "^7.1.3",
         "doctrine/dbal": "^2.8",
@@ -12,7 +18,7 @@
         "khill/lavacharts": "3.0.*",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "maatwebsite/excel": "^3.1"
+		"maatwebsite/excel": "dev-freezyoff-custom-validation"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
@@ -58,7 +64,7 @@
         ]
     },
     "config": {
-        "preferred-install": "dist",
+        "preferred-install": "stable",
         "sort-packages": true,
         "optimize-autoloader": true
     },

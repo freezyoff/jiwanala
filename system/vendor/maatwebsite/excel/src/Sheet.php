@@ -162,11 +162,7 @@ class Sheet
                 $startCell = $sheetExport->startCell();
             }
 
-            $this->append(
-                ArrayHelper::ensureMultipleRows($sheetExport->headings()),
-                $startCell ?? null,
-                $this->hasStrictNullComparison($sheetExport)
-            );
+            $this->append([$sheetExport->headings()], $startCell ?? null, $this->hasStrictNullComparison($sheetExport));
         }
 
         if ($sheetExport instanceof WithCharts) {
