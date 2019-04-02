@@ -9,7 +9,7 @@ class CreateTableDivisions extends Migration
     protected $connection = "core";
 	protected $tables = [
 		"division"=>"divisions",
-		"employee"=>"employees",
+		"user"=>"users",
 	];
 	
     /**
@@ -19,15 +19,18 @@ class CreateTableDivisions extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
-            $table->timestamps();
-			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
-			$table->integer('code');
-			$table->string('name');
-			$table->string('alias');
-			
-			$table->primary('code');
-        }, 'division');
+		if (!$this->schemaExist('division')){
+			$this->createSchema(function (Blueprint $table) {
+				$table->timestamps();
+				$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
+				$table->integer('id')->unsigned();
+				$table->string('name');
+				$table->string('alias');
+				
+				$table->primary('id');
+				$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+			}, 'division');
+		}
     }
 
     /**

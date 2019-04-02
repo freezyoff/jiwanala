@@ -44,7 +44,7 @@ return [
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
             'prefix' => '',
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
 			'modes' => [
 				//'ONLY_FULL_GROUP_BY', // Disable this to allow grouping by one column
 				'STRICT_TRANS_TABLES',
@@ -90,7 +90,7 @@ return [
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
             'prefix' => '',
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
 			'modes' => [
 				//'ONLY_FULL_GROUP_BY', // Disable this to allow grouping by one column
 				'STRICT_TRANS_TABLES',
@@ -136,7 +136,7 @@ return [
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
             'prefix' => '',
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
 			'modes' => [
 				//'ONLY_FULL_GROUP_BY', // Disable this to allow grouping by one column
 				'STRICT_TRANS_TABLES',

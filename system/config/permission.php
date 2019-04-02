@@ -13,6 +13,9 @@
 		'profile.put.own'	=>	['profile', 'Put owned Profile record', 'Permission to store owned profile record'],
 		'profile.list.own'	=>	['profile', 'List owned Profile record', 'Permission to List owned profile record'],
 		
+		/*
+		 *	Domain: Service
+		 */
 		'service.grant.permission' => ['service', 'Grant Service Feature Permission', 'Grant Application Level Permission ke user lain'],
         'service.revoke.permission' => ['service', 'Revoke Service Feature Permission', 'Revoke Application Level Permission ke user lain'],
         'service.list.permission' => ['service', 'List Service Feature Permission', '-'],
