@@ -13,7 +13,7 @@ trait HaveAssignments{
 			'employee_id', 
 			'division_id', 
 			'id',								//employees table exact primary column name
-			'code'								//divisions table exact primary column name
+			'id'								//divisions table exact primary column name
 		)->withPivot('creator', 'job_position_id')
 		->withTimestamps();
 	}

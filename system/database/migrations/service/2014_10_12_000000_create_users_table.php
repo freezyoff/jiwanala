@@ -19,10 +19,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('email')->unique();
-            $table->string('password')->nullabe();
+            $table->string('password')->nullable();
             $table->boolean('activated')->default(true);
             $table->rememberToken();
-			$table->string('api_token',60)->nullabe();
+			$table->string('api_token',60)->nullable();
 			
 			$table->foreign('creator')->references('id')->on('users');
         });

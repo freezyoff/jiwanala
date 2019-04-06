@@ -30,9 +30,9 @@ class CreateTableEmployeesAssignments extends Migration
 			$table->string('job_position_id',20)->nullable()->comment('ref table core.job_positions');
 			
 			$table->primary(['division_id','employee_id']);
-			$table->foreign('division_id')->references('code')->on($this->getSchemaName('core').'.'.$this->getTableName('division'));
-			$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
-			$table->foreign('job_position_id')->references('code')->on($this->getSchemaName('core').'.'.$this->getTableName('job-position'));
+			//$table->foreign('division_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('division'));
+			//$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
+			//$table->foreign('job_position_id')->references('code')->on($this->getSchemaName('core').'.'.$this->getTableName('job-position'));
 		}, 'employee-assignment');
     }
 

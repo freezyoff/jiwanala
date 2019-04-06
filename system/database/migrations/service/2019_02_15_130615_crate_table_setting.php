@@ -18,6 +18,7 @@ class CrateTableSetting extends Migration
      */
     public function up()
     {
+		/*
         $this->createSchema(function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
@@ -27,6 +28,7 @@ class CrateTableSetting extends Migration
 			
 			$table->primary('key');
 		}, 'setting');
+		*/
     }
 
     /**

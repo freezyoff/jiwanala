@@ -21,5 +21,15 @@ class Schedules{
 		$schedule->command('jiwanala:work-year-sync')
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jiwanala.work-year-sync.txt");
+			
+		//dump export table
+		$schedule->command('jiwanala-db:export',[
+				'schema'=>			'jiwanala_service.* jiwanala_core.* jiwanala_bauk.*',
+				'--con-host'=>		env('DB_HOST'),
+				'--con-username'=>	env('DB_USERNAME_SERVICE'),
+				'--con-password'=>	env('DB_PASSWORD_SERVICE'),
+			])
+			->daily()
+			->appendOutputTo($outputPath."scheduleLog.jiwanala-db.export.txt");
 	}
 }
