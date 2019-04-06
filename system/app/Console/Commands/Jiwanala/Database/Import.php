@@ -133,9 +133,9 @@ class Import extends Command
 			
 			$rcount = count($json['records']);
 			
-			$db->beginTransaction();
 			$db->statement('SET GLOBAL max_allowed_packet=1073741824');
 			$db->statement('SET FOREIGN_KEY_CHECKS=0');
+			$db->beginTransaction();
 			for($i=0; $i<$rcount; $i++){
 				//check if column value type need to be encode to base64
 				foreach($json['columns'] as $col=>$type){
@@ -148,8 +148,8 @@ class Import extends Command
 				
 				$db->table($json['database']['schema'].'.'.$json['database']['table'])->insert($json['records'][$i]);
 			}
-			$db->statement('SET FOREIGN_KEY_CHECKS=1');
 			$db->commit();
+			$db->statement('SET FOREIGN_KEY_CHECKS=1');
 			$this->infoReadSuccess();
 		}
 	}

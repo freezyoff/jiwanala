@@ -52,32 +52,81 @@ class Compare extends Command
 		}
 	}
 	
+	protected $host = [];
 	function getHost($remote=false){
 		if ($remote){
-			return $this->option('remote-host');
+			if (!isset($this->host['remote'])){
+				$this->host['remote'] = $this->option('remote-host')? 
+					$this->option('remote-host') : 
+					$this->ask('Remote Host');
+			}
+			return $this->host['remote'];
 		}
 		else{
-			return $this->option('local-host')? $this->option('local-host') : 'localhost';
+			if (!isset($this->host['local'])){
+				$this->host['local'] = $this->option('local-host')? 
+					$this->option('local-host') : 
+					$this->ask('Local Host', 'localhost');
+			}
+			return $this->host['local'];
 		}
 	}
 	
+	protected $username = [];
 	function getUsername($remote=false){
 		if ($remote){
-			return $this->option('remote-username')? $this->option('remote-username') : $this->ask('Remote Username');
+			if (!isset($this->username['remote'])){
+				$this->username['remote'] = $this->option('remote-username')? 
+					$this->option('remote-username') : 
+					$this->ask('Remote Username');
+			}
+			return $this->username['remote'];
 		}
 		else{
-			return $this->option('local-username')? $this->option('local-username') : $this->ask('Local Username');
+			if (!isset($this->username['local'])){
+				$this->username['local'] = $this->option('local-username')? 
+					$this->option('local-username') : 
+					$this->ask('Local Username');
+			}
+			return $this->username['local'];
 		}
 	}
 	
+	protected $password = [];
 	function getPassword($remote=false){
+		$choice = function($remote=false){
+			$target = $remote? "Remote" : "local";
+			$cc = $this->choice($target." Password",[
+				'n'=>'No Password',
+				'y'=>'Type Password'
+			]);
+			if ($cc=='n') return '';
+			if ($cc=='y') return 'y';
+		};
+		
 		if ($remote){
-			if ($this->option('remote-no-password')) return "";
-			return $this->option('remote-password')? $this->option('remote-password') : $this->ask('Remote Password');
+			if ($this->option('remote-no-password')) return null;
+			if (!isset($this->password['remote'])){
+				$this->password['remote'] = $this->option('remote-password');
+				if (!$this->password['remote']) $this->password['remote'] = $choice(true);
+				if ($this->password['remote'] == 'y'){
+					$this->password['remote'] = $this->ask('Remote Password');
+				}
+			}
+			
+			return $this->password['remote'];
 		}
 		else{
-			if ($this->option('local-no-password')) return "";
-			return $this->option('local-password')? $this->option('local-password') : $this->ask('Local Password');
+			if ($this->option('local-no-password')) return null;
+			if (!isset($this->password['local'])){
+				$this->password['local'] = $this->option('local-password');
+				if (!$this->password['local']) $this->password['local'] = $choice();
+				if ($this->password['local'] == 'y'){
+					$this->password['local'] = $this->ask('Local Password');
+				}
+			}
+			
+			return $this->password['local'];
 		}
 	}
 	
@@ -147,24 +196,31 @@ class Compare extends Command
 			//2. count each table
 			$index = 0;
 			$count = [];
-			$key = $database['schema'].'.';
+			$key = $database['schema'].'_';
 			foreach($localTables as $table) {
 				$count[$key.$table]['local'] = $this->countTable($database['schema'], $table);
 				
 			}
-			foreach($localTables as $table) {
+			foreach($remoteTables as $table) {
 				$count[$key.$table]['remote'] = $this->countTable($database['schema'], $table, true);
 			}
 			
 			//3. finalize
-			$index=0;
+			$index=count($result);
 			foreach($count as $key=>$db){
-				$result[$index] = [
-					'schema'=>$key,
-					'local'=>$db['local'],
-					'remote'=>$db['remote'],
-					'modifier'=>$db['local']<$db['remote']? '+' : $db['local']>$db['remote']? '-' : '='
-				];
+				$result[$index]['schema'] = $key;
+				$result[$index]['local'] = isset($db['local'])? $db['local'] : '';
+				$result[$index]['remote'] = isset($db['remote'])? $db['remote'] : '';
+				if (isset($db['local']) && isset($db['remote']) && $db['local']<$db['remote']){
+					$result[$index]['modifier'] = '+';
+				}
+				elseif (isset($db['local']) && isset($db['remote']) && $db['local']>$db['remote']){
+					$result[$index]['modifier'] = '-';
+				}
+				else{
+					$result[$index]['modifier'] = '=';
+				}
+				
 				$index++;
 			}
 		}
