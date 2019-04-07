@@ -137,6 +137,7 @@ Route::prefix('attendance')
 		->post('search/employee', '\App\Http\Controllers\My\Bauk\AttendanceController@searchEmployee');
 		
 	Route::prefix('histories')
+		->middleware('permission:bauk.attendance.list')
 		->group(function(){
 		Route::name('.landing')
 			->middleware('permission:bauk.attendance.list')
@@ -160,6 +161,16 @@ Route::prefix('attendance')
 			Route::name('.preview')
 				->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
 		});
+	});
+	
+	Route::prefix('summary')
+		->name('.summary')
+		->middleware('permission:bauk.attendance.list')
+		->group(function(){
+		
+		Route::name('.landing')
+			->get('', '\App\Http\Controllers\My\Bauk\Attendance\SummaryController@index');
+		
 	});
 	
 	Route::name('.report')

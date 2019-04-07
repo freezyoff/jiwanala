@@ -13,6 +13,11 @@ class Migration extends Command
      */
     protected $signature = 'jiwanala-db:migrate 
 		{migrationDirectories* 	: relative path to "database/migrations"}
+		{--con-driver}
+		{--con-host}
+		{--con-username}
+		{--con-password}
+		{--con-no-password}
 		{--export				: export flag}
 		{--export-schema=*		: } 
 		{--export-host=			: connection host. default localhost} 

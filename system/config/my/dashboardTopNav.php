@@ -84,8 +84,8 @@
 						'display'=>[ 
 							'name'=>'Penugasan',
 							'tag'=>[
-								'label'=>"new",
-								'color'=>'w3-green'
+								'label'=>"testing",
+								'color'=>'w3-yellow'
 							]
 						], 
 						'href'=>'my.bauk.assignment.landing',
@@ -121,6 +121,18 @@
 							//]
 						], 
 						'href'=>'my.bauk.attendance.landing',
+					],
+					[
+						'permission'=>'bauk.attendance.list',
+						'display'=>[ 				
+							'name'=>'Rekapitulasi', 
+							'icon'=>false ,
+							'tag'=>[
+								'label'=>"testing",
+								'color'=>'w3-yellow'
+							]
+						], 
+						'href'=>'my.bauk.attendance.summary.landing',
 					],
 					[
 						'permission'=>'bauk.attendance.post',

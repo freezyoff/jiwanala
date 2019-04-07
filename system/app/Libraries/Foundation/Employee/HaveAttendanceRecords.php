@@ -1,5 +1,6 @@
 <?php 
 namespace App\Libraries\Foundation\Employee;
+use \Carbon\Carbon;
 
 trait HaveAttendanceRecords{
 	public function attendances(){
@@ -20,13 +21,27 @@ trait HaveAttendanceRecords{
 	
 	/**
 	 *	return attendance record for current employee between given start & end date
-	 *	@param $start (String) - formatted date "Y-m-d"
-	 *	@param $end (String) - formatted date "Y-m-d"
+	 *	@param $start (String|Carbon) - formatted date "Y-m-d"
+	 *	@param $end (String|Carbon) - formatted date "Y-m-d"
 	 *	@return (Array of App\Libraries\Bauk\EmployeeAttendance|Boolean) the records or false
 	 */
 	public function attendanceRecordsByPeriode($start, $end, $sort='asc'){
+		if ($start instanceof Carbon) $start = $start->format('Y-m-d');
+		if ($end instanceof Carbon) $end = $end->format('Y-m-d');
 		return $this->attendances()
 					->whereBetween('date', [$start, $end])
 					->orderBy('date', $sort);
+	}
+	
+	public function getAttendanceCalendar(int $year, int $month){
+		if ($month<10) $month = '0'.$month;
+		
+		$start = Carbon::parse($year.'-'.$month.'-01');
+		$end = Carbon::parse($year.'-'.$month.'-'.$start->daysInMonth);
+		$result = [];
+		foreach($this->attendanceRecordsByPeriode($start, $end)->get() as $att){
+			$result[$att->date] = $att;
+		}
+		return $result;
 	}
 }

@@ -55,7 +55,7 @@ class Holiday extends Model
 	}
 	
 	public static function getHolidaysByMonth($year, $month=false){
-		$year = $year? $year : now()->format('Y');
+		$month = $month? $month : now()->format('m');
 		return 	Holiday::where(function($q) use ($year, $month){
 					$q->whereRaw('DATE_FORMAT(`start`,"%Y-%m") = \''.$year.'-'.$month.'\'');
 					$q->whereRaw('DATE_FORMAT(`end`,"%Y-%m") = \''.$year.'-'.$month.'\'');
@@ -96,5 +96,22 @@ class Holiday extends Model
 		if ($holiday) $name[] = str_replace(':attribute', $holiday->name, $message['custom']);
 		
 		return count($name)>0? implode(' / ', $name) : false;
+	}
+	
+	public static function getHolidayCalendar(int $year, int $month){
+		if ($month<10) $month = '0'.$month;
+		
+		$result = [];
+		foreach(self::getHolidaysByMonth($year, $month) as $holiday){
+			$start = Carbon::parse($holiday->start);
+			$end = Carbon::parse($holiday->end);
+			$current = Carbon::parse($start->format('Y-m-d'));
+			while($current->between($start, $end)){
+				$result[$current->format("Y-m-d")] = $holiday;
+				$current->addDay();
+			}
+		}
+		
+		return $result;
 	}
 }
