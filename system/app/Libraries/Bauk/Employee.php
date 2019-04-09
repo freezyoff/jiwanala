@@ -108,6 +108,7 @@ class Employee extends Model
 			$carbonDate->day = $carbonDate->daysInMonth;
 			$qq->where('registered_at','<=',$carbonDate->format('Y-m-d'));
 		}
+		
 		return $qq->get();
 	}
 	

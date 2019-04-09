@@ -6,12 +6,14 @@
 		'upload'=>'Upload Finger Kehadiran',
 		'upload_import'=>'Impor File',
 		'upload_report'=>'Laporan Impor',
-		'report'=>'Laporan Kehadiran'
+		'report'=>'Laporan Kehadiran',
+		'summary'=>'Rekapitulasi'
 	],
 	'subtitles'=>[
 		'year'=>'tahun',
 		'month'=>'bulan',
 		'consent'=>'cuti / izin',
 		'report'=>'Periode Laporan',
+		'summary'=>'Tahun Akademik : '
 	]
 ];
