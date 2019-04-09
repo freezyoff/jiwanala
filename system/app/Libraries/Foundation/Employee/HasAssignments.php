@@ -3,7 +3,7 @@ namespace App\Libraries\Foundation\Employee;
 
 use App\Libraries\Bauk\EmployeeAssignment;
 
-trait HaveAssignments{
+trait HasAssignments{
 	
 	public function assignments(){
 		$schema = config('database.connections.bauk.database');

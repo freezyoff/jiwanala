@@ -29,8 +29,7 @@
     },
     "autoload": {
 		"files": [
-			"app/Libraries/Foundation/AttendanceAndConsentHelper.php",
-			"app/Libraries/Foundation/DateHelper.php"
+			"app/Libraries/Foundation/AttendanceAndConsentHelper.php"
 		],
         "classmap": [
             "database/seeds",

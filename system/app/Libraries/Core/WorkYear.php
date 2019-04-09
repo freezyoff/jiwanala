@@ -21,8 +21,8 @@ class WorkYear extends Model
 	
 	public function getPeriode(){
 		return [
-			'start'=>\Carbon\Carbon::createFromFormat('Y-m-d', $this->attributes['start']),
-			'end'=>\Carbon\Carbon::createFromFormat('Y-m-d', $this->attributes['end']),
+			'start'=>	Carbon::createFromFormat('Y-m-d', $this->attributes['start']),
+			'end'=>		Carbon::createFromFormat('Y-m-d', $this->attributes['end']),
 		];
 	}
 	

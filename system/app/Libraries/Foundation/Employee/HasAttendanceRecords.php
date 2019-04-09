@@ -2,7 +2,7 @@
 namespace App\Libraries\Foundation\Employee;
 use \Carbon\Carbon;
 
-trait HaveAttendanceRecords{
+trait HasAttendanceRecords{
 	public function attendances(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeAttendance', 'employee_id', 'id');
 	}
@@ -33,6 +33,11 @@ trait HaveAttendanceRecords{
 					->orderBy('date', $sort);
 	}
 	
+	/**
+	 * @param (int) $year - year of schedule
+	 * @param (int) $month - month of schedule
+	 * @return if exists, array with date format "Y-m-d" as keys and Attendance in it, empty array otherwise
+	 */
 	public function getAttendanceCalendar(int $year, int $month){
 		if ($month<10) $month = '0'.$month;
 		

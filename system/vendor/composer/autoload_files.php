@@ -89,5 +89,4 @@ return array(
     '6124b4c8570aa390c21fafd04a26c69f' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     '801c31d8ed748cfa537fa45402288c95' => $vendorDir . '/psy/psysh/src/functions.php',
     'f43b489b6721414db98fb4a6c9b04a16' => $baseDir . '/app/Libraries/Foundation/AttendanceAndConsentHelper.php',
-    '5fa592bf821740bfa57c0b651849494a' => $baseDir . '/app/Libraries/Foundation/DateHelper.php',
 );

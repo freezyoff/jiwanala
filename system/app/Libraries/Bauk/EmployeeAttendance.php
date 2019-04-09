@@ -88,6 +88,10 @@ class EmployeeAttendance extends Model
 		return $arrival->greaterThan($scheduleTime);
 	}
 	
+	public function isNoArrival(){
+		return $this->getArrival()? false : true;
+	}
+	
 	public function getArrivalDifferent(){
 		if ($this->isLateArrival()){
 			$maxArrival = $this->getScheduleArrival();
@@ -108,6 +112,10 @@ class EmployeeAttendance extends Model
 		
 		$scheduleTime = $this->getScheduleDeparture();
 		return $departure->lessThan($scheduleTime);
+	}
+	
+	public function isNoDeparture(){
+		return $this->getLatestDeparture()? false : true;
 	}
 	
 	public function getDepartureDifferent(){

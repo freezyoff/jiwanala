@@ -133,7 +133,9 @@ class Import extends Command
 			
 			$rcount = count($json['records']);
 			
-			$db->statement('SET GLOBAL max_allowed_packet=1073741824');
+			if ($this->getHost() == 'localhost'){
+				$db->statement('SET GLOBAL max_allowed_packet=1073741824');				
+			}
 			$db->statement('SET FOREIGN_KEY_CHECKS=0');
 			$db->beginTransaction();
 			for($i=0; $i<$rcount; $i++){

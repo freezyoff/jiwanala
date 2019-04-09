@@ -4,10 +4,11 @@ namespace App\Libraries\Bauk;
 
 use App\Libraries\Foundation\Employee\AsPerson;
 use App\Libraries\Foundation\Employee\AsUser;
-use App\Libraries\Foundation\Employee\HaveAttendanceRecords;
-use App\Libraries\Foundation\Employee\HaveConsentRecords;
-use App\Libraries\Foundation\Employee\HaveWorkSchedules;
-use App\Libraries\Foundation\Employee\HaveAssignments;
+use App\Libraries\Foundation\Employee\HasAttendanceRecords;
+use App\Libraries\Foundation\Employee\HasConsentRecords;
+use App\Libraries\Foundation\Employee\HasWorkSchedules;
+use App\Libraries\Foundation\Employee\HasAssignments;
+use App\Libraries\Foundation\Employee\HasAttendanceSummary;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -16,10 +17,11 @@ class Employee extends Model
 {
 	use AsPerson, 
 		AsUser, 
-		HaveAttendanceRecords, 
-		HaveConsentRecords, 
-		HaveWorkSchedules,
-		HaveAssignments;
+		HasAttendanceRecords, 
+		HasConsentRecords, 
+		HasWorkSchedules,
+		HasAssignments,
+		HasAttendanceSummary;
 	
     protected $table="employees";
 	protected $connection ="bauk";

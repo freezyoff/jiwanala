@@ -2,7 +2,7 @@
 namespace App\Libraries\Foundation\Employee;
 use \Carbon\Carbon;
 
-trait HaveWorkSchedules{
+trait HasWorkSchedules{
 	public function schedules(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeSchedule', 'employee_id', 'id');
 	}

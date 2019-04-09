@@ -35,7 +35,17 @@ class CreateTableEmployeeConsent extends Migration
 				'td',	//Tugas / Dinas
 				'tl',	//Izin Datang Terlambat / Pulang Awal
 				'tf',	//Izin Tidak Finger Datang / Pulang
-			])->nullable()->comment('izin tidak masuk');
+			])->nullable()->comment("
+				ct: cuti tahunan,
+				cs: cuti sakit
+				cb: cuti besar
+				ca: cuti bersama
+				ch: cuti hamil
+				cp: cuti penting
+				td: izin tugas / dinas
+				tl: izin datang terlambat / pulang awal
+				tf: izin tidak finger datang / pulang
+			");
 			$table->date('start')->comment('tanggal mulai cuti/izin');
 			$table->date('end')->comment('tanggal selesai cuti/izin');
 			$table->boolean('locked')->default(false)->comment('flag kunci untuk persiapan laporan');
