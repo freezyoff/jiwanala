@@ -145,9 +145,13 @@ class Truncate extends Command
 		//First, we collect all schema.table from argument
         foreach($this->argument('schema') as $database){
 			$schema = array_combine(['schema','table'],explode('.',$database));
+			
+			//do not handle the laravel migrations table
+			if ($schema['table'] == 'migrations') continue;
+			
 			if ($schema['table'] == '*'){
 				//get all tables
-				foreach($this->getSchemaTables($schema['schema']) as $table){
+				foreach($this->getSchemaTables($schema['schema']) as $table){	
 					$this->addSchemaTable($schema['schema'], $table);
 				}
 			}
