@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Database\Migration::class,
 		\App\Console\Commands\Jiwanala\Database\Export::class,
 		\App\Console\Commands\Jiwanala\Database\Import::class,
-		\App\Console\Commands\Jiwanala\Database\compare::class,
+		\App\Console\Commands\Jiwanala\Database\Compare::class,
+		\App\Console\Commands\Jiwanala\Database\Truncate::class,
     ];
 
     /**

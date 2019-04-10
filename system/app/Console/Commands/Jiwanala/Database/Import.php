@@ -13,15 +13,15 @@ class Import extends Command
      */
     protected $signature = 'jiwanala-db:import 
 		{schema* : database schema, example: schema_name.database_name / schema.*}
-		{--con-host=		: connection host. default localhost} 
-		{--con-username=	: connection username} 
-		{--con-password=	: connection password}
-		{--con-no-password	: connection use no password for given username}
-		{--con-driver=		: connection driver}
-		{--con-query-limit= : query limit. default 1000 records}
-		{--import-version= 	: signature time for export key. Refer to directory name in storage/app/database/}
-		{--import-mode= 	: SQL or JSON. Default JSON}
-		{--except=*			: given schema table will not imported}
+		{--con-host=localhost	: custom connection host. default localhost} 
+		{--con-username=		: custom connection username} 
+		{--con-password=		: custom connection password}
+		{--con-no-password		: custom connection use no password for given username}
+		{--con-driver=mysql		: custom connection driver. default mysql}
+		{--con-query-limit= 	: query limit. default 1000 records}
+		{--import-version= 		: signature time for export key. Refer to directory name in storage/app/database/}
+		{--import-mode= 		: SQL or JSON. Default JSON}
+		{--except=*				: given schema table will not imported}
 	';
 
     /**
@@ -92,9 +92,6 @@ class Import extends Command
      */
     public function handle(){
 		//check username & password
-		$this->getUsername();
-		$this->getPassword();
-		
 		$mode = $this->getMode();
 		$this->infoStart();
 		
@@ -200,18 +197,38 @@ class Import extends Command
 			"[0m". PHP_EOL;
 	}
 	
+	function createConnectionFromConfig($schema){
+		$connections = config('database.connections');
+		foreach($connections as $key=>$con){
+			if ($con['database'] == $schema){
+				return $key;
+			}
+		}
+		
+		return false;
+	}
+	
+	function createConnectionFromOptions($schema){
+		$key = 'import_'.$schema;
+		config(['database.connections.'.$key => [
+			'driver' => 	$this->getDriver(),
+			'host' => 		$this->getHost(),
+			'username' => 	$this->getUsername(),
+			'password' => 	$this->getPassword(),
+			'database' => 	$schema,
+		]]);
+		return $key;
+	}
+	
 	function getConnection($schema){
-		$key = 'lazy_'.$schema;
-		config([
-			'database.connections.'.$key => [
-				'driver' => 	$this->getDriver(),
-				'host' => 		$this->getHost(),
-				'username' => 	$this->getUsername(),
-				'password' => 	$this->getPassword(),
-				'database' => 	$schema,
-			]
-		]);
-		return \DB::connection($key);
+		$config = $this->isCustomConnection()? 
+					$this->createConnectionFromOptions($schema) : 
+					$this->createConnectionFromConfig($schema);
+		return \DB::connection($config);
+	}
+	
+	function isCustomConnection(){
+		return $this->option('con-username');
 	}
 	
 	function getFiles(){

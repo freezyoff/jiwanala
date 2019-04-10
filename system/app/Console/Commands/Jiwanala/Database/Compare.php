@@ -12,18 +12,18 @@ class Compare extends Command
      * @var string
      */
     protected $signature = 'jiwanala-db:compare 
-		{schema*				: schema to be compared. example: schemaName.tableName}
-		{--except=*				: schema exception. will not readed}
-		{--remote-driver=		: remote connection driver}
-		{--remote-host=			: remote connection host. default localhost} 
-		{--remote-username=		: remote connection username.} 
-		{--remote-password=		: remote connection password.}
-		{--remote-no-password	: remote connection use no password}
-		{--local-driver=		: local connection driver}
-		{--local-host=			: local connection host. default localhost} 
-		{--local-username=		: local connection username.} 
-		{--local-password=		: local connection password.}
-		{--local-no-password	: local connection use no password}
+		{schema*					: schema to be compared. example: [schemaName].[tableName]}
+		{--EX|except=*				: schema exception. will not readed}
+		{--LD|local-driver=			: local custom connection driver}
+		{--LH|local-host=			: local custom connection host. default localhost} 
+		{--LU|local-username=		: local custom connection username.} 
+		{--LP|local-password=		: local custom connection password.}
+		{--LNP|local-no-password	: local custom connection use no password}
+		{--RD|remote-driver=		: remote connection driver}
+		{--RH|remote-host=			: remote connection host. default localhost} 
+		{--RU|remote-username=		: remote connection username.} 
+		{--RP|remote-password=		: remote connection password.}
+		{--RNP|remote-no-password	: remote connection use no password}
 		';
 
     /**
@@ -130,7 +130,25 @@ class Compare extends Command
 		}
 	}
 	
+	function isCustomConnection($remote=false){
+		if ($remote)return $this->option('remote-username');
+		else 		return $this->option('local-username');
+	}
+	
 	function getConnection($schema, $remote=false){
+		if ($remote){
+			return $this->getCustomConnection($schema, true);
+		}
+		
+		if ($this->isCustomConnection()){
+			return $this->getCustomConnection($schema);
+		}
+		else{
+			return $this->getConfigConnection($schema);
+		}
+	}
+	
+	function getCustomConnection($schema, $remote=false){ 
 		$key = ($remote? 'remote_' : 'local_').$schema;
 		config(['database.connections.'.$key => [
 				'driver' => 	$this->getDriver($remote),
@@ -141,13 +159,18 @@ class Compare extends Command
 			]]);
 		return \DB::connection($key);
 	}
-	function getRemoteConnection($schema){ return $this->getConnection($schema, true); }
-	function getLocalConnection($schema){ return $this->getConnection($schema); }
+	function getConfigConnection($schema){ 
+		$connections = config('database.connections');
+		foreach($connections as $key=>$con){
+			if ($con['database'] == $schema){
+				return \DB::connection($key);
+			}
+		}
+		return false;
+	}
 	
 	function getSchemaTables($schema, $remote=false){
-		//we need to sort the sql dump base on table creation date
-		//to avoid export error
-		$db = $remote? $this->getRemoteConnection($schema) : $this->getLocalConnection($schema);
+		$db = $this->getConnection($schema, $remote);
 		$tables = $db->table('information_schema.tables')
 					->select(['table_name', 'create_time'])
 					->where('table_schema',$schema)
@@ -173,7 +196,7 @@ class Compare extends Command
 	
 	public function countTable($schema, $table, $remote=false){
 		//get connection
-		$con = $remote? $this->getRemoteConnection($schema) : $this->getLocalConnection($schema);
+		$con = $this->getConnection($schema, $remote);
 		return $con->table($table)->count();
 	}
 
@@ -196,7 +219,7 @@ class Compare extends Command
 			//2. count each table
 			$index = 0;
 			$count = [];
-			$key = $database['schema'].'_';
+			$key = $database['schema'].'.';
 			foreach($localTables as $table) {
 				$count[$key.$table]['local'] = $this->countTable($database['schema'], $table);
 				
