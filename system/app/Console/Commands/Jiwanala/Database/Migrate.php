@@ -24,6 +24,7 @@ class Migrate extends Command
      */
     protected $description = 'Migrate all jiwanala database';
 
+	protected $directoris = ['service','core','bauk', 'baak', 'baku'];
     /**
      * Create a new command instance.
      *
@@ -59,7 +60,7 @@ class Migrate extends Command
     }
 	
 	function directories(){
-		return $this->argument('dir')? [$this->argument('dir')] : ['service','core','bauk', 'baak'];
+		return $this->argument('dir')? [$this->argument('dir')] : $this->directories;
 	}
 	
 	function getRemoteConnection($dir){
