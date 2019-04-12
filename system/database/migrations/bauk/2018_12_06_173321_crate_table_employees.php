@@ -24,13 +24,11 @@ class CrateTableEmployees extends Migration
 			$table->date('registered_at')->nullable()->comment('tanggal terdaftar');
 			$table->date('resign_at')->nullable()->comment('tanggal keluar / drop out');
             $table->boolean('active')->default(true);
-        });
-		
-		Schema::table("employees", function (Blueprint $table) {
+			
 			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
 			$table->foreign('user_id')->references('id')->on('jiwanala_service.users');
-			//$table->foreign('person_id')->references('id')->on('jiwanala_core.persons');
-		});
+			$table->foreign('person_id')->references('id')->on('jiwanala_core.persons');
+        });
     }
 
     /**
