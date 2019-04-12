@@ -24,7 +24,7 @@ class Migrate extends Command
      */
     protected $description = 'Migrate all jiwanala database';
 
-	protected $directoris = ['service','core','bauk', 'baak', 'baku'];
+	protected $directories = ['service','core','bauk', 'baak', 'baku'];
     /**
      * Create a new command instance.
      *
