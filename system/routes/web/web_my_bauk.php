@@ -139,6 +139,7 @@ Route::prefix('attendance')
 	Route::prefix('histories')
 		->middleware('permission:bauk.attendance.list')
 		->group(function(){
+			
 		Route::name('.landing')
 			->middleware('permission:bauk.attendance.list')
 			->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');

@@ -2,14 +2,32 @@
 
 @section('dashboard.main')
 	<div class="w3-card">
+		<!--
 		<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
 			<h4>Riwayat Kehadiran</h4>
 		</header>
+		-->
+		<div id="tabs-header" class="w3-row w3-container w3-theme">
+			<button class="w3-bar-item w3-button w3-large margin-top-8 w3-hover-blue" 
+					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#bulan')">
+				Bulan
+			</button>
+			<button class="w3-bar-item w3-button w3-large margin-top-8 w3-hover-blue" 
+					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#rekap')">
+				Rekapitulasi
+			</button>
+		</div>
 		<div class="w3-row">
 			@include('my.bauk.attendance.landing_form')
 		</div>
-		<div class="w3-row w3-container padding-bottom-8">
-			@include('my.bauk.attendance.landing_table')
+		<div id="tabs-container" class="w3-row w3-container padding-bottom-8">
+			<div id="bulan">
+				@include('my.bauk.attendance.landing_table')
+			</div>
+			<div id="rekap" class="city" style="display:none">
+				<h2>Tokyo</h2>
+				<p>Tokyo is the capital of Japan.</p>
+			</div>
 		</div>
 	</div>
 @endSection
@@ -191,6 +209,20 @@ App.UI.search.date = {
 		$('[role="select"]').select().on('select.pick', App.UI.search.date.events.pick);
 	}
 };
+
+App.UI.tabs = {
+	showItem: function(id){
+		$('#tabs-container').children().hide();
+		$(id).show();
+	},
+	higlightHeader: function(el){
+		$('#tabs-header').children().removeClass('w3-light-grey');
+		$(el).addClass('w3-light-grey');
+	},
+	init: function(){
+		this.higlightHeader($('#tabs-header').children().first());
+	}
+};
 </script>
 <script>
 $(document).ready(function(){ 
@@ -201,5 +233,7 @@ $(document).ready(function(){
 			App.UI.search.text.value('{{$nip}}', '{{$name}}')
 		}
 	@endif
+	
+	App.UI.tabs.init();
 });</script>
 @endSection

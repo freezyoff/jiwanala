@@ -33,7 +33,8 @@
 						type="text" />				
 				</div>
 				<div class="padding-top-16 padding-bottom-8 w3-hide-small" style="text-align:right">
-					<button class="w3-button w3-hover-red w3-red margin-right-8" onclick="deactivated-modal-{{$data->id}}">
+					<button class="w3-button w3-hover-red w3-red margin-right-8" 
+						onclick="$('#deactivated-modal-{{$data->id}}').hide()">
 						<i class="fas fa-times"></i>
 						<span class="padding-left-8">{{trans('my/bauk/employee/landing.hints.btn_cancel')}}</span>
 					</button>
@@ -49,7 +50,8 @@
 			</div>
 		</div>
 		<div class="w3-container w3-hide-medium w3-hide-large padding-top-8 padding-bottom-8" style="text-align:right">
-			<button class="w3-button w3-hover-red w3-red margin-right-8" onclick="deactivated-modal-{{$data->id}}">
+			<button class="w3-button w3-hover-red w3-red margin-right-8" 
+					onclick="$('#deactivated-modal-{{$data->id}}').hide()">
 				<i class="fas fa-times"></i>
 				<span class="padding-left-8">{{trans('my/bauk/employee/landing.hints.btn_cancel')}}</span>
 			</button>
