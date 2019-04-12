@@ -37,8 +37,7 @@ class Rollback extends Migrate
      */
     public function handle()
     {
-		$dirs = $this->directories();
-		sort($dirs);
+		$dirs = array_reverse($this->directories());
         foreach($dirs as $dir){
 			if ($this->isRepositoryExists($dir)){
 				$con = $this->option('remote')? $this->getRemoteConnection($dir) : $dir;
