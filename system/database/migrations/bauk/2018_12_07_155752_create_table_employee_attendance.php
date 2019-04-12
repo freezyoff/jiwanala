@@ -2,18 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmployeeAttendance extends Migration
 {
-	protected $connection = 'bauk';
-	protected $tables = [
-		"person"=>"persons",
-		'employee'=>'employees',
-		'user'=>'users',
-		'employee-attendance'=>'employee_attendance'
-	];
-	
     /**
      * Run the migrations.
      *
@@ -21,7 +13,7 @@ class CreateTableEmployeeAttendance extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("employee_attendance", function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
@@ -33,10 +25,9 @@ class CreateTableEmployeeAttendance extends Migration
 			$table->time('time4')->nullable()->comment('jam finger keluar');
 			$table->boolean('locked')->default(0)->comment('flag kunci untuk persiapan laporan');
 			
-			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('employee_id')->references('id')
-				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
-        },'employee-attendance');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+			$table->foreign('employee_id')->references('id')->on('employees');
+        });
     }
 
     /**
@@ -46,6 +37,6 @@ class CreateTableEmployeeAttendance extends Migration
      */
     public function down()
     {
-        $this->dropSchema('employee-attendance');
+        Schema::dropIfExists('employee_attendance');
     }
 }

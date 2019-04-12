@@ -11,20 +11,8 @@ class Compare extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala-db:compare 
-		{schema*				: schema to be compared. example: schemaName.tableName}
-		{--except=*				: schema exception. will not readed}
-		{--remote-driver=		: remote connection driver}
-		{--remote-host=			: remote connection host. default localhost} 
-		{--remote-username=		: remote connection username.} 
-		{--remote-password=		: remote connection password.}
-		{--remote-no-password	: remote connection use no password}
-		{--local-driver=		: local connection driver}
-		{--local-host=			: local connection host. default localhost} 
-		{--local-username=		: local connection username.} 
-		{--local-password=		: local connection password.}
-		{--local-no-password	: local connection use no password}
-		';
+    protected $signature = 'jn-db:compare 
+							{--except=*	: schema table to be exclude from comparation. example: [schemaName][.[tablename] . Use asterik (*) to compare all tables in schema}';
 
     /**
      * The console command description.
@@ -43,111 +31,33 @@ class Compare extends Command
         parent::__construct();
     }
 	
-	function getDriver($remote=false){
-		if ($remote){
-			return $this->option('remote-driver')? $this->option('remote-driver') : 'mysql';
-		}
-		else{
-			return $this->option('local-driver')? $this->option('local-driver') : 'mysql';
-		}
-	}
-	
-	protected $host = [];
-	function getHost($remote=false){
-		if ($remote){
-			if (!isset($this->host['remote'])){
-				$this->host['remote'] = $this->option('remote-host')? 
-					$this->option('remote-host') : 
-					$this->ask('Remote Host');
-			}
-			return $this->host['remote'];
-		}
-		else{
-			if (!isset($this->host['local'])){
-				$this->host['local'] = $this->option('local-host')? 
-					$this->option('local-host') : 
-					$this->ask('Local Host', 'localhost');
-			}
-			return $this->host['local'];
-		}
-	}
-	
-	protected $username = [];
-	function getUsername($remote=false){
-		if ($remote){
-			if (!isset($this->username['remote'])){
-				$this->username['remote'] = $this->option('remote-username')? 
-					$this->option('remote-username') : 
-					$this->ask('Remote Username');
-			}
-			return $this->username['remote'];
-		}
-		else{
-			if (!isset($this->username['local'])){
-				$this->username['local'] = $this->option('local-username')? 
-					$this->option('local-username') : 
-					$this->ask('Local Username');
-			}
-			return $this->username['local'];
-		}
-	}
-	
-	protected $password = [];
-	function getPassword($remote=false){
-		$choice = function($remote=false){
-			$target = $remote? "Remote" : "local";
-			$cc = $this->choice($target." Password",[
-				'n'=>'No Password',
-				'y'=>'Type Password'
-			]);
-			if ($cc=='n') return '';
-			if ($cc=='y') return 'y';
-		};
-		
-		if ($remote){
-			if ($this->option('remote-no-password')) return null;
-			if (!isset($this->password['remote'])){
-				$this->password['remote'] = $this->option('remote-password');
-				if (!$this->password['remote']) $this->password['remote'] = $choice(true);
-				if ($this->password['remote'] == 'y'){
-					$this->password['remote'] = $this->ask('Remote Password');
-				}
-			}
-			
-			return $this->password['remote'];
-		}
-		else{
-			if ($this->option('local-no-password')) return null;
-			if (!isset($this->password['local'])){
-				$this->password['local'] = $this->option('local-password');
-				if (!$this->password['local']) $this->password['local'] = $choice();
-				if ($this->password['local'] == 'y'){
-					$this->password['local'] = $this->ask('Local Password');
-				}
-			}
-			
-			return $this->password['local'];
-		}
-	}
-	
 	function getConnection($schema, $remote=false){
-		$key = ($remote? 'remote_' : 'local_').$schema;
+		return $remote? $this->getRemoteConnection($schema, true) : $this->getLocalConnection($schema);
+	}
+	
+	function getRemoteConnection($schema){ 
+		$key = 'remote_'.$schema;
 		config(['database.connections.'.$key => [
-				'driver' => 	$this->getDriver($remote),
-				'host' => 		$this->getHost($remote),
-				'username' => 	$this->getUsername($remote),
-				'password' => 	$this->getPassword($remote),
+				'driver' => 	env('DB_REMOTE_DRIVER'),
+				'host' => 		env('DB_REMOTE_HOST'),
+				'username' => 	env('DB_REMOTE_USERNAME'),
+				'password' => 	env('DB_REMOTE_PASSWORD'),
 				'database' => 	$schema,
 			]]);
 		return \DB::connection($key);
 	}
-	function getRemoteConnection($schema){ return $this->getConnection($schema, true); }
-	function getLocalConnection($schema){ return $this->getConnection($schema); }
+	function getLocalConnection($schema){ 
+		$connections = config('database.connections');
+		foreach($connections as $key=>$con){
+			if ($con['database'] == $schema){
+				return \DB::connection($key);
+			}
+		}
+		return false;
+	}
 	
 	function getSchemaTables($schema, $remote=false){
-		//we need to sort the sql dump base on table creation date
-		//to avoid export error
-		$db = $remote? $this->getRemoteConnection($schema) : $this->getLocalConnection($schema);
+		$db = $this->getConnection($schema, $remote);
 		$tables = $db->table('information_schema.tables')
 					->select(['table_name', 'create_time'])
 					->where('table_schema',$schema)
@@ -162,6 +72,15 @@ class Compare extends Command
 		return $tableList;
 	}
 	
+	function getSchemas(){
+		$connections = config('database.connections');
+		$db = [];
+		foreach($connections as $key=>$con){
+			$db[] = $con['database'];
+		}
+		return $db;
+	}
+	
 	protected $except;
 	function isException($schema, $table){
 		if (!isset($this->except)) $this->except = $this->option('except');
@@ -173,7 +92,7 @@ class Compare extends Command
 	
 	public function countTable($schema, $table, $remote=false){
 		//get connection
-		$con = $remote? $this->getRemoteConnection($schema) : $this->getLocalConnection($schema);
+		$con = $this->getConnection($schema, $remote);
 		return $con->table($table)->count();
 	}
 
@@ -185,9 +104,9 @@ class Compare extends Command
     public function handle()
     {
 		$result = [];
-        foreach($this->argument('schema') as $schema){
+        foreach($this->getSchemas() as $schema){
 			
-			$database = array_combine(['schema','table'], explode('.',$schema));
+			$database = array_combine(['schema','table'], [$schema,'*']);
 			
 			//1. read remote & all schema tables
 			$localTables 	= $database['table']=='*'? $this->getSchemaTables($database['schema']) : [$database['table']];
@@ -196,7 +115,7 @@ class Compare extends Command
 			//2. count each table
 			$index = 0;
 			$count = [];
-			$key = $database['schema'].'_';
+			$key = $database['schema'].'.';
 			foreach($localTables as $table) {
 				$count[$key.$table]['local'] = $this->countTable($database['schema'], $table);
 				

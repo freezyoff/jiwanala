@@ -11,13 +11,9 @@ class Export extends Command
      *
      * @var string
      */
-	protected $signature = 'jiwanala-db:export 
-		{schema* : database schema. schema_name.database_name / schema.*}
-		{--con-host=		: connection host. default localhost} 
-		{--con-username=	: connection username.} 
-		{--con-password=	: connection password.}
-		{--con-driver=		: connection driver}
-		{--con-query-limit= : query limit. default 1000 records}
+	protected $signature = 'jn-db:export 
+		{--remote}
+		{--query-limit=	 	: query limit. default 1000 records}
 		{--export-version= 	: signature time for export key. Use as directoriy in storage/app/database/}
 		{--export-mode= 	: SQL or JSON. Default JSON}
 	';
@@ -47,45 +43,29 @@ class Export extends Command
      */
     public function handle()
     {
+		ini_set('max_execution_time', 0);
 		set_time_limit(0);
 		
-		$this->getUsername();
-		$this->getPassword();
+		$this->infoStart();
 		
-		if ($this->argument('schema')){
-			$this->infoStart();
-			
-			$tables = [];
-			foreach($this->argument('schema') as $schema){
-				$arr = explode('.',$schema);
-				if ($arr[1] == '*'){
-					foreach($this->getAllSchemaTable($arr[0]) as $table){
-						$tables[$arr[0]][] = $table;
-						
-						//calc max table name length for output style
-						$this->maxTableNameLength = max($this->maxTableNameLength, strlen($arr[0].'.'.$table));
-					}
-				}
-				else{
-					$tables[$arr[0]][] = $arr[1];
-					
-					//calc max table name length for output style
-					$this->maxTableNameLength = max($this->maxTableNameLength, strlen($arr[0].'.'.$arr[1]));
-				}
+		$tables = [];
+		foreach($this->getSchemas() as $schema){
+			foreach($this->getAllSchemaTable($schema) as $table){
+				$tables[$schema][] = $table;
+				
+				//calc max table name length for output style
+				$this->maxTableNameLength = max($this->maxTableNameLength, strlen($schema.'.'.$table));
 			}
-			
-			//loop the $tables for export
-			foreach($tables as $schema=>$schemaTables){
-				foreach($schemaTables as $table){
-					$this->handleTable($schema, $table);
-				}
+		}
+		
+		//loop the $tables for export
+		foreach($tables as $schema=>$schemaTables){
+			foreach($schemaTables as $table){
+				$this->handleTable($schema, $table);
 			}
-			
-			$this->infoEnd();
 		}
-		else{
-			$this->error('No Input');
-		}
+		
+		$this->infoEnd();
     }
 	
 	/**
@@ -126,9 +106,8 @@ class Export extends Command
 				->skip($i)
 				->get();
 				
-			$ii = 0;
-			
 			$strBuffer="";
+			$ii = 0;
 			foreach($query as $item){
 				$ii++;
 				$opts['record'] = $item;
@@ -136,17 +115,24 @@ class Export extends Command
 				$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
 			}
 			$this->write($schema, $table, $strBuffer);
+			$strBuffer = null;
 			
 			$bar->advance($queryLimit);
 		}
 		
 		$this->write($schema, $table, $this->getFormatedString($this->getMode(), 'footer', []));
 		
+		
 		if ($queryCount == 0) {
 			$bar->setProgress(100);
 		}
 		
 		$bar->finish();
+		
+		if ($this->getMode() == 'json'){
+			echo ' JSON '. ($this->verifyJSON($schema, $table)? 'verified' : 'error :'.json_last_error());
+		}
+		
 		$this->line('');
 	}
 	
@@ -270,50 +256,40 @@ class Export extends Command
 		return $tableList;
 	}
 	
+	function getSchemas(){
+		$connections = config('database.connections');
+		$db = [];
+		foreach($connections as $key=>$con){
+			$db[] = $con['database'];
+		}
+		return $db;
+	}
+	
 	function getConnection($schema){
-		$key = 'lazy_'.$schema;
+		return $this->option('remote')? 
+			$this->getRemoteConnection($schema, true) : 
+			$this->getLocalConnection($schema);
+	}
+	
+	function getRemoteConnection($schema){ 
+		$key = 'remote_'.$schema;
 		config(['database.connections.'.$key => [
-				'driver' => 	$this->getDriver(),
-				'host' => 		$this->getHost(),
-				'username' => 	$this->getUsername(),
-				'password' => 	$this->getPassword(),
+				'driver' => 	env('DB_REMOTE_DRIVER'),
+				'host' => 		env('DB_REMOTE_HOST'),
+				'username' => 	env('DB_REMOTE_USERNAME'),
+				'password' => 	env('DB_REMOTE_PASSWORD'),
 				'database' => 	$schema,
 			]]);
 		return \DB::connection($key);
 	}
-	
-	function getDriver(){ 
-		return $this->option('con-driver')? $this->option('con-driver') : 'mysql'; 
-	}
-	
-	function getHost(){ 
-		return $this->option('con-host')? $this->option('con-host') : 'localhost'; 
-	}
-	
-	protected $username;
-	function getUsername(){ 
-		if (!$this->username && !$this->option('con-username')){
-			$this->ask("Connection Username");
+	function getLocalConnection($schema){ 
+		$connections = config('database.connections');
+		foreach($connections as $key=>$con){
+			if ($con['database'] == $schema){
+				return \DB::connection($key);
+			}
 		}
-		else{
-			$this->username = $this->option('con-username');
-		}
-		return $this->username;
-	}
-	
-	protected $password;
-	function getPassword(){ 
-		if (!$this->password && !$this->option('con-password')){
-			$this->ask("Connection Password");
-		}
-		else{
-			$this->password = $this->option('con-password');
-		}
-		return $this->password;
-	}
-	
-	function getQueryLimit(){
-		return $this->option('con-query-limit')? $this->option('con-query-limit') : 1000;
+		return false;
 	}
 	
 	function getTimestamp(){
@@ -342,6 +318,11 @@ class Export extends Command
 		}
 	}
 	
+	function verifyJSON($schema, $table){
+		json_decode(\Storage::disk('local')->read($this->getFileName($schema, $table)));
+		return json_last_error()==0? true : false;
+	}
+	
 	function getMode(){
 		return $this->option('export-mode')? $this->option('export-mode') : 'json';
 	}
@@ -363,5 +344,9 @@ class Export extends Command
 		}
 		$this->columnTypes[$key] = $result;
 		return $result;
+	}
+	
+	function getQueryLimit(){
+		return $this->option('query-limit')? $this->option('query-limit') : 1000;
 	}
 }

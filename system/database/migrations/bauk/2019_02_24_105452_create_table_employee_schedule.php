@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmployeeSchedule extends Migration
 {
-	protected $connection = 'bauk';
-	protected $tables = [
-		'user'=>'users',
-		'employee'=>'employees',
-		'employee-schedules'=>'employee_schedules',
-	];
-	
     /**
      * Run the migrations.
      *
@@ -20,7 +13,7 @@ class CreateTableEmployeeSchedule extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("employee_schedules", function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
@@ -29,10 +22,9 @@ class CreateTableEmployeeSchedule extends Migration
 			$table->time('arrival')->comment('Jam Masuk Kerja. batas maksimal kedatangan');
 			$table->time('departure')->comment('Jam Pulang kerja. batas minimal kepulangan');
 			
-			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('employee_id')->references('id')
-				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
-		}, 'employee-schedules');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+			$table->foreign('employee_id')->references('id')->on('employees');
+		});
     }
 
     /**
@@ -41,6 +33,6 @@ class CreateTableEmployeeSchedule extends Migration
      * @return void
      */
     public function down(){
-        $this->dropSchema('employee-schedules');
+		Schema::dropIfExists('employee_schedules');
     }
 }

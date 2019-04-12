@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTablePhones extends Migration
 {
-	protected $connection = 'core';
-	protected $tables = [
-		"person"=>"persons",
-		"phone"=>"phones", 
-		"person-phone"=>"person_phones",
-	];
-	
     /**
      * Run the migrations.
      *
@@ -20,7 +13,7 @@ class CreateTablePhones extends Migration
      */
     public function up()
     {
-		$this->createSchema(function (Blueprint $table) {
+		Schema::create("phones", function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable();
             $table->increments('id');
@@ -29,8 +22,9 @@ class CreateTablePhones extends Migration
 			$table->string('phone',25)->unique();
 			$table->string('extension', 25)->nullable();
 			
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
-        },'phone');
+			$table->foreign('person_id')->references('id')->on('persons');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+        });
     }
 
     /**
@@ -40,7 +34,6 @@ class CreateTablePhones extends Migration
      */
     public function down()
     {
-        $this->dropSchema('person-phone');
-        $this->dropSchema('phone');
+        Schema::dropIfExists('phones');
     }
 }

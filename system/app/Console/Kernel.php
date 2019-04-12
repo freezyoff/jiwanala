@@ -22,10 +22,12 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Service\JiwanalaUser_changepassword::class,
 		\App\Console\Commands\Core\JiwanalaWorkYear_sync::class,
 		
-		\App\Console\Commands\Jiwanala\Database\Migration::class,
+		\App\Console\Commands\Jiwanala\Database\Migrate::class,
+		\App\Console\Commands\Jiwanala\Database\Rollback::class,
+		\App\Console\Commands\Jiwanala\Database\Refresh::class,
 		\App\Console\Commands\Jiwanala\Database\Export::class,
 		\App\Console\Commands\Jiwanala\Database\Import::class,
-		\App\Console\Commands\Jiwanala\Database\compare::class,
+		\App\Console\Commands\Jiwanala\Database\Compare::class,
     ];
 
     /**

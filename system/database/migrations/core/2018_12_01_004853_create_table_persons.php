@@ -2,12 +2,15 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTablePersons extends Migration
 {
-	protected $connection = "core";
-	protected $tables = 'persons';
+	protected $table = 'persons';
+	
+	function getTableName(){
+		return $this->table;
+	}
 	
     /**
      * Run the migrations.
@@ -16,7 +19,7 @@ class CreateTablePersons extends Migration
      */
     public function up()
     {
-		$this->createSchema(function (Blueprint $table) {
+		Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->integer('creator')->unsigned()->nullable();
             $table->timestamps();
 			$table->increments('id');
@@ -29,6 +32,8 @@ class CreateTablePersons extends Migration
             $table->date('birth_date')->nullable();
 			$table->enum('gender', ['l', 'p']);
             $table->enum('marital',['bm','mn','cr','mt'])->comment('bm: belum menikah, mn:menikah, dj: duda/janda cerai, mt: duda/janda mati')->nullable();
+			
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users')->onDelete('restrict')->onUpdate('restrict');;
         });
     }
 
@@ -38,6 +43,6 @@ class CreateTablePersons extends Migration
      * @return void
      */
     public function down(){
-        $this->dropSchema();
+        Schema::dropIfExists($this->getTableName());
     }
 }
