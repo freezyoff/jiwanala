@@ -12,7 +12,10 @@ class Migrate extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-db:install {--remote	: use remote database}';
+    protected $signature = 'jn-db:install 
+							{dir?		: directory where migration files take place}
+							{--step=	: installation step}
+							{--remote	: use remote database}';
 
     /**
      * The console command description.
@@ -45,13 +48,18 @@ class Migrate extends Command
 				'--database'=> 	$con,
 				'--path'=> 		'database/migrations/'.$dir
 			];
+			
+			if ($this->option('step')){
+				$opts['--step'] = $this->option('step');
+			}
+				
 			\Artisan::call('migrate', $opts, $this->output);
 			$this->infoDone($con);
 		}
     }
 	
 	function directories(){
-		return ['service','core','bauk'];
+		return $this->argument('dir')? [$this->argument('dir')] : ['service','core','bauk', 'baak'];
 	}
 	
 	function getRemoteConnection($dir){
