@@ -2,16 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
-class BaukHolidaysTable extends Migration
+class CreateTableBaukHolidays extends Migration
 {
-	protected $connection = 'bauk';
-	protected $tables = [
-		'holiday'=>'holidays',
-		'user'=>'users'
-	];
-	
     /**
      * Run the migrations.
      *
@@ -19,7 +13,7 @@ class BaukHolidaysTable extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table){
+        Schema::create("holidays", function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
@@ -28,8 +22,8 @@ class BaukHolidaysTable extends Migration
 			$table->date('end')->comment('tanggal selesai libur');
 			$table->boolean('repeat')->default(0)->comment('diulang setiap bulan yang sama');
 			
-			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-		},'holiday');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+		});
     }
 
     /**
@@ -39,6 +33,6 @@ class BaukHolidaysTable extends Migration
      */
     public function down()
     {
-        $this->dropSchema('holiday');
+		Schema::dropIfExists('holidays');
     }
 }

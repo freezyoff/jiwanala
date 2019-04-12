@@ -16,21 +16,3 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
-
-Artisan::command('jiwanala-test', function(){
-	$connections = ['service', 'core', 'bauk'];
-	foreach($connections as $connection){
-		
-		//get table list in schema
-		$tables = \DB::connection($connection)->select('SHOW TABLES');
-		
-		//alter the table
-		foreach($tables as $table){
-			foreach($table as $key=>$tableName){
-				$schema = config('database.connections.'.$connection.'.database');
-				\DB::select('ALTER TABLE `'.$schema.'`.`'.$tableName.'` ENGINE = "InnoDB"');
-				$this->info('alter to InnoDB: '.$connection.'.'.$tableName);
-			}
-		}
-	}
-});

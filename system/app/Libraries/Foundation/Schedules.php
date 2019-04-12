@@ -16,20 +16,15 @@ class Schedules{
 		$outputPath = self::getOutputLogPath();
 		$schedule->command('jiwanala:employee-attendance-lock')
 			->daily()
-			->appendOutputTo($outputPath."scheduleLog.jiwanala.employee-attendance-lock.txt");
+			->appendOutputTo($outputPath."scheduleLog.jiwanala-employee-attendance-lock.txt");
 			
 		$schedule->command('jiwanala:work-year-sync')
 			->daily()
-			->appendOutputTo($outputPath."scheduleLog.jiwanala.work-year-sync.txt");
+			->appendOutputTo($outputPath."scheduleLog.jiwanala-work-year-sync.txt");
 			
 		//dump export table
-		$schedule->command('jiwanala-db:export',[
-				'schema'=>			'jiwanala_service.* jiwanala_core.* jiwanala_bauk.*',
-				'--con-host'=>		env('DB_HOST'),
-				'--con-username'=>	env('DB_USERNAME_SERVICE'),
-				'--con-password'=>	env('DB_PASSWORD_SERVICE'),
-			])
+		$schedule->command('jn-db:export',[])
 			->daily()
-			->appendOutputTo($outputPath."scheduleLog.jiwanala-db.export.txt");
+			->appendOutputTo($outputPath."scheduleLog.jn-db-export.txt");
 	}
 }

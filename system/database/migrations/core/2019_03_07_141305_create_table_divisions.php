@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableDivisions extends Migration
 {
@@ -19,18 +19,16 @@ class CreateTableDivisions extends Migration
      */
     public function up()
     {
-		if (!$this->schemaExist('division')){
-			$this->createSchema(function (Blueprint $table) {
-				$table->timestamps();
-				$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
-				$table->integer('id')->unsigned();
-				$table->string('name');
-				$table->string('alias');
-				
-				$table->primary('id');
-				$table->foreign('creator')->references('id')->on('jiwanala_service.users');
-			}, 'division');
-		}
+		Schema::create("divisions", function (Blueprint $table) {
+			$table->timestamps();
+			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
+			$table->integer('id')->unsigned();
+			$table->string('name');
+			$table->string('alias');
+			
+			$table->primary('id');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+		});
     }
 
     /**
@@ -40,6 +38,6 @@ class CreateTableDivisions extends Migration
      */
     public function down()
     {
-        $this->dropSchema('division');
+		Schema::dropIfExists('divisions');
     }
 }

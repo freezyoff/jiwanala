@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableJobs extends Migration
 {
@@ -24,48 +24,42 @@ class CreateTableJobs extends Migration
     public function up()
     {
 		//create jobs table
-        if (!$this->schemaExist('job')){
-			$this->createSchema(function (Blueprint $table) {
-				$table->timestamps();
-				$table->increments('id');
-				$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
-				$table->string('name')->default("");
-				$table->string('display_name')->default("");
-				$table->string('description')->default("");
-				
-				$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			}, 'job');
-		}
+        Schema::create("jobs", function (Blueprint $table) {
+			$table->timestamps();
+			$table->increments('id');
+			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
+			$table->string('name')->default("");
+			$table->string('display_name')->default("");
+			$table->string('description')->default("");
+			
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+		});
 		
 		//create intermediate job & division table
-		if (!$this->schemaExist('division_job')){
-			$this->createSchema(function (Blueprint $table) {
-				$table->timestamps();
-				$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
-				$table->integer('job_id')->unsigned();
-				$table->integer('division_id')->unsigned();
-				
-				$table->primary(['job_id','division_id']);
-				$table->foreign('job_id')->references('id')->on($this->getTableName('job'));
-				$table->foreign('division_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('division'));
-				$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			}, 'division_job');
-		}
+		Schema::create("divisions_jobs", function (Blueprint $table) {
+			$table->timestamps();
+			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
+			$table->integer('job_id')->unsigned();
+			$table->integer('division_id')->unsigned();
+			
+			$table->primary(['job_id','division_id']);
+			$table->foreign('job_id')->references('id')->on('jobs');
+			$table->foreign('division_id')->references('id')->on('divisions');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+		});
 		
 		//create intermediate job & permission table
-		if (!$this->schemaExist('job_permission')){
-			$this->createSchema(function (Blueprint $table) {
-				$table->timestamps();
-				$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
-				$table->integer('job_id')->unsigned();
-				$table->integer('permission_id')->unsigned();
-				
-				$table->primary(['job_id','permission_id']);
-				$table->foreign('job_id')->references('id')->on($this->getTableName('job'));
-				$table->foreign('permission_id')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('permission'));
-				$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			}, 'job_permission');
-		}
+		Schema::create("jobs_permissions", function (Blueprint $table) {
+			$table->timestamps();
+			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
+			$table->integer('job_id')->unsigned();
+			$table->integer('permission_id')->unsigned();
+			
+			$table->primary(['job_id','permission_id']);
+			$table->foreign('job_id')->references('id')->on('jobs');
+			$table->foreign('permission_id')->references('id')->on('jiwanala_service.permissions');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+		});
     }
 
     /**
@@ -75,8 +69,8 @@ class CreateTableJobs extends Migration
      */
     public function down()
     {
-        $this->dropSchema('job_permission');
-		$this->dropSchema('division_job');
-		$this->dropSchema('job');
+        foreach(['jobs_permissions','divisions_jobs','jobs'] as $table){
+			Schema::dropIfExists($table);
+		}
     }
 }

@@ -11,17 +11,11 @@ class Import extends Command
      *
      * @var string
      */
-    protected $signature = 'jiwanala-db:import 
-		{schema* : database schema, example: schema_name.database_name / schema.*}
-		{--con-host=localhost	: custom connection host. default localhost} 
-		{--con-username=		: custom connection username} 
-		{--con-password=		: custom connection password}
-		{--con-no-password		: custom connection use no password for given username}
-		{--con-driver=mysql		: custom connection driver. default mysql}
-		{--con-query-limit= 	: query limit. default 1000 records}
+    protected $signature = 'jn-db:import 
+		{--remote				: use remote connection}
+		{--query-limit= 		: query limit. default 1000 records}
 		{--import-version= 		: signature time for export key. Refer to directory name in storage/app/database/}
 		{--import-mode= 		: SQL or JSON. Default JSON}
-		{--except=*				: given schema table will not imported}
 	';
 
     /**
@@ -48,28 +42,6 @@ class Import extends Command
         parent::__construct();
     }
 	
-	function getHost(){ 
-		$this->host = $this->option('con-host')? $this->option('con-host') : $this->host;
-		return $this->host;
-	}
-	
-	function getDriver(){ 
-		$this->driver = $this->option('con-driver')? $this->option('con-driver') : $this->driver;
-		return $this->driver;
-	}
-	
-	function getUsername(){
-		$this->username = $this->option('con-username')? $this->option('con-username') : $this->ask('Connection Username');
-		return $this->username;
-	}
-	
-	function getPassword(){
-		if (!$this->option('con-no-password')){
-			$this->password = $this->option('con-password')? $this->option('con-password') : $this->ask('Connection Password');			
-		}
-		return $this->password;
-	}
-	
 	function getVersion(){
 		$version = $this->option('import-version');
 		if ($version){
@@ -91,18 +63,25 @@ class Import extends Command
      * @return mixed
      */
     public function handle(){
+		ini_set('max_execution_time', 0);
+		set_time_limit(0);
+		
 		//check username & password
 		$mode = $this->getMode();
 		$this->infoStart();
 		
-		foreach($this->argument('schema') as $schema){
-			
-			$schemaInfo = array_combine(['schema','table'], explode('.', $schema));
-			
-			foreach($this->getFiles() as $file){	
-				
-				if ($this->isMatchSchema($schemaInfo, $file)){
-					
+		$database = [];
+		foreach($this->getSchemas() as $schema){
+			$tables = $this->getAllSchemaTable($schema);
+			foreach($tables as $table){
+				$database[$schema][] = $table;
+			}
+		}
+		
+		foreach($database as $schema=>$tables){
+			foreach($tables as $table){			
+				if ($this->isFileExists($schema, $table)){
+					$schemaInfo = array_combine(['schema','table'],[$schema, $table]);
 					if ($mode == 'sql'){					
 						//read & import sql 
 						$this->infoRead($file);
@@ -112,25 +91,24 @@ class Import extends Command
 				
 					//json
 					else{
-						$this->handleJSON($this->getConnection($schemaInfo['schema']), $file);
+						$json = json_decode($this->read($schema, $table), true);
+						$this->handleJSON($this->getConnection($schemaInfo['schema']), $json);
 					}
 				}
 			}
-			
 		}
-		
+			
 		$this->infoEnd();
     }
 	
-	function handleJSON($db, $file){
-		$json = json_decode($this->read($file), true);
+	function handleJSON($db, $json){
 		if (isset($json['records']) && count($json['records'])>0){
 			$str = $json['database']['schema'].'.'.$json['database']['table'];
 			$this->infoRead($str.' : '.count($json['records']).' records');
 			
 			$rcount = count($json['records']);
 			
-			if ($this->getHost() == 'localhost'){
+			if ($this->getConnection($json['database']['schema'])->getConfig('host') == 'localhost'){
 				$db->statement('SET GLOBAL max_allowed_packet=1073741824');				
 			}
 			$db->statement('SET FOREIGN_KEY_CHECKS=0');
@@ -151,25 +129,6 @@ class Import extends Command
 			$db->statement('SET FOREIGN_KEY_CHECKS=1');
 			$this->infoReadSuccess();
 		}
-	}
-	
-	
-	function isMatchSchema(Array $schemaInfo, $file){
-		//check given exception, if except schema table, we return false;
-		$exceptSchemaTable = $this->option('except');
-		foreach($exceptSchemaTable as $exception){
-			$arr = explode('.',$exception);
-			if (count($arr)==2 && str_contains($file, $arr[0].'_'.$arr[1])) return false;
-		}
-		
-		//if given schema has asterix characters
-		//select all tables in schema
-		if ($schemaInfo['table'] == '*'){
-			return str_contains($file, $schemaInfo['schema']);
-		}
-		
-		//match table schema
-		return str_contains($file, $schemaInfo['schema'].'_'.$schemaInfo['table']);
 	}
 	
 	function infoStart(){
@@ -197,46 +156,71 @@ class Import extends Command
 			"[0m". PHP_EOL;
 	}
 	
-	function createConnectionFromConfig($schema){
+	function getConnection($schema){
+		return $this->option('remote')? 
+			$this->getRemoteConnection($schema, true) : 
+			$this->getLocalConnection($schema);
+	}
+	
+	function getRemoteConnection($schema){ 
+		$key = 'remote_'.$schema;
+		config(['database.connections.'.$key => [
+				'driver' => 	env('DB_REMOTE_DRIVER'),
+				'host' => 		env('DB_REMOTE_HOST'),
+				'username' => 	env('DB_REMOTE_USERNAME'),
+				'password' => 	env('DB_REMOTE_PASSWORD'),
+				'database' => 	$schema,
+			]]);
+		return \DB::connection($key);
+	}
+	function getLocalConnection($schema){ 
 		$connections = config('database.connections');
 		foreach($connections as $key=>$con){
 			if ($con['database'] == $schema){
-				return $key;
+				return \DB::connection($key);
 			}
 		}
-		
 		return false;
 	}
 	
-	function createConnectionFromOptions($schema){
-		$key = 'import_'.$schema;
-		config(['database.connections.'.$key => [
-			'driver' => 	$this->getDriver(),
-			'host' => 		$this->getHost(),
-			'username' => 	$this->getUsername(),
-			'password' => 	$this->getPassword(),
-			'database' => 	$schema,
-		]]);
-		return $key;
+	function getAllSchemaTable($schema){
+		//we need to sort the sql dump base on table creation date
+		//to avoid export error
+		$tables = $this->getConnection($schema)
+			->table('information_schema.tables')
+			->select(['table_name', 'create_time'])
+			->where('table_schema',$schema)
+			->orderBy('create_time','asc')
+			->get();
+			
+		$tableList = [];
+		foreach($tables as $table){
+			$tableList[] = $table->table_name;
+		}
+		return $tableList;
 	}
 	
-	function getConnection($schema){
-		$config = $this->isCustomConnection()? 
-					$this->createConnectionFromOptions($schema) : 
-					$this->createConnectionFromConfig($schema);
-		return \DB::connection($config);
+	function getSchemas(){
+		$connections = config('database.connections');
+		$db = [];
+		foreach($connections as $key=>$con){
+			$db[] = $con['database'];
+		}
+		return $db;
 	}
 	
-	function isCustomConnection(){
-		return $this->option('con-username');
+	function getFilePath($schema, $table){
+		return $this->storagePath.'/'.
+				$this->getVersion().'/'.
+				$this->getVersion().'_'.$schema.'_'.$table.'.sql';
 	}
 	
-	function getFiles(){
-		return \Storage::disk('local')->files($this->storagePath.'/'.$this->getVersion());
+	function isFileExists($schema, $table){
+		return \Storage::disk('local')->exists($this->getFilePath($schema, $table));
 	}
 	
-	function read($file){
-		return \Storage::disk('local')->read($file);
+	function read($schema, $table){
+		return \Storage::disk('local')->read($this->getFilePath($schema, $table));
 	}
 	
 	function getMode(){

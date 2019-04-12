@@ -2,19 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmployeesAssignments extends Migration
 {
-    protected $connection = 'bauk';
-	protected $tables = [
-		'user'=>'users',
-		'division'=>'divisions',
-		'job-position'=>'job_positions',
-		'employee'=>'employees',
-		'employee-assignment'=>'employees_assignments',
-	];
-	
     /**
      * Run the migrations.
      *
@@ -22,7 +13,7 @@ class CreateTableEmployeesAssignments extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("employees_assignments", function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->integer('division_id')->unsigned()->comment('ref table core.divisions');
@@ -33,7 +24,7 @@ class CreateTableEmployeesAssignments extends Migration
 			//$table->foreign('division_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('division'));
 			//$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
 			//$table->foreign('job_position_id')->references('code')->on($this->getSchemaName('core').'.'.$this->getTableName('job-position'));
-		}, 'employee-assignment');
+		});
     }
 
     /**
@@ -42,6 +33,6 @@ class CreateTableEmployeesAssignments extends Migration
      * @return void
      */
     public function down(){
-        $this->dropSchema('employee-assignment');
+        Schema::dropIfExists('employees_assignments');
     }
 }

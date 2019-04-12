@@ -6,7 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePermissionsTable extends Migration
 {
-	protected $connection = 'service';
     /**
      * Run the migrations.
      *
@@ -14,8 +13,7 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-		Schema::connection($this->connection)
-			->create('permissions', function (Blueprint $table) {
+		Schema::create('permissions', function (Blueprint $table) {
             $table->integer('creator')->unsigned()->nullable();
 			$table->timestamps();
 			$table->increments('id');
@@ -28,8 +26,7 @@ class CreatePermissionsTable extends Migration
 		});
 		
 		//	many to many relation with users table
-		Schema::connection($this->connection)
-			->create('users_permissions', function(Blueprint $table){
+		Schema::create('users_permissions', function(Blueprint $table){
 			$table->timestamps();
 			$table->integer('user_id')->unsigned();
 			$table->integer('permission_id')->unsigned();
@@ -47,7 +44,7 @@ class CreatePermissionsTable extends Migration
      */
     public function down()
     {
-		Schema::connection($this->connection)->dropIfExists('users_permissions');
-        Schema::connection($this->connection)->dropIfExists('permissions');
+		Schema::dropIfExists('users_permissions');
+        Schema::dropIfExists('permissions');
     }
 }

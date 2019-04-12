@@ -3,15 +3,18 @@
 namespace App\Console\Commands\Jiwanala\Database;
 
 use Illuminate\Console\Command;
+use App\Libraries\Foundation\Console\AllowCustomConnection;
 
 class Truncate extends Command
 {
+	use AllowCustomConnection;
+	
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'jiwanala-db:truncate 
+    protected $signature = 'db:truncate 
 							{schema* : database table name. example: [schema].[tablename].}
 							{--EX:except=*			: table exception. example: [schema].[tablename]}
 							{--CH|con-host= 		: custom connection host, default Localhost}

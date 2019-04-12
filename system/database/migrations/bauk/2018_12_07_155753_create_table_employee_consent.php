@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmployeeConsent extends Migration
 {
-    protected $connection = 'bauk';
-	protected $tables = [
-		'employee'=>'employees',
-		'user'=>'users',
-		'employee-consents'=>'employee_consents'
-	];
-	
     /**
      * Run the migrations.
      *
@@ -20,7 +13,7 @@ class CreateTableEmployeeConsent extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table){
+        Schema::create("employee_consents", function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
@@ -50,9 +43,9 @@ class CreateTableEmployeeConsent extends Migration
 			$table->date('end')->comment('tanggal selesai cuti/izin');
 			$table->boolean('locked')->default(false)->comment('flag kunci untuk persiapan laporan');
 			
-			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('employee_id')->references('id')->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee'));
-		}, 'employee-consents');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+			$table->foreign('employee_id')->references('id')->on('employees');
+		});
     }
 
     /**
@@ -61,6 +54,6 @@ class CreateTableEmployeeConsent extends Migration
      * @return void
      */
     public function down(){
-        $this->dropSchema('employee-consents');
+		Schema::dropIfExists('employee_consents');
     }
 }

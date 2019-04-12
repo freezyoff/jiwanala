@@ -2,15 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableWorkYear extends Migration
 {
-	protected $connection = "core";
-	protected $tables = [
-		"work-year"=>"work_year",
-	];
-	
     /**
      * Run the migrations.
      *
@@ -18,13 +13,13 @@ class CreateTableWorkYear extends Migration
      */
     public function up()
     {	
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("work_year", function (Blueprint $table) {
             $table->timestamps();
             $table->increments('id');
 			$table->string('name', 50);
 			$table->date('start');
 			$table->date('end');
-        },'work-year');
+        });
     }
 
     /**
@@ -34,6 +29,6 @@ class CreateTableWorkYear extends Migration
      */
     public function down()
     {
-        $this->dropSchema('work-year');
+        Schema::dropIfExists('work_year');
     }
 }

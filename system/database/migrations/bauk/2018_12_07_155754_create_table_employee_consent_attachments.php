@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmployeeConsentAttachments extends Migration
 {
-    protected $connection = 'bauk';
-	protected $tables = [
-		'user'=>'users',
-		'employee-attendance'=>'employee_attendance',
-		'employee-consent-attachments'=>'employee_consent_attachments'
-	];
-	
     /**
      * Run the migrations.
      *
@@ -20,7 +13,7 @@ class CreateTableEmployeeConsentAttachments extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("employee_consent_attachments", function (Blueprint $table) {
 			$table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('ref table service.users');
 			$table->increments('id');
@@ -30,12 +23,11 @@ class CreateTableEmployeeConsentAttachments extends Migration
 			$table->string('ext',4)->default('')->comment('ekstensi file');
 			$table->string('mime',100)->default('')->comment('mime file');
 			
-			$table->foreign('creator')->references('id')->on($this->getSchemaName('service').'.'.$this->getTableName('user'));
-			$table->foreign('employee_consent_id')->references('id')
-				->on($this->getSchemaName('bauk').'.'.$this->getTableName('employee-attendance'));
-		}, 'employee-consent-attachments');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+			$table->foreign('employee_consent_id')->references('id')->on('employee_attendance');
+		});
 		
-		DB::connection($this->connection)->statement("ALTER TABLE `employee_consent_attachments` MODIFY `attachment` MEDIUMBLOB");
+		DB::statement("ALTER TABLE `employee_consent_attachments` MODIFY `attachment` MEDIUMBLOB");
     }
 
     /**
@@ -44,6 +36,6 @@ class CreateTableEmployeeConsentAttachments extends Migration
      * @return void
      */
     public function down(){
-        $this->dropSchema('employee-consent-attachments');
+        Schema::dropIfExists('employee_consent_attachments');
     }
 }

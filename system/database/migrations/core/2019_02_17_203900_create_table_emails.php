@@ -2,16 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableEmails extends Migration
 {
-	protected $connection = "core";
-	protected $tables = [
-		"email"=>"emails",
-		"person"=>"persons",
-	];
-	
     /**
      * Run the migrations.
      *
@@ -19,7 +13,7 @@ class CreateTableEmails extends Migration
      */
     public function up()
     {
-        $this->createSchema(function (Blueprint $table) {
+        Schema::create("emails", function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable()->comment('foreign service.users');
             $table->increments('id');
@@ -27,8 +21,9 @@ class CreateTableEmails extends Migration
 			$table->string('email')->unique();
 			$table->boolean('default')->default(false);
 			
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
-        }, 'email');
+			$table->foreign('person_id')->references('id')->on('persons');
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+        });
     }
 
     /**
@@ -38,6 +33,6 @@ class CreateTableEmails extends Migration
      */
     public function down()
     {
-        $this->dropSchema('email');
+		Schema::dropIfExists('emails');
     }
 }

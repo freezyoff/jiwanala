@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use App\Libraries\Foundation\Migration;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTableAddress extends Migration
-{
-	protected $connection = "core";
-	protected $tables = [
-		"person"=>"persons",
-		"address"=>"addresses", 
-		"person-address"=>"person_addresses"
-	];
-	
+{	
     /**
      * Run the migrations.
      *
@@ -20,7 +13,7 @@ class CreateTableAddress extends Migration
      */
     public function up()
     {
-		$this->createSchema(function (Blueprint $table) {
+		Schema::create("addresses", function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable();
             $table->increments('id');
@@ -33,18 +26,22 @@ class CreateTableAddress extends Migration
             $table->string('district', 50)->nullable()->comment('Kota / Kabupaten');
             $table->string('province', 50)->nullable()->comment('Provinsi');
             $table->string('post_code', 20)->nullable()->comment('Kode Pos');
-        },'address');
+			
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+        });
 		
-		$this->createSchema(function (Blueprint $table) {
+		Schema::create("persons_addresses", function (Blueprint $table) {
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable();
 			$table->integer('person_id')->unsigned();
 			$table->integer('address_id')->unsigned();
 			
 			$table->primary(['person_id','address_id']);
-			$table->foreign('person_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('person'));
-			$table->foreign('address_id')->references('id')->on($this->getSchemaName('core').'.'.$this->getTableName('address'));
-        },'person-address');
+			$table->foreign('person_id')->references('id')->on('persons');
+			$table->foreign('address_id')->references('id')->on('addresses');
+			
+			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
+        });
     }
 
     /**
@@ -54,7 +51,7 @@ class CreateTableAddress extends Migration
      */
     public function down()
     {
-        $this->dropSchema('person-address');
-        $this->dropSchema('address');
+        Schema::dropIfExists('persons_addresses');
+        Schema::dropIfExists('addresses');
     }
 }
