@@ -11,7 +11,10 @@ class Rollback extends Migrate
      *
      * @var string
      */
-    protected $signature = 'jn-db:uninstall {--remote}';
+    protected $signature = 'jn-db:uninstall 
+							{dir? 		: directory migration files take place} 
+							{--step=	: uninstall step}
+							{--remote	: uninstall remote database}';
 
     /**
      * The console command description.
@@ -34,8 +37,7 @@ class Rollback extends Migrate
      */
     public function handle()
     {
-		$dirs = $this->directories();
-		sort($dirs);
+		$dirs = array_reverse($this->directories());
         foreach($dirs as $dir){
 			if ($this->isRepositoryExists($dir)){
 				$con = $this->option('remote')? $this->getRemoteConnection($dir) : $dir;
@@ -44,6 +46,11 @@ class Rollback extends Migrate
 					'--database'=> 	$con, 
 					'--path'=> 		'database/migrations/'.$dir
 				];
+				
+				if ($this->option('step')){
+					$opts['--step'] = $this->option('step');
+				}
+				
 				\Artisan::call('migrate:rollback', $opts, $this->output);
 				$this->infoDone($con);
 			}
