@@ -176,14 +176,17 @@ Route::prefix('attendance')
 	
 	Route::name('.report')
 		->prefix('report')
+		->middleware('permission:bauk.attendance.report')
 		->group(function(){
 		
 		Route::name('.landing')
-			->middleware('permission:bauk.attendance.report')
 			->get('', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@index');
 		
-		Route::name('.generate')
-			->post('generate', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@generate');
+		Route::name('.attendance')
+			->post('attendance/monthly', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@monthlyReport');
+		
+		Route::name('.summary')
+			->post('attendance/summary', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@summaryReport');
 	});
 		
 });

@@ -13,7 +13,8 @@
 		'year'=>'tahun',
 		'month'=>'bulan',
 		'consent'=>'cuti / izin',
-		'report'=>'Periode Laporan',
+		'report_monthly'=>'Laporan Bulanan',
+		'report_summary'=>'Laporan Rekapitulasi',
 		'summary'=>'Tahun Akademik : '
 	]
 ];

@@ -10,7 +10,7 @@ use App\Libraries\Bauk\EmployeeSchedule;
 use App\Libraries\Bauk\Holiday;
 use Carbon\Carbon;
 
-class AttendanceExport implements FromView
+class AttendanceMonthlyReport implements FromView
 {
 	use Exportable;
 	
@@ -62,7 +62,7 @@ class AttendanceExport implements FromView
     */
     public function view():View {	
 		$periodes = $this->getPeriodes();
-        return view('my.bauk.attendance.report_export',[
+        return view('my.bauk.attendance.report.monthly_export',[
 			'headers'=> $this->getHeaders(),
 			'rows'=>$this->generateRows(),
 			'start'=>$periodes[0],
