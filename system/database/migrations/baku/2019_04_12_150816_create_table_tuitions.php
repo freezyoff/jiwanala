@@ -18,7 +18,7 @@ class CreateTableTuitions extends Migration
 			$table->unsignedInteger('creator');
             $table->increments('id');
 			$table->string('name',50);
-			$table->double('ammount')
+			$table->double('ammount');
         });
     }
 
