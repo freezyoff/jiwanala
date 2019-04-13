@@ -20,8 +20,14 @@ trait HasAttendanceSummary{
 	}
 	
 	protected function getAttendanceSummaryProperty($key=false){
-		if (!$key) return $this->attendanceSummary;
-		if ($this->hasAttendanceSummaryProperty($key)) return $this->attendanceSummary[$key];
+		if (!$key){
+			ksort($this->attendanceSummary);
+			return $this->attendanceSummary;
+		} 
+		
+		if ($this->hasAttendanceSummaryProperty($key)){
+			return $this->attendanceSummary[$key];			
+		}
 		return false;
 	}
 	
@@ -29,7 +35,7 @@ trait HasAttendanceSummary{
 		return isset($this->attendanceSummary[$key]);
 	}
 	
-	public function getAttendanceSummaryByMonth(int $year, int $month){
+	protected function getAttendanceSummaryByMonth_impl(int $year, int $month){
 		if ($month < 10) $month = "0".$month;
 		
 		//given periode
@@ -93,9 +99,10 @@ trait HasAttendanceSummary{
 		$this->setAttendanceSummaryProperty('work_days', count($scheduleCalendar));
 		$this->setAttendanceSummaryProperty('attends', count($attendanceCalendar));
 		$this->setAttendanceSummaryProperty(
-			'notAttends', 
+			'absents', 
 			$this->getAttendanceSummaryProperty('work_days') - $this->getAttendanceSummaryProperty('attends'), 
 			true);
+			
 		foreach($scheduleCalendar as $workDate=>$workSchedule){
 			$this->getAttendanceSummaryByMonth_countAttends($workDate, $attendanceCalendar, $consentCalendar);
 			$this->getAttendanceSummaryByMonth_countConsents($workDate, $attendanceCalendar, $consentCalendar);
@@ -112,13 +119,13 @@ trait HasAttendanceSummary{
 		
 		//is late arrival
 		if ($attend[$date]->isLateArrival()){
-			$this->setAttendanceSummaryProperty('attends_lateArrive', 1);
+			$this->setAttendanceSummaryProperty('attends_lateArrival', 1);
 			$shouldHasConsentLateArrivalOrEarlyDeparture = true;
 		}
 		
 		//is early departure
 		elseif ($attend[$date]->isEarlyDeparture()){
-			$this->setAttendanceSummaryProperty('attends_earlyDepart', 1);
+			$this->setAttendanceSummaryProperty('attends_earlyDeparture', 1);
 			$shouldHasConsentLateArrivalOrEarlyDeparture = true;
 		}
 		
@@ -154,11 +161,11 @@ trait HasAttendanceSummary{
 		if (isset($attendCalendar[$date])) return;
 		
 		$consentIndex = [
-			'cs'=>'consents_sick',
-			'td'=>'consents_duty',
-			'ct'=>'consents_others',
-			'ch'=>'consents_others',
-			'cp'=>'consents_others',
+			'cs'=>'absents_consentSick',
+			'td'=>'absents_consentDuty',
+			'ct'=>'absents_consentOthers',
+			'ch'=>'absents_consentOthers',
+			'cp'=>'absents_consentOthers',
 		];
 		
 		if (isset($consentCalendar[$date]) && 
@@ -166,8 +173,14 @@ trait HasAttendanceSummary{
 			$this->setAttendanceSummaryProperty($consentIndex[$consentCalendar[$date]->consent], 1);
 		}
 		else{
-			$this->setAttendanceSummaryProperty('consents_noConsent', 1);
+			$this->setAttendanceSummaryProperty('absents_noConsent', 1);
 		}
+	}
+	
+	public function getAttendanceSummaryByMonth(int $year, int $month){
+		$this->resetAttendanceSummaryProperty();
+		$this->getAttendanceSummaryByMonth_impl($year, $month);
+		return $this->getAttendanceSummaryProperty();
 	}
 	
 	public function getAttendanceSummaryByMonthRange($sYear, $sMonth, $eYear, $eMonth){
@@ -179,7 +192,7 @@ trait HasAttendanceSummary{
 		$current = Carbon::parse($start->format('Y-m-d'));
 		
 		while($current->between($start, $end)){
-			$this->getAttendanceSummaryByMonth($current->year, $current->month);
+			$this->getAttendanceSummaryByMonth_impl($current->year, $current->month);
 			
 			if ($current->month == $end->month && 
 				$current->year == $end->year){

@@ -56,12 +56,12 @@
 			<td style="text-align:left !important;">{{ $sum['name'] }}</td>
 			<td>{{ $sum['work_days'] }}</td>
 			<td>{{ $sum['attends'] }}</td>
-			<td>{{ $sum['notAttends'] }}</td>
+			<td>{{ $sum['absents'] }}</td>
 			<td>{{ ($sum['work_days']>0)? round($sum['attends']/$sum['work_days'],2)*100 : "" }}</td>
 			
 			{{-- terlambat & pulang awal --}}
-			<td>{{ isset($sum['attends_lateArrive'])? $sum['attends_lateArrive'] : "" }}</td>
-			<td>{{ isset($sum['attends_earlyDepart'])? $sum['attends_earlyDepart'] : "" }}</td>
+			<td>{{ isset($sum['attends_lateArrival'])? $sum['attends_lateArrival'] : "" }}</td>
+			<td>{{ isset($sum['attends_earlyDeparture'])? $sum['attends_earlyDeparture'] : "" }}</td>
 			<td>{{ isset($sum['attends_lateOrEarlyConsent'])? $sum['attends_lateOrEarlyConsent'] : "" }}</td>
 			
 			{{-- tidak finger datang & pulang --}}
@@ -70,10 +70,10 @@
 			<td>{{ isset($sum['attends_noArrivalOrDepartureConsent'])? $sum['attends_noArrivalOrDepartureConsent'] : "" }}</td>
 			
 			{{-- tidak hadir --}}
-			<td>{{ isset($sum['consents_sick'])? $sum['consents_sick'] : "" }}</td>
-			<td>{{ isset($sum['consents_duty'])? $sum['consents_duty'] : "" }}</td>
-			<td>{{ isset($sum['consents_others'])? $sum['consents_others'] : "" }}</td>
-			<td>{{ isset($sum['consents_noConsent'])? $sum['consents_noConsent'] : "" }}</td>
+			<td>{{ isset($sum['absents_consentSick'])? $sum['absents_consentSick'] : "" }}</td>
+			<td>{{ isset($sum['absents_consentDuty'])? $sum['absents_consentDuty'] : "" }}</td>
+			<td>{{ isset($sum['absents_consentOthers'])? $sum['absents_consentOthers'] : "" }}</td>
+			<td>{{ isset($sum['absents_noConsent'])? $sum['absents_noConsent'] : "" }}</td>
 		</tr>
 		@endforeach
 	</tbody>

@@ -1,4 +1,28 @@
 <?php 
+Route::name('statistics')
+	->prefix('statistics')
+	->group(function(){
+	
+	//employee statistics
+	Route::name('.employee')
+		->prefix('employee')
+		->group(function(){
+			
+		Route::name('.attendance')
+			->prefix('attendance')
+			->group(function(){
+			Route::name('.monthly')->get(
+				'monthly/{year}/{month}/{nip?}', 
+				'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@monthlyReport'
+			);
+			Route::name('.summary')->get(
+				'summary/{work_year_id}/{nip?}',
+				'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@summaryReport'
+			);
+		});
+		
+	});
+});
 Route::name('landing')
 	->group(function(){
 	Route::get('/', '\App\Http\Controllers\My\BaukController@landing');
