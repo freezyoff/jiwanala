@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Database\Export::class,
 		\App\Console\Commands\Jiwanala\Database\Import::class,
 		\App\Console\Commands\Jiwanala\Database\Compare::class,
+		\App\Console\Commands\Jiwanala\Database\Sync::class,
     ];
 
     /**

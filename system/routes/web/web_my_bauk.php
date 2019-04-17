@@ -1,25 +1,25 @@
 <?php 
 Route::name('statistics')
 	->prefix('statistics')
-	->group(function(){
-	
-	//employee statistics
-	Route::name('.employee')
-		->prefix('employee')
+	->group(function(){	
+	Route::name('.attendance')
+		->prefix('attendance')
 		->group(function(){
-			
-		Route::name('.attendance')
-			->prefix('attendance')
-			->group(function(){
-			Route::name('.monthly')->get(
-				'monthly/{year}/{month}/{nip?}', 
-				'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@monthlyReport'
-			);
-			Route::name('.summary')->get(
-				'summary/{work_year_id}/{nip?}',
-				'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@summaryReport'
-			);
-		});
+		
+		Route::name('.monthly.all')->get(
+			'monthly/{year}/{month}',
+			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@monthlyReport'
+		);
+		
+		Route::name('.monthly')->get(
+			'monthly/{nip}/{year}/{month}', 
+			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@employeeMonthlyReport'
+		);
+		
+		Route::name('.summary')->get(
+			'summary/{work_year_id}/{nip?}',
+			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@summaryReport'
+		);
 		
 	});
 });
@@ -159,32 +159,43 @@ Route::prefix('attendance')
 	Route::middleware('permission:bauk.list.employee')
 		->name('.search.employee')
 		->post('search/employee', '\App\Http\Controllers\My\Bauk\AttendanceController@searchEmployee');
-		
-	Route::prefix('histories')
-		->middleware('permission:bauk.attendance.list')
-		->group(function(){
+	
+	Route::prefix('histories')->group(function(){
+		Route::prefix('employee')->group(function(){
+			Route::name('.landing')
+				->middleware('permission:bauk.attendance.list')
+				->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
+				
+			Route::prefix('fingers')
+				->name('.fingers')
+				->middleware('permission:bauk.attendance.post')
+				->group(function(){	
+				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
+				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
+			});
 			
-		Route::name('.landing')
-			->middleware('permission:bauk.attendance.list')
-			->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
-			
-		Route::prefix('fingers')
-			->name('.fingers')
-			->middleware('permission:bauk.attendance.post')
-			->group(function(){	
-			Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@show');
-			Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceFingerController@post');
+			Route::prefix('consent')
+				->name('.consents')
+				->middleware('permission:bauk.attendance.post')
+				->group(function(){	
+				Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
+				Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
+				
+				Route::name('.preview')
+					->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
+			});
 		});
 		
-		Route::prefix('consent')
-			->name('.consents')
-			->middleware('permission:bauk.attendance.post')
-			->group(function(){	
-			Route::get('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@show');
-			Route::post('{nip}/{year}/{month}/{day}', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@post');
-			
-			Route::name('.preview')
-				->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
+		Route::prefix('monthly')->name('.monthly')->group(function(){
+			Route::name('.landing')
+				->middleware('permission:bauk.attendance.list')
+				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@monthly');
+		});
+		
+		Route::prefix('summary')->name('.summary')->group(function(){
+			Route::name('.landing')
+				->middleware('permission:bauk.attendance.list')
+				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@summary');
 		});
 	});
 	

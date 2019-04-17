@@ -33,4 +33,5 @@ class ReportController extends Controller
 		$cls = new AttendanceSummaryReport($workYear);
 		return $cls->download($filename);
 	}
+	
 }

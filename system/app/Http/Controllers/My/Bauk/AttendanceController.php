@@ -43,6 +43,7 @@ class AttendanceController extends Controller
 			'name'=> $name? $name->getFullName() : '',
 			'year' => $year,
 			'month'=> $month,
+			'tabs'=>'employee',
 		]);
 	}
 	

@@ -242,13 +242,19 @@ class Export extends Command
 	function getAllSchemaTable($schema){
 		//we need to sort the sql dump base on table creation date
 		//to avoid export error
-		$tables = $this->getConnection($schema)
-			->table('information_schema.tables')
-			->select(['table_name', 'create_time'])
-			->where('table_schema',$schema)
-			->orderBy('create_time','asc')
-			->get();
-			
+		try{
+			$tables = $this->getConnection($schema)
+				->table('information_schema.tables')
+				->select(['table_name', 'create_time'])
+				->where('table_schema',$schema)
+				->orderBy('create_time','asc')
+				->get();
+					
+		//no table found
+		} catch(\Illuminate\Database\QueryException $ex){ 
+			$tables = [];
+		}
+		
 		$tableList = [];
 		foreach($tables as $table){
 			$tableList[] = $table->table_name;

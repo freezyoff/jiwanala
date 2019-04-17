@@ -12,7 +12,8 @@ class Compare extends Command
      * @var string
      */
     protected $signature = 'jn-db:compare 
-							{--except=*	: schema table to be exclude from comparation. example: [schemaName][.[tablename] . Use asterik (*) to compare all tables in schema}';
+							{--except=*		: schema table to be exclude from comparation. example: [schemaName][.[tablename] . Use asterik (*) to compare all tables in schema}
+							{--to-json		: output as json instead of table}';
 
     /**
      * The console command description.
@@ -46,6 +47,7 @@ class Compare extends Command
 			]]);
 		return \DB::connection($key);
 	}
+	
 	function getLocalConnection($schema){ 
 		$connections = config('database.connections');
 		foreach($connections as $key=>$con){
@@ -58,18 +60,27 @@ class Compare extends Command
 	
 	function getSchemaTables($schema, $remote=false){
 		$db = $this->getConnection($schema, $remote);
-		$tables = $db->table('information_schema.tables')
+		
+		//try to get the schema table list
+		try{
+			$tables = $db->table('information_schema.tables')
 					->select(['table_name', 'create_time'])
 					->where('table_schema',$schema)
 					->orderBy('create_time','asc')
 					->get();
+					
+		//no table found
+		} catch(\Illuminate\Database\QueryException $ex){ 
+			$tables = [];
+		}
 			
 		$tableList = [];
 		foreach($tables as $table){
-			if ($this->isException($schema, $table)) continue;
+			if ($this->isException($schema, $table->table_name)) continue;
 			$tableList[] = $table->table_name;
 		}
 		return $tableList;
+		
 	}
 	
 	function getSchemas(){
@@ -85,7 +96,10 @@ class Compare extends Command
 	function isException($schema, $table){
 		if (!isset($this->except)) $this->except = $this->option('except');
 		foreach($this->except as $ex){
-			if ($ex == $schema.'.'.$table) return true;
+			$exception = array_combine(['schema','table'], explode('.', $ex));
+			
+			return ($exception['schema']==$schema && $exception['table']=='*') ||
+					($ex == $schema.'.'.$table);
 		}
 		return false;
 	}
@@ -103,6 +117,15 @@ class Compare extends Command
      */
     public function handle()
     {
+		if ($this->option('to-json')){
+			$this->line(json_encode($this->compare()));
+		}
+		else{
+			$this->table(['Schema', 'Local', 'Remote', 'Mod'], $this->compare());
+		}
+    }
+	
+	function compare(){
 		$result = [];
         foreach($this->getSchemas() as $schema){
 			
@@ -128,21 +151,31 @@ class Compare extends Command
 			$index=count($result);
 			foreach($count as $key=>$db){
 				$result[$index]['schema'] = $key;
-				$result[$index]['local'] = isset($db['local'])? $db['local'] : '';
-				$result[$index]['remote'] = isset($db['remote'])? $db['remote'] : '';
-				if (isset($db['local']) && isset($db['remote']) && $db['local']<$db['remote']){
-					$result[$index]['modifier'] = '+';
+				$result[$index]['local'] = isset($db['local'])? $db['local'] : 0;
+				$result[$index]['remote'] = isset($db['remote'])? $db['remote'] : 0;
+				
+				//if local & remote table present
+				if (isset($db['local']) && isset($db['remote'])){					
+					if (isset($db['local']) && isset($db['remote']) && $db['local']<$db['remote']){	
+						$result[$index]['modifier'] = '+';
+					}
+					elseif (isset($db['local']) && isset($db['remote']) && $db['local']>$db['remote']){
+						$result[$index]['modifier'] = '-';
+					}
+					else{
+						$result[$index]['modifier'] = '=';
+					}
 				}
-				elseif (isset($db['local']) && isset($db['remote']) && $db['local']>$db['remote']){
-					$result[$index]['modifier'] = '-';
+				elseif (isset($db['local']) && !isset($db['remote'])){
+					$result[$index]['modifier'] = '>';
 				}
-				else{
-					$result[$index]['modifier'] = '=';
+				else if (!isset($db['local']) && isset($db['remote'])){
+					$result[$index]['modifier'] = '<';
 				}
 				
 				$index++;
 			}
 		}
-		$this->table(['Schema', 'Local', 'Remote', 'Mod'], $result);
-    }
+		return $result;
+	}
 }
