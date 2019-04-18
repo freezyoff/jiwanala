@@ -12,14 +12,15 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-db:sync';
+    protected $signature = 'jn-db:sync 
+							{--remote	: sync remote database records with local database records}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sync database records between Local & Production database';
+    protected $description = 'Sync database records between Local & Production database or vice versa';
 
     /**
      * Create a new command instance.
@@ -63,9 +64,23 @@ class Sync extends Command
      * @return mixed
      */
     public function handle()
-    {
-        \Artisan::call('jn-db:export',['--remote'=>true], $this->output);
-        \Artisan::call('jn-db:refresh',[], $this->output);
-		\Artisan::call('jn-db:import',[], $this->output);
+    {	
+		if ($this->option('remote')){
+			//export local database
+			\Artisan::call('jn-db:export',[], $this->output);
+			//truncate remote databse
+			\Artisan::call('jn-db:truncate',['--remote'=>true], $this->output);
+			//seed remote database with latest export
+			\Artisan::call('jn-db:import',['--remote'=>true], $this->output);
+		}
+		else{
+			//export remote database
+			\Artisan::call('jn-db:export',['--remote'=>true], $this->output);
+			//truncate local database
+			\Artisan::call('jn-db:truncate',[], $this->output);
+			//seed local database with lates export
+			\Artisan::call('jn-db:import',[], $this->output);
+		}
+		
     }
 }

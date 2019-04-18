@@ -53,7 +53,7 @@ class Migrate extends Command
 			if ($this->option('step')){
 				$opts['--step'] = $this->option('step');
 			}
-				
+			
 			\Artisan::call('migrate', $opts, $this->output);
 			$this->infoDone($con);
 		}
@@ -83,15 +83,10 @@ class Migrate extends Command
 	
 	function infoStart($dir){
 		$conf = config('database.connections.'.$dir);
-		echo "\033[36mStart \033".
-			"[0mInstall Database at: \033[33m".$conf['host']." \033[0m".
-			"schema: \033[36m".$conf['database']."\033[0m".PHP_EOL;
+		$this->line('<fg=cyan>Start </>Install <fg=yellow>'.$conf['host'].'</>.<fg=green>'.$conf['database'].'</>');
 	}
 	
 	function infoDone($dir){
-		$conf = config('database.connections.'.$dir);
-		echo "\033[36mDone \033".
-			"[0mInstall Database at: \033[33m".$conf['host']." \033[0m".
-			"schema: \033[36m".$conf['database']."\033[0m".PHP_EOL . PHP_EOL;
+		$this->line('<fg=cyan>Done </>Install');
 	}
 }

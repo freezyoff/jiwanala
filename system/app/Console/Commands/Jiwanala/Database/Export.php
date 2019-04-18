@@ -130,7 +130,12 @@ class Export extends Command
 		$bar->finish();
 		
 		if ($this->getMode() == 'json'){
-			echo ' JSON '. ($this->verifyJSON($schema, $table)? 'verified' : 'error :'.json_last_error());
+			$this->output->write(
+				' JSON '.
+				'<fg=cyan>'.
+				($this->verifyJSON($schema, $table)? 'verified' : 'error :'.json_last_error()).
+				'</>'
+			);
 		}
 		
 		$this->line('');
@@ -206,9 +211,8 @@ class Export extends Command
 	}
 	
 	function infoStart(){
-		echo PHP_EOL .
-			"\033[36m". "Start  " ."\033".
-			"[0m". "Export" .PHP_EOL;
+		$this->line('<fg=cyan>Start </>Export');
+		$this->line('<fg=cyan>Mode </>'.strtoupper($this->getMode()));
 	}
 	
 	function infoEnd(){
@@ -231,7 +235,9 @@ class Export extends Command
 		for($i=strlen($schema.'.'.$table); $i<$this->maxTableNameLength; $i++){
 			$table .= ' ';
 		}
-		
+		return '<fg=white>Export </>'.
+			'<fg=yellow>'.$schema.'</>.'.
+			'<fg=green>'.$table.'</>';
 		return 	"\033[37m". "Export \033". 
 				"\033[33m". $schema ."\033".
 				"[37m.\033".

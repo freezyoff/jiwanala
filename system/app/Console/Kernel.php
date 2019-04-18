@@ -24,11 +24,12 @@ class Kernel extends ConsoleKernel
 		
 		\App\Console\Commands\Jiwanala\Database\Migrate::class,
 		\App\Console\Commands\Jiwanala\Database\Rollback::class,
-		\App\Console\Commands\Jiwanala\Database\Refresh::class,
+		\App\Console\Commands\Jiwanala\Database\Reinstall::class,
 		\App\Console\Commands\Jiwanala\Database\Export::class,
 		\App\Console\Commands\Jiwanala\Database\Import::class,
 		\App\Console\Commands\Jiwanala\Database\Compare::class,
 		\App\Console\Commands\Jiwanala\Database\Sync::class,
+		\App\Console\Commands\Jiwanala\Database\Truncate::class,
     ];
 
     /**
