@@ -15,6 +15,22 @@
 		'upload_report'=>[
 			'Baris',
 			'Sukses / Gagal'
+		],
+		'export'=>[
+			'work_days'=>'Hari Kerja',
+			'attends'=>'Hadir',
+			'absents'=>'Tidak Hadir',
+			'attendance'=>'Kehadiran',
+			'attends_lateArrival'=>'Terlambat',
+			'attends_earlyDeparture'=>'Pulang Awal',
+			'attends_lateOrEarlyConsent'=>'Tanpa Dokumen (Terlambat / Pulang Awal)',
+			'attends_noArrival'=>'Tidak Finger Datang',
+			'attends_noDeparture'=>'Tidak Finger Pulang',
+			'attends_noArrivalOrDepartureConsent'=>'Tanpa Dokumen (Tidak Finger Datang / Pulang)',
+			'absents_consentSick'=>'Izin Sakit',
+			'absents_consentDuty'=>'Izin Tugas',
+			'absents_consentOthers'=>'Cuti',
+			'absents_noConsent'=>'Tanpa Dokumen (Izin / Cuti)',
 		]
 	],
 	'buttons'=>[
@@ -175,6 +191,7 @@
 		'noArrival'=>'Tidak finger datang.',
 		'noDeparture'=>'Tidak finger pulang.',
 		'noConsent'=>'Belum melaporkan dokumen Cuti / Izin.',
+		'noOverDueConsent'=>'Alpha',
 		'offschedule'=>'Libur hari :day'
 	],
 ];

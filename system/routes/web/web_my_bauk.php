@@ -164,7 +164,7 @@ Route::prefix('attendance')
 		Route::prefix('employee')->group(function(){
 			Route::name('.landing')
 				->middleware('permission:bauk.attendance.list')
-				->get('{nip?}/{year?}/{month?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
+				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
 				
 			Route::prefix('fingers')
 				->name('.fingers')

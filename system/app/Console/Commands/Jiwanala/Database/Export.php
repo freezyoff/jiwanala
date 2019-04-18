@@ -23,7 +23,7 @@ class Export extends Command
      *
      * @var string
      */
-    protected $description = 'Export all table in database shema';
+    protected $description = 'Export database records';
 
 	protected $timestamp;
 	protected $maxTableNameLength=0;

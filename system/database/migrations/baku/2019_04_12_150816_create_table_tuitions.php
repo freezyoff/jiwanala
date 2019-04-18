@@ -29,6 +29,6 @@ class CreateTableTuitions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_tuitions');
+        Schema::dropIfExists('tuitions');
     }
 }

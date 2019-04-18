@@ -9,6 +9,7 @@ use App\Libraries\Bauk\Employee;
 use App\Libraries\Bauk\EmployeeAttendance;
 use App\Libraries\Bauk\EmployeeConsent;
 use App\Libraries\Bauk\EmployeeSchedule;
+use App\Libraries\Core\WorkYear;
 use Illuminate\Http\Request;
 use Storage;
 use Validator;
@@ -16,9 +17,188 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
-    public function landing($nip=false, $year=false, $month=false){
-		//return [$year, $month, $nip];
+	public function landing(Request $req){
+		$collect = collect();
+		$nip = 		$req->input('nip');
+		$year = 	$req->input('year', now()->format('Y'));
+		$month = 	$req->input('month', now()->format('m'));
+		$workYear = WorkYear::getCurrent()->getPeriode();
+		$employee = Employee::findByNIP($nip);
 		
+		$collect->put('nip', 		$nip);
+		$collect->put('name', 		$employee? $employee->getFullName() : '');
+		$collect->put('year', 		$year);
+		$collect->put('month', 		$month);
+		$collect->put('workYear', 	$workYear);
+		$collect->put('employee', 	$employee);
+		$collect->put('summary', 	$this->createSummaryTableData($employee, $workYear));
+		$collect->put('details', 	$this->createDetailsTableData($employee, $year, $month));
+		
+		$ctabType = $year && $month && $employee;
+		$collect->put('ctab', 		$req->input('ctab', $ctabType? 'tab-item-details' : 'tab-item-summary'));
+		//return $collect->all();
+		return view('my.bauk.attendance.landing', $collect->all());
+	}
+	
+	function createDetailsTableData($employee, $year, $month){
+		//no employee
+		if (!$employee) return [];
+		
+		//get the calendar
+		$calendar = collect();
+		
+		foreach($employee->getAttendanceDetails($year, $month) as $date=>$data){
+			$cdate = Carbon::parse($date);
+			
+			$data['dayOfWeek'] = 	trans('calendar.days.long.'.($cdate->dayOfWeek));
+			$data['day'] = 			$cdate->format('d');
+			
+			//weekend & holiday
+			$data['weekEnd'] = $data['isWeekEnd']? str_replace(
+					':day',
+					trans('calendar.days.long.'.$cdate->dayOfWeek), 
+					trans('my/bauk/attendance/hints.warnings.offschedule')
+				)
+				:
+				false;
+				
+			$data['holiday'] = $data['isHoliday']? str_replace(
+					':day',
+					$data['holiday']->name, 
+					trans('my/bauk/attendance/hints.warnings.offschedule')
+				)
+				:
+				false;
+			
+			//attend & consent
+			if (!$data['isHoliday']){
+				$data['allow_update'] = isTodayAllowedToUpdateAttendanceAndConsentRecordOn($cdate);
+				$data['attend_update_url'] = route('my.bauk.attendance.fingers',[
+						'nip'=>		$employee->nip, 
+						'year'=>	$cdate->format('Y'), 
+						'month'=>	$cdate->format('m'),
+						'day'=>		$cdate->format('d'),
+					]);
+				
+				$data['consent_update_url'] =  route('my.bauk.attendance.consents',[
+						'nip'=>		$employee->nip, 
+						'year'=>	$cdate->format('Y'), 
+						'month'=>	$cdate->format('m'),
+						'day'=>		$cdate->format('d'),
+					]);
+			}
+			
+			//reminder for user
+			$data['reminder'] = $this->createDetailsTableData_reminder($employee, $cdate, $data);
+			$data['hasReminder'] = count($data['reminder'])>0;
+			
+			$calendar->put($date, $data);
+		}
+		
+		return $calendar->all();
+	}
+	
+	function createDetailsTableData_reminder(Employee $employee, Carbon $cdate, $data){
+		$isToday = $cdate->diffInDays($cdate) == 0;
+		
+		$result = [];
+		//masuk kerja
+		if ($data['isAttend']){
+			
+			//tidak finger datang 
+			if (!$data['attend']->getArrival()){
+				$result['noArrival'] = trans('my/bauk/attendance/hints.warnings.noArrival');
+			}
+			
+			//tidak finger pulang
+			if (!$data['attend']->getLatestDeparture()){
+				$result['noDeparture'] = trans('my/bauk/attendance/hints.warnings.noDeparture');
+			}
+			
+			if ($data['attend']->isLateArrival()){
+				$msg = trans('my/bauk/attendance/hints.warnings.lateArrival');
+				$diff = $data['attend']->getArrivalDifferent();
+				$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+											str_replace(':jam Jam', "", $msg);
+				$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+											str_replace(':menit Menit', "", $msg);
+				$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+											str_replace(':detik Detik', "", $msg);
+							
+				$result['lateArrival'] = $msg;
+			}
+			
+			//pulang awal
+			if ($data['attend']->isEarlyDeparture()){
+				$msg = trans('my/bauk/attendance/hints.warnings.earlyDeparture');
+				$diff = $data['attend']->getDepartureDifferent();
+				$msg = $diff->hours>0? 		str_replace(':jam', $diff->hours, $msg) :
+											str_replace(':jam Jam', "", $msg);
+				$msg = $diff->minutes>0? 	str_replace(':menit', $diff->minutes,$msg) : 
+											str_replace(':menit Menit', "", $msg);
+				$msg = $diff->seconds>0? 	str_replace(':detik', $diff->seconds, $msg) : 
+											str_replace(':detik Detik', "", $msg);
+											
+				$result['earlyDeparture'] = $msg;
+			}
+		}
+		elseif (!$data['isHoliday'] && !$data['isWeekEnd'] && !$data['hasConsent']){
+			$overDue = !isTodayAllowedToUpdateAttendanceAndConsentRecordOn($cdate);
+			if ($overDue){
+				$result['noOverDueConsent'] = trans('my/bauk/attendance/hints.warnings.noOverDueConsent');
+			}
+			else{
+				$result['noConsent'] = trans('my/bauk/attendance/hints.warnings.noConsent');
+			}
+		}
+		
+		return $result;
+	}
+	
+	function createSummaryTableData($employee, $workYear){
+		$now = now();
+		$start = $workYear['start'];
+		$end = $workYear['end'];
+		$current = Carbon::parse($now->year.'-'.$now->month.'-01')->subMonth();
+		$summaryTableHeaders = [
+			0=>$workYear['start']->format('m-Y').' s/d '.$current->format('m-Y'),
+			1=>$current->addMonth()->format('m-Y'),
+			2=>$start->format('m-Y').' s/d '.$current->format('m-Y')
+		];
+		
+		$summaryRecords = [];
+		if ($employee){
+			$dummy = $employee->getAttendanceSummaryByMonthRange(
+						$start->format('Y'), 
+						$start->format('m'), 
+						$current->subMonth()->format('Y'),
+						$current->format('m')
+					);
+			$dummy['attendance'] = round($dummy['attends']/$dummy['work_days']*100,2).' %';
+			$summaryRecords['tillLastMonth'] = collect($dummy);
+			
+			$dummy = $employee->getAttendanceSummaryByMonth(
+						$current->addMonth()->format('Y'), 
+						$current->format('m')
+					);
+			$dummy['attendance'] = round($dummy['attends']/$dummy['work_days']*100,2).' %';
+			$summaryRecords['thisMonth'] = collect($dummy);
+			
+			$dummy = $employee->getAttendanceSummaryByMonthRange(
+						$start->format('Y'), 
+						$start->format('m'), 
+						$current->format('Y'),
+						$current->format('m')
+					);
+			$dummy['attendance'] = round($dummy['attends']/$dummy['work_days']*100,2).' %';
+			$summaryRecords['tillThisMonth'] = collect($dummy);
+		}
+		
+		return ['tableHeaders'=>$summaryTableHeaders, 'rows'=>$summaryRecords];
+	}
+	
+    public function landing2(Request $req, $nip=false, $year=false, $month=false){
+		$now = now();
 		if ($year && $month){
 			$periode = $year.'-'.$month.'-01';
 			$periode = Carbon::parse($periode);
@@ -29,26 +209,44 @@ class AttendanceController extends Controller
 			$month = $periode->format('m');
 		}
 		
-		$name = Employee::findByNIP( $nip? $nip : -1 );
+		$workYear = \App\Libraries\Core\WorkYear::getCurrent()->getPeriode();
+		$employee = Employee::findByNIP( $nip? $nip : -1 );
 		
-		$attendance = [];
-		if ($periode){
-			$attendance = $this->getAttendanceByPeriode($nip, $periode);
+		$tabs = null;
+		if ($employee){
+			$tabs = [
+				'details'=> $this->getAttendanceByPeriode($nip, $periode),
+				'summary'=> [
+					'headers'=> trans('my/bauk/attendance/hints.table_export.headers'),
+					'lastSummary'=>$employee->getAttendanceSummaryByMonthRange(
+							$workYear['start']->format('Y'), 
+							$workYear['start']->format('m'), 
+							$periode->format('Y'), 
+							$periode->format('m')),
+					'currentMonth'=>$employee->getAttendanceSummaryByMonth($year, $month),
+					'currentSummary'=>$employee->getAttendanceSummaryByMonthRange(
+							$workYear['start']->format('Y'), 
+							$workYear['start']->format('m'), 
+							$year, 
+							$now->format('m'))
+				],
+			];
 		}
 		
 		//return $this->getAttendanceByPeriode($nip, $periode->format('Y-m-d'));
 		return view('my.bauk.attendance.landing',[
-			'attendances'=> $attendance,
+			'tabs'=> $tabs,
+			'ctabs'=> ($employee && $year && $month)? 'tab-item-details' : 'tab-item-summary',
 			'nip'=> $nip,
-			'name'=> $name? $name->getFullName() : '',
+			'name'=> $employee? $employee->getFullName() : '',
 			'year' => $year,
 			'month'=> $month,
-			'tabs'=>'employee',
+			'workYear'=> $workYear,
 		]);
 	}
 	
-	public function getAttendanceByPeriode($nip=false, $date=false){
-		if (!$nip || !$date) return [];
+	public function getAttendanceByPeriode($nipOrEmployee=false, $date=false){
+		if (!$nipOrEmployee || !$date) return [];
 		
 		$now = now();
 		$date = $date instanceof Carbon? $date : Carbon::parse($date);
@@ -64,7 +262,7 @@ class AttendanceController extends Controller
 		
 		
 		//create date array of current month
-		$employee = Employee::findByNIP($nip);
+		$employee = $nipOrEmployee instanceof Employee? $nip : Employee::findByNIP($nip);
 		$registeredAt = $employee->registeredAt;
 		$resignAt = $employee->resignAt? $employee->resignAt : $end;
 		$loop = $start->copy();

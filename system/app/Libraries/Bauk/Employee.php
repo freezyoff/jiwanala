@@ -9,6 +9,7 @@ use App\Libraries\Foundation\Employee\HasConsentRecords;
 use App\Libraries\Foundation\Employee\HasWorkSchedules;
 use App\Libraries\Foundation\Employee\HasAssignments;
 use App\Libraries\Foundation\Employee\HasAttendanceSummary;
+use App\Libraries\Foundation\Employee\HasAttendanceDetails;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -21,7 +22,8 @@ class Employee extends Model
 		HasConsentRecords, 
 		HasWorkSchedules,
 		HasAssignments,
-		HasAttendanceSummary;
+		HasAttendanceSummary,
+		HasAttendanceDetails;
 	
     protected $table="employees";
 	protected $connection ="bauk";

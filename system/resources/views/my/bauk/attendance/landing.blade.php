@@ -2,37 +2,30 @@
 
 @section('dashboard.main')
 	<div class="w3-card">
-		<!--
-		<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
-			<h4>Riwayat Kehadiran</h4>
+		<header class="w3-container w3-theme padding-top-8">
+			<h4>Karyawan</h4>
 		</header>
-		-->
-		<div id="tabs-header" class="w3-row w3-container w3-theme">
-			<button class="w3-bar-item w3-button w3-large margin-top-8 w3-hover-blue" 
-					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#employee')">
-				Karyawan
-			</button>
-			<button class="w3-bar-item w3-button w3-large margin-top-8 w3-hover-blue" 
-					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#monthly')">
-				Bulanan
-			</button>
-			<button class="w3-bar-item w3-button w3-large margin-top-8 w3-hover-blue" 
+		<div id="tabs-header" class="w3-row w3-theme padding-left-8">
+			<button id="tab-item-summary" class="w3-bar-item w3-button margin-top-8" 
 					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#summary')">
 				Rekapitulasi
 			</button>
+			<button id="tab-item-details" class="w3-bar-item w3-button margin-top-8" 
+					onclick="App.UI.tabs.higlightHeader(this); App.UI.tabs.showItem('#details')">
+				Detil
+			</button>
+		</div>
+		<div class="w3-container padding-top-8">
+			@include('my.bauk.attendance.landing.search_nip_form')
+			@include('my.bauk.attendance.landing.search_history_form')
 		</div>
 		<div id="tabs-container" class="w3-row w3-container padding-bottom-8">
-			<div id="employee" class="{{isset($tabs) && $tabs == 'employee'? '' : 'w3-hide'}}">
-				@include('my.bauk.attendance.landing.employee_form')
-				@include('my.bauk.attendance.landing.employee_table')
+			<div id="summary" class="{{isset($tabs) && $tabs == 'summary'? '' : 'w3-hide'}}">
+				@include('my.bauk.attendance.landing.summary_table')
 			</div>
-			<div id="monthly" class="city {{isset($tabs) && $tabs == 'monthly'? '' : 'w3-hide'}}">
-				<h2>Monthly</h2>
-				<p>Tokyo is the capital of Japan.</p>
-			</div>
-			<div id="summary" class="city {{isset($tabs) && $tabs == 'summary'? '' : 'w3-hide'}}">
-				<h2>Tokyo</h2>
-				<p>Tokyo is the capital of Japan.</p>
+			<div id="details" class="{{isset($tabs) && $tabs == 'details'? '' : 'w3-hide'}}">
+				@include('my.bauk.attendance.landing.details_form')
+				@include('my.bauk.attendance.landing.details_table')
 			</div>
 		</div>
 	</div>
@@ -47,28 +40,13 @@
 @section('html.head.styles')
 @parent
 <link rel="stylesheet" href="{{url('css/datepicker.css')}}">
+<style>
+.w3-table-all tbody tr td .w3-row + .w3-row{ margin-top:8px; margin-bottom:8px; }
+.w3-table-all tbody tr td .w3-row + .w3-row.w3-tag{ margin:0; }
+</style>
 @endSection
 
 @section('html.body.scripts')
-@parent
-<script>
-App.UI.tabs = {
-	showItem: function(id){
-		$('#tabs-container').children().addClass('w3-hide');
-		$(id).removeClass('w3-hide');
-	},
-	higlightHeader: function(el){
-		$('#tabs-header').children().removeClass('w3-light-grey');
-		$(el).addClass('w3-light-grey');
-	},
-	init: function(){
-		this.higlightHeader($('#tabs-header').children().first());
-	}
-};
-</script>
-<script>
-$(document).ready(function(){ 
-	App.UI.tabs.init();
-});
-</script>
+	@parent
+	@include('my.bauk.attendance.landing.js')
 @endSection

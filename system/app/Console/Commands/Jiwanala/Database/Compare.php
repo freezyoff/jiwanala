@@ -20,7 +20,7 @@ class Compare extends Command
      *
      * @var string
      */
-    protected $description = 'Compare Local & Remote database schema table records';
+    protected $description = 'Compare database records between Local & Remote Production';
 
     /**
      * Create a new command instance.

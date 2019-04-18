@@ -19,7 +19,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $description = 'Sync records with remote record';
+    protected $description = 'Sync database records between Local & Production database';
 
     /**
      * Create a new command instance.
@@ -64,10 +64,8 @@ class Sync extends Command
      */
     public function handle()
     {
-        \Artisan::call('jn-db:compare',['--to-json'=>true]);
-		$database = collect(json_decode(\Artisan::output(),true));
-		foreach($database as $db){
-			$this->line($db['schema'].$db['local'].'='.$db['remote']);
-		}
+        \Artisan::call('jn-db:export',['--remote'=>true], $this->output);
+        \Artisan::call('jn-db:refresh',[], $this->output);
+		\Artisan::call('jn-db:import',[], $this->output);
     }
 }

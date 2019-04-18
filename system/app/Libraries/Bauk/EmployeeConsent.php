@@ -3,6 +3,7 @@ namespace App\Libraries\Bauk;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class EmployeeConsent extends Model{
 	protected $table="employee_consents";
@@ -16,6 +17,10 @@ class EmployeeConsent extends Model{
 		'end',
 		'locked'
 	];
+	
+	public function getDate(): Carbon{
+		return Carbon::parse($this->date);
+	}
 	
 	public static  function getConsentTypes(){
 		return array_keys(trans('my/bauk/attendance/consent'));
@@ -33,4 +38,7 @@ class EmployeeConsent extends Model{
 		return $this->hasMany('App\Libraries\Bauk\EmployeeConsentAttachment', 'employee_consent_id', 'id');
 	}
 	
+	public function allowUpdate(){
+		return isTodayAllowedToUpdateAttendanceAndConsentRecordOn($this->getDate());
+	}
 }

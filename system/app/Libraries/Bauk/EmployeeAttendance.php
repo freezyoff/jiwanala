@@ -151,4 +151,8 @@ class EmployeeAttendance extends Model
 		$lseconds = $seconds;
 		return (Object)['hours'=>$lhours, 'minutes'=>$lminutes, 'seconds'=>$lseconds];
 	}
+	
+	public function allowUpdate(){
+		return isTodayAllowedToUpdateAttendanceAndConsentRecordOn($this->getDate());
+	}
 }
