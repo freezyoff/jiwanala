@@ -11,26 +11,17 @@ class MinifyReponseOutputString
         $response = $next($request);
 		
         if ($this->isResponseObject($response) && $this->isHtmlResponse($response) && !$this->isResponseStackTrace($response)) {
+			$comments = 
+				'/'.
+					'\<!--(.|\n)*?--\>|'.		//html comment
+					'(?<=\s)\/\/.*\s+|'.		//js comment line //
+					'\/\*((.|\s)*?)\*\/|'.		//js comment /* */
+				'/';
+				
 			$replace = [
-				
-				//	HTML
-				'/\<!--(.|\n)*?--\>/'												=>'',		//comment
-				'/\>[\r\n\t\s]+\</'													=>'><',		//<><>
-				
-				//	JAVASCRIPT & CSS
-				'/|(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:)\/\/.*))|/'	=>'',		//js comment // & /* */
-				'/[^\S]{2,}\{/'														=>'{',		//js & css start brackets
-				'/\{[^\S]{2,}/'														=>'{',		//js & css start brackets
-				'/[^\S]{2,}\;/'														=>';',		//space before ;
-				'/\;[^\S]{2,}/'														=>';',		//space after ;
-				'/[^\S]+\}/'														=>'}',		//js & css end brackets
-				'/\}[^\S]{2,}/'														=>'}',		//js & css end brackets
-				'/\)[^\S]{2,}\./'														=> ').',
-				'/\)[^\S]{2,}/'														=> ')',
-				'/\,[^\S]{2,}/'														=> ',',
-				
-				//	WHITE SPACE
-				'/([^}])\s{2,}/'													=> '$1 ',	//white space with ended
+				$comments					=>'',
+				'/(?<=\>)\s+|\s+(?=\<)|/'	=>'',	//whitespace before & after tag
+				'/\s{2,}/'					=>' ',	//white space with ended
 			];
             $response->setContent(preg_replace(array_keys($replace), array_values($replace), $response->getContent()));
         }

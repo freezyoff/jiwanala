@@ -78,11 +78,14 @@
 							</div>
 						@endif
 						@if ($data['hasConsent'])
-							<div class="w3-row w3-tag w3-indigo" style="padding:4px 8px;">
+							<div class="w3-row w3-tag w3-indigo" 
+								style="padding:4px 8px; cursor:pointer"
+								onclick="$(this).find('#viewer-modal-{{$date}}').show()">
 								<i class="fas fa-exclamation-circle fa-fw"></i>
 								<span class="padding-left-8">
 									{{ trans('my/bauk/attendance/consent.types.'.$data['consent']->consent) }}
 								</span>
+								@include('my.bauk.attendance.landing.details_table_pic_modal')
 							</div>
 						@endif
 					</td>

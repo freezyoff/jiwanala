@@ -199,16 +199,6 @@ Route::prefix('attendance')
 		});
 	});
 	
-	Route::prefix('summary')
-		->name('.summary')
-		->middleware('permission:bauk.attendance.list')
-		->group(function(){
-		
-		Route::name('.landing')
-			->get('', '\App\Http\Controllers\My\Bauk\Attendance\SummaryController@index');
-		
-	});
-	
 	Route::name('.report')
 		->prefix('report')
 		->middleware('permission:bauk.attendance.report')

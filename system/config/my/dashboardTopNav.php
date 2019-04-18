@@ -115,24 +115,12 @@
 						'display'=>[ 				
 							'name'=>'Riwayat', 
 							'icon'=>false ,
-							//'tag'=>[
-							//	'label'=>"update",
-							//	'color'=>'w3-blue'
-							//]
-						], 
-						'href'=>'my.bauk.attendance.landing',
-					],
-					[
-						'permission'=>'bauk.attendance.list',
-						'display'=>[ 				
-							'name'=>'Rekapitulasi', 
-							'icon'=>false ,
 							'tag'=>[
-								'label'=>"testing",
-								'color'=>'w3-yellow'
+								'label'=>"new feature",
+								'color'=>'w3-green'
 							]
 						], 
-						'href'=>'my.bauk.attendance.summary.landing',
+						'href'=>'my.bauk.attendance.landing',
 					],
 					[
 						'permission'=>'bauk.attendance.post',
@@ -151,10 +139,10 @@
 						'display'=>[ 				
 							'name'=>'Laporan', 
 							'icon'=>false,
-							//'tag'=>[
-							//	'label'=>"update",
-							//	'color'=>'w3-blue'
-							//]
+							'tag'=>[
+								'label'=>"new feature",
+								'color'=>'w3-green'
+							]
 						], 
 						'href'=>'my.bauk.attendance.report.landing',
 					]
