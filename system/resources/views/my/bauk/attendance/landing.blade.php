@@ -3,7 +3,7 @@
 @section('dashboard.main')
 	<div class="w3-card">
 		<header class="w3-container w3-theme padding-top-8">
-			<h4>Karyawan</h4>
+			<h4>Riwayat Karyawan</h4>
 		</header>
 		<div id="tabs-header" class="w3-row w3-theme padding-left-8">
 			<button id="tab-item-summary" class="w3-bar-item w3-button margin-top-8" 
