@@ -262,7 +262,8 @@ class AttendanceController extends Controller
 		
 		
 		//create date array of current month
-		$employee = $nipOrEmployee instanceof Employee? $nip : Employee::findByNIP($nip);
+		$employee = $nipOrEmployee instanceof Employee? $nipOrEmployee : Employee::findByNIP($nipOrEmployee);
+		$nip = $employee->nip;
 		$registeredAt = $employee->registeredAt;
 		$resignAt = $employee->resignAt? $employee->resignAt : $end;
 		$loop = $start->copy();
