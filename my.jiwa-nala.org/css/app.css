@@ -84,6 +84,13 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 .margin-top-bottom-16{margin-top:16px;margin-bottom:16px;}
 
 @media (max-width: 600px){
+	html,body {font-size:13px !important;}
+	h1{font-size:34px;}
+	h2{font-size:28px;}
+	h3{font-size:22px;}
+	h4{font-size:18px;}
+	h5{font-size:16px;}
+	h6{font-size:14px;}
 	.padding-none-small {padding:0 !important;}
 	.padding-left-none-small{padding-left:0 !important;}
 	.padding-right-none-small{padding-right:0 !important;}
@@ -98,6 +105,13 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 @media (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
 @media (min-width: 768px),			/* Medium devices (landscape tablets, 768px and up) */
 @media (max-width: 992){
+	html,body {font-size:14px !important;}
+	h1{font-size:35px;}
+	h2{font-size:29px;}
+	h3{font-size:23px;}
+	h4{font-size:19px;}
+	h6{font-size:17px;}
+	h6{font-size:15px;}
 	.padding-none-medium {padding:0 !important;}
 	.padding-left-none-medium{padding-left:0 !important;}
 	.padding-right-none-medium{padding-right:0 !important;}
@@ -111,6 +125,13 @@ input:focus,select:focus,textarea:focus,button:focus {outline: none; background-
 }
 @media (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
 @media (min-width: 1200px) {		/* Extra large devices (large laptops and desktops, 1200px and up) */
+	html,body {font-size:15px !important;}
+	h1{font-size:36px;}
+	h2{font-size:30px;}
+	h3{font-size:24px;}
+	h4{font-size:20px;}
+	h6{font-size:18px;}
+	h6{font-size:16px;}
 	.padding-none-large {padding:0 !important;}
 	.padding-left-none-large{padding-left:0 !important;}
 	.padding-right-none-large{padding-right:0 !important;}
