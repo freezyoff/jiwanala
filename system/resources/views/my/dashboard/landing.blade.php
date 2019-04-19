@@ -4,19 +4,19 @@
 <div class="w3-row">
 	<form action="{{route('my.dashboard.landing')}}" method="post">
 		@csrf
-		<div class="w3-col s12 m4 l4">
+		<div class="w3-col s12 m12 l4">
 			<div class="w3-teal w3-text-white"
 				style="border:1px solid #ccc; border-radius:4px; padding:8px; display:flex;">
 				<div style="font-size:2em; padding:0 8px;">
 					<i class="fas fa-user"></i>
 				</div>
 				<div class="margin-left-8">
-					<div>{{\Auth::user()->asEmployee->nip}}</div>
-					<div>{{\Auth::user()->asEmployee->getFullName()}}</div>
+					<div>{{$nip}}</div>
+					<div>{{$employee->getFullName()}}</div>
 				</div>
 			</div>
 		</div>
-		<div class="padding-left-16 w3-col s12 m8 l8 padding-none-small">
+		<div class="padding-left-16 w3-col s12 m12 l8 padding-none-small">
 			<div class="w3-col s12 m6 l4">
 				<div class="input-group padding-top-8">
 					<label><i class="far fa-calendar-check w3-large"></i></label>
@@ -52,21 +52,44 @@
 		</div>
 	</form>
 </div>
-<div class="w3-row margin-top-16">
-	@include('my.dashboard.landing_progress')
-	@include('my.dashboard.landing_attendance_details')
+<div class="w3-row">
+	<div id="attendanceProgress" class="w3-col s12 m12 l4 w3-light-grey">
+		<div class="padding-top-16 padding-bottom-16 margin-right-16 margin-none-small margin-none-medium">
+			<div class="w3-col s12 m12 l12 margin-bottom-8" style="min-width:135px">
+				<div style="display:flex;align-items:center;justify-content:space-evenly;min-width:275px">
+					@include('my.dashboard.landing_radial_progressbar')
+				</div>
+			</div>
+			<div id="attendanceProgress-tabs" 
+				class="w3-bar w3-black w3-hide-large" 
+				style="padding:8px 8px 0 8px">
+				<button class="w3-bar-item w3-button" toggle="#attendanceProgress-summary">
+					<h5>Rekapitulasi</h5>
+				</button>
+				<button class="w3-bar-item w3-button" toggle="#attendanceProgress-details">
+					<h5>Detil Bulan ini</h5>
+				</button>
+			</div> 
+			<div id="attendanceProgress-summary" class="w3-col s12 m12 l12 padding-left-8 padding-none-small padding-none-medium padding-none-large">
+				@include('my.dashboard.landing_attendance_summary')
+			</div>
+		</div>
+	</div>
+	<div id="attendanceProgress-details" class="w3-col s12 m12 l8 margin-top-16 margin-none-large padding-left-16-large">
+		@include('my.dashboard.landing_attendance_details')
+	</div>
 </div>
 @endSection
 
 @section('html.body.scripts')
 @parent
 <script>
-var setProgressBar = function(percentInt, title){
+var setProgressBar = function(id, percentInt, title){
 	var duration =  1000,
 		percent = percentInt,
 		angel = (percent/100)*360,
-		pbar = $('#progressbar-radial'),
-		span = $('#progressbar-radial-label'),
+		pbar = $('#'+id),
+		span = $('#'+id+'-label'),
 		slice = pbar.find('.slice'),
 		startAngel = parseInt(pbar.attr('angel')),
 		startCount = parseInt(pbar.attr('percent'));
@@ -91,7 +114,69 @@ var setProgressBar = function(percentInt, title){
 		}
 	});
 	
-	$('#progressbar-title').html(title);
+	$('#'+id+'-title').html(title);
+};
+
+var tabs = {
+	tabs: '#attendanceProgress-tabs',
+	containers: ['#attendanceProgress-summary', '#attendanceProgress-details'],
+	onTabChange: function(){
+		tabs.highlightButton(this, false);
+		tabs.hide($(this).attr('toggle'));
+	},
+	onTabClick: function(){
+		$(tabs.tabs).children().trigger('change');
+		tabs.highlightButton(this, true);
+		tabs.show($(this).attr('toggle'));
+	},
+	highlightButton: function(button, flag){
+		if (flag){ 	$(button).addClass('w3-light-grey'); }
+		else{ 		$(button).removeClass('w3-light-grey'); }
+	},
+	isVisible: function(){
+		return $(tabs.tabs).css('display')!='none';
+	},
+	show: function(element){
+		$(element).show();
+	},
+	hide: function(element){
+		$(element).hide();
+	},
+	onResize: function(){
+		if (tabs.isVisible()){
+			tabs.hideAll();
+			$('#attendanceProgress > div').removeClass('padding-bottom-16');
+			$('#attendanceProgress-details').removeClass('margin-top-16');
+			$(tabs.tabs).children().first().trigger('click');
+		}
+		else{
+			$('#attendanceProgress > div').addClass('padding-bottom-16');
+			$('#attendanceProgress-details').addClass('margin-top-16');
+			tabs.showAll();
+		}
+	},
+	init: function(){
+		//install tab listener
+		$(tabs.tabs).children().on({
+			change: tabs.onTabChange,
+			click: tabs.onTabClick
+		});
+		
+		$(window).on('resize', function(){
+			tabs.onResize();
+		});
+		tabs.onResize();
+	},
+	showAll:function(){
+		$.each(tabs.containers, function(index,item){
+			tabs.show(item);
+		});
+	},
+	hideAll: function(){
+		$.each(tabs.containers, function(index,item){
+			tabs.hide(item);
+		});
+	},
 };
 
 $(document).ready(function(){
@@ -105,8 +190,11 @@ $(document).ready(function(){
 	});
 	
 	setTimeout(function(){
-		setProgressBar(parseInt('{{$progress['percent']}}'), '{!!$progress['title']!!}');
+		setProgressBar('current-progress', parseInt('{{$summary['rows']['thisMonth']->get('attendance')}}'), '{!!'Bulan Ini<br>('.$summary['tableHeaders'][1].')'!!}');
+		setProgressBar('workyear-progress', parseInt('{{$summary['rows']['tillThisMonth']->get('attendance')}}'), '{!!'Sampai Bulan ini<br>('.$summary['tableHeaders'][2].')'!!}');
 	},1500);
+	
+	tabs.init();
 });
 </script>
 @endSection
@@ -123,83 +211,7 @@ $(document).ready(function(){
 
 .w3-table>tbody>tr{border-bottom:1px solid #ccc}
 
-.progressbar.radial *{box-sizing:content-box;}
-.progressbar.radial{
-	position: relative;
-	font-size: 120px;
-	width: 1em;
-	height: 1em;
-	border-radius: 50%;
-	background-color: #cccccc;
-}
-.progressbar.radial:after{
-	position: absolute;
-	top: 0.08em;
-	left: 0.08em;
-	display: block;
-	content: " ";
-	border-radius: 50%;
-	background-color: #f5f5f5;
-	width: 0.84em;
-	height: 0.84em;
-	-webkit-transition-property: all;
-	-moz-transition-property: all;
-	-o-transition-property: all;
-	transition-property: all;
-	-webkit-transition-duration: 0.2s;
-	-moz-transition-duration: 0.2s;
-	-o-transition-duration: 0.2s;
-	transition-duration: 0.2s;
-	-webkit-transition-timing-function: ease-in;
-	-moz-transition-timing-function: ease-in;
-	-o-transition-timing-function: ease-in;
-	transition-timing-function: ease-in;
-}
-
-.progressbar.radial span{
-	position: absolute;
-	width: 100%;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 5em;
-	line-height: 5em;
-	font-size: 0.2em;
-	color: #307bbb;
-	display: block;
-	text-align: center;
-	white-space: nowrap;
-	-webkit-transition-property: all;
-	-moz-transition-property: all;
-	-o-transition-property: all;
-	transition-property: all;
-	-webkit-transition-duration: 0.2s;
-	-moz-transition-duration: 0.2s;
-	-o-transition-duration: 0.2s;
-	transition-duration: 0.2s;
-	-webkit-transition-timing-function: ease-out;
-	-moz-transition-timing-function: ease-out;
-	-o-transition-timing-function: ease-out;
-	transition-timing-function: ease-out;
-}
-
-
-.progressbar.radial .slice .bar,
-.progressbar.radial .slice .fill{
-	position: absolute;
-	border: 0.08em solid #307bbb;
-	width: 0.84em;
-	height: 0.84em;
-	clip: rect(0em, 0.5em, 1em, 0em);
-	border-radius: 50%;
-	-webkit-transform: rotate(0deg);
-	-moz-transform: rotate(0deg);
-	-ms-transform: rotate(0deg);
-	-o-transform: rotate(0deg);
-	transform: rotate(0deg);
-}
-
-.progressbar.radial .slice{position: absolute;width: 1em;height: 1em;clip: rect(0em, 1em, 1em, 0.5em);}
-.progressbar.radial .slice.full{clip: rect(auto, auto, auto, auto) !important;}
+.w3-table-all tbody tr td .w3-row + .w3-row{ margin-top:8px; margin-bottom:8px; }
+.w3-table-all tbody tr td .w3-row + .w3-row.w3-tag{ margin:0; }
 </style>
 @endSection

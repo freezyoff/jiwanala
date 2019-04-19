@@ -8,11 +8,40 @@ use App\Http\Controllers\My\Bauk\AttendanceController;
 use App\Libraries\Bauk\Holiday;
 use App\Libraries\Bauk\EmployeeSchedule;
 use App\Libraries\Bauk\Employee;
+use App\Libraries\Core\WorkYear;
 use Carbon\Carbon;
 
-class DashboardController extends Controller{
+class DashboardController extends Controller
+{
+	public function index(Request $req){
+		$collect = collect();
+		$year = 	$req->input('year', now()->format('Y'));
+		$month = 	$req->input('month', now()->format('m'));
+		$workYear = WorkYear::getCurrent()->getPeriode();
+		$employee = \Auth::user()->asEmployee()->first();
+		$nip = 		$employee->nip;
+		
+		
+		$summary = $employee->getAttendanceSummaryByMonth($year, $month);
+		$summary['attendance'] = round($summary['attends']/$summary['work_days']*100,2).' %';
+		
+		$collect->put('employee', 	$employee);
+		$collect->put('nip', 		$nip);
+		$collect->put('name', 		$employee? $employee->getFullName() : '');
+		$collect->put('year', 		$year);
+		$collect->put('month', 		$month);
+		$collect->put('workYear', 	$workYear);
+		$collect->put('summary', 	createEmployeeAttendanceSummaryTable($employee, $workYear));
+		$collect->put('details', 	createEmployeeAttendanceDetailsTable($employee, $year, $month));
+		
+		//return $collect->all();
+		if ($nip){
+			return view('my.dashboard.landing', $collect->all());
+		}
+		return view('my.landing');
+	}
 	
-    public function index(Request $req){
+    public function index2(Request $req){
 		$month = $req->input('month',now()->format('m'));
 		$year = $req->input('year',now()->format('Y'));
 		
@@ -23,7 +52,7 @@ class DashboardController extends Controller{
 		$attendanceCtrl = new AttendanceController();
 		
 		//link to employee
-		if ($nip){			
+		if ($nip){
 			return view('my.dashboard.landing',[
 				'nip'=>$nip,
 				'month'=>$month,

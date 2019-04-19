@@ -63,7 +63,6 @@
 			.brand>.brand-text>.title {font-size:1.2em}
 			.brand>.brand-text>.subtitle {font-size:.6em;}	
 			#jn-topbar>.w3-bar>.brand:first-child{padding-left:16px;}
-			#jn-main>header>h3 {font-size:1.2em;}
 		}
 		
 		@media (min-width: 600px), 			/* Small devices (portrait tablets and large phones, 600px and up) */
@@ -74,7 +73,6 @@
 			.brand>.brand-text>.title {font-size:1.4em;}
 			.brand>.brand-text>.subtitle {font-size:.7em;}
 			.top-nav>button>span{display:none;}
-			#jn-main>header>h3 {font-size:1.4em;}
 		}
 		
 		@media (min-width: 992px),			/* Large devices (laptops/desktops, 992px and up) */
@@ -84,7 +82,6 @@
 			.brand>.brand-text>.title {font-size:1.5em}
 			.brand>.brand-text>.subtitle {font-size:.75em;}
 			.top-nav>button>span{padding-left:6px; display:inline-block;}
-			#jn-main>header>h3 {font-size:1.5em;}
 		}
 	</style>
 @endSection
