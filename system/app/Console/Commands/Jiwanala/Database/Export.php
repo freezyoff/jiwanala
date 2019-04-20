@@ -16,6 +16,7 @@ class Export extends Command
 		{--query-limit=	 	: query limit. default 1000 records}
 		{--export-version= 	: signature time for export key. Use as directoriy in storage/app/database/}
 		{--export-mode= 	: SQL or JSON. Default JSON}
+		{--daemon 			: background message}
 	';
 
     /**
@@ -81,64 +82,73 @@ class Export extends Command
 			'schema'=>	$schema,
 			'table'=>	$table,
 		];
-		$queryLimit = $this->getQueryLimit();
+		
 		$queryCount = $opts['con']->table($table)->count();
 		
-		//comment info
-		$bar = $this->output->createProgressBar($queryCount);
-		$bar->setFormat("%message% [%bar%] %percent:3s%%");
-		
-		$bar->setMessage($this->infoRead($schema, $table));
-		$bar->setProgress(0);
+		if (!$this->isDaemon()) {
+			$this->createProgressBar($schema, $table, $queryCount);
+		}
 		
 		$opts['types'] = $this->getColumnTypes($schema, $table);
 		$opts['columns'] = array_keys($opts['types']);
-		$strBuffer = $this->getFormatedString($this->getMode(), 'head', $opts);
-		$this->write($schema, $table, $strBuffer, true);
 		
 		//columns
-		//to avoid error, we write the INSERT statement in values loop below
-		$bar->setMessage($this->infoExport($schema, $table));
-		for($i=0; $i<$queryCount; $i+=$queryLimit){
-			$query = $this->getConnection($schema)
-				->table($table)
-				->take($queryLimit)
-				->skip($i)
-				->get();
+		//to avoid error, we write the INSERT statement in values loop below		
+		$this->infoExport($schema, $table);
+		$JSONError = false;
+		if ($queryCount){
+			for($i=0,$batch=1; $i<$queryCount; $i+=$this->getQueryLimit(), $batch++){
 				
-			$strBuffer="";
-			$ii = 0;
-			foreach($query as $item){
-				$ii++;
-				$opts['record'] = $item;
-				$opts['isLastRecord'] = !($i+$ii < $queryCount);
-				$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
-			}
-			$this->write($schema, $table, $strBuffer);
-			$strBuffer = null;
-			
-			$bar->advance($queryLimit);
+				$strBuffer = $this->getFormatedString($this->getMode(), 'head', $opts);
+				$this->writeToFile($schema, $table, $batch, $strBuffer, true);
+				
+				$query = $this->getConnection($schema)
+					->table($table)
+					->take($this->getQueryLimit())
+					->skip($i)
+					->get();
+					
+				$strBuffer="";
+				$qi = 0;
+				$qc = $query->count();
+				foreach($query as $item){
+					$opts['record'] = $item;
+					$opts['isLastRecord'] = ($qi+1 == $qc);
+					$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
+					$qi++;
+					
+					if (!$this->isDaemon()){
+						$this->getProgressbar()->advance();
+					}
+				}
+				$this->writeToFile($schema, $table, $batch, $strBuffer);
+				
+				$strBuffer = $this->getFormatedString($this->getMode(), 'footer', []);
+				$this->writeToFile($schema, $table, $batch, $strBuffer);
+				
+				//verify json
+				if ($this->getMode() == 'json'){
+					$validate = $this->verifyJSON($schema, $table, $batch);
+					$JSONError = isset($JSONError)? $JSONError & $validate : $validate;
+				}
+			}			
+		}
+		else{
+			//create file with empty records
+			$strBuffer = $this->getFormatedString($this->getMode(), 'head', $opts);
+			$this->writeToFile($schema, $table, 1, $strBuffer, true);
+			$strBuffer = $this->getFormatedString($this->getMode(), 'footer', []);
+			$this->writeToFile($schema, $table, 1, $strBuffer);
 		}
 		
-		$this->write($schema, $table, $this->getFormatedString($this->getMode(), 'footer', []));
-		
-		
-		if ($queryCount == 0) {
-			$bar->setProgress(100);
+		if (!$this->isDaemon()){
+			$this->getProgressbar()->setProgress(100);
+			$this->destroyProgressbar();
 		}
-		
-		$bar->finish();
 		
 		if ($this->getMode() == 'json'){
-			$this->output->write(
-				' JSON '.
-				'<fg=cyan>'.
-				($this->verifyJSON($schema, $table)? 'verified' : 'error :'.json_last_error()).
-				'</>'
-			);
+			$this->infoJSONError($JSONError? true : false);
 		}
-		
-		$this->line('');
 	}
 	
 	function getFormatedString($mode, $type, $data){
@@ -211,38 +221,52 @@ class Export extends Command
 	}
 	
 	function infoStart(){
-		$this->line('<fg=cyan>Start </>Export');
-		$this->line('<fg=cyan>Mode </>'.strtoupper($this->getMode()));
+		if ($this->isDaemon()){
+			$this->line('Start Export at: '.now()->format('Y/m/d H:i:s'));
+			$this->line('Mode : '.strtoupper($this->getMode()));
+		}
+		else{
+			$this->line('<fg=cyan>Start </>Export');
+			$this->line('<fg=cyan>Mode </>'.strtoupper($this->getMode()));
+		}
 	}
 	
 	function infoEnd(){
-		echo "\033[36m". "Done   " ."\033".
-			"[0m". "Export" .PHP_EOL;
-	}
-	
-	function infoRead($schema, $table){
-		for($i=strlen($schema.'.'.$table); $i<=$this->maxTableNameLength; $i++){
-			$table .= ' ';
+		if ($this->isDaemon()){
+			$this->line('Done Export at: '.now()->format('Y/m/d H:i:s'));
+			$this->line('');
 		}
-		return "\033[32m". "Read   \033". 
-			"\033[33m". $schema ."\033".
-			"[37m.\033".
-			"\033[36m". $table ."\033".
-			"[0m";
+		else{
+			echo "\033[36m". "Done   " ."\033".
+				"[0m". "Export" . PHP_EOL . PHP_EOL;
+		}
 	}
 	
 	function infoExport($schema, $table){
 		for($i=strlen($schema.'.'.$table); $i<$this->maxTableNameLength; $i++){
 			$table .= ' ';
 		}
-		return '<fg=white>Export </>'.
-			'<fg=yellow>'.$schema.'</>.'.
-			'<fg=green>'.$table.'</>';
-		return 	"\033[37m". "Export \033". 
-				"\033[33m". $schema ."\033".
-				"[37m.\033".
-				"\033[36m". $table ."\033".
-				"[0m ";
+			
+		if ($this->isDaemon()){
+			$this->output->write('- Export '.$schema.'.'.$table.' ');
+		}
+		else{
+			$msg = '- <fg=white>Export </>'.
+				'<fg=yellow>'.$schema.'</>.'.
+				'<fg=green>'.$table.'</>';
+			$this->getProgressbar()->setMessage($msg);
+		}
+	}
+	
+	function infoJSONError($flag){
+		if ($flag){
+			if ($this->isDaemon()) 	$this->output->write(' JSON invalid'.PHP_EOL);
+			else					$this->output->write(' JSON '.'<fg=red>invalid</>'.PHP_EOL);
+		}
+		else{
+			if ($this->isDaemon()) 	$this->output->write(' JSON valid'.PHP_EOL);
+			else					$this->output->write(' JSON <fg=cyan>valid</>'.PHP_EOL);
+		}
 	}
 	
 	function getAllSchemaTable($schema){
@@ -315,23 +339,23 @@ class Export extends Command
 			$this->getTimestamp()->format('Ymd');
 	}
 	
-	function getFileName($schema, $table){
+	function getFileName($schema, $table, $batch){
 		$prefix = $this->getExportVersion();
-		$filename = 'database/'.$prefix .'/'. $prefix .'_'. $schema .'_'. $table .'.sql';
+		$filename = 'database/'.$prefix.'/'.$prefix.'_'.$schema.'_'. $table.'_'.$batch.'.sql';
 		return $filename;
 	}
 	
-	function write($schema, $table, $content, $overwrite=false){
+	function writeToFile($schema, $table, $batch, $content, $overwrite=false){
 		if ($overwrite){
-			\Storage::disk('local')->put($this->getFileName($schema, $table), $content);
+			\Storage::disk('local')->put($this->getFileName($schema, $table, $batch), $content);
 		}
 		else{
-			\Storage::disk('local')->append($this->getFileName($schema, $table), $content);
+			\Storage::disk('local')->append($this->getFileName($schema, $table, $batch), $content);
 		}
 	}
 	
-	function verifyJSON($schema, $table){
-		json_decode(\Storage::disk('local')->read($this->getFileName($schema, $table)));
+	function verifyJSON($schema, $table, $batch){
+		json_decode(\Storage::disk('local')->read($this->getFileName($schema, $table, $batch)));
 		return json_last_error()==0? true : false;
 	}
 	
@@ -360,5 +384,27 @@ class Export extends Command
 	
 	function getQueryLimit(){
 		return $this->option('query-limit')? $this->option('query-limit') : 1000;
+	}
+	
+	protected $daemon;
+	function isDaemon(){
+		if (!isset($daemon)){
+			$daemon = $this->option('daemon')? true : false;
+		}
+		return $daemon;
+	}
+	
+	protected $progressbar;
+	function createProgressbar($schema, $table, $queryCount){
+		$this->progressbar = $this->output->createProgressBar($queryCount);
+		$this->progressbar->setFormat("%message% [%bar%] %percent:3s%%");
+		$this->infoExport($schema, $table);
+		$this->progressbar->start();
+	}
+	function destroyProgressbar(){
+		$this->progressbar->finish();
+	}
+	function getProgressbar(){
+		return $this->progressbar;
 	}
 }

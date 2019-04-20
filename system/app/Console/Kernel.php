@@ -30,6 +30,10 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Database\Compare::class,
 		\App\Console\Commands\Jiwanala\Database\Sync::class,
 		\App\Console\Commands\Jiwanala\Database\Truncate::class,
+		
+		\App\Console\Commands\Jiwanala\Bauk\EmployeeAttendanceInvalidTime::class,
+		
+		\App\Console\Commands\File\SearchText::class,
     ];
 
     /**
