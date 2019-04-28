@@ -1,49 +1,29 @@
 <?php 
-Route::name('statistics')
-	->prefix('statistics')
-	->group(function(){	
-	Route::name('.attendance')
-		->prefix('attendance')
-		->group(function(){
-		
-		Route::name('.monthly.all')->get(
-			'monthly/{year}/{month}',
-			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@monthlyReport'
-		);
-		
-		Route::name('.monthly')->get(
-			'monthly/{nip}/{year}/{month}', 
-			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@employeeMonthlyReport'
-		);
-		
-		Route::name('.summary')->get(
-			'summary/{work_year_id}/{nip?}',
-			'\App\Http\Controllers\My\Bauk\Attendance\AttendanceStatisticsController@summaryReport'
-		);
-		
-	});
-});
 Route::name('landing')
-	->group(function(){
-	Route::get('/', '\App\Http\Controllers\My\BaukController@landing');
-		
-	Route::prefix('info')
-		->name('.info')
-		->group(function(){
-		Route::name('.nextHolidays')
-			->post('nextHolidays', '\App\Http\Controllers\My\BaukController@nextHolidays');
-		Route::name('.employeesCount')
-			->post('employeesCount', '\App\Http\Controllers\My\BaukController@employeesCount');	
-		Route::name('.attendanceProgress')
-			->post('attendanceProgress', '\App\Http\Controllers\My\BaukController@attendanceProgress');
-		Route::name('.employeeWithNoSchedules')
-			->post('employeeWithNoSchedules', '\App\Http\Controllers\My\BaukController@employeeWithNoSchedules');
-		
-		Route::name('.fingerConsent')
-			->post('fingerConsent', '\App\Http\Controllers\My\BaukController@fingerConsent');
-			
+	->get('/', function(){
+		$now = now();
+		return view("my.bauk.landing",[
+			'year'=>$now->format('Y'),
+			'month'=>$now->format('m'),
+			'day'=>$now->format('d'),
+		]);
 	});
-});
+
+Route::name('nextHolidays')
+	->post('nextHolidays', '\App\Http\Controllers\My\BaukController@nextHolidays');
+Route::name('employeesCount')
+	->post('employeesCount', '\App\Http\Controllers\My\BaukController@employeesCount');	
+Route::name('attendanceDocumentationProgress')
+	->post('attendanceProgress', '\App\Http\Controllers\My\BaukController@attendanceDocumentationProgress');
+Route::name('attendanceDocumentationSummary')
+	->post('attendanceSummary', '\App\Http\Controllers\My\BaukController@attendanceDocumentationSummary');
+Route::name('employeeWithNoSchedules')
+	->post('employeeWithNoSchedules', '\App\Http\Controllers\My\BaukController@employeeWithNoSchedules');
+Route::name('fingerConsent')
+	->post('fingerConsent', '\App\Http\Controllers\My\BaukController@fingerConsent');
+Route::name('consentWithoutDocs')
+	->get('consentWithoutDocs', '\App\Http\Controllers\My\BaukController@consentWithoutDocs');
+
 	
 Route::prefix('employee')
 	->name('employee')
@@ -164,7 +144,7 @@ Route::prefix('attendance')
 		Route::prefix('employee')->group(function(){
 			Route::name('.landing')
 				->middleware('permission:bauk.attendance.list')
-				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
+				->any('{nip?}/{year?}/{month?}/{ctab?}', '\App\Http\Controllers\My\Bauk\AttendanceController@landing');
 				
 			Route::prefix('fingers')
 				->name('.fingers')
@@ -185,18 +165,7 @@ Route::prefix('attendance')
 					->post('preview/file', '\App\Http\Controllers\My\Bauk\Attendance\AttendanceConsentController@previewFile');
 			});
 		});
-		
-		Route::prefix('monthly')->name('.monthly')->group(function(){
-			Route::name('.landing')
-				->middleware('permission:bauk.attendance.list')
-				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@monthly');
-		});
-		
-		Route::prefix('summary')->name('.summary')->group(function(){
-			Route::name('.landing')
-				->middleware('permission:bauk.attendance.list')
-				->any('', '\App\Http\Controllers\My\Bauk\AttendanceController@summary');
-		});
+
 	});
 	
 	Route::name('.report')
@@ -205,13 +174,13 @@ Route::prefix('attendance')
 		->group(function(){
 		
 		Route::name('.landing')
-			->get('', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@index');
+			->get('', '\App\Http\Controllers\My\Bauk\ReportController@index');
 		
 		Route::name('.attendance')
-			->post('attendance/monthly', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@monthlyReport');
+			->post('attendance/monthly', '\App\Http\Controllers\My\Bauk\ReportController@monthlyReport');
 		
 		Route::name('.summary')
-			->post('attendance/summary', '\App\Http\Controllers\My\Bauk\Attendance\ReportController@summaryReport');
+			->post('attendance/summary', '\App\Http\Controllers\My\Bauk\ReportController@summaryReport');
 	});
 		
 });

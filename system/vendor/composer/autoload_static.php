@@ -89,7 +89,6 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
-        '5f0a3883c37f5ebcb9bae99904ede34a' => __DIR__ . '/../..' . '/app/Libraries/Foundation/EmployeeAttendanceHelper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -548,6 +547,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
     public static $classMap = array (
         'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => __DIR__ . '/../..' . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
         'App\\Console\\Commands\\Core\\JiwanalaWorkYear_sync' => __DIR__ . '/../..' . '/app/Console/Commands/Core/JiwanalaWorkYear_sync.php',
+        'App\\Console\\Commands\\File\\SearchText' => __DIR__ . '/../..' . '/app/Console/Commands/File/SearchText.php',
         'App\\Console\\Commands\\JiwanalaAddPermission' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddPermission.php',
         'App\\Console\\Commands\\JiwanalaAddUser' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaAddUser.php',
         'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
@@ -572,15 +572,15 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\My\\Api\\AndroidController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Api/AndroidController.php',
-        'App\\Http\\Controllers\\My\\BaukController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/BaukController.php',
         'App\\Http\\Controllers\\My\\Bauk\\AssignmentController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/AssignmentController.php',
         'App\\Http\\Controllers\\My\\Bauk\\AttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/AttendanceController.php',
         'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceConsentController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceConsentController.php',
         'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceFingerController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceFingerController.php',
         'App\\Http\\Controllers\\My\\Bauk\\Attendance\\AttendanceStatisticsController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/AttendanceStatisticsController.php',
-        'App\\Http\\Controllers\\My\\Bauk\\Attendance\\ReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/Attendance/ReportController.php',
+        'App\\Http\\Controllers\\My\\Bauk\\BaukController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/BaukController.php',
         'App\\Http\\Controllers\\My\\Bauk\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/EmployeeController.php',
         'App\\Http\\Controllers\\My\\Bauk\\HolidayController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/HolidayController.php',
+        'App\\Http\\Controllers\\My\\Bauk\\ReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/ReportController.php',
         'App\\Http\\Controllers\\My\\Bauk\\ScheduleController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/Bauk/ScheduleController.php',
         'App\\Http\\Controllers\\My\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/DashboardController.php',
         'App\\Http\\Controllers\\My\\HeadMasterController' => __DIR__ . '/../..' . '/app/Http/Controllers/My/HeadMasterController.php',

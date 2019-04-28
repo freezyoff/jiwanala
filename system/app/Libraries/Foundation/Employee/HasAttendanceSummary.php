@@ -1,7 +1,8 @@
 <?php 
 namespace App\Libraries\Foundation\Employee;
-use \Carbon\Carbon;
-use \App\Libraries\Bauk\Holiday;
+use Carbon\Carbon;
+use App\Libraries\Bauk\Holiday;
+use Illuminate\Support\Arr;
 
 trait HasAttendanceSummary{
 	protected $attendanceSummary = [];
@@ -87,7 +88,7 @@ trait HasAttendanceSummary{
 			}
 			
 			//hilangkan key (dalam tanggal) pada $scheduleCalendar setelah tanggal $now
-			if ($cKey->greaterThan($now) || $cKey->format('Y-m-d') == $now->format('Y-m-d')) {
+			if ($cKey->greaterThan($now)) {
 				unset($scheduleCalendar[$key]);
 				unset($attendanceCalendar[$key]);
 				unset($consentCalendar[$key]);
@@ -108,6 +109,8 @@ trait HasAttendanceSummary{
 			$this->getAttendanceSummaryByMonth_countConsents($workDate, $attendanceCalendar, $consentCalendar);
 		}
 		
+		//fill empty properties first
+		$this->fillEmptyProperties();
 		return $this->getAttendanceSummaryProperty();
 	}
 	
@@ -141,14 +144,15 @@ trait HasAttendanceSummary{
 			$shouldHasConsentNoArrivalOrNoDeparture = true;
 		}
 		
-		//is should has consent, but no consent available
+		//is late arrival or early departure, but no consent available
 		if ($shouldHasConsentLateArrivalOrEarlyDeparture){
 			$hasConsent = isset($consent[$date]);
 			if (!$hasConsent || $consent[$date]->consent != 'tl') {
-				$this->setAttendanceSummaryProperty('attends_lateOrEarlyConsent', 1);
+				$this->setAttendanceSummaryProperty('attends_noLateOrEarlyConsent', 1);
 			}
 		}
 		
+		//is no arrival or no departure
 		if ($shouldHasConsentNoArrivalOrNoDeparture){
 			$hasConsent = isset($consent[$date]);
 			if (!$hasConsent || $consent[$date]->consent != 'tf') {
@@ -160,20 +164,45 @@ trait HasAttendanceSummary{
 	protected function getAttendanceSummaryByMonth_countConsents($date, $attendCalendar, $consentCalendar){
 		if (isset($attendCalendar[$date])) return;
 		
-		$consentIndex = [
-			'cs'=>'absents_consentSick',
-			'td'=>'absents_consentDuty',
-			'ct'=>'absents_consentOthers',
-			'ch'=>'absents_consentOthers',
-			'cp'=>'absents_consentOthers',
+		$consents = [
+			'cs' => 'absents_consentSick',
+			'td' => 'absents_consentDuty',
+			'ct' => 'absents_consentAnnual',
+			'ch' => 'absents_consentOthers',
+			'cp' => 'absents_consentOthers',
 		];
 		
-		if (isset($consentCalendar[$date]) && 
-			array_key_exists($consentCalendar[$date]->consent, $consentIndex)){
-			$this->setAttendanceSummaryProperty($consentIndex[$consentCalendar[$date]->consent], 1);
+		$key = Arr::has($consentCalendar, $date)? $consentCalendar[$date]->consent : false;
+		$found = $key && Arr::has($consents, $key);
+		if ($found){
+			$this->setAttendanceSummaryProperty($consents[$key], 1);
 		}
 		else{
 			$this->setAttendanceSummaryProperty('absents_noConsent', 1);
+		}
+	}
+	
+	protected function fillEmptyProperties(){
+		//avoid null value. we should give 0 (nil) value to empty properties
+		$props = [
+			'attends_lateArrival',
+			'attends_earlyDeparture',
+			'attends_noArrival',
+			'attends_noDeparture',
+			'attends_noLateOrEarlyConsent',
+			'attends_noArrivalOrDepartureConsent',
+			'absents_consentSick',
+			'absents_consentDuty',
+			'absents_consentAnnual',
+			'absents_consentOthers',
+			'absents_consentOthers',
+			'absents_noConsent',
+		];
+		
+		foreach($props as $key){
+			if (!$this->hasAttendanceSummaryProperty($key)){
+				$this->setAttendanceSummaryProperty($key, 0);
+			}
 		}
 	}
 	

@@ -1,16 +1,16 @@
 <div class="w3-row">
 	<div style="display:flex; justify-content:space-evenly">
 		<div style="display:flex; flex-direction:column;align-items:center;margin-top:8px;">
-			<div id="progressbar-radial" 
+			<div id="summarybar-radial" 
 				class="progressbar radial xlarge" 
 				style="font-size:9em;box-shadow:2px 1px 10px .1px #898383 inset;">
-				<span id="progressbar-radial-label"><i class="button-icon-loader"></i></span>
+				<span id="summarybar-radial-label"><i class="button-icon-loader"></i></span>
 				<div class="slice">
 					<div class="bar"></div>
 					<div class="fill"></div>
 				</div>
 			</div>
-			<span id="progressbar-title" class="padding-top-8" style="font-size:.7em; text-align:center"></span>
+			<span id="summarybar-title" class="padding-top-8" style="font-size:.7em; text-align:center"></span>
 		</div>
 	</div>
 </div>
@@ -23,7 +23,7 @@
 				@endif
 				<tr>
 					<td>{!!$header!!}</td>
-					<td id="attendanceProgress-{{$key}}">
+					<td id="attendanceSummary-{{$key}}">
 						<i class="button-icon-loader"></i>
 					</td>
 				</tr>
@@ -32,32 +32,32 @@
 	</table>
 </div>
 <script>
-var attendanceProgress = {
+var attendanceSummary = {
 	init: function(){
-		$('#attendanceProgress-year, #attendanceProgress-month').on('select.pick', function(event, oldValue, newValue){
+		$('#summary-year').on('select.pick', function(event, oldValue, newValue){
 			if (oldValue != newValue){
-				attendanceProgress.send();	
+				attendanceSummary.send();	
 			}
 		});
-		attendanceProgress.send();
+		attendanceSummary.send();
 	},
 	send: function(){
 		$.ajax({
 			method: "POST",
-			url: '{{route('my.bauk.attendanceDocumentationProgress')}}',
+			url: '{{route('my.bauk.attendanceDocumentationSummary')}}',
 			data: { 
 				'_token': '{{csrf_token()}}',
-				'year': $('#attendanceProgress-year').val(),
-				'month': $('#attendanceProgress-month').val(),
+				'year': $('#attendanceSummary-year').val(),
+				'month': $('#attendanceSummary-month').val(),
 			},
 			dataType: "json",
 			beforeSend: function() {
-				$('#progressbar-radial-label').html($('<i class="button-icon-loader"></i>'));
+				$('#summarybar-radial-label').html($('<i class="button-icon-loader"></i>'));
 			},
 			success: function(response){
-				attendanceProgress.setProgressbar(response.attendance);
+				attendanceSummary.setProgressbar(response.attendance);
 				$.each(response.keys, function(index, value){
-					$('#attendanceProgress-'+value).html(response[value]);
+					$('#attendanceSummary-'+value).html(response[value]);
 				});
 			}
 		});
@@ -66,8 +66,8 @@ var attendanceProgress = {
 		var duration =  1000,
 			percent = percent,
 			angel = (percent/100)*360,
-			pbar = $('#progressbar-radial'),
-			span = $('#progressbar-radial-label'),
+			pbar = $('#summarybar-radial'),
+			span = $('#summarybar-radial-label'),
 			slice = pbar.find('.slice'),
 			startAngel = parseInt(pbar.attr('angel')),
 			startCount = parseInt(pbar.attr('percent'));

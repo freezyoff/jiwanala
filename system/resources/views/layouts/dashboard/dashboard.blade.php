@@ -168,8 +168,8 @@
 		initSideBar: function(){
 			var height = $("#jn-topbar").height();
 			$('#jn-main').css('margin-top',height+'px');
-			$('#jn-main>content').css('min-height',$(document).height()-$('#jn-main>header').outerHeight()-$('#jn-main>footer').outerHeight()-height);
 			$('#jn-sidebar').css('top',height+'px');
+			//$('#jn-main>content').css('min-height',$(document).height()-$('#jn-main>header').outerHeight()-$('#jn-main>footer').outerHeight()-height);
 		},
 		toggleSideBar: function(){
 			if ($('#jn-sidebar').css('display') == 'none'){ this.openSideBar(); }

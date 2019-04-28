@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Libraries\Service\Auth\User;
 use App\Libraries\Bauk\EmployeeAttendance;
 use App\Libraries\Bauk\Employee;
+use App\Libraries\Helper\BaukHelper;
 
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -54,7 +55,7 @@ class AttendanceByFingersImport implements
 		$dateFormat = $this->dateformat;
 		$isAllowed = function ($attribute, $value, $fail) use($dateFormat){
 			$date = Carbon::createFromFormat($dateFormat, $value);
-			if (!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date)) {
+			if (!BaukHelper::isAllowUpdateAttendanceAndConsentOnGivenDate($date)) {
 				$fail( str_replace(
 					':value',
 					$value,
@@ -133,7 +134,7 @@ class AttendanceByFingersImport implements
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row){
-		$date = $this->convertToDatabaseDateFormat($row['tanggal'], $this->dateformat, false);
+		$date = $this->convertToDatabaseDate($this->dateformat, $row['tanggal'], null);
 		$employeeRecord = \App\Libraries\Bauk\Employee::findByNIP($row['nip']);
 		$employeeId = \App\Libraries\Bauk\Employee::findByNIP($row['nip'])->id;
 		
@@ -144,23 +145,24 @@ class AttendanceByFingersImport implements
 			'employee_id'	=> $employeeId,
 			'date' 			=> $date,
 		]);
-		$record->time1 = $this->convertToDatabaseDateFormat($row['finger_masuk'], $this->timeformat, $record->time1);
-		$record->time2 = $this->convertToDatabaseDateFormat($row['finger_keluar_1'], $this->timeformat, $record->time2);
-		$record->time3 = $this->convertToDatabaseDateFormat($row['finger_keluar_2'], $this->timeformat, $record->time3);
-		$record->time4 = $this->convertToDatabaseDateFormat($row['finger_keluar_3'], $this->timeformat, $record->time4);
+		$record->time1 = $this->convertToDatabaseTime($this->timeformat, $row['finger_masuk'], $record->time1);
+		$record->time2 = $this->convertToDatabaseTime($this->timeformat, $row['finger_keluar_1'], $record->time2);
+		$record->time3 = $this->convertToDatabaseTime($this->timeformat, $row['finger_keluar_2'], $record->time3);
+		$record->time4 = $this->convertToDatabaseTime($this->timeformat, $row['finger_keluar_3'], $record->time4);
 		
 		//save the success
 		$this->onSuccess($row, $record);
 		return $record;
     }
 	
-	private function convertToDatabaseDateFormat($value, $formatDateTime, $defaultValue){
-		if ($value == null && $value =='') return $defaultValue;
-		
-		$carbon = Carbon::createFromFormat($formatDateTime, $value);
-		return $formatDateTime==$this->dateformat? 
-			$carbon->format('Y-m-d'):
-			$carbon->format('H:i:s');
+	private function convertToDatabaseDate($format, $value, $defvalue){
+		if (!$value || empty($value) || is_null($value)) return $defvalue;
+		return Carbon::createFromFormat($format, $value)->format('Y-m-d');
+	}
+	
+	private function convertToDatabaseTime($format, $value, $defvalue){
+		if (!$value || empty($value) || is_null($value)) return $defvalue;
+		return Carbon::createFromFormat($format, $value)->format('H:i:s');
 	}
 	
 	/**

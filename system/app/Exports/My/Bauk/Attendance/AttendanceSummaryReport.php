@@ -24,12 +24,12 @@ class AttendanceSummaryReport implements FromView
     */
     public function view():View {
         return view('my.bauk.attendance.report.summary_export',[
-			'summary'=>		$this->getSummary(),
-			'workYear'=>	$this->workYear
+			'summary'=>		$this->generateReport(),
+			'workYear'=>	$this->workYear->getperiode()
 		]);
     }
 	
-	function getSummary(){
+	function generateReport(){
 		$workYear = $this->workYear;
 		$start = Carbon::parse($workYear->start);
 		$end = Carbon::parse($workYear->end);

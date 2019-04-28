@@ -29,9 +29,3 @@
 		</tbody>
 	</table>
 </div>
-<style>
-@media (max-width: 600px){
-	table#attendance-summary thead tr th {font-size:12px;}
-	table#attendance-summary tbody tr td {font-size:12px;}
-}
-</style>

@@ -28,9 +28,7 @@
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {
-		"files": [
-			"app/Libraries/Foundation/EmployeeAttendanceHelper.php"
-		],
+		"files": [],
         "classmap": [
             "database/seeds",
             "database/factories"

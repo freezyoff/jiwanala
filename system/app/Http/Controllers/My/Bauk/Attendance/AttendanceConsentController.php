@@ -8,6 +8,7 @@ use App\Libraries\Bauk\Employee;
 use App\Libraries\Bauk\EmployeeConsent;
 use App\Libraries\Bauk\EmployeeConsentAttachment;
 use App\Libraries\Bauk\Holiday;
+use App\Libraries\Helpers\BaukHelper;
 use App\Http\Requests\My\Bauk\Attendance\ConsentPostRequest;
 
 class AttendanceConsentController extends Controller{
@@ -17,7 +18,7 @@ class AttendanceConsentController extends Controller{
 		
 		$date = \Carbon\Carbon::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
 		if (Holiday::isHoliday($date)) abort(404);
-		if (!isTodayAllowedToUpdateAttendanceAndConsentRecordOn($date)) abort(404);
+		if (!BaukHelper::isAllowUpdateAttendanceAndConsentOnGivenDate($date)) abort(404);
 		
 		return $date;
 	}
@@ -100,6 +101,7 @@ class AttendanceConsentController extends Controller{
 			//$attachmentData->ext = \Storage::disk($file['disk'])->extension($file['path']);
 			$attachmentData->attachment = \Storage::disk($file['disk'])->get($file['path']);
 			$attachmentData->save();
+			
 			$fileDBList[] = $attachmentData->id;
 		}
 		
@@ -107,6 +109,13 @@ class AttendanceConsentController extends Controller{
 		$dbrecords = $consentDate->attachments()->get();
 		foreach($dbrecords as $record){
 			if ( !in_array($record->id, $fileDBList) ) $record->delete();
+		}
+		
+		//recheck attachment
+		//we cannot allow consent with no attachment
+		//if no attachment records, we delete the consent records
+		if ($dbrecords->count()<=0){
+			$consentDate->delete();
 		}
 		
 		return redirect($request->input('back_action'));

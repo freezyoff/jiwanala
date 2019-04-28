@@ -4,24 +4,15 @@ namespace App\Http\Controllers\My;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Libraries\Bauk\EmployeeAttendance;
 use App\Libraries\Bauk\Employee;
-use App\Libraries\Bauk\EmployeeSchedule;
 use App\Libraries\Bauk\Holiday;
-use \Carbon\Carbon;
+use App\Libraries\Core\WorkYear;
+use App\Exports\My\Bauk\Attendance\AttendanceMonthlyReport;
+use App\Exports\My\Bauk\Attendance\AttendanceSummaryReport;
 
-class BaukController extends Controller
-{
-    public function landing(){
-		$now = now();
-		return view("my.bauk.landing",[
-			'year'=>$now->format('Y'),
-			'month'=>$now->format('m'),
-			'day'=>$now->format('d'),
-		]);
-	}
+class BaukController extends Controller{
 	
-	public function nextHolidays(){
+    public function nextHolidays(){
 		//next 5 holidays
 		$count = 0;
 		$date = now();
@@ -35,12 +26,9 @@ class BaukController extends Controller
 			$count = count($result);
 			$date->addMonthNoOverflow();
 		}while($count<$offset);
-		return $this->nextHolidays_toTableBody($result);
-	}
-	
-	protected function nextHolidays_toTableBody($rows){
+		
 		$tbody = '';
-		foreach($rows as $row){
+		foreach($result as $row){
 			$range = $row->getDateRange();
 			$tbody .='<tr>';
 			$tbody .='<td>'.$range[0]->format('d').'&nbsp;'.trans('calendar.months.long.'.$range[0]->format('n'));
@@ -86,123 +74,61 @@ class BaukController extends Controller
 		]);
 	}
 	
-	public function fingerConsent(){
-		$now = now();
-		$year = $now->format('Y');
-		$month = $now->format('m');
-		
-		//late arrival
-		//'employeeList'=>EmployeeAttendance::getLateArrival($year, $month, "Count("*")")->all(),
-		return [
-			'lateArrival'=>EmployeeAttendance::getLateArrivalCount($year, $month),
-			'earlyDeparture'=>EmployeeAttendance::getLateArrivalCount($year, $month)
-		];
-	}
 	
 	//	data finger kehadiran untuk karyawan aktif pada periode bulan ini. 
 	//	Hanya data kehadiran saja. Izin tidak dihitung.
-	public function attendanceProgress(){
+	public static function attendanceDocumentationProgress(){
 		$now = now();
+		$year = request('year', $now->year);
+		$month = request('month', $now->month);
+		$cls = new AttendanceMonthlyReport($year, $month);
 		
-		//get the periode
-		$month = \Request::input('month', $now->format('m'));
-		$year = \Request::input('year', $now->format('Y'));
-		
-		$start = Carbon::parse($year.'-'.$month.'-01');
-		if ($start->month == $now->month && $start->year == $now->year){
-			$end = $now->copy();
-		}
-		else{
-			$end = $start->copy();
-			$end->day = $start->daysInMonth;
-		}
-		
-		$count = 0;
-		$employees = Employee::getActiveEmployee(true, $end->year, $end->month);
-		$allPercent = $absents = $consents = $noConsentDocs = $noLateOrEarlyDocs = $lateArrivalOrEarlyDeparture = 0 ;
-		foreach($employees as $employee){
-			$registeredAt = $employee->registeredAt;
-			$loop = $registeredAt->between($start, $end)? $registeredAt->copy() : $start->copy();
-			$loopStop = $employee->resignAt? $employee->resignAt : $end;
-			
-			$holiday=0;
-			$offScheduleDaysCount=0;
-			$scheduleDaysCount=0;
-			$attends = 0;
-			while($loop->lessThanOrEqualTo($loopStop)){
-				if (Holiday::isHoliday($loop)) {
-					$holiday++;
-					$loop->addDay();
-					continue;
+		$result = collect($cls->generateReport());
+		$keys = $result->values()->map(function($item, $key){
+			$except = ['name','nip','registered','resigned','attends','absents','work_days'];
+			$new = [];
+			foreach($item as $k=>$v){
+				if (!in_array($k, $except)){
+					$new[] = $k;
 				}
-				
-				$hasSchedule = EmployeeSchedule::hasSchedule($employee->id, $loop->dayOfWeek);
-				if (!$hasSchedule) {
-					$offScheduleDaysCount++;
-					$loop->addDay();
-					continue;
-				}
-				
-				$scheduleDaysCount ++;
-				$record = $employee->attendanceRecord($loop);
-				if($record){
-					$attends++;
-					if ($record->isLateArrival() || $record->isEarlyDeparture()) {
-						$lateArrivalOrEarlyDeparture++;
-						if (!$employee->consentRecord($loop)){
-							$noLateOrEarlyDocs++;
-						}
-					}
-				}
-				else{
-					if ($employee->consentRecord($loop)){
-						$consents++;
-					}
-					else{
-						$absents++;
-						$noConsentDocs++;
-					}
-				}
-				
-				$loop->addDay();
 			}
-			
-			$subPercent = $scheduleDaysCount>0? floor($attends/($scheduleDaysCount)*100) : 0;
-			$allPercent += $subPercent;
-			$count++;
+			return $new;
+		})->flatten()->unique();
+		
+		$return = collect();
+		foreach($keys->all() as $key){
+			$return->put($key, $result->sum($key));
 		}
 		
-		return [
-			'percent'=>$count>0? $allPercent/$count : 0,
-			'absents'=>$absents,
-			'consents'=>$consents,
-			'noConsentDocs'=>$noConsentDocs,
-			'noLateOrEarlyDocs'=>$noLateOrEarlyDocs,
-			'lateArrivalOrEarlyDeparture'=>$lateArrivalOrEarlyDeparture,
-			'start'=>[
-				'year'=>$start->year,
-				'month'=>$start->month,
-				'day'=>$start->day,
-			],
-			'end'=>[
-				'year'=>$end->year,
-				'month'=>$end->month,
-				'day'=>$end->day,
-			],
-			'title'=>'Finger Karyawan Fulltime<br>per '. $start->format('d-m-Y') .' s/d '. $end->format('d-m-Y'),
-		];
+		$work_days = $result->max('work_days');
+		$return->put('attendance', $work_days>0? $result->avg('attends') / $work_days  * 100 : 0);
+		
+		return array_merge($return->all(), ['keys'=> $keys]);
 	}
 	
-	/**
-	 *	Employee without schedule
-	 *
-	 */
-	public function employeeWithNoSchedules(){
-		//@TODO: buat ini
-		Employee::where(function($q){
-			$q->whereRaw('id NOT IN (SELECT employee_id FROM employee_schedules GROUP BY employee_id)');
-		});
+	function attendanceDocumentationSummary(){
+		$now = now();
+		$cls = new AttendanceSummaryReport(WorkYear::getCurrent());
+		$result = collect($cls->generateReport());
+		$keys = $result->values()->map(function($item, $key){
+			$except = ['name','nip','registered','resigned', 'attends','absents','work_days'];
+			$new = [];
+			foreach($item as $k=>$v){
+				if (!in_array($k, $except)){
+					$new[] = $k;
+				}
+			}
+			return $new;
+		})->flatten()->unique();
 		
-		return false;
+		$return = collect();
+		foreach($keys->all() as $key){
+			$return->put($key, $result->sum($key));
+		}
+		
+		$work_days = $result->max('work_days');
+		$return->put('attendance', $work_days>0? $result->avg('attends') / $work_days  * 100 : 0);
+		
+		return array_merge($return->all(), ['keys'=> $keys]);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\My\Bauk\Attendance;
+namespace App\Http\Controllers\My\Bauk;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,15 +12,14 @@ class ReportController extends Controller
 {
 	
 	public function index(){
-		return view('my.bauk.attendance.report.landing');
+		return view('my.bauk.attendance.report');
 	}
 	
     public function monthlyReport(Request $req){
 		$month = $req->input('month');
 		$year = $req->input('year');
 		
-		$cls = new AttendanceMonthlyReport();
-		$cls->setPeriode($year, $month);
+		$cls = new AttendanceMonthlyReport($year, $month);
 		
 		return $cls->download('Laporan Kehadiran '.$month.''.$year.'.xls');
 	}

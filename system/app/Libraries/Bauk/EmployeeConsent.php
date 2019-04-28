@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
+use App\Libraries\Helpers\BaukHelper;
+
 class EmployeeConsent extends Model{
 	protected $table="employee_consents";
 	protected $connection ="bauk";
@@ -39,6 +41,6 @@ class EmployeeConsent extends Model{
 	}
 	
 	public function allowUpdate(){
-		return isTodayAllowedToUpdateAttendanceAndConsentRecordOn($this->getDate());
+		return BaukHelper::isAllowUpdateAttendanceAndConsentOnGivenDate($this->getDate());
 	}
 }

@@ -23,7 +23,7 @@
 var nextHolidays = function(){
 	$.ajax({
 		method: "POST",
-		url: '{{route('my.bauk.landing.info.nextHolidays')}}',
+		url: '{{route('my.bauk.nextHolidays')}}',
 		data: { '_token': '{{csrf_token()}}' },
 		dataType: 'html',
 		beforeSend: function() {},

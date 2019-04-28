@@ -60,7 +60,7 @@
 			{{-- terlambat & pulang awal --}}
 			<td>{{ isset($sum['attends_lateArrival'])? $sum['attends_lateArrival'] : "" }}</td>
 			<td>{{ isset($sum['attends_earlyDeparture'])? $sum['attends_earlyDeparture'] : "" }}</td>
-			<td>{{ isset($sum['attends_lateOrEarlyConsent'])? $sum['attends_lateOrEarlyConsent'] : "" }}</td>
+			<td>{{ isset($sum['attends_noLateOrEarlyConsent'])? $sum['attends_noLateOrEarlyConsent'] : "" }}</td>
 			
 			{{-- tidak finger datang & pulang --}}
 			<td>{{ isset($sum['attends_noArrival'])? $sum['attends_noArrival'] : "" }}</td>

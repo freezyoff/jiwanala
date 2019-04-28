@@ -5,6 +5,7 @@ namespace App\Libraries\Bauk;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Libraries\Bauk\EmployeeSchedule;
+use App\Libraries\Helpers\BaukHelper;
 use Carbon\Carbon;
 
 class EmployeeAttendance extends Model
@@ -21,6 +22,46 @@ class EmployeeAttendance extends Model
 		'time4',
 		'locked',
 	];
+	
+	/**
+	 *	Mutator Time1 attribute
+	 *	we found records with value 00:00:00.
+	 *	we need to force it to null
+	 */
+	public function setTime1Attribute($value){
+		if (!$value || $value=='00:00:00') $value = null;
+		$this->attribute['time1'] = $value;
+	}
+	
+	/**
+	 *	Mutator Time2 attribute
+	 *	we found records with value 00:00:00.
+	 *	we need to force it to null
+	 */
+	public function setTime2Attribute($value){
+		if (!$value || $value=='00:00:00') $value = null;
+		$this->attribute['time2'] = $value;
+	}
+	
+	/**
+	 *	Mutator Time3 attribute
+	 *	we found records with value 00:00:00.
+	 *	we need to force it to null
+	 */
+	public function setTime3Attribute($value){
+		if (!$value || $value=='00:00:00') $value = null;
+		$this->attribute['time3'] = $value;
+	}
+	
+	/**
+	 *	Mutator Time4 attribute
+	 *	we found records with value 00:00:00.
+	 *	we need to force it to null
+	 */
+	public function setTime4Attribute($value){
+		if (!$value || $value=='00:00:00') $value = null;
+		$this->attribute['time4'] = $value;
+	}
 	
 	public function employee(){
 		return $this->belongsTo('\App\Libraries\Bauk\Employee', 'employee_id', 'id');
@@ -153,6 +194,6 @@ class EmployeeAttendance extends Model
 	}
 	
 	public function allowUpdate(){
-		return isTodayAllowedToUpdateAttendanceAndConsentRecordOn($this->getDate());
+		return BaukHelper::isAllowUpdateAttendanceAndConsentOnGivenDate($this->getDate());
 	}
 }

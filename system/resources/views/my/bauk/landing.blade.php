@@ -2,7 +2,7 @@
 
 @section('dashboard.main')
 <div class="w3-row">
-	@include('my.bauk.landing_attendanceProgress')
+	@include('my.bauk.landing_attendanceDocumentationProgress')
 	<div id="statistics" 
 		class="w3-col s12 m5 l5 w3-light-grey padding-left-8 padding-left-none-small 
 				margin-top-8 margin-top-none-large margin-top-none-medium">
@@ -52,11 +52,10 @@
 @section('html.body.scripts')
 @parent
 <script>
-
 var employeesCount = function(){
 	$.ajax({
 		method: "POST",
-		url: '{{route('my.bauk.landing.info.employeesCount')}}',
+		url: '{{route('my.bauk.employeesCount')}}',
 		data: { 
 			'_token': '{{csrf_token()}}',
 			'year': $('#attendanceProgress-year').val(),

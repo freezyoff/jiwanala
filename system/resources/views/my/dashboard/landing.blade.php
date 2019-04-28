@@ -64,10 +64,10 @@
 				class="w3-bar w3-black w3-hide-large" 
 				style="padding:8px 8px 0 8px">
 				<button class="w3-bar-item w3-button" toggle="#attendanceProgress-summary">
-					<h5>Rekapitulasi</h5>
+					<h6>Rekapitulasi</h6>
 				</button>
 				<button class="w3-bar-item w3-button" toggle="#attendanceProgress-details">
-					<h5>Detil Bulan ini</h5>
+					<h6>Detil Bulan ini</h6>
 				</button>
 			</div> 
 			<div id="attendanceProgress-summary" class="w3-col s12 m12 l12 padding-left-8 padding-none-small padding-none-medium padding-none-large">

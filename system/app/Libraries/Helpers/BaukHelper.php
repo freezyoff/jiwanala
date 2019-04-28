@@ -1,13 +1,16 @@
-<?php
-if (! function_exists('isTodayAllowedToUpdateAttendanceAndConsentRecordOn')) {
+<?php 
+namespace App\Libraries\Helpers;
+
+use Carbon\Carbon;
+use \App\Libraries\Bauk\Employee;
+
+class BaukHelper{
 	
 	/**
-	 *	Check if today we can update attendance or consent record with given date.
-	 *	All update on previous month closed on day 4 this month.
-	 *	@param $date - given date of attendance or consent record. format (d/m/Y)
-	 *	@return True if allowed or false
+	 *	Test if allow update Bauk Attendance or Consent Record with given date.
+	 *	@param (Carbon) $date - the date to test
 	 */
-    function isTodayAllowedToUpdateAttendanceAndConsentRecordOn(\Carbon\Carbon $date) {
+	public static function isAllowUpdateAttendanceAndConsentOnGivenDate(Carbon $date) {
 		$now = now();
 		
 		//$date - bulan dan tahun sama (import untuk bulan ini).
@@ -24,11 +27,8 @@ if (! function_exists('isTodayAllowedToUpdateAttendanceAndConsentRecordOn')) {
 		
 		return false;
     }
-}
-
-if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 	
-	function createEmployeeAttendanceDetailsTable($employee, $year, $month){
+	public static function createAttendanceMonthlyDetailsTable($employee, $year, $month){
 		//no employee
 		if (!$employee) return [];
 		
@@ -36,7 +36,7 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 		$calendar = collect();
 		
 		foreach($employee->getAttendanceDetails($year, $month) as $date=>$data){
-			$cdate = \Carbon\Carbon::parse($date);
+			$cdate = Carbon::parse($date);
 			
 			$data['dayOfWeek'] = 	trans('calendar.days.long.'.($cdate->dayOfWeek));
 			$data['day'] = 			$cdate->format('d');
@@ -60,7 +60,7 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 			
 			//attend & consent
 			if (!$data['isHoliday']){
-				$data['allow_update'] = isTodayAllowedToUpdateAttendanceAndConsentRecordOn($cdate);
+				$data['allow_update'] = self::isAllowUpdateAttendanceAndConsentOnGivenDate($cdate);
 				$data['attend_update_url'] = route('my.bauk.attendance.fingers',[
 						'nip'=>		$employee->nip, 
 						'year'=>	$cdate->format('Y'), 
@@ -77,7 +77,7 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 			}
 			
 			//reminder for user
-			$data['reminder'] = createEmployeeAttendanceDetailsTable_reminder($employee, $cdate, $data);
+			$data['reminder'] = self::createAttendanceMonthlyDetailsTable_remider($employee, $cdate, $data);
 			$data['hasReminder'] = count($data['reminder'])>0;
 			
 			$calendar->put($date, $data);
@@ -86,7 +86,7 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 		return $calendar->all();
 	}
 	
-	function createEmployeeAttendanceDetailsTable_reminder(\App\Libraries\Bauk\Employee $employee, \Carbon\Carbon $cdate, $data){
+	protected static function createAttendanceMonthlyDetailsTable_remider($employee, Carbon $cdate, $data){
 		$isToday = $cdate->diffInDays($cdate) == 0;
 		
 		$result = [];
@@ -131,7 +131,7 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 			}
 		}
 		elseif (!$data['isHoliday'] && !$data['isWeekEnd'] && !$data['hasConsent']){
-			$overDue = !isTodayAllowedToUpdateAttendanceAndConsentRecordOn($cdate);
+			$overDue = !self::isAllowUpdateAttendanceAndConsentOnGivenDate($cdate);
 			if ($overDue){
 				$result['noOverDueConsent'] = trans('my/bauk/attendance/hints.warnings.noOverDueConsent');
 			}
@@ -142,10 +142,8 @@ if (! function_exists('createEmployeeAttendanceDetailsTable')) {
 		
 		return $result;
 	}
-}
-
-if (! function_exists('createEmployeeAttendanceSummaryTable')) {
-	function createEmployeeAttendanceSummaryTable($employee, $workYear){
+	
+	public static function createAttendanceSummaryTable($employee, $workYear){
 		$now = now();
 		$start = $workYear['start'];
 		$end = $workYear['end'];
