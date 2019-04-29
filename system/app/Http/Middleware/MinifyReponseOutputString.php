@@ -9,7 +9,7 @@ class MinifyReponseOutputString
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-		
+
         if ($this->isResponseObject($response) && $this->isHtmlResponse($response) && !$this->isResponseStackTrace($response)) {
 			$comments = 
 				'/'.
@@ -20,8 +20,8 @@ class MinifyReponseOutputString
 				
 			$replace = [
 				$comments					=>'',
-				'/(?<=\>)\s+|\s+(?=\<)|/'	=>'',	//whitespace before & after tag
-				'/\s{2,}/'					=>' ',	//white space with ended
+				'/(?<=\>)\s{2,}|\s{2,}(?=\<)|/'	=>'',	//whitespace before & after tag
+				'/\s{2,}/'					=>' ',		//white space with ended
 			];
             $response->setContent(preg_replace(array_keys($replace), array_values($replace), $response->getContent()));
         }

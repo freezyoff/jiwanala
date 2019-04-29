@@ -1,0 +1,79 @@
+@large:  ~"(min-width: 992px)";
+@medium: ~"(min-width: 600px) and (max-width: 992px)";
+@small:  ~"(max-width: 600px)";
+
+@media @small{
+	html, body {font-size:13px !important;}
+	h1{font-size:34px;}
+	h2{font-size:28px;}
+	h3{font-size:22px;}
+	h4{font-size:18px;}
+	h5{font-size:16px;}
+	h6{font-size:14px;}
+	.padding{
+		&-none-small{ .padding0(); }
+		&-left-none-small{ padding-left:0 !important; }
+		&-right-none-small{ padding-right:0 !important; }
+		&-top-none-small{ padding-top:0 !important; }
+		&-top-bottom-small{ padding-bottom:0 !important; }
+	}
+	.margin{
+		&-none-small{ margin:0; }
+		&-left-none-small{ margin-left:0 !important; }
+		&-right-none-small{ margin-right:0 !important; }
+		&-top-none-small{ margin-top:0 !important; }
+		&-top-bottom-small{ margin-bottom:0 !important; }
+	}
+}
+
+@media @medium{
+	html,body {font-size:14px !important;}
+	h1{font-size:35px;}
+	h2{font-size:29px;}
+	h3{font-size:23px;}
+	h4{font-size:19px;}
+	h6{font-size:17px;}
+	h6{font-size:15px;}
+	.padding{
+		&-none-medium{ .padding0(); }
+		&-left-none-medium{ padding-left:0 !important; }
+		&-right-none-medium{ padding-right:0 !important; }
+		&-top-none-medium{ padding-top:0 !important; }
+		&-top-bottom-medium{ padding-bottom:0 !important; }
+	}
+	.margin{
+		&-none-medium{ margin:0; }
+		&-left-none-medium{ margin-left:0 !important; }
+		&-right-none-medium{ margin-right:0 !important; }
+		&-top-none-medium{ margin-top:0 !important; }
+		&-top-bottom-medium{ margin-bottom:0 !important; }
+	}
+}
+
+@media @large{
+	html,body {font-size:15px !important;}
+	h1{font-size:36px;}
+	h2{font-size:30px;}
+	h3{font-size:24px;}
+	h4{font-size:20px;}
+	h6{font-size:18px;}
+	h6{font-size:16px;}
+	.padding{
+		&-none-large{ .padding0(); }
+		&-left-none-large{ padding-left:0 !important; }
+		&-right-none-large{ padding-right:0 !important; }
+		&-top-none-large{ padding-top:0 !important; }
+		&-top-bottom-large{ padding-bottom:0 !important; }
+		&-left{
+			&-8-large{padding-left:8px;}
+			&-16-large{padding-left:16px;}
+		}
+	}
+	.margin{
+		&-none-large{ margin:0; }
+		&-left-none-large{ margin-left:0 !important; }
+		&-right-none-large{ margin-right:0 !important; }
+		&-top-none-large{ margin-top:0 !important; }
+		&-top-bottom-large{ margin-bottom:0 !important; }
+	}
+}

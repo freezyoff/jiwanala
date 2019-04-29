@@ -1,26 +1,20 @@
 <?php 
 namespace App\Libraries\Foundation\Employee;
+
 use \Carbon\Carbon;
+use App\Libraries\Bauk\EmployeeSchedule;
 
 trait HasWorkSchedules{
 	public function schedules(){
 		return $this->hasMany('App\Libraries\Bauk\EmployeeSchedule', 'employee_id', 'id');
 	}
 	
-	public function hasSchedule(String $dayOfWeek){
-		return $this->getSchedule($dayOfWeek)? true : false;
+	public function hasSchedule(Carbon $date){
+		return EmployeeSchedule::hasSchedule($this->id, $date);
 	}
 	
-	public function getSchedule(String $dayOfWeek){
-		return $this->schedules()->where('day','=',$dayOfWeek)->first();
-	}
-	
-	public function getScheduleDaysOfWeek(){
-		return EmployeeSchedule::getScheduleDaysOfWeek($this->id);
-	}
-	
-	public function getOffScheduleDaysOfWeek(){
-		return EmployeeSchedule::getOffScheduleDaysOfWeek($this->id);
+	public function getSchedule(Carbon $date){
+		return EmployeeSchedule::getSchedule($this->id, $date);
 	}
 	
 	/**
@@ -35,17 +29,11 @@ trait HasWorkSchedules{
 		$end = Carbon::parse($year.'-'.$month.'-'.$start->daysInMonth);
 		$current = Carbon::parse($start->format('Y-m-d'));
 		
-		$scheduleDays = [];
-		for($i=1;$i<=7;$i++) {
-			if ($this->hasSchedule($i)){
-				$scheduleDays[$i]= $this->getSchedule($i);
-			}
-		}
-		
 		$result = [];
 		while($current->between($start, $end)){
-			if (array_key_exists($current->dayOfWeek, $scheduleDays)){
-				$result[$current->format('Y-m-d')] = $scheduleDays[$current->dayOfWeek];
+			$sch = $this->getSchedule($current);
+			if ($sch){
+				$result[$current->format('Y-m-d')] = $sch;
 			}
 			$current->addDay();
 		}

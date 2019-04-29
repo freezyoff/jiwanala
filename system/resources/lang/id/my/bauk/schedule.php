@@ -4,7 +4,8 @@ return [
 		'landing'=>'Jadwal Kerja',
 	],
 	'subtitles'=> [
-		'landing'=>'Daftar Jadwal Kerja'
+		'landing'=>'Jadwal Kerja Umum',
+		'special'=>'Jadwal Kerja Khusus'
 	],
 	'modal'=>[
 		'searchEmployee'=>[

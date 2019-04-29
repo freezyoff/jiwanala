@@ -2,8 +2,7 @@
 
 @section('html.head.styles')
 	@parent
-	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
-	<link rel="stylesheet" href="{{url('css/app.css?'.csrf_token())}}">
+	<link rel="stylesheet" href="{{url('css/app.css?v='.csrf_token())}}">
 	<style>
 		@media only screen and (max-width: 600px) {
 			.w3-display-middle{position:relative;transform: none;left:0; min-width:300px}

@@ -1,0 +1,132 @@
+@import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
+@import url("https://www.w3schools.com/w3css/4/w3.css");
+@import url("https://www.w3schools.com/lib/w3-theme-black.css");
+@import "./../font/stylesheet.css";
+@import "./const.less";
+
+body,html,h1,h2,h3,h4,h5,h6,div,span,pre,p,ul{ 
+	.padding0();
+	.margin0();
+	font-family:@font-roboto;
+}
+
+input,textarea,select,input:focus,select:focus,textarea:focus,button:focus {
+	outline: none; 
+	background-color:transparent; 
+	min-width:25px;
+}
+
+.full-height {height: 100%;}
+
+.padding{
+	&-none{ .padding0(); }
+	&-top{
+		&-4{ padding-top:4px; }
+		&-8{ padding-top:8px; }
+		&-16{padding-top:16px;}
+		&-24{padding-top:24px;}
+		&-32{padding-top:32px;}
+		&-none{padding-top:0; }
+	}
+	&-bottom{
+		&-4{ padding-bottom:4px; }
+		&-8{ padding-bottom:8px; }
+		&-16{padding-bottom:16px;}
+		&-24{padding-bottom:24px;}
+		&-32{padding-bottom:32px;}
+		&-none{padding-bottom:0px;}
+	}
+	&-left{
+		&-4{ padding-left:4px; }
+		&-8{ padding-left:8px; }
+		&-16{padding-left:16px;}
+		&-24{padding-left:24px;}
+		&-32{padding-left:32px;}
+		&-none{padding-left:0px;}
+	}
+	&-right{
+		&-4{ padding-right:4px; }
+		&-8{ padding-right:8px; }
+		&-16{padding-right:16px;}
+		&-24{padding-right:24px;}
+		&-32{padding-right:24px;}
+		&-none{padding-right:0px;}
+	}
+	&-top-bottom{
+		&-4{ padding-top:4px; padding-bottom:4px;  }
+		&-8{ padding-top:8px; padding-bottom:8px;  }
+		&-16{padding-top:16px; padding-bottom:16px;}
+		&-24{padding-top:24px; padding-bottom:24px;}
+		&-32{padding-top:32px; padding-bottom:32px;}
+		&-none{padding-top:0; padding-bottom:0;}
+	}
+	&-left-right{
+		&-4{ padding-left:4px; padding-right:4px;  }
+		&-8{ padding-left:8px; padding-right:8px;  }
+		&-16{padding-left:16px; padding-right:16px;}
+		&-24{padding-left:24px; padding-right:24px;}
+		&-32{padding-left:32px; padding-right:32px;}
+		&-none{padding-left:0; padding-right:0;}
+	}
+}
+
+.margin{
+	&-none{ .margin0(); }
+	&-top{
+		&-4{ margin-top:4px; }
+		&-8{ margin-top:8px; }
+		&-16{margin-top:16px;}
+		&-24{margin-top:24px;}
+		&-32{margin-top:32px;}
+		&-none{margin-top:0; }
+	}
+	&-bottom{
+		&-4{ margin-bottom:4px; }
+		&-8{ margin-bottom:8px; }
+		&-16{margin-bottom:16px;}
+		&-24{margin-bottom:24px;}
+		&-32{margin-bottom:32px;}
+		&-none{margin-bottom:0px;}
+	}
+	&-left{
+		&-4{ margin-left:4px; }
+		&-8{ margin-left:8px; }
+		&-16{margin-left:16px;}
+		&-24{margin-left:24px;}
+		&-32{margin-left:32px;}
+		&-none{margin-left:0px;}
+	}
+	&-right{
+		&-4{ margin-right:4px; }
+		&-8{ margin-right:8px; }
+		&-16{margin-right:16px;}
+		&-24{margin-right:24px;}
+		&-32{margin-right:24px;}
+		&-none{margin-right:0px;}
+	}
+	&-top-bottom{
+		&-4{ margin-top:4px; margin-bottom:4px;  }
+		&-8{ margin-top:8px; margin-bottom:8px;  }
+		&-16{margin-top:16px; margin-bottom:16px;}
+		&-24{margin-top:24px; margin-bottom:24px;}
+		&-32{margin-top:32px; margin-bottom:32px;}
+		&-none{margin-top:0; margin-bottom:0;}
+	}
+	&-left-right{
+		&-4{ margin-left:4px; margin-right:4px;  }
+		&-8{ margin-left:8px; margin-right:8px;  }
+		&-16{margin-left:16px; margin-right:16px;}
+		&-24{margin-left:24px; margin-right:24px;}
+		&-32{margin-left:32px; margin-right:32px;}
+		&-none{margin-left:0; margin-right:0;}
+	}
+}
+
+@import "./loader.less";
+@import "./media.less";
+@import "./w3-hack.css";
+@import "./laravel-hack.css";
+@import "./timepicker.css";
+@import "./datepicker.css";
+@import "./datepicker-hack.css";
+@import "./progressbar-radial.css";

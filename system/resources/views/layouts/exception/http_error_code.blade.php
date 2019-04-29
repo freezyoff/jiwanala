@@ -2,7 +2,6 @@
 
 @section('html.head.styles')
 	@parent
-	<link rel="stylesheet" href="{{url('css/app.css?'.csrf_token())}}">
 	<style>
 		.brand>img {position:relative;}
 		.brand>.brand-text {position:relative;}

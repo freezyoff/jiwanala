@@ -172,7 +172,7 @@ class EmployeeAttendance extends Model
 	 *	@return schedule base on attribute date
 	 */
 	public function getSchedule(): EmployeeSchedule{
-		return EmployeeSchedule::getSchedule($this->employee_id, $this->getDate()->dayOfWeek);
+		return EmployeeSchedule::getSchedule($this->employee_id, $this->getDate());
 	}
 	
 	public function getScheduleArrival():Carbon{

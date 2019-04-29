@@ -7,8 +7,6 @@
 
 @section('html.head.styles')
 	@parent
-	<link rel="stylesheet" href="{{url('font/stylesheet.css')}}">
-	<link rel="stylesheet" href="{{url('css/app.min.css?'.csrf_token())}}">
 	<style>
 		.brand{min-width:165px;padding-top:8px; padding-bottom:8px;text-decoration:none;}
 		.brand>.brand-text>.subtitle {line-height:1.3; letter-spacing:.2px;}

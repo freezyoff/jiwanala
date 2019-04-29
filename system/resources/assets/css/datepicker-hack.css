@@ -1,0 +1,23 @@
+/* datepicker hack */
+.datepicker-modal .datepicker-inline {font-size:1.1em; min-width:20em; width:inherit;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul {display:flex; width:inherit; justify-content:space-evenly; align-items:center;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li {width:inherit;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="days"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="months"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="years"] {flex-wrap:wrap !important;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month next"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year next"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years prev"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years next"] {width:inherit; min-width:14% !important;}
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="month current"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="year current"],
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul>li[data-view="years current"] {width:inherit; flex-grow:1;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="week"]>li,
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="days"]>li {min-width:14% !important;}
+
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="months"]>li,
+.datepicker-modal .datepicker-inline>.datepicker-panel>ul[data-view="years"]>li {min-width:25% !important;}
