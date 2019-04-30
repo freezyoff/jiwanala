@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Libraries\Service\Auth\User;
 use App\Libraries\Bauk\EmployeeAttendance;
 use App\Libraries\Bauk\Employee;
-use App\Libraries\Helper\BaukHelper;
+use App\Libraries\Helpers\BaukHelper;
 
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -81,7 +81,7 @@ class AttendanceByFingersImport implements
 			$tanggal = Carbon::createFromFormat($dateFormat, $value);
 			$nip = $rows[$ext[0]]['nip'];
 			$employee = Employee::findByNIP($nip);
-			if (!$employee->hasSchedule($tanggal->dayOfWeek)){
+			if ($employee && !$employee->hasSchedule($tanggal->dayOfWeek)){
 				$fail( str_replace(
 					[':day',':date'],
 					[trans('calendar.days.long.'.$tanggal->dayOfWeek), $value],
