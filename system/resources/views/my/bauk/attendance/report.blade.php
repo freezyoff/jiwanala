@@ -23,7 +23,7 @@
 		</div>
 	</div>
 </div>
-<div class="w3-col s12 m6 l6 padding-left-8 padding-none-small margin-top-16 margin-none-medium">
+<div class="w3-col s12 m6 l6 padding-left-8 padding-none-small margin-top-16 margin-none-medium margin-none-large">
 	<div class="w3-card">
 		<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
 			<h4>{{trans('my/bauk/attendance/pages.subtitles.report_summary')}}</h4>

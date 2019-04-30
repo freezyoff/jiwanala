@@ -5,7 +5,7 @@ return [
 	],
 	'subtitles'=> [
 		'landing'=>'Jadwal Kerja Umum',
-		'special'=>'Jadwal Kerja Khusus'
+		'exception'=>'Jadwal Kerja Khusus'
 	],
 	'modal'=>[
 		'searchEmployee'=>[

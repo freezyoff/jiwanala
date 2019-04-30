@@ -15,6 +15,14 @@ class EmployeeSchedule extends Model
 		return $this->belongsTo('App\Libraries\Bauk\Employee', 'employee_id', 'id');
 	}
 	
+	public function isDefault(){
+		return is_null($this->date) || empty($this->date);
+	}
+	
+	public function isException(){
+		return !$this->isDefault();
+	}
+	
 	public static function hasSchedule($employeeID, Carbon $date){
 		return self::getSchedule($employeeID, $date)? true : false;
 	}
@@ -28,8 +36,12 @@ class EmployeeSchedule extends Model
 		
 		//record not found
 		//we search record with column day & date null
+		return self::getDefaultSchedule($employeeID, $date->dayOfWeek);
+	}
+	
+	public static function getDefaultSchedule($employeeID, $dayOfWeek){
 		return self::where('employee_id','=',$employeeID)
-					->where('day', "$date->dayOfWeek")
+					->where('day', "$dayOfWeek")
 					->whereNull('date')
 					->first();
 	}

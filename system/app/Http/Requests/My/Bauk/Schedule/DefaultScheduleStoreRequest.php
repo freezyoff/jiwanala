@@ -4,7 +4,7 @@ namespace App\Http\Requests\My\Bauk\Schedule;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class DefaultScheduleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->hasPermission('bauk.holiday.post');
+        return \Auth::user()->hasPermission('bauk.schedule.post');
     }
 
     /**

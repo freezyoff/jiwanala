@@ -18,6 +18,7 @@
 			<input name="employee_name" 
 				value="{{old('employee_name', isset($employee)? $employee->getFullName(' ') : '')}}"
 				type="hidden" />
+			<input name="ctab" value="default" type="hidden" />
 		</div>
 	</div>
 	<div class="w3-col s12 m8 l8">
@@ -41,7 +42,7 @@
 			style="border:none;" >
 			<label style="cursor:pointer;">
 				<i class="fa-square fa-fw 
-					@if (old('schedule.'.$i.'.check') || (isset($schedules) && isset($schedules[$i])))
+					@if (old('schedule.'.$i.'.check') || (isset($schedules) && isset($schedules['default'][$i])))
 						fas w3-text-blue
 					@else
 						far
@@ -53,7 +54,7 @@
 				class="w3-hide" type="checkbox" 
 				@if (old('schedule.'.$i.'.check'))
 				checked="checked"
-				@elseif (isset($schedules) && isset($schedules[$i]))
+				@elseif (isset($schedules) && isset($schedules['default'][$i]))
 				checked="checked"
 				@endif
 			/>
@@ -67,8 +68,8 @@
 				name="schedule[{{$i}}][arrival][origin]" 
 				@if (old('schedule.'.$i.'.arrival.origin'))
 					value="{{old('schedule.'.$i.'.arrival.origin')}}"
-				@elseif (isset($schedules) && isset($schedules[$i]))
-					value="{{$schedules[$i]->arrival}}"
+				@elseif (isset($schedules) && isset($schedules['default'][$i]))
+					value="{{$schedules['default'][$i]->arrival}}"
 				@endif
 				type="hidden" />
 			<input id="schedule-{{$i}}-arrival-large" 
@@ -109,8 +110,8 @@
 				name="schedule[{{$i}}][departure][origin]" 
 				@if (old('schedule.'.$i.'.departure.origin'))
 					value="{{old('schedule.'.$i.'.departure.origin')}}"
-				@elseif (isset($schedules) && isset($schedules[$i]))
-					value="{{$schedules[$i]->departure}}"
+				@elseif (isset($schedules) && isset($schedules['default'][$i]))
+					value="{{$schedules['default'][$i]->departure}}"
 				@endif
 				type="hidden" />
 			<input id="schedule-{{$i}}-departure-large" 

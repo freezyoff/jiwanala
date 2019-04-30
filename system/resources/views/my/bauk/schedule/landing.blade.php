@@ -4,17 +4,37 @@
 <div class="w3-card">
 	<header class="w3-container w3-theme padding-top-8 padding-bottom-8">
 		 <div id="tabs" class="w3-bar w3-black">
-			<button class="w3-bar-item w3-button" onclick="tabs.hideAll().show('default')">
+			<button id="tabs-default" class="w3-bar-item w3-button" onclick="tabs.hideAll().show('default')">
 				{{trans('my/bauk/schedule.subtitles.landing')}}
 			</button>
-			<button class="w3-bar-item w3-button" onclick="tabs.hideAll().show('special')">
-				{{trans('my/bauk/schedule.subtitles.special')}}
+			<button id="tabs-exception" class="w3-bar-item w3-button" onclick="tabs.hideAll().show('exception')">
+				{{trans('my/bauk/schedule.subtitles.exception')}}
 			</button>
 		</div> 
 	</header>
+	<div class="w3-row w3-container margin-top-8">
+		<form id="schedule-search" name="schedule-search" action="{{route('my.bauk.schedule.landing')}}" method="post">
+			@csrf
+			<div class="w3-row">
+				<div class="w3-col s12 m6 l6">
+					<div class="input-group">
+						<label><i class="fas fa-search fa-fw"></i></label>
+						<input id="search-keywords" 
+							name="keywords"
+							class="w3-input ajaxSearch" 
+							value=""
+							placeholder="{{trans('my/bauk/schedule.hints.searchKeywords')}}" 
+							type="text" />
+						<input name="active" value="1" type="hidden" />
+						<input id="search-nip" name="employee_nip" value="" type="hidden" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
 	<div id="tab-items" class="padding-top-8 padding-bottom-16">
-		<div id="default">@include('my.bauk.schedule.landing_default')</div>
-		<div id="special">SPECIAL</div>
+		<div id="tab-items-default">@include('my.bauk.schedule.landing_default')</div>
+		<div id="tab-items-exception">@include('my.bauk.schedule.landing_exception')</div>
 	</div>
 </div>
 @endSection
@@ -24,23 +44,22 @@
 <script>
 var tabs = {
 	show: function(key){
-		$('#'+key).show();
+		$('#tab-items-'+key).show();
 		return this;
 	},
 	hide: function(key){
-		$('#'+key).hide();
+		$('#tab-items-'+key).hide();
 		return this;
 	},
 	hideAll: function(){
-		$('#tab-items').children().each(function(){
-			$(this).hide();
+		$('#tab-items').children().each(function(index, item){
+			$(item).hide();
 		});
 		return this;
 	},
 	init: function(){
-		var toShow = '{{request('ctabs','default')}}';
-		if (toShow) $('#'+toShow).trigger('click');
-		else 		$('#tabs').children().first().trigger('click');
+		var ctab = '{{request('ctab','default')}}';
+		var button = $('#tabs-'+ctab).trigger('click');
 	}
 };
 

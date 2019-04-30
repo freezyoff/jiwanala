@@ -3,7 +3,7 @@
 	action="{{route('my.bauk.attendance.report.summary')}}"
 	method="post">
 	@csrf
-	<div class="w3-col s12 m12 l6">
+	<div class="w3-col s12 m12 l8">
 		<div class="input-group">
 			<label><i class="fas fa-calendar fa-fw"></i></label>
 			<input id="summary-year" 

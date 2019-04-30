@@ -1,30 +1,11 @@
 <div class="w3-row w3-container">
-	<div class="w3-col s12 m12 l8 schedule padding-right-8">
-		<form id="schedule-search" name="schedule-search" action="{{route('my.bauk.schedule.landing')}}" method="post">
-			@csrf
-			<div class="w3-row">
-				<div class="w3-col s12 m6 l6">
-					<div class="input-group">
-						<label><i class="fas fa-search fa-fw"></i></label>
-						<input id="search-keywords" 
-							name="keywords"
-							class="w3-input ajaxSearch" 
-							value=""
-							placeholder="{{trans('my/bauk/schedule.hints.searchKeywords')}}" 
-							type="text" />
-						<input name="active" value="1" type="hidden" />
-						<input id="search-nip" name="employee_nip" value="" type="hidden" />
-					</div>
-				</div>
-			</div>
-		</form>
-		<div class="margin-top-16 padding-bottom-16"></div>
+	<div class="w3-col s12 m12 l8 schedule padding-right-16">
 		<form id="schedule-submit" 
 			name="schedule-submit" 
-			action="{{route('my.bauk.schedule.store')}}" 
+			action="{{route('my.bauk.schedule.store.default')}}" 
 			method="post">
 			@csrf
-			@include('my.bauk.schedule.landing_form')
+			@include('my.bauk.schedule.landing_default_form')
 			<div class="w3-col s12 m12 l12" align="right">
 					<button id="btnSubmit" 
 						class="w3-button w3-mobile w3-blue w3-hover-blue margin-top-16"
