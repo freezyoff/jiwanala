@@ -169,7 +169,7 @@ class BaukHelper{
 						$current->addMonth()->format('Y'), 
 						$current->format('m')
 					);
-			$dummy['attendance'] = round($dummy['attends']/$dummy['work_days']*100,2).' %';
+			$dummy['attendance'] = $dummy['work_days']>0? round($dummy['attends']/$dummy['work_days']*100,2).' %' : 0;
 			$summaryRecords['thisMonth'] = collect($dummy);
 			
 			$dummy = $employee->getAttendanceSummaryByMonthRange(
