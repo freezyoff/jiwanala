@@ -9,16 +9,7 @@
 					<span style="color:grey">{{trans('my/bauk/schedule.hints.nip')}}</span>
 				@endif
 			</label>
-			<input name="employee_id" 
-				value="{{old('employee_id', isset($employee)? $employee->id : '')}}"
-				type="hidden" />
-			<input name="employee_nip" 
-				value="{{old('employee_nip', isset($employee)? $employee->nip : '')}}"
-				type="hidden" />
-			<input name="employee_name" 
-				value="{{old('employee_name', isset($employee)? $employee->getFullName(' ') : '')}}"
-				type="hidden" />
-			<input name="ctab" value="exception" type="hidden" />
+			
 		</div>
 	</div>
 	<div class="w3-col s12 m8 l8">

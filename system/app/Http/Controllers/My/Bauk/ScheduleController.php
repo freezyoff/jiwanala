@@ -12,6 +12,7 @@ use App\Http\Requests\My\Bauk\Schedule\ExceptionScheduleStoreRequest;
 class ScheduleController extends Controller
 {
     public function index(Request $request){
+		//return $request->all();
 		$data = [];
 		$nip = $request->input('employee_nip');
 		$nip = $nip? $nip : $request->input('keywords');
@@ -31,6 +32,15 @@ class ScheduleController extends Controller
 			$data['employee'] = $employee;
 			$data['schedules']= $schedules;
 		}
+		
+		if (!isset($data['schedules']['default'])){
+			$data['schedules']['default'] = [];
+		}
+		if (!isset($data['schedules']['exception'])){
+			$data['schedules']['exception'] = [];
+		}
+		
+		//ctab
 		
 		return view('my.bauk.schedule.landing',$data);
 	}

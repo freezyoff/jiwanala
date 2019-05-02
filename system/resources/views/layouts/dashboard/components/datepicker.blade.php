@@ -1,17 +1,17 @@
 <?php
 /*
- *	String $id 				- input element id
- *	String $name 			- input element name
- *	String $value 			- input element value
- *	String $placeholder 	- input element placeholder
- *	String $modalIconClass 	- input element placeholder
- *	String $modalTitle		- input element placeholder
+ *	String $id 					- input element id
+ *	String $name 				- input element name
+ *	String $value 				- input element value
+ *	String $placeholder 		- input element placeholder
+ *	String $modalIconClass 		- input element placeholder
+ *	String $modalTitle			- input element placeholder
+ *	String $startDateLimiter	- id of datepicker for limiting start date
  */
-$uuid = str_replace('-','',\Illuminate\Support\Str::uuid());
-$functionStamp = 'datepicker_'.$uuid;
+$id = isset($id)? $id : str_replace('-','',\Illuminate\Support\Str::uuid());
+$functionStamp = 'datepicker_'.$id;
 $prefixName = ['large','small'];
 $role = ['dropdown','modal'];
-$id = isset($id)? $id.$uuid : $name.$uuid;
 $link = [
 	'input#'.$id.'-'.$prefixName[0],
 	'input#'.$id.'-'.$prefixName[1],
@@ -27,6 +27,11 @@ if (!isset($class)){
 $value = !isset($value)? '' : $value;
 $modal = !isset($modal)? '' : $modal;
 $modalContainer = !isset($modalContainer)? '' : $modalContainer;
+
+if (isset($startDateLimiter)){
+	$startDateLimiter = 'datepicker_'.$startDateLimiter;
+}
+
 ?>
 
 <input id="{{isset($id)? $id : $name}}"  
@@ -50,7 +55,7 @@ $modalContainer = !isset($modalContainer)? '' : $modalContainer;
 	<div class="w3-modal-content w3-animate-top w3-card-4">
 		<header class="w3-container w3-theme">
 			<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
-				onclick="$('#startsmall-modal').hide()" 
+				onclick="$('#{{$id}}-{{$prefixName[1]}}-modal').hide()" 
 				style="font-size:20px !important">
 				×
 			</span>
@@ -96,9 +101,6 @@ var {{$functionStamp}} = {
 		
 		//datepicker role dropdown
 		{{$functionStamp}}.input.large.datepicker( {{$functionStamp}}.options.float )
-			.on('click focusin', function(event){
-				event.stopPropagation();
-			})
 			.on('pick.datepicker', function(event){
 				{{$functionStamp}}.input.source
 					.val($(this).datepicker('getDate',true))
@@ -110,7 +112,6 @@ var {{$functionStamp}} = {
 		{{$functionStamp}}.input.small
 			.datepicker( {{$functionStamp}}.options.modal )
 			.on('click focusin', function(event){
-				event.stopPropagation();
 				$('div#{{$id}}-{{$prefixName[1]}}-modal').show();
 			})
 			.on('pick.datepicker', function(){
@@ -119,6 +120,31 @@ var {{$functionStamp}} = {
 					.trigger('datepicker.sync');
 				{{$functionStamp}}.hide();
 			});
+		
+		@if (isset($startDateLimiter))
+			$.each([{{$startDateLimiter}}.input.large, {{$startDateLimiter}}.input.small], function(index, item){
+				$(this).on('pick.datepicker',function(){
+					var xx = $(this).datepicker('getDate');
+					var yy = {{$functionStamp}}.input.large.datepicker('getDate');
+					var rr = null;
+					if (xx < yy) {
+						rr = yy; 
+					}else if (xx > yy){
+						rr = xx; 
+					}else {
+						rr = xx;
+					}
+					{{$functionStamp}}.input.small.datepicker('setDate', rr).datepicker('setStartDate', xx);
+					{{$functionStamp}}.input.large.datepicker('setDate', rr).datepicker('setStartDate', xx);
+					{{$functionStamp}}.input.source.val({{$functionStamp}}.input.large.val()).trigger('datepicker.sync');
+				});
+			});	
+			
+			//trigger pick if not empty value
+			if ({{$startDateLimiter}}.input.large.val() != ""){
+				{{$startDateLimiter}}.input.large.trigger('pick.datepicker');
+			}
+		@endif
 	}
 };
 
