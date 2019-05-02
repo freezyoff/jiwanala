@@ -30,7 +30,7 @@ class EmployeeAttendance extends Model
 	 */
 	public function setTime1Attribute($value){
 		if (!$value || $value=='00:00:00') $value = null;
-		$this->attribute['time1'] = $value;
+		$this->attributes['time1'] = $value;
 	}
 	
 	/**
@@ -40,7 +40,7 @@ class EmployeeAttendance extends Model
 	 */
 	public function setTime2Attribute($value){
 		if (!$value || $value=='00:00:00') $value = null;
-		$this->attribute['time2'] = $value;
+		$this->attributes['time2'] = $value;
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class EmployeeAttendance extends Model
 	 */
 	public function setTime3Attribute($value){
 		if (!$value || $value=='00:00:00') $value = null;
-		$this->attribute['time3'] = $value;
+		$this->attributes['time3'] = $value;
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class EmployeeAttendance extends Model
 	 */
 	public function setTime4Attribute($value){
 		if (!$value || $value=='00:00:00') $value = null;
-		$this->attribute['time4'] = $value;
+		$this->attributes['time4'] = $value;
 	}
 	
 	public function employee(){
