@@ -24,7 +24,12 @@ class ExceptionScheduleStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'employee_id'	=> 'required|exists:bauk.employees,id',
+            'employee_nip'	=> 'required|exists:bauk.employees,nip',
+			'start'			=> 'required',
+			'end'			=> 'required',
+			'arrival'		=> 'required',
+			'departure'		=> 'required'
         ];
     }
 }

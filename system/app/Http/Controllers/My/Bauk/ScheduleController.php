@@ -8,6 +8,7 @@ use App\Libraries\Bauk\EmployeeSchedule;
 use App\Libraries\Bauk\Employee;
 use App\Http\Requests\My\Bauk\Schedule\DefaultScheduleStoreRequest;
 use App\Http\Requests\My\Bauk\Schedule\ExceptionScheduleStoreRequest;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -20,7 +21,7 @@ class ScheduleController extends Controller
 		$employee = Employee::findByNIP($nip);
 		if ($employee){
 			$schedules = [];
-			foreach($employee->schedules()->get() as $schedule){
+			foreach($employee->schedules as $schedule){
 				if ($schedule->isDefault()){
 					$schedules['default'][$schedule->day] = $schedule;
 				}
@@ -105,6 +106,21 @@ class ScheduleController extends Controller
 	}
 	
 	function storeException(ExceptionScheduleStoreRequest $request){
+		$start = Carbon::createFromFormat('d-m-Y', $request->input('start'));
+		$end = Carbon::createFromFormat('d-m-Y', $request->input('end'));
+		$loop = Carbon::createFromFormat('d-m-Y', $request->input('start'));
+		while($loop->lessThanOrEqualTo($end)){
+			EmployeeSchedule::firstOrCreate([
+				'creator'		=> \Auth::user()->id,
+				'employee_id' 	=> \Auth::user()->asEmployee->id,
+				'day'			=> "".$loop->dayOfWeek,
+				'date'			=> $loop->format('Y-m-d'),
+				'arrival'		=> $request->input('arrival'),
+				'departure'		=> $request->input('departure')
+			])->save();
+			
+			$loop->addDay();
+		}
 		return $request->all();
 	}
 }

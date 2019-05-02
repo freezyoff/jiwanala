@@ -9,7 +9,6 @@
 					<span style="color:grey">{{trans('my/bauk/schedule.hints.nip')}}</span>
 				@endif
 			</label>
-			
 		</div>
 	</div>
 	<div class="w3-col s12 m8 l8">
