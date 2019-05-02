@@ -25,6 +25,7 @@ class Schedules{
 		//dump export table
 		$schedule->command('jn-db:export',[
 				'--daemon'=>true,
+				'--query-limit'=>10
 			])
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-db-export.txt");

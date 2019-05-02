@@ -112,7 +112,7 @@ class ScheduleController extends Controller
 		while($loop->lessThanOrEqualTo($end)){
 			EmployeeSchedule::firstOrCreate([
 				'creator'		=> \Auth::user()->id,
-				'employee_id' 	=> \Auth::user()->asEmployee->id,
+				'employee_id' 	=> $request->input('employee_id'),
 				'day'			=> "".$loop->dayOfWeek,
 				'date'			=> $loop->format('Y-m-d'),
 				'arrival'		=> $request->input('arrival'),
@@ -121,6 +121,6 @@ class ScheduleController extends Controller
 			
 			$loop->addDay();
 		}
-		return $request->all();
+		return $this->index($request);
 	}
 }

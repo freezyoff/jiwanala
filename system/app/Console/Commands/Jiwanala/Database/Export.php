@@ -114,14 +114,15 @@ class Export extends Command
 				foreach($query as $item){
 					$opts['record'] = $item;
 					$opts['isLastRecord'] = ($qi+1 == $qc);
-					$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
+					//$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
+					$this->writeToFile($schema, $table, $batch, $this->getFormatedString($this->getMode(), 'body', $opts));
 					$qi++;
 					
 					if (!$this->isDaemon()){
 						$this->getProgressbar()->advance();
 					}
 				}
-				$this->writeToFile($schema, $table, $batch, $strBuffer);
+				//$this->writeToFile($schema, $table, $batch, $strBuffer);
 				
 				$strBuffer = $this->getFormatedString($this->getMode(), 'footer', []);
 				$this->writeToFile($schema, $table, $batch, $strBuffer);
