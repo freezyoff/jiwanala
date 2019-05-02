@@ -3,11 +3,17 @@
 @section('dashboard.main')
 <div class="w3-card">
 	<header class="w3-container w3-theme padding-top-8">
-		 <div id="tabs" class="w3-bar w3-black">
-			<button id="tabs-default" class="w3-bar-item w3-button" onclick="tabs.hideAll().show('default', this)">
+		 <div id="tabs" class="w3-bar w3-black" style="white-space:nowrap">
+			<button id="tabs-default" 
+				class="w3-bar-item w3-button" 
+				onclick="tabs.hideAll().show('default', this)"
+				style="white-space:nowrap">
 				{{trans('my/bauk/schedule.subtitles.landing')}}
 			</button>
-			<button id="tabs-exception" class="w3-bar-item w3-button" onclick="tabs.hideAll().show('exception', this)">
+			<button id="tabs-exception" 
+				class="w3-bar-item w3-button" 
+				onclick="tabs.hideAll().show('exception', this)"
+				style="white-space:nowrap">
 				{{trans('my/bauk/schedule.subtitles.exception')}}
 			</button>
 		</div> 
