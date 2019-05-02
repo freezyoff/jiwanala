@@ -76,8 +76,10 @@ Route::prefix('schedule')
 	->group(function(){
 	Route::name('.landing')
 		->any('/', '\App\Http\Controllers\My\Bauk\ScheduleController@index');
-	Route::name('.store')
-		->post('/add', '\App\Http\Controllers\My\Bauk\ScheduleController@store');
+	Route::name('.store.default')
+		->post('/add/default', '\App\Http\Controllers\My\Bauk\ScheduleController@storeDefault');
+	Route::name('.store.exception')
+		->post('/add/exception', '\App\Http\Controllers\My\Bauk\ScheduleController@storeException');
 });
 
 Route::prefix('holiday')

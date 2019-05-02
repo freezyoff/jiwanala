@@ -31,15 +31,8 @@
 	</div>
 @endSection
 
-@section('html.head.scripts')
-@parent
-<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
-<script src="{{url('js/datepicker.js')}}"></script>
-@endSection
-
 @section('html.head.styles')
 @parent
-<link rel="stylesheet" href="{{url('css/datepicker.css')}}">
 <style>
 .w3-table-all tbody tr td .w3-row + .w3-row{ margin-top:8px; margin-bottom:8px; }
 .w3-table-all tbody tr td .w3-row + .w3-row.w3-tag{ margin:0; }

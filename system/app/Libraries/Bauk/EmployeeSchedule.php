@@ -9,43 +9,40 @@ class EmployeeSchedule extends Model
 {
     protected $table="employee_schedules";
 	protected $connection ="bauk";
-	protected $fillable=['creator', 'employee_id','day','arrival','departure'];
+	protected $fillable=['creator', 'employee_id','day','date','arrival','departure'];
 	
 	public function employee(){
 		return $this->belongsTo('App\Libraries\Bauk\Employee', 'employee_id', 'id');
 	}
 	
-	public static function hasSchedule($employeeId, String $dayOfWeek){
-		return self::getSchedule($employeeId, $dayOfWeek)? true : false;
-	}
-		
-	public static function getSchedule($employeeId, String $dayOfWeek){
-		return self::where('employee_id','=',$employeeId)->where('day','=',$dayOfWeek)->first();
+	public function isDefault(){
+		return is_null($this->date) || empty($this->date);
 	}
 	
-	public static function getSchedules($employeeId){
-		return self::where('employee_id','=',$employeeId)->get();
+	public function isException(){
+		return !$this->isDefault();
 	}
 	
-	public static function getScheduleDaysOfWeek($employeeId){
-		$in = [];
-		foreach(self::getSchedules($employeeId) as $schedule){
-			$in[] = $schedule->day;
+	public static function hasSchedule($employeeID, Carbon $date){
+		return self::getSchedule($employeeID, $date)? true : false;
+	}
+	
+	public static function getSchedule($employeeID, Carbon $date){
+		//first we search records with given date
+		$byDateSchedule = self::where('employee_id', $employeeID)->where('date', $date->format('Y-m-d'))->first();
+		if ($byDateSchedule){
+			return $byDateSchedule;
 		}
 		
-		return $in;
+		//record not found
+		//we search record with column day & date null
+		return self::getDefaultSchedule($employeeID, $date->dayOfWeek);
 	}
 	
-	public static function getScheduleDaysOfWeekIso($employeeId){
-		$in = [];
-		foreach(self::getSchedules($employeeId) as $schedule){
-			$in[] = $schedule->day+1;
-		}
-		
-		return $in;
-	}
-	
-	public static function getOffScheduleDaysOfWeek($employeeId){
-		return array_except([0,1,2,3,4,5,6],self::getScheduleDaysOfWeek($employeeId));
+	public static function getDefaultSchedule($employeeID, $dayOfWeek){
+		return self::where('employee_id','=',$employeeID)
+					->where('day', "$dayOfWeek")
+					->whereNull('date')
+					->first();
 	}
 }

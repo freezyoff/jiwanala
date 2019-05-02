@@ -19,16 +19,6 @@
 </div>
 @endSection
 
-@section('html.head.scripts')
-@parent
-<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
-@endSection
-
-@section('html.head.styles')
-@parent
-<link rel="stylesheet" href="{{url('css/timepicker.css')}}">
-@endSection
-
 @section('html.body.scripts')
 @parent
 <script>

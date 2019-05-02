@@ -15,11 +15,6 @@
 	</div>
 @endSection
 
-@section('html.body.scripts')
-@parent
-<script></script>
-@endSection
-
 @section('html.head.styles')
 @parent
 <style>

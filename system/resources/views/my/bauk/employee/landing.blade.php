@@ -108,7 +108,6 @@
 
 @section('html.head.styles')
 @parent
-<link rel="stylesheet" href="{{url('css/datepicker.css')}}">
 <style>
 .datepicker-modal .datepicker-inline{font-size:12px !important;}
 </style>
@@ -116,8 +115,6 @@
 
 @section('html.body.scripts')
 @parent
-<script src="{{url('vendors/cowboy/jquery-throttle-debounce.js')}}"></script>
-<script src="{{url('js/datepicker.js')}}"></script>
 <script>
 App.UI.keywords = function(){
 	$('input[name="keywords"]').on('change', $.debounce(250, function(){
