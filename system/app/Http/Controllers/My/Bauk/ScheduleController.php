@@ -15,7 +15,7 @@ class ScheduleController extends Controller
     public function index(Request $request){
 		//return $request->all();
 		$data = [];
-		$nip = $request->input('employee_nip');
+		$nip = $request->input('employee_nip', $request->session()->get('employee_nip'));
 		$nip = $nip? $nip : $request->input('keywords');
 		
 		$employee = Employee::findByNIP($nip);
@@ -121,6 +121,8 @@ class ScheduleController extends Controller
 			
 			$loop->addDay();
 		}
-		return $this->index($request);
+		$request->session()->flash('employee_id', $request->input('employee_id'));
+		$request->session()->flash('employee_nip', $request->input('employee_nip'));
+		return redirect()->route('my.bauk.schedule.landing');
 	}
 }
