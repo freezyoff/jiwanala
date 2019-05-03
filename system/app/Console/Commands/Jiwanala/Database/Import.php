@@ -16,7 +16,6 @@ class Import extends Command
 		{--remote				: use remote connection}
 		{--query-limit= 		: query limit. default 1000 records}
 		{--import-version= 		: signature time for export key. Refer to directory name in storage/app/database/}
-		{--import-mode= 		: SQL or JSON. Default JSON}
 	';
 
     /**
@@ -32,6 +31,8 @@ class Import extends Command
 	
 	protected $dir = '';
 	protected $storagePath = 'database';
+	
+	protected $maxQuery = 1000;
 	
 	/**
      * Create a new command instance.
@@ -58,7 +59,117 @@ class Import extends Command
 		}
 		return $versions[count($versions)-1];
 	}
-
+	
+	function getQueryLimit(){
+		return $this->option('query-limit')? $this->option('query-limit') : $this->maxQuery;
+	}
+	
+	function getQueryLimitForDatabase($schema, $table){
+		$columns = $this->getColumnTypes($schema, $table);
+		foreach($columns as $key=>$type){
+			if (str_contains($type, 'blob')){
+				return $this->getQueryLimit()/100;
+			}
+		}
+		return $this->getQueryLimit(); 
+	}
+	
+	protected $columnTypes = [];
+	function getColumnTypes($schema, $table){
+		
+		//for performance
+		//check if already has $columnTypes
+		$key = $schema.'-'.$table;
+		if (array_key_exists($key, $this->columnTypes)) {
+			return $this->columnTypes[$key];
+		}
+		
+		$result = [];
+		$sts = 'SHOW FIELDS FROM `'.$schema.'`.`'.$table.'`';
+		foreach($this->getConnection($schema)->select($sts) as $q){
+			$result[$q->Field] = $q->Type;
+		}
+		$this->columnTypes[$key] = $result;
+		return $result;
+	}
+	
+	protected $filePointer = false;
+	protected $fileProperties = [];
+	
+	function openFile($file){
+		$this->fileProperties = [];
+		$this->filePointer = fopen($file, "r");
+		return !$this->filePointer? false : $this->filePointer;
+	}
+	
+	function closeFile(){
+		fclose($this->filePointer);
+	}
+	
+	function readFile(){
+		$buffer = fgets($this->filePointer);
+		return $buffer === false? false : $buffer;
+	}
+	
+	function readFileProperties(){
+		if (empty($this->fileProperties)){
+			$mode = false;
+			while ($mode !== '##records') {
+				$buffer = preg_replace('/\s+/','',$this->readFile());
+				if (str_contains($buffer, '##')){
+					$mode = $buffer;
+				}
+				else{
+					$this->fileProperties[str_replace('##','',$mode)] = json_decode($buffer, true);
+				}
+			}
+			
+			if (!$this->isValidFileProperties()){
+				$this->fileProperties = [];
+			}
+		}
+	}
+	
+	function getFileProperties($key){
+		return $this->fileProperties[$key];
+	}
+	
+	function isValidFileProperties(){
+		foreach(['database','types','rows'] as $prop){
+			if (!isset($this->fileProperties[$prop])){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	function importFileRecords($schema, $table){
+		$buffer = true;
+		$db = $this->getConnection($schema);
+		
+		if ($this->getConnection($schema)->getConfig('host') == 'localhost'){
+			$db->statement('SET GLOBAL max_allowed_packet=1073741824');
+		}
+		
+		$queryLimit = $this->getQueryLimitForDatabase($schema, $table);
+		$queryCount = 0;
+		$db->beginTransaction();
+		$db->statement('SET FOREIGN_KEY_CHECKS=0');
+		while($buffer !== false){
+			$buffer = $this->readFile();
+			if ($buffer !== false){
+				$db->table($schema.'.'.$table)->insert(json_decode($buffer, true));				
+				$queryCount++;
+			}
+			
+			if ($queryCount>=$queryLimit){
+				$db->commit();
+			}
+		}
+		$db->statement('SET FOREIGN_KEY_CHECKS=1');
+		$db->commit();
+	}
+	
     /**
      * Execute the console command.
      *
@@ -69,7 +180,6 @@ class Import extends Command
 		set_time_limit(0);
 		
 		//check username & password
-		$mode = $this->getMode();
 		$this->infoStart();
 		
 		$database = [];
@@ -83,24 +193,17 @@ class Import extends Command
 		
 		//find max records count 
 		foreach($database as $schema=>$tables){
-			foreach($tables as $table){			
+			foreach($tables as $table){
 				if ($this->isFileExists($schema, $table)){
-					if ($mode == 'sql'){
-						//TODO: FIX THIS
-					}
-				
-					//json
-					else{
-						$recordCounts = collect();
-						foreach($this->getFiles($schema, $table) as $file){
-							$json = json_decode($this->read($file), true);
-							$this->maxRecordLength = max( $this->maxRecordLength, strlen(count($json['records'])) );
-							$recordCounts->push( [
-								'file'=> $file,
-								'count'=> count($json['records'])
-							]);
-						}
-						$this->recordCounts[$schema.'.'.$table] = $recordCounts->all();
+					foreach($this->getFiles($schema, $table) as $file){
+						$this->openFile($file);
+						$this->readFileProperties();
+						
+						$rows = $this->getFileProperties('rows');
+						$this->maxRecordLength = max( $this->maxRecordLength, strlen($rows) );
+						$this->recordCounts[$schema.'.'.$table] = $rows;
+						
+						$this->closeFile();
 					}
 				}
 			}
@@ -109,88 +212,23 @@ class Import extends Command
 		//start import
 		foreach($database as $schema=>$tables){
 			foreach($tables as $table){
-				if ($this->isFileExists($schema, $table)){
-					if ($mode == 'sql'){					
-						//read & import sql 
-						$this->infoRead($file);
-						$this->getConnection($schema)->unprepared($this->read($file));
-						$this->infoReadSuccess();
-					}
 				
-					//json
-					else{
-						$this->handleJSON($schema, $table);
-					}
+				$this->infoRead($schema, $table);
+				
+				foreach($this->getFiles($schema, $table) as $file){
+					$this->openFile($file);
+					$this->readFileProperties();	
+					$this->importFileRecords($schema, $table);
+					$this->closeFile();
 				}
+				
+				$this->infoReadSuccess();
+				
 			}
 		}
 			
 		$this->infoEnd();
     }
-	
-	function handleJSON($schema, $table){
-		$collect = collect($this->recordCounts[$schema.'.'.$table]);
-		$this->infoReadJSON($schema, $table, $collect->sum('count'));
-		foreach($this->getFiles($schema, $table) as $file){
-			$json = json_decode($this->read($file), true);
-			$this->handleJSONInsert($this->getConnection($schema), $json);
-		}
-		$this->infoReadSuccess();
-	}
-	
-	function handleJSONInsert($db, $json){
-		if (isset($json['records']) && count($json['records'])>0){
-			$str = $json['database']['schema'].'.'.$json['database']['table'];
-			
-			if ($this->getConnection($json['database']['schema'])->getConfig('host') == 'localhost'){
-				$db->statement('SET GLOBAL max_allowed_packet=1073741824');
-			}
-			$db->statement('SET FOREIGN_KEY_CHECKS=0');
-			
-			if ($this->isHasBigData($json)){
-				$this->handleDBInsert($db, $json);
-			}
-			else{
-				$this->handleDBTransaction($db, $json);
-			}
-			
-			$db->statement('SET FOREIGN_KEY_CHECKS=1');
-		}
-	}
-	
-	function handleDBInsert($db, $json){
-		$rcount = count($json['records']);
-		for($i=0; $i<$rcount; $i++){
-			//check if column value type need to be encode to base64
-			foreach($json['columns'] as $col=>$type){
-				if (str_contains($type, 'blob')){
-					$json['records'][$i][$col] = base64_decode($json['records'][$i][$col]);
-				}
-			}
-			
-			//insert
-			
-			$db->table($json['database']['schema'].'.'.$json['database']['table'])->insert($json['records'][$i]);
-		}
-	}
-	
-	function handleDBTransaction($db, $json){
-		$rcount = count($json['records']);
-		$db->beginTransaction();
-		for($i=0; $i<$rcount; $i++){
-			//check if column value type need to be encode to base64
-			foreach($json['columns'] as $col=>$type){
-				if (str_contains($type, 'blob')){
-					$json['records'][$i][$col] = base64_decode($json['records'][$i][$col]);
-				}
-			}
-			
-			//insert
-			
-			$db->table($json['database']['schema'].'.'.$json['database']['table'])->insert($json['records'][$i]);
-		}
-		$db->commit();
-	}
 	
 	function infoStart(){
 		$this->line('<fg=cyan>Start </><fg=white>Import </>');
@@ -201,37 +239,13 @@ class Import extends Command
 		$this->line('<fg=cyan>Done </><fg=white>Import</>');
 	}
 	
-	function infoRead($str){
-		if (strlen($str) < $this->maxTableNameLength){
-			for($i=strlen($str);$i<$this->maxTableNameLength; $i++) $str .=' ';
+	function infoRead($schema, $table){
+		$name = $schema.'.'.$table;
+		$str = '';
+		if (strlen($name) < $this->maxTableNameLength){
+			for($i=strlen($name);$i<$this->maxTableNameLength; $i++) $str .=' ';
 		}
-		$this->output->write('<fg=white>Importing </><fg=yellow>'.$str.'</> : ', false);
-	}
-	
-	function infoReadJSON($schema, $table, $recordCount){
-		$tblName = $schema.'.'.$table;
-		$whiteSpaces = '';
-		if (strlen($tblName) < $this->maxTableNameLength){
-			for($i=strlen($tblName);$i<$this->maxTableNameLength; $i++) $whiteSpaces .=' ';
-		}
-		$table = '<fg=yellow>'.$schema.'</>.'.
-				'<fg=green>'.$table.'</>'.
-				$whiteSpaces;
-				
-				
-		$count = $recordCount;
-		$whiteSpaces = '';
-		if (strlen($count)<$this->maxRecordLength){
-			for($i=strlen($count);$i<$this->maxRecordLength; $i++) $whiteSpaces.=' ';
-		}
-		$count = $whiteSpaces.$count;
-		
-		$write = '<fg=white>Importing </>'.
-			$table.' '.
-			'<fg=white>[</>'.
-			'<fg=magenta>'.$count.' </>'.
-			'<fg=white>records] : </>';
-		$this->output->write($write, false);
+		$this->output->write('<fg=white>Importing </><fg=yellow>'.$schema.'</>.<fg=green>'.$table.$str.'</> : ', false);
 	}
 	
 	function infoReadSuccess(){
@@ -314,23 +328,9 @@ class Import extends Command
 		$result = [];
 		foreach($files as $file){
 			if (preg_match($pattern, $file)) {
-				$result[] = $file;
+				$result[] = storage_path('app/'.$file);
 			}
 		}
 		return $result;
-	}
-	
-	function read($filepath){
-		return \Storage::disk('local')->read($filepath);
-	}
-	
-	function getMode(){
-		return $this->option('import-mode')? $this->option('import-mode') : 'json';
-	}
-	
-	function isHasBigData($json){
-		foreach($json['columns'] as $col){
-			if (Str::contains($col, 'blob')) return true;
-		}
 	}
 }

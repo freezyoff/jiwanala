@@ -74,14 +74,12 @@ class AttendanceByFingersImport implements
 				));
 			}
 		};
-		$isScheduleDayOff = function($attribute, $value, $fail) use ($dateFormat, $rows){
+		$isHasSchedule = function($attribute, $value, $fail) use ($dateFormat, $rows){
 			$ext = explode('.',$attribute);
-			
-			//check if given date is dayoff work
 			$tanggal = Carbon::createFromFormat($dateFormat, $value);
 			$nip = $rows[$ext[0]]['nip'];
 			$employee = Employee::findByNIP($nip);
-			if ($employee && !$employee->hasSchedule($tanggal->dayOfWeek)){
+			if ($employee && !$employee->hasSchedule($tanggal)){
 				$fail( str_replace(
 					[':day',':date'],
 					[trans('calendar.days.long.'.$tanggal->dayOfWeek), $value],
@@ -93,7 +91,7 @@ class AttendanceByFingersImport implements
         return [
 			'no' =>					['required','numeric'],
 			'nip'=> 				['required','numeric','exists:bauk.employees,nip'],
-            'tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isScheduleDayOff],
+            'tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isHasSchedule],
 			'finger_masuk' => 		['nullable','required_if:finger_keluar_1,',$regexTimeFormat],
 			'finger_keluar_1' =>	['nullable','required_if:finger_masuk,',$regexTimeFormat],
 			'finger_keluar_2' =>	['nullable',$regexTimeFormat],
@@ -102,7 +100,7 @@ class AttendanceByFingersImport implements
             //	Above is alias for as it always validates in batches
 			'*.no' =>				['required','numeric'],
 			'*.nip'=> 				['required','numeric','exists:bauk.employees,nip'],
-			'*.tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isScheduleDayOff],
+			'*.tanggal' => 			['required','date_format:'.$dateFormat, $isAllowed, $isHoliday, $isHasSchedule],
 			'*.finger_masuk' => 	['nullable','required_if:*.finger_keluar_1,',$regexTimeFormat],
 			'*.finger_keluar_1' =>	['nullable','required_if:*.finger_masuk,',$regexTimeFormat],
 			'*.finger_keluar_2' =>	['nullable',$regexTimeFormat],

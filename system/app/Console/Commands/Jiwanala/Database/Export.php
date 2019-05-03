@@ -13,9 +13,9 @@ class Export extends Command
      */
 	protected $signature = 'jn-db:export 
 		{--remote}
-		{--query-limit=	 	: query limit. default 1000 records}
+		{--query-limit=	 	: query limit. default 10 records}
+		{--file-size-limit=	: Export file size limit. default 100Mb}
 		{--export-version= 	: signature time for export key. Use as directoriy in storage/app/database/}
-		{--export-mode= 	: SQL or JSON. Default JSON}
 		{--daemon 			: background message}
 	';
 
@@ -28,6 +28,9 @@ class Export extends Command
 
 	protected $timestamp;
 	protected $maxTableNameLength=0;
+	protected $strBuffer='';
+	protected $maxQuery = 1000;
+	protected $maxFileSize = 100000000;
 	
     /**
      * Create a new command instance.
@@ -36,199 +39,35 @@ class Export extends Command
      */
     public function __construct(){ parent::__construct(); }
 	
-    /**
-     * Execute the con
-	 sole command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-		ini_set('max_execution_time', 0);
-		set_time_limit(0);
-		
-		$this->infoStart();
-		
-		$tables = [];
-		foreach($this->getSchemas() as $schema){
-			foreach($this->getAllSchemaTable($schema) as $table){
-				$tables[$schema][] = $table;
-				
-				//calc max table name length for output style
-				$this->maxTableNameLength = max($this->maxTableNameLength, strlen($schema.'.'.$table));
-			}
-		}
-		
-		//loop the $tables for export
-		foreach($tables as $schema=>$schemaTables){
-			foreach($schemaTables as $table){
-				$this->handleTable($schema, $table);
-			}
-		}
-		
-		$this->infoEnd();
-    }
-	
-	/**
-	 *	save table export to file
-	 */
-	function handleTable($schema, $table){
-		//do not handle the laravel migrations table
-		if ($table == 'migrations') return;
-		
-		//prepare properties
-		$opts = [
-			'con'=>		$this->getConnection($schema),
-			'schema'=>	$schema,
-			'table'=>	$table,
-		];
-		
-		$queryCount = $opts['con']->table($table)->count();
-		
-		if (!$this->isDaemon()) {
-			$this->createProgressBar($schema, $table, $queryCount);
-		}
-		
-		$opts['types'] = $this->getColumnTypes($schema, $table);
-		$opts['columns'] = array_keys($opts['types']);
-		
-		//columns
-		//to avoid error, we write the INSERT statement in values loop below		
-		$this->infoExport($schema, $table);
-		$JSONError = false;
-		if ($queryCount){
-			for($i=0,$batch=1; $i<$queryCount; $i+=$this->getQueryLimit(), $batch++){
-				
-				$strBuffer = $this->getFormatedString($this->getMode(), 'head', $opts);
-				$this->writeToFile($schema, $table, $batch, $strBuffer, true);
-				
-				$query = $this->getConnection($schema)
-					->table($table)
-					->take($this->getQueryLimit())
-					->skip($i)
-					->get();
-					
-				$strBuffer="";
-				$qi = 0;
-				$qc = $query->count();
-				foreach($query as $item){
-					$opts['record'] = $item;
-					$opts['isLastRecord'] = ($qi+1 == $qc);
-					//$strBuffer .= $this->getFormatedString($this->getMode(), 'body', $opts);
-					$this->writeToFile($schema, $table, $batch, $this->getFormatedString($this->getMode(), 'body', $opts));
-					$qi++;
-					
-					if (!$this->isDaemon()){
-						$this->getProgressbar()->advance();
-					}
-				}
-				//$this->writeToFile($schema, $table, $batch, $strBuffer);
-				
-				$strBuffer = $this->getFormatedString($this->getMode(), 'footer', []);
-				$this->writeToFile($schema, $table, $batch, $strBuffer);
-				
-				//verify json
-				if ($this->getMode() == 'json'){
-					$validate = $this->verifyJSON($schema, $table, $batch);
-					$JSONError = isset($JSONError)? $JSONError & $validate : $validate;
-				}
-			}			
-		}
-		else{
-			//create file with empty records
-			$strBuffer = $this->getFormatedString($this->getMode(), 'head', $opts);
-			$this->writeToFile($schema, $table, 1, $strBuffer, true);
-			$strBuffer = $this->getFormatedString($this->getMode(), 'footer', []);
-			$this->writeToFile($schema, $table, 1, $strBuffer);
-		}
-		
-		if (!$this->isDaemon()){
-			$this->getProgressbar()->setProgress(100);
-			$this->destroyProgressbar();
-		}
-		
-		if ($this->getMode() == 'json'){
-			$this->infoJSONError($JSONError? true : false);
-		}
+	function getQueryLimit(){
+		return $this->option('query-limit')? $this->option('query-limit') : $this->maxQuery;
 	}
 	
-	function getFormatedString($mode, $type, $data){
-		if ($this->getMode() == 'json') return $this->getFormatedStringJSON($type, $data);
-		if ($this->getMode() == 'sql') return $this->getFormatedStringSQL($type, $data);
-		return "";
+	function getQueryLimitForDatabase($schema, $table){
+		$columns = $this->getColumnTypes($schema, $table);
+		foreach($columns as $key=>$type){
+			if (str_contains($type, 'blob')){
+				return $this->getQueryLimit()/100;
+			}
+		}
+		return $this->getQueryLimit(); 
 	}
 	
-	function getFormatedStringJSON($type, $data){
-		if ($type=='head'){ 
-			//get column types
-			return "{". PHP_EOL .
-					"\t\"database\":". json_encode(['schema'=>$data['schema'], 'table'=>$data['table']]) .','. PHP_EOL .
-					"\t\"columns\":". json_encode($data['types']) .','. PHP_EOL .
-					"\t\"records\":[";
-		}
-		
-		if ($type=='body'){
-			$arr = [];
-			foreach($data['columns'] as $col) {
-				$raw = $data['record']->{$col};
-				//check if column value type need to be encode to base64
-				if (str_contains($data['types'][$col], 'blob')){
-					$raw = base64_encode($raw);
-				}
-				$arr[$col] = $raw;
-			}
-			return "\t\t". json_encode($arr).($data['isLastRecord']? '' : ','. PHP_EOL );
-		}
-		
-		if ($type=='footer'){ 
-			return "\t]". PHP_EOL ."}"; 
-		}
+	function getPartitionLimit(){
+		return $this->option('file-size-limit')? $this->option('file-size-limit') : $this->maxFileSize;
 	}
 	
-	function getFormatedStringSQL($type, $data){
-		if ($type == 'head'){
-			$columns = [];
-			for($i=0; $i<count($data['columns']); $i++){
-				$columns[$i] = '`'.$data['columns'][$i].'`';
-			}	
-			return 	'-- '. PHP_EOL .
-					'-- Table: `'.$data['schema'].'`.`'.$data['table'].'`'. PHP_EOL .
-					'--'. PHP_EOL .
-					'SET FOREIGN_KEY_CHECKS=0;'. PHP_EOL . PHP_EOL .
-					'INSERT INTO ' . '`'.$data['schema'].'`.`'.$data['table'].'`'. PHP_EOL .
-					'('. implode(',',$columns) .')'.PHP_EOL .
-					'VALUES';
-		}
-		
-		if ($type == 'body'){
-			$array = [];
-			for($i=0; $i<count($data['columns']); $i++){
-				if ($data['record']->{$data['columns'][$i]} == NULL){
-					$array[$i] = "NULL";
-				}
-				else{
-					$array[$i] = '"'. $data['record']->{$data['columns'][$i]} .'"';				
-				}
-			}
-			return '('. implode(',',$array) .')'. ($data['isLastRecord']? ';' : ',' ). PHP_EOL;
-		}
-		
-		if ($type == 'footer'){
-			return	'SET FOREIGN_KEY_CHECKS=1;'.PHP_EOL .
-					'-- '. PHP_EOL .
-					'-- End Export '. PHP_EOL .
-					'--'. PHP_EOL;
-		}
+	function isDaemon(){
+		return $this->option('daemon')? true : false;
 	}
 	
 	function infoStart(){
+		$isRemote = $this->option('remote')? true : false;
 		if ($this->isDaemon()){
-			$this->line('Start Export at: '.now()->format('Y/m/d H:i:s'));
-			$this->line('Mode : '.strtoupper($this->getMode()));
+			$this->line('Start Export '.($isRemote?'Remote':'Localhost').' at: '.now()->format('Y/m/d H:i:s'));
 		}
 		else{
-			$this->line('<fg=cyan>Start </>Export');
-			$this->line('<fg=cyan>Mode </>'.strtoupper($this->getMode()));
+			$this->line('<fg=cyan>Start </>Export '. ($isRemote?'Remote':'Localhost'));
 		}
 	}
 	
@@ -259,15 +98,108 @@ class Export extends Command
 		}
 	}
 	
-	function infoJSONError($flag){
-		if ($flag){
-			if ($this->isDaemon()) 	$this->output->write(' JSON invalid'.PHP_EOL);
-			else					$this->output->write(' JSON '.'<fg=red>invalid</>'.PHP_EOL);
+    public function handle()
+    {
+		ini_set('max_execution_time', 0);
+		set_time_limit(0);
+		
+		$this->infoStart();
+		
+		$tables = [];
+		foreach($this->getSchemas() as $schema){
+			foreach($this->getAllSchemaTable($schema) as $table){
+				$tables[$schema][] = $table;
+				
+				//calc max table name length for output style
+				$this->maxTableNameLength = max($this->maxTableNameLength, strlen($schema.'.'.$table));
+			}
 		}
-		else{
-			if ($this->isDaemon()) 	$this->output->write(' JSON valid'.PHP_EOL);
-			else					$this->output->write(' JSON <fg=cyan>valid</>'.PHP_EOL);
+		
+		//loop the $tables for export
+		foreach($tables as $schema=>$schemaTables){
+			foreach($schemaTables as $table){
+				
+				//do not handle the laravel migrations table
+				if ($table == 'migrations') continue;
+				
+				$writeProperties= false;
+				$recordsCount =  $this->getRecordsCount($schema, $table);
+				$batchCount = 1;
+				$loopCount = 0; 
+				$columns = $this->getColumnTypes($schema, $table);
+				
+				//create progressbar if necessary
+				if (!$this->isDaemon()){
+					$this->createProgressbar($schema, $table, $recordsCount);
+				} 
+				
+				$this->infoExport($schema, $table);
+				while ($loopCount<$recordsCount){
+					foreach($this->getRecordsQuery($schema, $table, $loopCount) as $record){
+				
+						if (!$writeProperties){
+							$writeProperties = $this->writeProperties($schema, $table, $batchCount, $columns, $recordsCount);
+						}
+						
+						$this->writeRecords($schema, $table, $columns, $record, $batchCount);
+						
+						if (!$this->isDaemon()){
+							$this->getProgressbar()->advance();
+						}
+						
+						if ($this->isReachFileSizeLimit($schema, $table, $batchCount)){
+							$batchCount++;
+							$writeProperties = false;
+						}
+						
+						$loopCount++;
+					}
+				}
+				
+				if (!$this->isDaemon()){
+					$this->getProgressbar()->advance(100);
+					$this->destroyProgressbar();
+				}
+				
+				//$this->line(' '.$this->filesize_formatted($schema, $table, $batchCount));
+				$this->line('');
+			}
 		}
+		
+		$this->infoEnd();
+    }
+	
+	function writeProperties($schema, $table, $batch, $columns, $recordCount){
+		$str = '##database'.PHP_EOL .
+				json_encode(['schema'=>$schema,'table'=>$table]).PHP_EOL .
+				'##types'.PHP_EOL .
+				json_encode($columns).PHP_EOL .
+				'##rows'.PHP_EOL .
+				$recordCount.PHP_EOL .
+				'##records'.PHP_EOL;
+		$this->writeToFile($schema, $table, $batch, $str, true);
+		return true;
+	}
+	
+	function writeRecords($schema, $table, $column, $record, $batch){
+		foreach($column as $key=>$type){
+			if (str_contains($type, 'blob')){
+				$record->{$key} = base64_encode($record->{$key});
+			}
+		}
+		$this->writeToFile($schema, $table, $batch, json_encode($record).PHP_EOL, false);
+	}
+	
+	function getRecordsCount($schema, $table){
+		return $this->getConnection($schema)->table($table)->count();
+	}
+	
+	function getRecordsQuery($schema, $table, $skip){
+		return $this->getConnection($schema)
+			->table($table)
+			->take($this->getQueryLimitForDatabase($schema, $table))
+			->skip($skip)
+			->get();
 	}
 	
 	function getAllSchemaTable($schema){
@@ -342,26 +274,36 @@ class Export extends Command
 	
 	function getFileName($schema, $table, $batch){
 		$prefix = $this->getExportVersion();
-		$filename = 'database/'.$prefix.'/'.$prefix.'_'.$schema.'_'. $table.'_'.$batch.'.sql';
-		return $filename;
+		$filename = 'app/database/'.$prefix.'/'.$prefix.'_'.$schema.'_'. $table.'_'.$batch.'.sql';
+		return storage_path($filename);
 	}
 	
 	function writeToFile($schema, $table, $batch, $content, $overwrite=false){
+		$file = $this->getFileName($schema, $table, $batch);
+		if(!file_exists(dirname($file))) {
+			mkdir(dirname($file), 0777, true);
+		}
+		
 		if ($overwrite){
-			\Storage::disk('local')->put($this->getFileName($schema, $table, $batch), $content);
+			file_put_contents($file, $content);
 		}
 		else{
-			\Storage::disk('local')->append($this->getFileName($schema, $table, $batch), $content);
+			file_put_contents($file, $content, FILE_APPEND);
 		}
 	}
 	
-	function verifyJSON($schema, $table, $batch){
-		json_decode(\Storage::disk('local')->read($this->getFileName($schema, $table, $batch)));
-		return json_last_error()==0? true : false;
+	function getFileSize($schema, $table, $batch){
+		$filename = $this->getFileName($schema, $table, $batch);
+		if (file_exists($filename)){
+			clearstatcache();
+			return filesize( $filename );
+		}
+		return 0;
 	}
 	
-	function getMode(){
-		return $this->option('export-mode')? $this->option('export-mode') : 'json';
+	function isReachFileSizeLimit($schema, $table, $batch){
+		$size = $this->getFileSize($schema, $table, $batch);
+		return $size>$this->maxFileSize;
 	}
 	
 	protected $columnTypes = [];
@@ -383,18 +325,6 @@ class Export extends Command
 		return $result;
 	}
 	
-	function getQueryLimit(){
-		return $this->option('query-limit')? $this->option('query-limit') : 1000;
-	}
-	
-	protected $daemon;
-	function isDaemon(){
-		if (!isset($daemon)){
-			$daemon = $this->option('daemon')? true : false;
-		}
-		return $daemon;
-	}
-	
 	protected $progressbar;
 	function createProgressbar($schema, $table, $queryCount){
 		$this->progressbar = $this->output->createProgressBar($queryCount);
@@ -407,5 +337,13 @@ class Export extends Command
 	}
 	function getProgressbar(){
 		return $this->progressbar;
+	}
+	
+	function filesize_formatted($schema, $table, $batch)
+	{
+		$size = $this->getFileSize($schema, $table, $batch);
+		$units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+		$power = $size > 0 ? floor(log($size, 1024)) : 0;
+		return number_format($size / pow(1024, $power), 2, '.', ',') . ' ' . $units[$power];
 	}
 }
