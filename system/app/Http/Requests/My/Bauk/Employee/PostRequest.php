@@ -13,7 +13,7 @@ class PostRequest extends FormRequest
      * @return bool
      */
     public function authorize(){ 
-		return Auth::check() && Auth::user()->hasPermission('bauk.post.employee');
+		return Auth::check() && Auth::user()->hasPermission('bauk.employee.post');
 	}
 
     /**

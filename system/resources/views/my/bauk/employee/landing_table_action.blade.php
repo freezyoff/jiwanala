@@ -15,7 +15,7 @@
 </a>
 @endif
 
-@if(Auth::user()->hasPermission('bauk.patch.employee'))
+@if(Auth::user()->hasPermission('bauk.employee.patch'))
 <a href="{{route('my.bauk.employee.edit',['id'=>$data->id])}}" 
 	style="text-decoration:none;"
 	class="w3-large w3-text-green w3-hover-text-black padding-left-8" 
@@ -24,7 +24,7 @@
 </a>
 @endif
 
-@if(Auth::user()->hasPermission('bauk.delete.employee'))
+@if(Auth::user()->hasPermission('bauk.employee.delete'))
 <a onclick="$('#delete-modal-{{$data->id}}').show()" 
 	class="w3-large w3-text-red w3-hover-text-black padding-left-8" 
 	title="Hapus data"><i class="fas fa-trash"></i>

@@ -12,7 +12,7 @@ class PatchRequest extends FormRequest
      * @return bool
      */
     public function authorize(){ 
-		return \Auth::check() && \Auth::user()->hasPermission('bauk.patch.employee');
+		return \Auth::check() && \Auth::user()->hasPermission('bauk.employee.patch');
 	}
 
     /**

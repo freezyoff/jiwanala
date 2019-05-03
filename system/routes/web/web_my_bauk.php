@@ -34,7 +34,7 @@ Route::prefix('employee')
 	
 	Route::prefix('add')
 		->name('.add')
-		->middleware('permission:bauk.post.employee')
+		->middleware('permission:bauk.employee.post')
 		->group(function(){
 		Route::get('/', '\App\Http\Controllers\My\Bauk\EmployeeController@postView');
 		Route::post('/', '\App\Http\Controllers\My\Bauk\EmployeeController@post');
@@ -42,7 +42,7 @@ Route::prefix('employee')
 	
 	Route::prefix('edit')
 		->name('.edit')
-		->middleware('permission:bauk.patch.employee')
+		->middleware('permission:bauk.employee.patch')
 		->group(function(){
 		Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patchView');
 		Route::post('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@patch');
@@ -50,21 +50,21 @@ Route::prefix('employee')
 	
 	Route::prefix('delete')
 		->name('.delete')
-		->middleware('permission:bauk.delete.employee')
+		->middleware('permission:bauk.employee.delete')
 		->group(function(){
 		Route::get('{id}', '\App\Http\Controllers\My\Bauk\EmployeeController@delete');
 	});
 	
 	Route::prefix('activate')
 		->name('.activate')
-		->middleware('permission:bauk.patch.employee')
+		->middleware('permission:bauk.employee.patch')
 		->group(function(){
 		Route::get('{id}/{activationFlag?}', '\App\Http\Controllers\My\Bauk\EmployeeController@activate');
 	});
 	
 	Route::prefix('deactivate')
 		->name('.deactivate')
-		->middleware('permission:bauk.patch.employee')
+		->middleware('permission:bauk.employee.patch')
 		->group(function(){
 		Route::get('deactivate/{id}/{date}', '\App\Http\Controllers\My\Bauk\EmployeeController@deactivate');
 	});
@@ -138,7 +138,7 @@ Route::prefix('attendance')
 		Route::post('/upload', '\App\Http\Controllers\My\Bauk\AttendanceController@upload');
 	});
 	
-	Route::middleware('permission:bauk.list.employee')
+	Route::middleware('permission:bauk.employee.list')
 		->name('.search.employee')
 		->post('search/employee', '\App\Http\Controllers\My\Bauk\AttendanceController@searchEmployee');
 	
