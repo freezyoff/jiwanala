@@ -23,16 +23,12 @@ class Schedules{
 			->appendOutputTo($outputPath."scheduleLog.jiwanala-work-year-sync.txt");
 			
 		//dump export table
-		$schedule->command('jn-db:export',['--daemon'=>true,])
+		$schedule->command('jn-db:export',['--daemon'=>true])
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-db-export.txt");
 			
 		//fixing databse jiwanala_bauk.employee_attendance records 
-		$schedule->command('jn-bauk:fix_attendance_invalid_time',
-			[
-				'--delete'=>true,
-				'--daemon'=>true
-			])
+		$schedule->command('jn-bauk:fix_attendance_invalid_time',['--delete'=>true, '--daemon'=>true])
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-bauk-fix_attendance_invalid_time.txt");
 	}
