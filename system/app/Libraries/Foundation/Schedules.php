@@ -23,10 +23,7 @@ class Schedules{
 			->appendOutputTo($outputPath."scheduleLog.jiwanala-work-year-sync.txt");
 			
 		//dump export table
-		$schedule->command('jn-db:export',[
-				'--daemon'=>true,
-				'--query-limit'=>10
-			])
+		$schedule->command('jn-db:export',['--daemon'=>true,])
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-db-export.txt");
 			
