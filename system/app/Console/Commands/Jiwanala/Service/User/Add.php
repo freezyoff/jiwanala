@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Jiwanala\Service\User;
 
 use Illuminate\Console\Command;
+use App\Libraries\Service\Auth\User;
 
 class Add extends Command
 {
@@ -11,7 +12,7 @@ class Add extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-user:add {username} {email} {password} {activated=1}';
+    protected $signature = 'jn-user:add {name} {email} {password} {activated=1}';
 
     /**
      * The console command description.
@@ -37,6 +38,12 @@ class Add extends Command
      */
     public function handle()
     {
-        //
+        $user = User::create([
+			'name'=>$this->argument('name'),
+			'email'=>$this->argument('email'),
+			'password'=>\Hash::make($this->argument('password')),
+			'activated'=>$this->argument('activated'),
+		]);
+		$this->line('User <fg=yellow>'.$user->name.'</> created');
     }
 }

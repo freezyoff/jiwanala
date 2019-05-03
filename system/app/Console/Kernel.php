@@ -45,6 +45,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\User\GrantRole::class,
 		\App\Console\Commands\Jiwanala\Service\User\RevokeRole::class,
 		\App\Console\Commands\Jiwanala\Service\User\ListUser::class,
+		\App\Console\Commands\Jiwanala\Service\User\Add::class,
 		
 		/*
 		 * jn-permission
@@ -53,6 +54,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\Permission\Delete::class,
 		\App\Console\Commands\Jiwanala\Service\Permission\ListPermission::class,
 		\App\Console\Commands\Jiwanala\Service\Permission\Install::class,
+		\App\Console\Commands\Jiwanala\Service\Permission\Sync::class,
 		
 		/*
 		 * jn-role
@@ -63,6 +65,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\Role\RevokePermission::class,
 		\App\Console\Commands\Jiwanala\Service\Role\ListRole::class,
 		\App\Console\Commands\Jiwanala\Service\Role\Install::class,
+		\App\Console\Commands\Jiwanala\Service\Role\Sync::class,
 		
     ];
 

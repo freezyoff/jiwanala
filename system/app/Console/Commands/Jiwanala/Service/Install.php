@@ -38,7 +38,16 @@ class Install extends Command
     public function handle()
     {
         $this->call('jn-permission:install',[],$this->output);
+		$this->line('');
 		$this->call('jn-role:install',[],$this->output);
-		$this->call('',[],$this->output);
+		$this->line('');
+		$installDefaultUser = $this->choice('Install default user?', ['Yes', 'No'], 0);
+		if ($installDefaultUser == 'Yes'){
+			$this->call('jn-user:add',[
+				 'name'=>'akhmad.musa.hadi',
+				 'email'=>'akhmad.musa.hadi@gmail.com',
+				 'password'=>'Yousummonme3105'
+			], $this->output);
+		}
     }
 }
