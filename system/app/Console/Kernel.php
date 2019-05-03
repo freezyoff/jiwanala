@@ -13,15 +13,17 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\JiwanalaMigration::class,
-		\App\Console\Commands\JiwanalaAddPermission::class,
-		\App\Console\Commands\JiwanalaAddUser::class,
-		\App\Console\Commands\JiwanalaGrantPermission::class,
-		\App\Console\Commands\JiwanalaPermissions::class,
 		\App\Console\Commands\Bauk\JiwanalaEmployeeAttendance_Lock::class,
 		\App\Console\Commands\Service\JiwanalaUser_changepassword::class,
+		
+		\App\Console\Commands\Jiwanala\Bauk\EmployeeAttendanceInvalidTime::class,
 		\App\Console\Commands\Core\JiwanalaWorkYear_sync::class,
 		
+		\App\Console\Commands\File\SearchText::class,
+		
+		/*
+		 * jn-db
+		 */
 		\App\Console\Commands\Jiwanala\Database\Migrate::class,
 		\App\Console\Commands\Jiwanala\Database\Rollback::class,
 		\App\Console\Commands\Jiwanala\Database\Reinstall::class,
@@ -31,9 +33,37 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Database\Sync::class,
 		\App\Console\Commands\Jiwanala\Database\Truncate::class,
 		
-		\App\Console\Commands\Jiwanala\Bauk\EmployeeAttendanceInvalidTime::class,
+		/*
+		 * jn-seed
+		 */
+		 \App\Console\Commands\Jiwanala\Service\Install::class,
 		
-		\App\Console\Commands\File\SearchText::class,
+		/*
+		 * jn-user
+		 */
+		\App\Console\Commands\Jiwanala\Service\User\ListRole::class,
+		\App\Console\Commands\Jiwanala\Service\User\GrantRole::class,
+		\App\Console\Commands\Jiwanala\Service\User\RevokeRole::class,
+		\App\Console\Commands\Jiwanala\Service\User\ListUser::class,
+		
+		/*
+		 * jn-permission
+		 */
+		\App\Console\Commands\Jiwanala\Service\Permission\Add::class,
+		\App\Console\Commands\Jiwanala\Service\Permission\Delete::class,
+		\App\Console\Commands\Jiwanala\Service\Permission\ListPermission::class,
+		\App\Console\Commands\Jiwanala\Service\Permission\Install::class,
+		
+		/*
+		 * jn-role
+		 */
+		\App\Console\Commands\Jiwanala\Service\Role\Add::class,
+		\App\Console\Commands\Jiwanala\Service\Role\Delete::class,
+		\App\Console\Commands\Jiwanala\Service\Role\GrantPermission::class,
+		\App\Console\Commands\Jiwanala\Service\Role\RevokePermission::class,
+		\App\Console\Commands\Jiwanala\Service\Role\ListRole::class,
+		\App\Console\Commands\Jiwanala\Service\Role\Install::class,
+		
     ];
 
     /**

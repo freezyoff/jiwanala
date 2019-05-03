@@ -6,17 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model{
 	protected $table = 'permissions';
 	protected $connection = 'service';
-	protected $fillable = ['creator', 'key','context','display_name','decription'];
 	
-    public function users(){
-		return $this->belongsToMany('\App\Libraries\Service\Auth\User', 'users_permissions', 'permission_id', 'user_id')->withTimestamps();
-	}
+	protected $primaryKey = 'id';
+    public $incrementing = false;
 	
-	public static function findByKey($key){
-		return self::where('key','=',$key)->first();
-	}
+	protected $fillable = ['creator', 'id','context','display_name','description'];
 	
-	public static function exists($key){
-		return self::findByKey($key)? true : false;
+    public function roles(){
+		return $this->belongsToMany('\App\Libraries\Service\Role', 'roles_permissions', 'permission_id', 'role_id')->withTimestamps();
 	}
 }

@@ -25,6 +25,7 @@ class CreateTableDivisions extends Migration
 			$table->integer('id')->unsigned();
 			$table->string('name');
 			$table->string('alias');
+			$table->enum('type',['ed','sp'])->comment('ed: education division, sp: support division');
 			
 			$table->primary('id');
 			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
