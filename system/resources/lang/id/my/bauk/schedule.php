@@ -23,10 +23,14 @@ return [
 		'cancel'=>'Batal'
 	],
 	'validations'=>[
-		'schedule.*.arrival.origin.required_if'=>'Isi Jam Masuk.',
-		'schedule.*.arrival.origin.date_format'=>'Format tanggal 24 Jam.',
-		'schedule.*.departure.origin.required_if'=>'Isi Jam Pulang.',
-		'schedule.*.departure.origin.date_format'=>'Format tanggal 24 Jam.',
+		'schedule_default.*.arrival.required_if'=>'Isi Jam Masuk.',
+		'schedule_default.*.arrival.date_format'=>'Format tanggal 24 Jam.',
+		'schedule_default.*.departure.required_if'=>'Isi Jam Pulang.',
+		'schedule_default.*.departure.date_format'=>'Format tanggal 24 Jam.',
+		'schedule_exception.*.arrival.required_if'=>'Isi Jam Masuk.',
+		'schedule_exception.*.arrival.date_format'=>'Format tanggal 24 Jam.',
+		'schedule_exception.*.departure.required_if'=>'Isi Jam Pulang.',
+		'schedule_exception.*.departure.date_format'=>'Format tanggal 24 Jam.',
 	],
 	'info'=>[
 		'inputs'=>[

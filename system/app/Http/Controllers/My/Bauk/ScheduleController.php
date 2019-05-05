@@ -17,68 +17,79 @@ class ScheduleController extends Controller
 		$data = [];
 		$nip = $request->input('employee_nip', $request->session()->get('employee_nip'));
 		$nip = $nip? $nip : $request->input('keywords');
-		
 		$employee = Employee::findByNIP($nip);
-		if ($employee){
-			$schedules = [];
-			foreach($employee->schedules as $schedule){
-				if ($schedule->isDefault()){
-					$schedules['default'][$schedule->day] = $schedule;
-				}
-				else{
-					$schedules['exception'][$schedule->day] = $schedule;
-				}
-			}
-			
-			$data['employee'] = $employee;
-			$data['schedules']= $schedules;
-		}
 		
-		if (!isset($data['schedules']['default'])){
-			$data['schedules']['default'] = [];
-		}
-		if (!isset($data['schedules']['exception'])){
-			$data['schedules']['exception'] = [];
-		}
+		$data['ctab'] = $request->input('ctab', 'default');
+		$data['employee'] = $employee;
+		$data['schedule_default'] = self::schedule_default($employee);
 		
-		//ctab
+		//exception schedule
+		$data['schedule_exception'] = self::schedule_exception($employee);
+		
+		//exception periode
+		$month = $request->input('exception_month', now()->format('m'));
+		$year = $request->input('exception_year', now()->year);
+		$data['exception_periode'] = Carbon::parse($year.'-'.$month.'-01');
 		
 		return view('my.bauk.schedule.landing',$data);
 	}
 	
+	public static function schedule_exception($employee){
+		if ($employee){
+			$schedules = [];
+			foreach($employee->schedules()->whereNotNull('date')->get() as $exception){
+				$schedules[$exception->date] = $exception;
+			}
+			return $schedules;
+		}
+		return [];
+	}
+	
+	public static function schedule_default($employee){
+		if ($employee){
+			$schedules = [];
+			foreach($employee->schedules()->whereNull('date')->get() as $default){
+				$schedules[$default->day] = $default;
+			}			
+			return $schedules;
+		}
+		return [];
+	}
+	
 	function storeDefault(DefaultScheduleStoreRequest $request){
-		$inputs = $request->input('schedule',[]);
+		//return $request->all();
+		
+		$inputs = $request->input('schedule_default',[]);
 		$employee_id = $request->input('employee_id');
 		
 		$employee = Employee::find($employee_id);
 		$messageBag = [];
+		
 		//find checked days
 		for($index=0; $index<7; $index++){
 			
 			if ( isset($inputs[$index]['check']) ){
 				
+				//prepare the model
 				$data = [
 					'creator'=> 		\Auth::user()->id, 
 					'employee_id' => 	$employee_id,
+					'arrival'=>			$inputs[$index]['arrival'],
+					'departure'=>		$inputs[$index]['departure'],
 					'day'=>				(String) $index,
-					'arrival'=>			$inputs[$index]['arrival']['origin'],
-					'departure'=>		$inputs[$index]['departure']['origin'],
+					'date'=>			null,
 				];
 				
-				//prepare the model
 				$model = EmployeeSchedule::getDefaultSchedule($employee_id, $index);
 				$model = $model? $model : new EmployeeSchedule();
 				
-				
 				//prepare success message
-				if($model->arrival !== $data['arrival']) {
-					$messageBag['store'][$index]['arrival'] = 'diperbaharui';					
+				if($model->arrival != $data['arrival']) {
+					$messageBag['store'][$index]['arrival'] = $model->exists? 'diperbaharui' : 'disimpan';
 				}
-				if($model->departure !== $data['departure']) {
-					$messageBag['store'][$index]['departure'] = 'diperbaharui';					
+				if($model->departure != $data['departure']) {
+					$messageBag['store'][$index]['departure'] = $model->exists? 'diperbaharui' : 'disimpan';
 				}
-				
-				//update data and save
 				$model->fill($data);
 				$model->save();
 			}
@@ -91,8 +102,9 @@ class ScheduleController extends Controller
 		}
 		
 		return redirect()->back()
-			->with('store',isset($messageBag['store'])? $messageBag['store'] : [])
+			->with('store', isset($messageBag['store'])?  $messageBag['store'] : [])
 			->with('delete',isset($messageBag['delete'])? $messageBag['delete'] : [])
+			->with('schedule_exception', self::schedule_exception($employee))
 			->withInput();
 	}
 	
@@ -106,23 +118,65 @@ class ScheduleController extends Controller
 	}
 	
 	function storeException(ExceptionScheduleStoreRequest $request){
-		$start = Carbon::createFromFormat('d-m-Y', $request->input('start'));
-		$end = Carbon::createFromFormat('d-m-Y', $request->input('end'));
-		$loop = Carbon::createFromFormat('d-m-Y', $request->input('start'));
-		while($loop->lessThanOrEqualTo($end)){
-			EmployeeSchedule::firstOrCreate([
-				'creator'		=> \Auth::user()->id,
-				'employee_id' 	=> $request->input('employee_id'),
-				'day'			=> "".$loop->dayOfWeek,
-				'date'			=> $loop->format('Y-m-d'),
-				'arrival'		=> $request->input('arrival'),
-				'departure'		=> $request->input('departure')
-			])->save();
+		//return $request->all();
+		
+		$inputs = $request->input('schedule_exception',[]);
+		$employee_id = $request->input('employee_id');
+		
+		$employee = Employee::find($employee_id);
+		$start = Carbon::parse($request->input('year').'-'.$request->input('month').'-01');
+		$end = Carbon::parse($request->input('year').'-'.$request->input('month').'-01')->endOfMonth();
+		
+		$messageBag = [];
+		
+		for($index = $start; $start->lessThanOrEqualTo($end); $index = $start->addDay()){
+			$indexStr = $start->format('Y-m-d');
 			
-			$loop->addDay();
+			if ( isset($inputs[$indexStr]['check']) ){
+				
+				//prepare the model
+				$data = [
+					'creator'=> 		\Auth::user()->id, 
+					'employee_id' => 	$employee_id,
+					'arrival'=>			$inputs[$indexStr]['arrival'],
+					'departure'=>		$inputs[$indexStr]['departure'],
+					'day'=>				$index->dayOfWeek,
+					'date'=>			$index->format('Y-m-d'),
+				];
+				
+				$model = EmployeeSchedule::getSchedule($employee_id, $index);
+				$model = $model? $model : new EmployeeSchedule();
+				
+				//prepare success message
+				if($model->arrival != $data['arrival']) {
+					$messageBag['store'][$indexStr]['arrival'] = $model->exists? 'diperbaharui' : 'disimpan';
+				}
+				if($model->departure != $data['departure']) {
+					$messageBag['store'][$indexStr]['departure'] = $model->exists? 'diperbaharui' : 'disimpan';
+				}
+				$model->fill($data);
+				$model->save();
+			}
+			elseif ($this->deleteException($employee, $index)){
+				$messageBag['delete'][$indexStr]['arrival'] = 'dihapus';
+				$messageBag['delete'][$indexStr]['departure'] = 'dihapus';
+			}
+			
 		}
-		$request->session()->flash('employee_id', $request->input('employee_id'));
-		$request->session()->flash('employee_nip', $request->input('employee_nip'));
-		return redirect()->route('my.bauk.schedule.landing');
+		
+		return redirect()->back()
+			->with('store', isset($messageBag['store'])?  $messageBag['store'] : [])
+			->with('delete',isset($messageBag['delete'])? $messageBag['delete'] : [])
+			->with('schedule_default', self::schedule_default($employee))
+			->withInput();
+	}
+	
+	function deleteException($employee_id, $index){
+		$model = EmployeeSchedule::getSchedule($employee_id, $index);
+		if ($model && !$model->isDefault()) {
+			$model->delete();
+			return true;
+		}
+		return false;
 	}
 }

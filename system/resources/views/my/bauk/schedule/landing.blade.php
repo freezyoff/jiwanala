@@ -50,7 +50,7 @@ var tabs = {
 		return this;
 	},
 	init: function(){
-		var ctab = '{{old('ctab','default')}}';
+		var ctab = '{{old('ctab',$ctab? $ctab : 'default')}}';
 		var button = $('#tabs-'+ctab).trigger('click');
 	}
 };

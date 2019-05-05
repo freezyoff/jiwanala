@@ -4,8 +4,8 @@
  *	String $name 				- input element name
  *	String $value 				- input element value
  *	String $placeholder 		- input element placeholder
- *	String $modalIconClass 		- input element placeholder
- *	String $modalTitle			- input element placeholder
+ *	String $modalIcon 			- input modal icon class
+ *	String $modalTitle			- input modal title
  *	String $startDateLimiter	- id of datepicker for limiting start date
  */
 $id = isset($id)? $id : str_replace('-','',\Illuminate\Support\Str::uuid());
@@ -32,6 +32,7 @@ if (isset($startDateLimiter)){
 	$startDateLimiter = 'datepicker_'.$startDateLimiter;
 }
 
+$modalIcon = isset($modalIcon)? $modalIcon : '';
 ?>
 
 <input id="{{isset($id)? $id : $name}}"  
@@ -54,15 +55,12 @@ if (isset($startDateLimiter)){
 	onclick="$(this).hide()">
 	<div class="w3-modal-content w3-animate-top w3-card-4">
 		<header class="w3-container w3-theme">
-			<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
-				onclick="$('#{{$id}}-{{$prefixName[1]}}-modal').hide()" 
-				style="font-size:20px !important">
+			<h4 class="w3-button w3-display-topright w3-hover-none w3-hover-text-light-grey"
+				onclick="$('#{{$id}}-{{$prefixName[1]}}-modal').hide()">
 				×
-			</span>
+			</h4>
 			<h4 class="padding-top-8 padding-bottom-8">
-				@if (isset($modalIconClass))
-				<i class="{{$modalIconClass}}"></i>
-				@endif
+				<i class="{{$modalIcon}}"></i>
 				<span style="padding-left:12px;">{{isset($modalTitle)? $modalTitle : ''}}</span>
 			</h4>
 		</header>
@@ -150,5 +148,17 @@ var {{$functionStamp}} = {
 
 $(document).ready(function(){
 	{{$functionStamp}}.init();
+	
+	@if (empty($modalIcon))
+	if ($('input#{{$id}}').parent().has('input-group')){
+		$.each($('input#{{$id}}').parent()
+			.find(">:first-child")
+			.find('i')
+			.attr('class')
+			.split(' '), function(index, item){
+				$('i#{{$id}}-modal-icon').addClass(item);
+			});
+	}	
+	@endif
 });
 </script>

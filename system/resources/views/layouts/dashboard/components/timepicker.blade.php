@@ -5,17 +5,22 @@
  *	String $value 				- input element value
  *	String $class 				- input element class
  *	String $placeholder			- input element placeholder
- *	String $modalIconClass 		- Icon for modal
+ *	String $modalIcon	 		- Icon for modal class
  *	String $modalTitle 			- Title for modal
+ *	String $timeFormat 			- array[input: , output: ]
  */
+ 
 $id = isset($id)? $id : str_replace('-','',\Illuminate\Support\Str::uuid());
 $prefixName = ['large','small']; 
 $value = isset($value)? $value : '';
-$class = [
-	'timepicker w3-input input w3-hide-small w3-hide-medium', 
+$defClass = [
+	'timepicker w3-input input w3-hide-small w3-hide-medium ', 
 	'timepicker w3-input input w3-hide-large'
 ];
+$class = isset($class)? $class : '';
+
 $placeholder = isset($placeholder)? $placeholder : '';
+$modalIcon = isset($modalIcon)? $modalIcon : '';
 ?>
 
 <!-- timepicker source -->
@@ -28,7 +33,7 @@ $placeholder = isset($placeholder)? $placeholder : '';
 <!-- start: timepicker large -->
 <input id="{{$id}}-{{$prefixName[0]}}" 
 	name="{{$name}}-{{$prefixName[0]}}"
-	class="{{$class[0]}}" 
+	class="{{$defClass[0]}} {{$class}}" 
 	type="text" 
 	timepicker-source="input#{{$id}}"
 	timepicker-link="input#{{$id}}-{{$prefixName[1]}}"
@@ -40,7 +45,7 @@ $placeholder = isset($placeholder)? $placeholder : '';
 <!-- start: timepicker small -->
 <input id="{{$id}}-{{$prefixName[1]}}" 
 	name="{{$name}}-{{$prefixName[1]}}"
-	class="{{$class[1]}}" 
+	class="{{$defClass[1]}} {{$class}}" 
 	type="text" 
 	timepicker-source="input#{{$id}}"
 	timepicker-link="input#{{$id}}-{{$prefixName[0]}}"
@@ -67,7 +72,7 @@ $placeholder = isset($placeholder)? $placeholder : '';
 				×
 			</h4>
 			<h4 class="padding-top-8 padding-bottom-8">
-				<i class="{{$modalIconClass}}"></i>
+				<i id="{{$id}}-modal-icon" class="{{$modalIcon}} fa-fw"></i>
 				<span style="padding-left:12px;">{{$modalTitle}}</span>
 			</h4>
 		</header>
@@ -75,11 +80,31 @@ $placeholder = isset($placeholder)? $placeholder : '';
 	</div>
 </div>
 <!-- end: modal container -->
+
 <script>
 $(document).ready(function(){
 	//inject dropdown to outer parent
-	$('div#{{$id}}-dropdown').parent().insertAfter(
-		$('input#{{$id}}').parent()
-	);
+	//$('div#{{$id}}-dropdown').parent().insertAfter(
+	//	$('input#{{$id}}').parent()
+	//);
+	
+	@if (empty($modalIcon))
+	if ($('input#{{$id}}').parent().has('input-group')){
+		$.each($('input#{{$id}}').parent()
+			.find(">:first-child")
+			.find('i')
+			.attr('class')
+			.split(' '), function(index, item){
+				$('i#{{$id}}-modal-icon').addClass(item);
+			});
+	}	
+	@endif
+	
+	$.each(['input#{{$id}}-{{$prefixName[0]}}', 'input#{{$id}}-{{$prefixName[1]}}'], function(index, item){
+		$(item).timepicker({
+			parseFormat: '{{ isset($timeFormat['input'])? $timeFormat['input'] : 'HH:mm:ss'}}',
+			outputFormat: '{{ isset($timeFormat['output'])? $timeFormat['output'] : 'HH:mm:ss'}}'
+		});
+	});
 });
 </script>

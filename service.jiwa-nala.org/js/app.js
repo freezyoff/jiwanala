@@ -202,7 +202,11 @@
 				event.stopPropagation();
 				var requiredWidth = toggleContainer.filter($(this).attr('select-dropdown')).width('').width();
 				var width = $(this).parent().hasClass('input-group')? $(this).parent().width() : $(this).width();
-				toggleContainer.filter($(this).attr('select-dropdown')).width(Math.max(width, requiredWidth));	//dropdown only set the width
+				var height = $(this).parent().hasClass('input-group')? $(this).parent().height() : $(this).height();
+				var position = $(label).position();
+				toggleContainer.filter($(this).attr('select-dropdown'))
+					.css({top:(position.top+height+2)+'px'})
+					.width(Math.max(width, requiredWidth));	//dropdown only set the width
 				toggleContainer.show();	//show all
 				chevronToggle();
 			};
@@ -249,7 +253,7 @@
 					$(item).parent().click(pickItemInContainer);
 				}
 			});
-			$(window).click(hideContainer);
+			$(window).on('click resize', hideContainer);
 			
 		});
 		
@@ -339,9 +343,8 @@
 					'<div id="'+uid+'-modal" class="w3-modal w3-display-container w3-hide-large" onclick="$(this).hide()">'+
 						'<div class="w3-modal-content w3-animate-top w3-card-4">'+
 							'<header class="w3-container w3-theme">'+
-								'<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"'+
-									'onclick="$(\'#uid-modal\').hide()" '+
-									'style="font-size:20px !important">×</span>'+
+								'<h4 class="w3-button w3-display-topright w3-hover-none w3-hover-text-light-grey"'+
+									'onclick="$(\'#uid-modal\').hide()">×</h4>'+
 								'<h4 class="padding-top-8 padding-bottom-8">'+
 									'<i class="'+icon+'"></i>'+
 									'<span style="padding-left:12px;">'+options.modal.title+'</span>'+
@@ -439,7 +442,6 @@
 			setLoaderVisibility(false);
 		}
 		var errorAjax = function(aa, bb){ 
-			console.log('errorajax');
 			emptyList(); 
 			if (options.ajax.error) options.ajax.error(aa, bb);				
 			setLoaderVisibility(false);
@@ -584,8 +586,16 @@
 		
 		//if options[container] exist
 		if (iroot.attr('timepicker-container')){
+			var isParentInputGroup = iroot.parent().hasClass('input-group');
+			var height = isParentInputGroup? iroot.parent().height() : iroot.height();
 			var container = iroot.attr('timepicker-container');
-			$(container).append(troot).css('padding', '8px');
+			
+			//dropdown style
+			$(container).append(troot);
+			if (!iroot.attr('timepicker-modal')){
+				$(container).css({padding: '8px', top: (height+2)+'px', right:'0'});
+			}
+			
 			if (options.class) $(troot).addClass(options.class);
 			if (options.styles) $(troot).attr('style',options.styles);
 			
@@ -598,10 +608,11 @@
 					$(iroot.attr('timepicker-modal')).show();
 				}
 				else{
-					$(container).addClass('w3-show').css('right','0');
+					$(container).addClass('w3-show');
 				}
+				console.log(iroot.attr('timepicker-modal'));
 			});
-			$(window).on('click focus', function(){
+			$(window).on('click focus resize', function(){
 				if (iroot.attr('timepicker-modal')){
 					$(iroot.attr('timepicker-modal')).hide();
 				}

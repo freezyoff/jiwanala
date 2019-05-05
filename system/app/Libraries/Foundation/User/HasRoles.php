@@ -15,7 +15,8 @@ trait HasRoles{
 	}
 	
 	public function grantRole($key){
-		$this->roles()->attach($key, ['creator'=>\Auth::user()->id]);
+		$data = \Auth::user()? ['creator'=>\Auth::user()->id] : [];
+		$this->roles()->attach($key, $data);
 	}
 	
 	public function revokeRole($key){

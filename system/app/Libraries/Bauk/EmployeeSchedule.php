@@ -30,18 +30,14 @@ class EmployeeSchedule extends Model
 	public static function getSchedule($employeeID, Carbon $date){
 		//first we search records with given date
 		$byDateSchedule = self::where('employee_id', $employeeID)->where('date', $date->format('Y-m-d'))->first();
-		if ($byDateSchedule){
-			return $byDateSchedule;
-		}
-		
-		//record not found
-		//we search record with column day & date null
-		return self::getDefaultSchedule($employeeID, $date->dayOfWeek);
+		return $byDateSchedule? 
+			$byDateSchedule : 
+			self::getDefaultSchedule($employeeID, $date->dayOfWeek);
 	}
 	
-	public static function getDefaultSchedule($employeeID, $dayOfWeek){
+	public static function getDefaultSchedule($employeeID, String $dayOfWeek){
 		return self::where('employee_id','=',$employeeID)
-					->where('day', "$dayOfWeek")
+					->where('day', $dayOfWeek)
 					->whereNull('date')
 					->first();
 	}
