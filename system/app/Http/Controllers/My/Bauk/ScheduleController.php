@@ -157,7 +157,7 @@ class ScheduleController extends Controller
 				$model->fill($data);
 				$model->save();
 			}
-			elseif ($this->deleteException($employee, $index)){
+			elseif ($this->deleteException($employee->id, $index)){
 				$messageBag['delete'][$indexStr]['arrival'] = 'dihapus';
 				$messageBag['delete'][$indexStr]['departure'] = 'dihapus';
 			}
@@ -171,8 +171,8 @@ class ScheduleController extends Controller
 			->withInput();
 	}
 	
-	function deleteException($employee_id, $index){
-		$model = EmployeeSchedule::getSchedule($employee_id, $index);
+	function deleteException($employee_id, $date){
+		$model = EmployeeSchedule::getSchedule($employee_id, $date);
 		if ($model && !$model->isDefault()) {
 			$model->delete();
 			return true;
