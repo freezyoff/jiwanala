@@ -12,7 +12,8 @@ class ListPermission extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-permission:list';
+    protected $signature = 'jn-permission:list
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -40,10 +41,28 @@ class ListPermission extends Command
     {
         $this->table(
 			['ID','Context', 'Display Name', 'Descriptions'], 
-			collect(Permission::all()
-			->map(function($item){
+			$this->getPermissions()->map(function($item){
 				return collect($item)->only(['id','context','display_name','description']);
-			}))
+			})
 		);
     }
+	
+	function getPermissions(){
+		return $this->option('remote')? $this->getPermissionsOnRemote() : $this->getPermissionsOnLocal();
+	}
+	
+	function getPermissionsOnRemote(){
+		config(['database.connections._permissionRemote' => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	'jiwanala_service',
+		]]);
+		return collect(Permission::on('_permissionRemote')->get());
+	}
+	
+	function getPermissionsOnLocal(){
+		return collect(Permission::all());
+	}
 }

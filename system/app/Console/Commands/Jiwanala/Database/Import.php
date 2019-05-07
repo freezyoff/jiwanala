@@ -16,6 +16,7 @@ class Import extends Command
 		{--remote				: use remote connection}
 		{--query-limit= 		: query limit. default 1000 records}
 		{--import-version= 		: signature time for export key. Refer to directory name in storage/app/database/}
+		{--execution-time=		: time limit. @see ini_set("max_execution_time", time), @see set_time_limit(time)}
 	';
 
     /**
@@ -186,8 +187,11 @@ class Import extends Command
      * @return mixed
      */
     public function handle(){
-		ini_set('max_execution_time', 0);
-		set_time_limit(0);
+		if ($this->option('execution-time') !== null){
+			$time = (int)$this->option('execution-time');
+			ini_set('max_execution_time', $time);
+			set_time_limit($time);
+		}
 		
 		$this->infoStart();
 		
@@ -247,7 +251,8 @@ class Import extends Command
     }
 	
 	function infoStart(){
-		$this->line('<fg=cyan>Start </><fg=white>Import </>');
+		$target = $this->option('remote')? 'Remote' : 'Local';
+		$this->line('<fg=cyan>Start </><fg=yellow>'.$target.'</> Database <fg=white>Import </>');
 		$this->line('<fg=white>Use </><fg=yellow>Version : </><fg=cyan>'.$this->getVersion().'</>');
 	}
 	

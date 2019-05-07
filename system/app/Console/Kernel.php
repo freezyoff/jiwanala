@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\User\RevokeRole::class,
 		\App\Console\Commands\Jiwanala\Service\User\ListUser::class,
 		\App\Console\Commands\Jiwanala\Service\User\Add::class,
+		\App\Console\Commands\Jiwanala\Service\User\Delete::class,
+		\App\Console\Commands\Jiwanala\Service\User\ResetPwd::class,
 		
 		/*
 		 * jn-permission
@@ -67,6 +69,12 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\Role\Install::class,
 		\App\Console\Commands\Jiwanala\Service\Role\Sync::class,
 		
+		/*
+		 * jn-employee
+		 */
+		\App\Console\Commands\Jiwanala\Bauk\Employee\CreateUser::class,
+		\App\Console\Commands\Jiwanala\Bauk\Employee\DeleteUser::class,
+		\App\Console\Commands\Jiwanala\Bauk\Employee\ResetUserPwd::class,
     ];
 
     /**
