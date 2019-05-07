@@ -17,6 +17,7 @@ class Export extends Command
 		{--file-size-limit=	: Export file size limit. default 100Mb}
 		{--export-version= 	: signature time for export key. Use as directoriy in storage/app/database/}
 		{--daemon 			: background message}
+		{--execution-time=	: time limit. @see ini_set("max_execution_time", time), @see set_time_limit(time)}
 	';
 
     /**
@@ -31,6 +32,7 @@ class Export extends Command
 	protected $strBuffer='';
 	protected $maxQuery = 1000;
 	protected $maxFileSize = 100000000;
+	protected $execution_time = 60*5;
 	
     /**
      * Create a new command instance.
@@ -67,7 +69,7 @@ class Export extends Command
 			$this->line('Start Export '.($isRemote?'Remote':'Localhost').' at: '.now()->format('Y/m/d H:i:s'));
 		}
 		else{
-			$this->line('<fg=cyan>Start </>Export '. ($isRemote?'Remote':'Localhost'));
+			$this->line('<fg=cyan>Start </>Export <fg=yellow>'. ($isRemote?'Remote':'Localhost').'</>');
 		}
 	}
 	
@@ -100,8 +102,11 @@ class Export extends Command
 	
     public function handle()
     {
-		ini_set('max_execution_time', 0);
-		set_time_limit(0);
+		if ($this->option('execution-time') !== null){
+			$time = (int)$this->option('execution-time');
+			ini_set('max_execution_time', $time);
+			set_time_limit($time);
+		}
 		
 		$this->infoStart();
 		

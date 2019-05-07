@@ -13,7 +13,8 @@ class Truncate extends Command
      * @var string
      */
     protected $signature = 'jn-db:truncate 
-							{--remote				: use remote connection}';
+							{--remote				: use remote connection}
+							{--execution-time=		: time limit. @see ini_set("max_execution_time", time), @see set_time_limit(time)}';
 
     /**
      * The console command description.
@@ -102,8 +103,11 @@ class Truncate extends Command
      */
     public function handle()
     {
-		ini_set('max_execution_time', 0);
-		set_time_limit(0);
+		if ($this->option('execution-time') !== null){
+			$time = (int)$this->option('execution-time');
+			ini_set('max_execution-time', $time);
+			set_time_limit($time);
+		}
 		
 		$tables = [];
 		foreach($this->getSchemas() as $schema){
@@ -136,7 +140,8 @@ class Truncate extends Command
 	}
 	
 	function infoStart(){
-		$this->line('<fg=cyan>Start </><fg=white>Truncante </>');
+		$target = $this->option('remote')? 'Remote' : 'Local';
+		$this->line('<fg=cyan>Start </><fg=white>Truncante </><fg=yellow>'.$target.'</>');
 	}
 	
 	function infoEnd(){
