@@ -49,7 +49,10 @@ class DefaultScheduleStoreRequest extends FormRequest
 	protected function failedValidation(Validator $validator)
     {
 		$employee = Employee::find( request('employee_id') );
-		\Session::flash('schedule_exception', ScheduleController::schedule_exception($employee) );
+		
+		$month = request('exception_month');
+		$year = request('exception_year');
+		\Session::flash('schedule_exception', ScheduleController::schedule_exception($employee, $month, $year) );
         throw (new ValidationException($validator))
                     ->errorBag($this->errorBag)
                     ->redirectTo($this->getRedirectUrl());

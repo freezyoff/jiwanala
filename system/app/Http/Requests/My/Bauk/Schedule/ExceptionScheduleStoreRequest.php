@@ -32,8 +32,8 @@ class ExceptionScheduleStoreRequest extends FormRequest
 			'employee_id'=>		'required|exists:bauk.employees,id',
 		];
 		
-		$start = Carbon::parse(request('year').'-'.request('month').'-01');
-		$end = Carbon::parse(request('year').'-'.request('month').'-01')->endOfMonth();
+		$start = Carbon::parse(request('exception_year').'-'.request('exception_month').'-01');
+		$end = Carbon::parse(request('exception_year').'-'.request('exception_month').'-01')->endOfMonth();
 		
 		for($index = $start; $start->lessThanOrEqualTo($end); $index = $start->addDay()){
 			$indexStr = $start->format('Y-m-d');
@@ -53,7 +53,7 @@ class ExceptionScheduleStoreRequest extends FormRequest
 	protected function failedValidation(Validator $validator)
     {
 		$employee = Employee::find( request('employee_id') );
-		\Session::flash('schedule_default', ScheduleController::schedule_default($employee) );
+		\Session::flash('schedule_default', ScheduleController::schedule_default($employee));
         throw (new ValidationException($validator))
                     ->errorBag($this->errorBag)
                     ->redirectTo($this->getRedirectUrl());

@@ -20,7 +20,7 @@
 |
 */
 if (!App::environment('production')) {
-	ini_set('max_execution_time', 300);	
+	ini_set('max_execution_time', 0);
 }
 $domain = App::environment('production')? config('jiwanala.domain.production') : config('jiwanala.domain.local');
 $locale = Session::get('locale', App::getLocale());

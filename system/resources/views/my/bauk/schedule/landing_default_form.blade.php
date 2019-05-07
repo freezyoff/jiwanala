@@ -1,5 +1,5 @@
 <?php 
-	$schedule_default = empty($schedule_default)? \Session::get('schedule_default') : $schedule_default;
+	$schedule_default = old('schedule_default', session('schedule_default', $schedule_default? $schedule_default : []));
 ?>
 <form id="default-form" 
 	name="default-form" 
@@ -17,6 +17,12 @@
 		value="{{old('employee_name', isset($employee)? $employee->getFullName(' ') : '')}}"
 		type="hidden" />
 	<input name="ctab" value="default" type="hidden" />
+	<input name="exception_month" 
+		value="{{old('exception_month', session('exception_month', $exception_month))}}" 
+		type="hidden" />
+	<input name="exception_year" 
+		value="{{old('exception_year', session('exception_year', $exception_year))}}" 
+		type="hidden" />
 
 	@for($i=0;$i<7;$i++)
 	<div class="w3-row padding-top-8">
@@ -24,7 +30,7 @@
 			<div class="input-group" style="border:none;" >
 				<label style="cursor:pointer;">
 					<i class="fa-square fa-fw 
-						@if (old('schedule_default.'.$i.'.check') || isset($schedule_default[$i]))
+						@if (isset($schedule_default[$i]['check']))
 							fas w3-text-blue
 						@else
 							far
@@ -35,9 +41,7 @@
 				<input name="schedule_default[{{$i}}][check]" 
 					class="w3-hide" 
 					type="checkbox" 
-					@if (old('schedule_default.'.$i.'.check'))
-					checked="checked"
-					@elseif (isset($schedule_default[$i]))
+					@if (isset($schedule_default[$i]['check']))
 					checked="checked"
 					@endif
 				/>
@@ -48,18 +52,13 @@
 				<label><i class="fas fa-sign-in-alt fa-fw"></i></label>
 				<!-- begin timepicker -->
 				<?php 
+					$isset = isset($schedule_default[$i]) && isset($schedule_default[$i]['arrival']);
 					$data = [
 						'name'=>'schedule_default['.$i.'][arrival]',
 						'placeholder'=>trans('my/bauk/schedule.hints.arrivalTime'),
 						'modalTitle'=>trans('my/bauk/schedule.hints.arrivalTime'),
-						'value'=>""
+						'value'=>$isset? $schedule_default[$i]['arrival'] : ''
 					];
-					if (old('schedule_default.'.$i.'.arrival')){	
-						$data['value'] = old('schedule_default.'.$i.'.arrival');
-					}
-					elseif (isset($schedule_default) && isset($schedule_default[$i])){
-						$data['value'] = $schedule_default[$i]->arrival;
-					}
 				?>
 				@include('layouts.dashboard.components.timepicker', $data)
 				<!-- end: timepicker -->
@@ -77,18 +76,13 @@
 				<label><i class="fas fa-sign-out-alt fa-fw"></i></label>
 				<!-- begin timepicker -->
 				<?php 
+				$isset = isset($schedule_default[$i]) && isset($schedule_default[$i]['arrival']);
 					$data = [
 						'name'=>'schedule_default['.$i.'][departure]',
 						'placeholder'=>trans('my/bauk/schedule.hints.departureTime'),
 						'modalTitle'=>trans('my/bauk/schedule.hints.departureTime'),
-						'value'=>""
+						'value'=>$isset? $schedule_default[$i]['departure'] : ''
 					];
-					if (old('schedule_default.'.$i.'.departure')){	
-						$data['value'] = old('schedule_default.'.$i.'.departure');
-					}
-					elseif (isset($schedule_default) && isset($schedule_default[$i])){
-						$data['value'] = $schedule_default[$i]->departure;
-					}
 				?>
 				@include('layouts.dashboard.components.timepicker', $data)
 				<!-- end: timepicker -->

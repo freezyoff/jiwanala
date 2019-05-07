@@ -46,7 +46,7 @@ class UserController extends Controller
 		$registeredUser = User::where('name','=',$employee->nip)->first();
 		if ($registeredUser){
 			//update email
-			$registeredUser->email = $email;			
+			$registeredUser->email = $email;
 		}
 		else{
 			//create new record

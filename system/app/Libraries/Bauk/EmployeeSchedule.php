@@ -29,7 +29,10 @@ class EmployeeSchedule extends Model
 	
 	public static function getSchedule($employeeID, Carbon $date){
 		//first we search records with given date
-		$byDateSchedule = self::where('employee_id', $employeeID)->where('date', $date->format('Y-m-d'))->first();
+		$byDateSchedule = self::where('employee_id', $employeeID)
+							->whereNotNull('date')
+							->where('date', $date->format('Y-m-d'))
+							->first();
 		return $byDateSchedule? 
 			$byDateSchedule : 
 			self::getDefaultSchedule($employeeID, $date->dayOfWeek);
@@ -40,5 +43,11 @@ class EmployeeSchedule extends Model
 					->where('day', $dayOfWeek)
 					->whereNull('date')
 					->first();
+	}
+	
+	public static function getExceptionSchedule($employeeID, Carbon $date){
+		return self::where('employee_id', $employeeID)
+				->where('date', $date->format('Y-m-d'))
+				->first();
 	}
 }

@@ -24,21 +24,31 @@ class ScheduleController extends Controller
 		$data['schedule_default'] = self::schedule_default($employee);
 		
 		//exception schedule
-		$data['schedule_exception'] = self::schedule_exception($employee);
-		
-		//exception periode
 		$month = $request->input('exception_month', now()->format('m'));
 		$year = $request->input('exception_year', now()->year);
-		$data['exception_periode'] = Carbon::parse($year.'-'.$month.'-01');
+		$data['schedule_exception'] = self::schedule_exception($employee, $month, $year);
+		
+		//exception periode
+		$data['exception_month'] = $month;
+		$data['exception_year'] = $year;
 		
 		return view('my.bauk.schedule.landing',$data);
 	}
 	
-	public static function schedule_exception($employee){
+	public static function schedule_exception($employee, $month, $year){
 		if ($employee){
+			$start = Carbon::parse($year.'-'.$month.'-01');
+			$end = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
+			
 			$schedules = [];
-			foreach($employee->schedules()->whereNotNull('date')->get() as $exception){
-				$schedules[$exception->date] = $exception;
+			$employeeSchedule = $employee->schedules()
+									->whereNotNull('date')
+									->whereBetween('date',[$start, $end])
+									->get();
+			foreach($employeeSchedule as $exception){
+				$schedules[$exception->date]['check'] = true;
+				$schedules[$exception->date]['arrival'] = $exception->arrival;
+				$schedules[$exception->date]['departure'] = $exception->departure;
 			}
 			return $schedules;
 		}
@@ -49,7 +59,9 @@ class ScheduleController extends Controller
 		if ($employee){
 			$schedules = [];
 			foreach($employee->schedules()->whereNull('date')->get() as $default){
-				$schedules[$default->day] = $default;
+				$schedules[$default->day]['check'] = true;
+				$schedules[$default->day]['arrival'] = $default->arrival;
+				$schedules[$default->day]['departure'] = $default->departure;
 			}			
 			return $schedules;
 		}
@@ -101,10 +113,15 @@ class ScheduleController extends Controller
 			}
 		}
 		
+		$month = $request->input('exception_month');
+		$year = $request->input('exception_year');
 		return redirect()->back()
 			->with('store', isset($messageBag['store'])?  $messageBag['store'] : [])
 			->with('delete',isset($messageBag['delete'])? $messageBag['delete'] : [])
-			->with('schedule_exception', self::schedule_exception($employee))
+			->with('exception_month', $month)
+			->with('exception_year', $year)
+			->with('schedule_default', self::schedule_default($employee))
+			->with('schedule_exception', self::schedule_exception($employee, $month, $year))
 			->withInput();
 	}
 	
@@ -123,9 +140,11 @@ class ScheduleController extends Controller
 		$inputs = $request->input('schedule_exception',[]);
 		$employee_id = $request->input('employee_id');
 		
+		$year = $request->input('exception_year');
+		$month = $request->input('exception_month');
 		$employee = Employee::find($employee_id);
-		$start = Carbon::parse($request->input('year').'-'.$request->input('month').'-01');
-		$end = Carbon::parse($request->input('year').'-'.$request->input('month').'-01')->endOfMonth();
+		$start = Carbon::parse($year.'-'.$month.'-01');
+		$end = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
 		
 		$messageBag = [];
 		
@@ -140,12 +159,12 @@ class ScheduleController extends Controller
 					'employee_id' => 	$employee_id,
 					'arrival'=>			$inputs[$indexStr]['arrival'],
 					'departure'=>		$inputs[$indexStr]['departure'],
-					'day'=>				$index->dayOfWeek,
+					'day'=>				(String) $index->dayOfWeek,
 					'date'=>			$index->format('Y-m-d'),
 				];
 				
-				$model = EmployeeSchedule::getSchedule($employee_id, $index);
-				$model = $model? $model : new EmployeeSchedule();
+				$model = EmployeeSchedule::getExceptionSchedule($employee_id, $index);
+				$model = $model && !$model->isDefault()? $model : new EmployeeSchedule();
 				
 				//prepare success message
 				if($model->arrival != $data['arrival']) {
@@ -167,12 +186,15 @@ class ScheduleController extends Controller
 		return redirect()->back()
 			->with('store', isset($messageBag['store'])?  $messageBag['store'] : [])
 			->with('delete',isset($messageBag['delete'])? $messageBag['delete'] : [])
+			->with('exception_month', $month)
+			->with('exception_year', $year)
 			->with('schedule_default', self::schedule_default($employee))
+			->with('schedule_exception', self::schedule_exception($employee, $month, $year))
 			->withInput();
 	}
 	
 	function deleteException($employee_id, $date){
-		$model = EmployeeSchedule::getSchedule($employee_id, $date);
+		$model = EmployeeSchedule::getExceptionSchedule($employee_id, $date);
 		if ($model && !$model->isDefault()) {
 			$model->delete();
 			return true;

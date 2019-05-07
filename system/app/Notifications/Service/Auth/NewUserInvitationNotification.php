@@ -21,6 +21,17 @@ class NewUserInvitationNotification extends Notification
     public function __construct($token){ 
 		$this->token = route('service.auth.reset',[$token]);
 		$this->token = str_replace(["https://",'http://'],"",$this->token);
+		if (!\App::environment('production')){
+			$this->token = str_replace(
+				config('jiwanala.domain.local'),
+				config('jiwanala.domain.production'),
+				$this->token
+			);
+		}
+	}
+	
+	public function getToken(){
+		return $this->token;
 	}
 
     /**
@@ -45,7 +56,7 @@ class NewUserInvitationNotification extends Notification
         return (new MailMessage)
 			->subject(trans('service/auth/reset.mail.invitation'))
 			->markdown('service.auth.mail.new_user_invitation', [
-				'token'=>$this->token
+				'token'=>$this->getToken()
 			]);
     }
 
@@ -57,8 +68,6 @@ class NewUserInvitationNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        return ['invitation_url'=>$this->getToken()];
     }
 }

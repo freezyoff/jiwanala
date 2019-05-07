@@ -21,7 +21,18 @@ class ResetPasswordNotification extends Notification
     public function __construct($token){
 		$this->token = route('service.auth.reset',[$token]);
 		$this->token = str_replace(["https://",'http://'],"",$this->token);
+		if (!\App::environment('production')){
+			$this->token = str_replace(
+				config('jiwanala.domain.local'),
+				config('jiwanala.domain.production'),
+				$this->token
+			);
+		}
     }
+	
+	public function getToken(){
+		return $this->token;
+	}
 
     /**
      * Get the notification's delivery channels.
@@ -44,7 +55,7 @@ class ResetPasswordNotification extends Notification
 		return (new MailMessage)
 			->subject(trans('service/auth/reset.mail.reset'))
 			->markdown('service.auth.mail.reset_user_password', [
-				'token'=>$this->token
+				'token'=>$this->getToken()
 			]);
     }
 
@@ -55,6 +66,6 @@ class ResetPasswordNotification extends Notification
      * @return array
      */
     public function toArray($notifiable){
-        return ['reset_url'=>$this->token];
+        return ['reset_url'=>$this->getToken()];
     }
 }

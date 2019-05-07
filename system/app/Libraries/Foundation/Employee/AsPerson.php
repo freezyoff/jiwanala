@@ -10,4 +10,8 @@ trait AsPerson{
 		//return $this->id .'-'. $this->person_id;
 		return $this->asPerson()->first()->getFullName($spacer);
 	}
+	
+	public function getEmailDefault(){
+		return $this->asPerson()->first()->emailDefault();
+	}
 }
