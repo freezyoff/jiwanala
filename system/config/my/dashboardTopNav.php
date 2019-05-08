@@ -150,10 +150,10 @@
 			],
 		]
 	],
-
+	
 	/*
-	'head-master'=>[
-		'display'=>[ 'name'=>'Kepala Sekolah', 'icon'=>'fas fa-chess-rook'],
+	'division'=>[
+		'display'=>'\Auth::user()->getRole("division.")',
 		'href'=>'my.head-master.landing',
 		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->isAssignedAs('2.4'); },
 	],

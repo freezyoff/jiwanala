@@ -20,34 +20,32 @@
 			<div class="w3-col s12 m6 l4">
 				<div class="input-group padding-top-8">
 					<label><i class="far fa-calendar-check w3-large"></i></label>
-					<input id="dashboard-periode-month" 
-						name="month"
-						value="{{ $month }}"
-						type="text" 
-						class="w3-input month" 
-						role="select"
-						select-dropdown="#attendanceProgress-month-dropdown"
-						select-modal="#attendanceProgress-month-modal"
-						select-modal-container="#attendanceProgress-month-modal-container" />
+					<?php 
+						$dropdown = [
+							'id'		=> 'dashboard-periode-month',
+							'name'		=> 'month',
+							'value'		=> $month,
+							'dropdown'	=> ['my.dashboard.landing_month_year_dropdown', ['mode'=>'month']],
+							'modalTitle'=> ucfirst(trans('my/bauk/attendance/pages.subtitles.month'))
+						];
+					?>
+					@include('layouts.dashboard.components.select', $dropdown)
 				</div>
 			</div>
 			<div class="w3-col s12 m6 l4">
 				<div class="input-group margin-left-8 margin-none-small padding-top-8">
 					<label><i class="far fa-calendar-check w3-large"></i></label>
-					<input id="dashboard-periode-year" 
-						name="year"
-						value="{{ $year }}"
-						type="text" 
-						class="w3-input" 
-						role="select"
-						select-dropdown="#attendanceProgress-year-dropdown"
-						select-modal="#attendanceProgress-year-modal"
-						select-modal-container="#attendanceProgress-year-modal-container" />
+					<?php 
+						$dropdown = [
+							'id'		=> 'dashboard-periode-year',
+							'name'		=> 'year',
+							'value'		=> $year,
+							'dropdown'	=> ['my.dashboard.landing_month_year_dropdown', ['mode'=>'year']],
+							'modalTitle'=> ucfirst(trans('my/bauk/attendance/pages.subtitles.year'))
+						];
+					?>
+					@include('layouts.dashboard.components.select', $dropdown)
 				</div>
-				@include('my.dashboard.landing_month_dropdown')
-				@include('my.dashboard.landing_month_modal')
-				@include('my.dashboard.landing_year_dropdown')
-				@include('my.dashboard.landing_year_modal')
 			</div>
 		</div>
 	</form>
@@ -180,12 +178,7 @@ var tabs = {
 };
 
 $(document).ready(function(){
-	$('input[role="select"]').select({
-		style:{
-			cursor:'pointer',
-			overflow:'visible'
-		}
-	}).on('change', function(){
+	$('input[role="select"]').on('change', function(){
 		$(this).parents('form').trigger('submit');
 	});
 	
