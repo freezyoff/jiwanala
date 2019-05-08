@@ -62,4 +62,13 @@
 			'bauk.assignment.verifier',
 		]
 	], 
+	
+	'division.manager'=>[
+		'context'=>'division',
+		'display_name'=>'Ketua Divisi',
+		'description'=>'Pimpinan Divisi',
+		'permissions'=>[
+			'division-manager.subordinates.list'
+		]
+	]
 ];

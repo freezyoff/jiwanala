@@ -12,7 +12,8 @@ class Add extends Command
      *
      * @var string
      */
-	protected $signature = 'jn-permission:add {id} {context} {display_name} {description}';
+	protected $signature = 'jn-permission:add {id} {context} {display_name} {description}
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -31,6 +32,28 @@ class Add extends Command
         parent::__construct();
     }
 
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function createPermission($arg){
+		return $this->isRemote()?
+			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->insert($arg) : 
+			Permission::create($arg);
+	}
+
     /**
      * Execute the console command.
      *
@@ -38,7 +61,7 @@ class Add extends Command
      */
     public function handle()
     {
-        $permission = Permission::create([
+        $permission = $this->createPermission([
 			'id'=>$this->argument('id'),
 			'context'=>$this->argument('context'),
 			'display_name'=>$this->argument('display_name'),

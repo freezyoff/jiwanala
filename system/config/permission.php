@@ -84,6 +84,7 @@
 		/*
 		 *	Domain: Division
 		 */
-		 'division.'=>[],
+		 'division.subordinates.list'=>['division', 'List Subordinates', 'Melihat daftar rekan kerja'],
+		 
     ],
 ];
