@@ -5,6 +5,7 @@ namespace App\Console\Commands\Jiwanala\Service\User;
 use Illuminate\Console\Command;
 use App\Libraries\Service\Auth\User;
 use App\Libraries\Service\Role;
+use Illuminate\Support\Str;
 
 class GrantRole extends Command
 {
@@ -13,7 +14,8 @@ class GrantRole extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-user:grantRole {user_name} {role_id*}';
+    protected $signature = 'jn-user:grantRole {user_name} {role_id*} 
+							{--role-opt		: add role option in grant process}';
 
     /**
      * The console command description.
@@ -31,6 +33,19 @@ class GrantRole extends Command
     {
         parent::__construct();
     }
+	
+	function serializeRoleOptions($roleID){
+		$roleOptions = [];
+		$choice = $this->choice('Add Role <fg=yellow>'.$roleID .'</> Option?', ['Yes', 'No'], 0);
+		while (strtolower($choice) == strtolower('yes')){
+			$key = $this->ask('Option array <fg=yellow>Key</> (use dot notation if nested array)?');
+			$value = $this->ask('Option array <fg=yellow>Value</>?');
+			data_fill($roleOptions, $key, $value);
+			$choice = $this->choice('Add more Role Option?', ['Yes', 'No'], 0);
+		}
+		
+		return $roleOptions;
+	}
 
     /**
      * Execute the console command.
@@ -50,7 +65,8 @@ class GrantRole extends Command
 		foreach($this->argument('role_id') as $role){
 			//check if given role valid id
 			if (Role::find($role)){
-				$user->grantRole($role);
+				
+				$user->grantRole($role, $this->serializeRoleOptions($role));
 				$this->line('Role <fg=green>'.$role.'</> <fg=yellow>Granted</>');
 			}
 			else{
