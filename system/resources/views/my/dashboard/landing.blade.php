@@ -162,9 +162,9 @@ var tabs = {
 			click: tabs.onTabClick
 		});
 		
-		$(window).on('resize', function(){
-			tabs.onResize();
-		});
+		//$(window).on('resize', function(){
+		//	tabs.onResize();
+		//});
 		tabs.onResize();
 	},
 	showAll:function(){
