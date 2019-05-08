@@ -151,13 +151,13 @@
 		]
 	],
 	
-	/*
-	'division'=>[
-		'display'=>'\Auth::user()->getRole("division.")',
+	'head-master'=>[
+		'display'=>['name'=>'Kepala Sekolah', 'icon'=>''],
 		'href'=>'my.head-master.landing',
-		'permission_context'=>function(){ return \Auth::guard('my')->user()->asEmployee->isAssignedAs('2.4'); },
+		'permission_context'=>function(){
+			
+		},
 	],
-	*/
 	
 	'baak'=>[
 		'display'=>[ 'name'=>'BAAK', 'icon'=>'fas fa-graduation-cap'],

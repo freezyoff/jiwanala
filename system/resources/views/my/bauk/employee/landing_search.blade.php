@@ -49,11 +49,10 @@
 		<div id="keyactive-modal" class="w3-modal w3-display-container w3-hide-large" onclick="$(this).hide()">
 			<div class="w3-modal-content w3-animate-top w3-card-4">
 				<header class="w3-container w3-theme">
-					<span class="w3-button w3-display-topright w3-small w3-hover-none w3-hover-text-light-grey"
-						onclick="$('#keyactive-modal').hide()" 
-						style="font-size:20px !important">
+					<h4 class="w3-button w3-display-topright w3-hover-none w3-hover-text-light-grey"
+						onclick="$('#keyactive-modal').hide()">
 						×
-					</span>
+					</h4>
 					<h4 class="padding-top-8 padding-bottom-8">
 						<i class="fas fa-search"></i>
 						<span style="padding-left:12px;">{{trans('my/bauk/employee/landing.hints.keyactive_modal')}}</span>
