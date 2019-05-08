@@ -80,5 +80,10 @@
 		'bauk.assignment.release'=>['bauk', 'Release Employee Assignment', 'Mencabut penugasan karyawan'],
 		'bauk.assignment.verifier'=>['bauk', 'Verify', 'Verify penugasan karyawan'],
 		'bauk.assignment.approver'=>['bauk', 'Approve', 'Approve penugasan karyawan'],
+		
+		/*
+		 *	Domain: Division
+		 */
+		 'division.'=>[],
     ],
 ];

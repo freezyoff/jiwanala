@@ -19,24 +19,22 @@ trait HasAssignments{
 	}
 	
 	public function assignAt($division){
-		$this->assignments()->attach($division, [
-			'creator'=>\Auth::user()->id,
-		]);
+		$this->assignments()->attach($division, ['creator'=>\Auth::user()->id]);
 	}
 	
 	/**
 	 * @param $division - code of division
-	 * @param $job_position - code of job_position
+	 * @param $roleKey - code of role
 	 */
 	public function assignAs($division, $job_position){
 		if (!$this->isAssignedAt($division)){
-			$this->assignments()->attach($division, [
-				'creator'=>\Auth::user()->id,
-				'job_position_id'=>$job_position,
-			]);
+			$this->assignments()->attach($division, ['creator'=>\Auth::user()->id]);
 		}
-		else{
-			$this->assignments()->updateExistingPivot($division, ['job_position_id'=>$job_position]);
+		
+		$user = $this->asUser;
+		if ($user){
+			$user->assignments()->updateExistingPivot($division, ['job_position_id'=>$job_position]);
+			
 		}
 	}
 	

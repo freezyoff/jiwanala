@@ -12,37 +12,32 @@
 				<div class="w3-col s12 m4 l4">
 					<div class="input-group padding-left-8 padding-none-small">
 						<label><i class="fas fa-university"></i></label>
-						<input id="division" 
-							name="division" 
-							type="text" 
-							class="w3-input" 
-							value="{{old('division', isset($division)? $division->code : '')}}" 
-							select-role="dropdown"
-							select-dropdown="#division-dropdown" 
-							select-modal="#division-modal"
-							select-modal-container="#division-modal-container" />
+						<?php 
+							$divisionInputID = str_replace('-','',\Illuminate\Support\Str::uuid());
+							$dropdown = [
+								'id'		=> $divisionInputID,
+								'name'		=> 'division',
+								'value'		=> old('division', isset($division)? $division->id : ''),
+								'dropdown'	=> ['my.bauk.assignment.landing_division_select', []],
+								'modalTitle'=> trans('my/bauk/assignment.modal.divisions')
+							];
+						?>
+						@include('layouts.dashboard.components.select', $dropdown)
 					</div>
-					@include('my.bauk.assignment.landing_division_dropdown_and_modal')
 				</div>
 			</form>
 		</div>
-		<div class="w3-container margin-top-16">
-			<div class="w3-bar w3-theme-l2">
-				<button class="w3-bar-item w3-button w3-blue w3-hover-blue" target="#unassigned">Belum Bertugas</button>
-				<button class="w3-bar-item w3-button w3-hover-blue" target="#assigned">Telah Bertugas</button>
-			</div>
+		<div class="w3-row w3-hide-small">
+			@include('my.bauk.assignment.landing_medium_large')
 		</div>
-		<div class="w3-container padding-bottom-16">
-			<div id="unassigned" class="employee-list w3-responsive">
-				@include('my.bauk.assignment.landing_table',['mode'=>'assign', 'employees'=>$unassigned])
-			</div>
-			<div id="assigned" class="employee-list w3-responsive" style="display:none">
-			  @include('my.bauk.assignment.landing_table',['mode'=>'release', 'employees'=>$assigned])
-			</div>
+		<div class="w3-row w3-hide-medium w3-hide-large">
+			@include('my.bauk.assignment.landing_small')
 		</div>
 	</div>
 </div>
+
 @include('my.bauk.assignment.landing_error_modal')
+
 @endSection
 
 @section('html.head.styles')
@@ -84,7 +79,7 @@ var doAssign = function(clickable){
 		beforeSend: function(){ toggleClickable(clickable); },
 		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
 		success: function(data){
-			$('div#assigned').html(data);
+			$('div.employee-list.table-assigned').html(data);
 			$(clickable).parents('tr').remove();
 		}
 	});
@@ -96,62 +91,15 @@ var doRelease = function(clickable){
 		beforeSend: function(){ toggleClickable(clickable); },
 		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
 		success: function(data){
-			$('div#unassigned').html(data);
+			$('div.employee-list.table-unassigned').html(data);
 			$(clickable).parents('tr').remove();
 		}
 	});
 };
 
-var doAssignAs = function(clickable){
-	$.ajax({
-		url: $(clickable).attr('trigger-href'),
-		beforeSend: function(){ 
-			toggleClickable(clickable); 
-			var citem = $(clickable);
-			$($('a.action')).each(function(index, item){
-				if (!citem.is(item)) $(item).hide();
-			});
-		},
-		error: function(xhr, status, error) { 
-			toggleClickabel(clickable); 
-			handleError(xhr.status); 
-			$($('a.action')).each(function(index, item){
-				$(item).show();
-			});
-		},
-		success: function(data){
-			var json = JSON.parse(data);
-			$('div#assigned').html(json.assigned);
-			$('div#unassigned').html(json.unassigned);
-		}
-	});
-};
-
-var doReleaseAs = function(clickable){
-	$.ajax({
-		url: $(clickable).attr('trigger-href'),
-		beforeSend: function(){ toggleClickable(clickable); },
-		error: function(xhr, status, error) { toggleClickable(clickable); handleError(xhr.status); },
-		success: function(data){
-			var json = JSON.parse(data);
-			$('div#assigned').html(json.assigned);
-			$('div#unassigned').html(json.unassigned);
-		}
-	});
-};
-
 $(document).ready(function(){
-	$('#division').change(function(){
+	$('#{{$divisionInputID}}').change(function(){
 		$(this).parents('form').trigger('submit');
-	}).select();
-	
-	$('.w3-bar-item').click(function(){
-		$('.w3-bar-item').each(function(index,item){
-			$(item).removeClass('w3-blue');
-			$($(this).attr('target')).css('display','none');
-		});
-		$(this).toggleClass('w3-blue');
-		$($(this).attr('target')).css('display','block');
 	});
 });
 </script>

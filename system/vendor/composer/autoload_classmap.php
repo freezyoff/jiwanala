@@ -111,7 +111,6 @@ return array(
     'App\\Libraries\\Core\\Address' => $baseDir . '/app/Libraries/Core/Address.php',
     'App\\Libraries\\Core\\Division' => $baseDir . '/app/Libraries/Core/Division.php',
     'App\\Libraries\\Core\\Email' => $baseDir . '/app/Libraries/Core/Email.php',
-    'App\\Libraries\\Core\\JobPosition' => $baseDir . '/app/Libraries/Core/JobPosition.php',
     'App\\Libraries\\Core\\Person' => $baseDir . '/app/Libraries/Core/Person.php',
     'App\\Libraries\\Core\\Phone' => $baseDir . '/app/Libraries/Core/Phone.php',
     'App\\Libraries\\Core\\WorkYear' => $baseDir . '/app/Libraries/Core/WorkYear.php',

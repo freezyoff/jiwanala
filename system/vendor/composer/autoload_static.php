@@ -650,7 +650,6 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Libraries\\Core\\Address' => __DIR__ . '/../..' . '/app/Libraries/Core/Address.php',
         'App\\Libraries\\Core\\Division' => __DIR__ . '/../..' . '/app/Libraries/Core/Division.php',
         'App\\Libraries\\Core\\Email' => __DIR__ . '/../..' . '/app/Libraries/Core/Email.php',
-        'App\\Libraries\\Core\\JobPosition' => __DIR__ . '/../..' . '/app/Libraries/Core/JobPosition.php',
         'App\\Libraries\\Core\\Person' => __DIR__ . '/../..' . '/app/Libraries/Core/Person.php',
         'App\\Libraries\\Core\\Phone' => __DIR__ . '/../..' . '/app/Libraries/Core/Phone.php',
         'App\\Libraries\\Core\\WorkYear' => __DIR__ . '/../..' . '/app/Libraries/Core/WorkYear.php',

@@ -26,7 +26,8 @@
 						'id'		=> $monthID,
 						'name'		=> 'exception_month',
 						'value'		=> old('exception_month', session('exception_month', $exception_month)),
-						'dropdown'	=> ['layouts.dashboard.components.select_date_items', ['month'=>true]]
+						'dropdown'	=> ['layouts.dashboard.components.select_date_items', ['month'=>true]],
+						'modalTitle'=> ucfirst(trans('my/bauk/attendance/pages.subtitles.month')),
 					];
 				?>
 				@include('layouts.dashboard.components.select', $dropdown)
@@ -41,7 +42,8 @@
 						'id'		=> $yearID,
 						'name'		=> 'exception_year',	
 						'value'		=> old('exception_year', session('exception_year', $exception_year)),
-						'dropdown'	=> ['layouts.dashboard.components.select_date_items', ['year'=>true]]
+						'dropdown'	=> ['layouts.dashboard.components.select_date_items', ['year'=>true]],
+						'modalTitle'=> ucfirst(trans('my/bauk/attendance/pages.subtitles.month')),
 					];
 				?>
 				@include('layouts.dashboard.components.select', $dropdown)

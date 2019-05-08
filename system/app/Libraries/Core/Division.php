@@ -12,7 +12,8 @@ class Division extends Model
 		'creator',
 		'id',
 		'name',
-		'alias'
+		'alias',
+		'type'
 	];
 	
 	protected $primary = 'id';
@@ -27,37 +28,25 @@ class Division extends Model
 			'employee_id', 
 			'id',								//divisions table exact primary column name
 			'id'								//employees table exact primary column name
-		)->withPivot('creator', 'job_position_id')
+		)->withPivot('creator')
 		->withTimestamps();
 	}
 	
 	public function assign($employeeID){
-		$this->employees->attach($employeeID, [
-			'creator'=>\Auth::user()->id,
-		]);
+		$this->employees->attach($employeeID, ['creator'=>\Auth::user()->id]);
 	}
 	
-	public function assignAs($employeeID, $jobPosition){
-		$this->employees->attach($employeeID, [
-			'job_position_id'=>$jobPosition,
-			'creator'=>\Auth::user()->id,
-		]);
+	public function assignAs($employeeID, $roleKey){
+		$this->employees->attach($employeeID, ['creator'=>\Auth::user()->id]);
+		$this->employees->asUser->grantRole($roleKey);
 	}
 	
 	public function release($employeeID){
 		$this->employees->detach($employeeID);
 	}
 	
-	public function releaseJob($employeeID){
-		$this->employees->updateExistingPivot($employeeID, ['job_position_id'=>null]);
-	}
-
-	
-	public static function find($id){
-		if (is_array($id)){
-			return self::whereIn('id',$id)->get();
-		}
-		return self::where('id',$id)->first();
+	public function releaseAs($roleKey){
+		$this->employees->asUser->revokeRole($roleKey);
 	}
 	
 	/**
@@ -67,11 +56,19 @@ class Division extends Model
 		return self::find($divisionID)->employees->where('active',1);
 	}
 	
-	public static function getEmployeeAs($divisionID, $jobPosition){
-		return self::where('id',$divisionID)->first()->employees()->wherePivot('job_position_id',$jobPosition)->first();
+	public static function getEmployeeAs($divisionID, $roleKey){
+		$employees = self::where('id',$divisionID)->first()->employees;
+		$result = collect();
+		foreach($employees as $employee){
+			$user = $employee->asUser;
+			if ($user && $user->hasRole($roleKey)){
+				$result->collect($employee);
+			}
+		}
+		return $result;
 	}
 	
-	public static function hasEmployeeAs($divisionID, $jobPosition){
-		return self::getEmployeeAs($divisionID, $jobPosition)? true : false;
+	public static function hasEmployeeAs($divisionID, $roleKey){
+		return self::getEmployeeAs($divisionID, $roleKey)->count()>0? true : false;
 	}
 }

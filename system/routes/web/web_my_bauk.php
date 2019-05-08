@@ -210,4 +210,5 @@ Route::name('assignment.')
 	Route::name('release.as')
 		->middleware('permission:bauk.assignment.release')
 		->get('release/{employeeNIP}/from/{divisionCode}/as/{jobPositionCode}', '\App\Http\Controllers\My\Bauk\AssignmentController@releaseAs');
+		
 });

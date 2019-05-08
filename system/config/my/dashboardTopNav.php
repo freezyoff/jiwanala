@@ -84,8 +84,8 @@
 						'display'=>[ 
 							'name'=>'Penugasan',
 							'tag'=>[
-								'label'=>"testing",
-								'color'=>'w3-yellow'
+								'label'=>"update",
+								'color'=>'w3-blue'
 							]
 						], 
 						'href'=>'my.bauk.assignment.landing',
@@ -95,10 +95,10 @@
 						'display'=>[ 				
 							'name'=>'Jadwal Kerja', 
 							'icon'=>false,
-							'tag'=>[
-								'label'=>"update",
-								'color'=>'w3-blue'
-							]
+							//'tag'=>[
+							//	'label'=>"update",
+							//	'color'=>'w3-blue'
+							//]
 						], 
 						'href'=>'my.bauk.schedule.landing',
 					],

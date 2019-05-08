@@ -15,9 +15,7 @@ class AssignmentController extends Controller{
 			'division'=> Division::find($cDivision),
 			'divisions'=> Division::all(),
 			'unassigned'=> Employee::getNotAssignedAt($cDivision, [['nip','asc']]),
-			'assigned'=> Employee::getAssignedAt($cDivision, [['nip','asc']]),
-			'hasLeader'=> Division::hasEmployeeAs($cDivision, '2.4'),
-			'leader'=> Division::getEmployeeAs($cDivision, '2.4'),
+			'assigned'=> Employee::getAssignedAt($cDivision, [['nip','asc']])
 		]);
 	}
 	
@@ -28,8 +26,6 @@ class AssignmentController extends Controller{
 			'division'=> Division::find($divisionCode),
 			'employees'=> Employee::getAssignedAt($divisionCode, [['nip','asc']]),
 			'mode'=>'release',
-			'hasLeader'=> Division::hasEmployeeAs($divisionCode, '2.4'),
-			'leader'=> Division::getEmployeeAs($divisionCode, '2.4'),
 		]);
 	}
 	
@@ -64,8 +60,6 @@ class AssignmentController extends Controller{
 			'division'=> Division::find($divisionCode),
 			'employees'=> Employee::getNotAssignedAt($divisionCode, [['nip','asc']]),
 			'mode'=>'assign',
-			'hasLeader'=> Division::hasEmployeeAs($divisionCode, '2.4'),
-			'leader'=> Division::getEmployeeAs($divisionCode, '2.4'),
 		]);
 	}
 	
