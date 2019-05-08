@@ -49,14 +49,16 @@ class Sync extends Command
 			Permission::where('id',$id)->first();
 	}
 	
-	function createPermission($arg){
-		return $this->isRemote()?
-			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->insert($arg) : 
-			Permission::create($arg);
-	}
-	
 	function isRemote(){
 		return $this->option('remote');
+	}
+	
+	function createRole($arg){
+		if ($this->isRemote()){
+			$arg['--remote'] = true;
+		}
+		$this->call('jn-permission:add',$arg);
+		return $this->getPermission($arg['id']);
 	}
 
     /**
@@ -73,16 +75,13 @@ class Sync extends Command
 			$saved = $permission? true : false;
 			if (!$saved){
 				$arg['id'] = $key;
-				if ($this->isRemote()){
-					$arg['--remote'] = true;					
-				}
-				$this->call('jn-permission:add',$arg,$this->output);
+				$permission = $this->createRole($arg);
 			}
 			else{
 				$permission->fill($arg);
 				$permission->save();
-				$this->line('<fg=cyan>'.($saved? 'Sync':'Add ').'</> Permission Context:<fg=green>'.$permission->context.'</> id:<fg=yellow>'.$permission->id.'</>');
 			}
+			$this->line('<fg=cyan>'.($saved? 'Sync':'Add ').'</> Permission Context:<fg=green>'.$permission->context.'</> id:<fg=yellow>'.$permission->id.'</>');
 		}
     }
 }

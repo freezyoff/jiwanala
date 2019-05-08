@@ -12,7 +12,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:install';
+    protected $signature = 'jn-role:install {--remote : target remote database}';
 
     /**
      * The console command description.
@@ -30,6 +30,10 @@ class Install extends Command
     {
         parent::__construct();
     }
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
 
     /**
      * Execute the console command.
@@ -38,50 +42,11 @@ class Install extends Command
      */
     public function handle()
     {
-        foreach(config('role') as $key=>$role){
-			
-			$only = ['context','display_name','description'];
-			$data = array_filter(
-				$role,
-				function ($key) use ($only) {
-					return in_array($key, $only);
-				},
-				ARRAY_FILTER_USE_KEY
-			);
-			$data['id'] = $key;
-			
-			$this->call('jn-role:add', $data, $this->output);
-			//$dbCurrent = Role::create($data);
-			
-			//adding permissions 
-			$dbCurrentPermissions = [];
-			
-			//extend from role
-			if (isset($role['roles'])){
-				foreach($role['roles'] as $extend){
-					$dbRole = Role::find($extend);
-					$dbCurrentPermissions = $dbRole->permissions()->get()
-						->flatten(1)
-						->map(function($item, $key){
-							return $item['id'];
-						})->all();
-				}				
-			}
-			
-			//handle permissions
-			if (isset($role['permissions'])){
-				foreach($role['permissions'] as $permission){
-					if (!in_array($permission, $dbCurrentPermissions)){
-						$dbCurrentPermissions[] = $permission;
-					}
-				}
-			}
-			
-			//insert
-			$this->call('jn-role:grant', [
-				'role_id'=>$data['id'],
-				'permission_id'=>$dbCurrentPermissions
-			], $this->output);
+		$arg = [];
+		if ($this->isRemote()){
+			$arg['--remote'] = true;
 		}
+		
+        $this->call('jn-role:sync', $arg, $this->output);
     }
 }

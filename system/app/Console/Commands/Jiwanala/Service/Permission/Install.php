@@ -11,7 +11,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-permission:install';
+    protected $signature = 'jn-permission:install {--remote : target remote database}';
 
     /**
      * The console command description.
@@ -29,6 +29,10 @@ class Install extends Command
     {
         parent::__construct();
     }
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
 
     /**
      * Execute the console command.
@@ -37,10 +41,11 @@ class Install extends Command
      */
     public function handle()
     {
-        foreach(config('permission.permissions') as $key=>$permission){
-			$arg = array_combine(['context','display_name','description'], $permission);
-			$arg['id'] = $key;
-			$this->call('jn-permission:add', $arg, $this->output);
+		$arg = [];
+		if ($this->isRemote()){
+			$arg['--remote'] = true;
 		}
+		
+        $this->call('jn-permission:sync', $arg, $this->output);
     }
 }

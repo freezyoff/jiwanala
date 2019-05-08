@@ -12,7 +12,8 @@ class Delete extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:delete {id*}';
+    protected $signature = 'jn-role:delete {id*}
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -30,6 +31,28 @@ class Delete extends Command
     {
         parent::__construct();
     }
+	
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function getRole($id){
+		return $this->isRemote()?
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->where('id', $id)->first() : 
+			Role::find($id);
+	}
 
     /**
      * Execute the console command.
@@ -39,10 +62,13 @@ class Delete extends Command
     public function handle()
     {
         foreach($this->argument('id') as $id){
-			$role = Role::find($id);
+			$role = $this->getRole($id);
 			if ($role){
 				$role->delete();
-				$this->line('<fg=red>Delete</> Role Context:<fg=green>'.$role->context.'</> id:<fg=yellow>'.$role->id.'</>');				
+				$this->line('<fg=red>Delete</> Role Context:<fg=green>'.$role->context.'</> id:<fg=yellow>'.$role->id.'</>');
+			}
+			else{
+				$this->line('<fg=yellow>Not Found</> Role <fg=green>'.$role->id.'</>');
 			}
 		}
     }

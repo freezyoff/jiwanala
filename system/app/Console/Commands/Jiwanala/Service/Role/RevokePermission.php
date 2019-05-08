@@ -12,7 +12,8 @@ class RevokePermission extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:revoke {role_id} {permission_id*}';
+    protected $signature = 'jn-role:revoke {role_id} {permission_id*}
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -31,6 +32,39 @@ class RevokePermission extends Command
         parent::__construct();
     }
 
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function createRole($arg){
+		if ($this->isRemote()){
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->insert($arg);
+		}
+		else{
+			Role::create($arg);
+		}
+		
+		return $this->getRole($arg['id']);
+	}
+	
+	function getRole($id){
+		return $this->isRemote()?
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->where('id', $id)->first() : 
+			Role::find($id);
+	}
+	
     /**
      * Execute the console command.
      *
@@ -39,7 +73,7 @@ class RevokePermission extends Command
     public function handle()
     {
         foreach($this->argument('permission_id') as $permission_id){
-			$role = Role::find($this->argument('role_id'));
+			$role = $this->getRole($this->argument('role_id'));
 			if ($role){
 				$role->permissions()->detach($permission_id);
 				$this->line('<fg=red>Revoke</> Role:<fg=green>'.$role->id.'</> -> Permission:<fg=yellow>'.$permission_id.'</>');

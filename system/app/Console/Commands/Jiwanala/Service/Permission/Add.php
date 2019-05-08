@@ -49,9 +49,19 @@ class Add extends Command
 	}
 	
 	function createPermission($arg){
-		return $this->isRemote()?
-			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->insert($arg) : 
+		if ($this->isRemote()){
+			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->insert($arg);
+		}
+		else{
 			Permission::create($arg);
+		}
+		return $this->getPermission($arg['id']);
+	}
+	
+	function getPermission($id){
+		return $this->isRemote()?
+			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->where('id', $arg['id'])->first() : 
+			Permission::find($arg['id']);
 	}
 
     /**

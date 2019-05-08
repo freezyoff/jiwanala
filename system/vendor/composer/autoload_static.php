@@ -664,6 +664,7 @@ class ComposerStaticInit1b4007e8666c4b80261f9b8c49531a0a
         'App\\Libraries\\Foundation\\Schedules' => __DIR__ . '/../..' . '/app/Libraries/Foundation/Schedules.php',
         'App\\Libraries\\Foundation\\User\\HasPermissions' => __DIR__ . '/../..' . '/app/Libraries/Foundation/User/HasPermissions.php',
         'App\\Libraries\\Foundation\\User\\HasRoles' => __DIR__ . '/../..' . '/app/Libraries/Foundation/User/HasRoles.php',
+        'App\\Libraries\\Foundation\\User\\RoleOptions' => __DIR__ . '/../..' . '/app/Libraries/Foundation/User/RoleOptions.php',
         'App\\Libraries\\Helpers\\BaukHelper' => __DIR__ . '/../..' . '/app/Libraries/Helpers/BaukHelper.php',
         'App\\Libraries\\PPDB\\User' => __DIR__ . '/../..' . '/app/Libraries/PPDB/User.php',
         'App\\Libraries\\Service\\Auth\\PasswordResetModel' => __DIR__ . '/../..' . '/app/Libraries/Service/Auth/PasswordResetModel.php',

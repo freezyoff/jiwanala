@@ -12,7 +12,8 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:sync';
+    protected $signature = 'jn-role:sync 
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -30,6 +31,36 @@ class Sync extends Command
     {
         parent::__construct();
     }
+	
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function getRole($id){
+		return $this->isRemote()?
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->where('id', $id)->first() :
+			Role::find($id);
+	}
+	
+	function createRole($arg){
+		if ($this->isRemote()){
+			$arg['--remote'] = true;
+		}
+		$this->call('jn-role:add', $arg);
+		return $this->getRole($arg['id']);
+	}
 
     /**
      * Execute the console command.
@@ -49,12 +80,16 @@ class Sync extends Command
 				ARRAY_FILTER_USE_KEY
 			);
 			
-			$dbCurrent = Role::firstOrNew(['id'=>$key],$data);
-			$exists = $dbCurrent->exists;
+			$dbCurrentRole = $this->getRole($key);
+			$exists = $dbCurrentRole? true : false;
+			
 			if (!$exists){
-				$dbCurrent->save();
+				$data['id'] = $key;
+				$dbCurrentRole = $this->createRole($data);
 			}
-			$this->line('<fg=cyan>'.($exists? 'Sync' : 'Add ').'</> Role Context:<fg=green>'.$dbCurrent->context.'</> id:<fg=yellow>'.$dbCurrent->id.'</>');
+			$this->line('<fg=cyan>'.($exists? 'Sync' : 'Add ').'</> Role Context:<fg=green>'.
+				$dbCurrentRole->context.'</> id:<fg=yellow>'.
+				$dbCurrentRole->id.'</>');
 			
 			//adding permissions 
 			$dbCurrentPermissions = [];
@@ -62,8 +97,8 @@ class Sync extends Command
 			//extend from role
 			if (isset($role['roles'])){
 				foreach($role['roles'] as $extend){
-					$dbRole = Role::find($extend);
-					$dbCurrentPermissions = $dbRole->permissions()->get()
+					$dbExtendRole = $this->getRole($extend);
+					$dbCurrentPermissions = $dbExtendRole->permissions()->get()
 						->flatten(1)
 						->map(function($item, $key){
 							return $item['id'];
@@ -81,9 +116,9 @@ class Sync extends Command
 			}
 			
 			//insert
-			$dbCurrent->permissions()->sync($dbCurrentPermissions);
+			$dbCurrentRole->permissions()->sync($dbCurrentPermissions);
 			foreach($dbCurrentPermissions as $permission){
-				$this->line('<fg=cyan>'.($exists? 'Sync':'Add ').'</> Role:<fg=green>'.$dbCurrent->id.'</> -> Permission:<fg=yellow>'.$permission.'</>');
+				$this->line('<fg=cyan>'.($exists? 'Sync':'Add ').'</> Role:<fg=green>'.$dbCurrentRole->id.'</> -> Permission:<fg=yellow>'.$permission.'</>');
 			}
 		}
     }

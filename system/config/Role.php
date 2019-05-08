@@ -68,7 +68,7 @@
 		'display_name'=>'Ketua Divisi',
 		'description'=>'Pimpinan Divisi',
 		'permissions'=>[
-			'division-manager.subordinates.list'
+			'division.subordinates.list'
 		]
-	]
+	],
 ];

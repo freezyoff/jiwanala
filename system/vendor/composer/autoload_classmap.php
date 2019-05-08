@@ -125,6 +125,7 @@ return array(
     'App\\Libraries\\Foundation\\Schedules' => $baseDir . '/app/Libraries/Foundation/Schedules.php',
     'App\\Libraries\\Foundation\\User\\HasPermissions' => $baseDir . '/app/Libraries/Foundation/User/HasPermissions.php',
     'App\\Libraries\\Foundation\\User\\HasRoles' => $baseDir . '/app/Libraries/Foundation/User/HasRoles.php',
+    'App\\Libraries\\Foundation\\User\\RoleOptions' => $baseDir . '/app/Libraries/Foundation/User/RoleOptions.php',
     'App\\Libraries\\Helpers\\BaukHelper' => $baseDir . '/app/Libraries/Helpers/BaukHelper.php',
     'App\\Libraries\\PPDB\\User' => $baseDir . '/app/Libraries/PPDB/User.php',
     'App\\Libraries\\Service\\Auth\\PasswordResetModel' => $baseDir . '/app/Libraries/Service/Auth/PasswordResetModel.php',

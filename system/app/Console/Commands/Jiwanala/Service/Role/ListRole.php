@@ -12,7 +12,7 @@ class ListRole extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:list';
+    protected $signature = 'jn-role:list {--remote : target remote database}';
 
     /**
      * The console command description.
@@ -30,6 +30,28 @@ class ListRole extends Command
     {
         parent::__construct();
     }
+	
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function getRole(){
+		return $this->isRemote()?
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->get() : 
+			Role::all();
+	}
 
     /**
      * Execute the console command.
@@ -40,7 +62,7 @@ class ListRole extends Command
     {
         $this->table(
 			['ID','Context', 'Display Name', 'Descriptions'], 
-			collect(Role::all()
+			collect($this->getRole()
 				->map(function($item){
 					return collect($item)->only(['id','context','display_name','description']);
 				}))

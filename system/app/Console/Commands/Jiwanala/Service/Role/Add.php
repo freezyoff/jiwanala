@@ -12,7 +12,8 @@ class Add extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-role:add {id} {context} {display_name} {description}';
+    protected $signature = 'jn-role:add {id} {context} {display_name} {description}
+							{--remote : target remote database}';
 
     /**
      * The console command description.
@@ -30,6 +31,39 @@ class Add extends Command
     {
         parent::__construct();
     }
+	
+	function remoteConnection($connectionKey, $database){
+		config(['database.connections.'.$connectionKey => [
+			'driver' => 	env('DB_REMOTE_DRIVER'),
+			'host' => 		env('DB_REMOTE_HOST'),
+			'username' => 	env('DB_REMOTE_USERNAME'),
+			'password' => 	env('DB_REMOTE_PASSWORD'),
+			'database' => 	$database,
+		]]);
+		
+		return $connectionKey;
+	}
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function createRole($arg){
+		if ($this->isRemote()){
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->insert($arg);
+		}
+		else{
+			Role::create($arg);
+		}
+		
+		return $this->getRole($arg['id']);
+	}
+	
+	function getRole($id){
+		return $this->isRemote()?
+			Role::on($this->remoteConnection('_remoteRole', 'jiwanala_service'))->where('id', $id)->first() : 
+			Role::find($id);
+	}
 
     /**
      * Execute the console command.
@@ -38,7 +72,7 @@ class Add extends Command
      */
     public function handle()
     {
-        $role = Role::create([
+        $role = $this->createRole([
 			'id'=>$this->argument('id'),
 			'context'=>$this->argument('context'),
 			'display_name'=>$this->argument('display_name'),

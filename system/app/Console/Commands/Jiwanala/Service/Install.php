@@ -11,7 +11,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'jn-seed:service';
+    protected $signature = 'jn-seed:service  {--remote : target remote database}';
 
     /**
      * The console command description.
@@ -29,6 +29,10 @@ class Install extends Command
     {
         parent::__construct();
     }
+	
+	function isRemote(){
+		return $this->option('remote');
+	}
 
     /**
      * Execute the console command.
@@ -37,9 +41,14 @@ class Install extends Command
      */
     public function handle()
     {
-        $this->call('jn-permission:install',[],$this->output);
+		$arg = [];
+		if ($this->isRemote()){
+			$arg['--remote'] = true;
+		}
+		
+        $this->call('jn-permission:install', $arg, $this->output);
 		$this->line('');
-		$this->call('jn-role:install',[],$this->output);
+		$this->call('jn-role:install', $arg, $this->output);
 		$this->line('');
 		$installDefaultUser = $this->choice('Install default user?', ['Yes', 'No'], 0);
 		if ($installDefaultUser == 'Yes'){
