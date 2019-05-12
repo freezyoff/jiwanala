@@ -61,7 +61,7 @@ class Add extends Command
 	function getPermission($id){
 		return $this->isRemote()?
 			Permission::on($this->remoteConnection('_remotePermission', 'jiwanala_service'))->where('id', $arg['id'])->first() : 
-			Permission::find($arg['id']);
+			Permission::find($id);
 	}
 
     /**
