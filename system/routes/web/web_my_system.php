@@ -22,6 +22,7 @@ Route::prefix('user')
 		->any('reset/{id}', '\App\Http\Controllers\My\System\UserController@reset');
 });
 
+/*
 Route::prefix('division')
 	->name('division.')
 	->group(function(){
@@ -30,3 +31,5 @@ Route::prefix('division')
 		->get('', '\App\Http\Contollers\My\System\DivisionController@index');
 	
 });
+
+*/

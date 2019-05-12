@@ -7,14 +7,13 @@ namespace Khill\Lavacharts\Dashboards\Bindings;
  *
  * Binds a ControlWrapper to a ChartWrapper to use in dashboards.
  *
- * @package    Khill\Lavacharts
- * @subpackage Dashboards\Bindings
- * @since      3.0.0
- * @author     Kevin Hill <kevinkhill@gmail.com>
- * @copyright  (c) 2015, KHill Designs
- * @link       http://github.com/kevinkhill/lavacharts GitHub Repository Page
- * @link       http://lavacharts.com                   Official Docs Site
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package   Khill\Lavacharts\Dashboards\Bindings
+ * @since     3.0.0
+ * @author    Kevin Hill <kevinkhill@gmail.com>
+ * @copyright (c) 2017, KHill Designs
+ * @link      http://github.com/kevinkhill/lavacharts GitHub Repository Page
+ * @link      http://lavacharts.com                   Official Docs Site
+ * @license   http://opensource.org/licenses/MIT      MIT
  */
 class Binding
 {
@@ -38,7 +37,7 @@ class Binding
      * @param array $chartWrappers
      * @param array $controlWrappers
      */
-    public function __construct($controlWrappers, $chartWrappers)
+    public function __construct(array $controlWrappers, array $chartWrappers)
     {
         $this->chartWrappers   = $chartWrappers;
         $this->controlWrappers = $controlWrappers;
@@ -55,6 +54,18 @@ class Binding
     }
 
     /**
+     * Get the a specific ChartWrap
+     *
+     * @since  3.1.0
+     * @param  int $index Which chart wrap to retrieve
+     * @return array
+     */
+    public function getChartWrap($index)
+    {
+        return $this->chartWrappers[$index];
+    }
+
+    /**
      * Get the ControlWrappers
      *
      * @return array
@@ -62,5 +73,17 @@ class Binding
     public function getControlWrappers()
     {
         return $this->controlWrappers;
+    }
+
+    /**
+     * Get the a specific ControlWrap
+     *
+     * @since  3.1.0
+     * @param  int $index Which control wrap to retrieve
+     * @return array
+     */
+    public function getControlWrap($index)
+    {
+        return $this->controlWrappers[$index];
     }
 }

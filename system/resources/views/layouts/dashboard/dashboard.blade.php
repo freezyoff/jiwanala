@@ -1,6 +1,7 @@
 <?php 
-	//default options
-	$sidebar = isset($sidebar)? $sidebar : false;
+	
+	$sidebarItems = isset($sidebar)? \App\Libraries\Foundation\Navigation\Factory::makeSidebar($sidebar) : collect();
+	$showSidebar = $sidebarItems->count()>0;
 ?>
 
 @extends('layouts.baseLayout')
@@ -47,7 +48,7 @@
 			color:rgb(241,241,241) !important;
 		}
 		
-		@if(!$sidebar)
+		@if(!$showSidebar)
 			.w3-main{margin-left:0 !important;}
 			#jn-sidebar{width:0; !important}
 		@else
@@ -98,13 +99,13 @@
 	
 	<!-- begin: Sidebar/menu -->
 	@section('dashboard.sidebar')
-		@if($sidebar)
+		@if($showSidebar)
 		<div id="jn-sidebar"
 			class="w3-sidebar w3-collapse w3-theme-l1 w3-animate-left" 
 			style="z-index:3;width:300px;" >
 			
 			@section('dashboard.sidebar.items')
-				@include('layouts.dashboard.dashboard_sidebar',['sidebar'=>$sidebar])
+				@include('layouts.dashboard.dashboard_sidebar',['sidebar'=>$sidebar, 'showSidebar'=>$showSidebar])
 			@show
 			
 		</div>

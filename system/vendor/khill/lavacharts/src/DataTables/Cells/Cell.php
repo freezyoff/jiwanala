@@ -2,46 +2,47 @@
 
 namespace Khill\Lavacharts\DataTables\Cells;
 
-use Khill\Lavacharts\Exceptions\InvalidFunctionParam;
+use Khill\Lavacharts\Exceptions\InvalidParamType;
+use Khill\Lavacharts\Support\Customizable;
 
 /**
  * DataCell Object
  *
  * Holds the information for a data point
  *
- * @package    Khill\Lavacharts
- * @subpackage DataTables
- * @author     Kevin Hill <kevinkhill@gmail.com>
- * @copyright  (c) 2015, KHill Designs
- * @link       http://github.com/kevinkhill/lavacharts GitHub Repository Page
- * @link       http://lavacharts.com                   Official Docs Site
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package   Khill\Lavacharts\DataTables\Cells
+ * @since     3.0.0
+ * @author    Kevin Hill <kevinkhill@gmail.com>
+ * @copyright (c) 2017, KHill Designs
+ * @link      http://github.com/kevinkhill/lavacharts GitHub Repository Page
+ * @link      http://lavacharts.com                   Official Docs Site
+ * @license   http://opensource.org/licenses/MIT      MIT
  */
-class Cell implements \JsonSerializable
+class Cell extends Customizable
 {
     /**
      * The cell value.
      *
      * @var string
      */
-    protected $v = null;
+    protected $v;
 
     /**
      * A string version of the v value. (Optional)
      *
      * @var string
      */
-    protected $f = '';
+    protected $f;
 
     /**
-     * An object that is a map of custom values applied to the cell. (Optional)
+     * An array that is a map of custom values applied to the cell. (Optional)
      *
      * @var array
      */
-    protected $p = [];
+    protected $p;
 
     /**
-     * Defines a DataCell for a DataTable
+     * Defines a Cell for a DataTable
      *
      * Each cell in the table holds a value. Cells optionally can take a
      * "formatted" version of the data; this is a string version of the data,
@@ -53,24 +54,49 @@ class Cell implements \JsonSerializable
      * numeric cell values of 1, 2, and 3.
      *
      *
-     * @param  string      $v The cell value
-     * @param  string      $f A string version of the v value
-     * @param array|string $p An object that is a map of custom values applied to the cell
-     * @throws \Khill\Lavacharts\Exceptions\InvalidFunctionParam
+     * @param  string       $v The cell value
+     * @param  string       $f A string version of the v value
+     * @param  array|string $p A map of custom values applied to the cell
+     * @throws \Khill\Lavacharts\Exceptions\InvalidParamType
      */
-    public function __construct($v = null, $f = '', $p = [])
+    public function __construct($v, $f = '', array $p = [])
     {
         if (is_string($f) === false) {
-            throw new InvalidFunctionParam($f, __FUNCTION__, 'string');
-        }
-
-        if (is_array($p) === false) {
-            throw new InvalidFunctionParam($p, __FUNCTION__, 'array');
+            throw new InvalidParamType($f, 'string');
         }
 
         $this->v = $v;
         $this->f = $f;
-        $this->p = $p;
+
+        parent::__construct($p);
+    }
+
+    /**
+     * Mapping the 'p' attribute of the cell to it's options.
+     *
+     * @since  3.1.0
+     * @param  string $attr
+     * @return array
+     */
+    public function __get($attr)
+    {
+        if ($attr == 'p') {
+            return $this->getOptions();
+        }
+    }
+
+    /**
+     * Allowing the 'p' attribute to be checked for options by using the hasOptions method.
+     *
+     * @since  3.1.0
+     * @param  string $attr
+     * @return bool
+     */
+    function __isset($attr)
+    {
+        if ($attr == 'p') {
+            return $this->hasOptions();
+        }
     }
 
     /**
@@ -94,32 +120,30 @@ class Cell implements \JsonSerializable
     }
 
     /**
-     * Returns the cell customization options.
+     * Returns the custom values of the cell.
      *
-     * @return array
+     * @return string
      */
-    public function getOptions()
+    public function getCustomValues()
     {
-        return $this->p;
+        return $this->f;
     }
 
     /**
-     * Custom serialization of the DataCell
+     * Custom serialization of the Cell
      *
      * @return array
      */
     public function jsonSerialize()
     {
-        $json = [];
+        $json = ['v' => $this->v];
 
-        if (is_null($this->v) === false) {
-            $json['v'] = $this->v;
-        }
-        if (empty($this->f) === false) {
+        if ( ! empty($this->f)) {
             $json['f'] = $this->f;
         }
-        if (empty($this->p) === false) {
-            $json['p'] = $this->p;
+
+        if ( ! empty($this->options)) {
+            $json['p'] = $this->getOptions();
         }
 
         return $json;

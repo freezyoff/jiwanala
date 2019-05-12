@@ -3,6 +3,7 @@
 namespace Khill\Lavacharts\Laravel;
 
 use Illuminate\Support\Facades\App;
+use Khill\Lavacharts\Charts\ChartFactory;
 
 /**
  * Blade Template Extensions
@@ -13,8 +14,8 @@ use Illuminate\Support\Facades\App;
  * The above example would turn into @linechart('MyChart', 'div-id')
  *
  *
- * @package    Khill\Lavacharts
- * @subpackage Laravel
+ * @package    Khill\Lavacharts\Laravel
+ * @since      2.5.0
  * @author     Kevin Hill <kevinkhill@gmail.com>
  * @copyright  (c) 2015, KHill Designs
  * @link       http://github.com/kevinkhill/lavacharts GitHub Repository Page
@@ -25,24 +26,10 @@ use Illuminate\Support\Facades\App;
 $app   = App::getFacadeApplication();
 $blade = $app['view']->getEngineResolver()->resolve('blade')->getCompiler();
 
-$charts = [
-    'Dashboard',
-    'AreaChart',
-    'BarChart',
-    'CalendarChart',
-    'ColumnChart',
-    'ComboChart',
-    'DonutChart',
-    'GaugeChart',
-    'GeoChart',
-    'LineChart',
-    'PieChart',
-    'ScatterChart',
-    'TableChart'
-];
+$renderables = array_merge(['Dashboard'], ChartFactory::$CHART_TYPES);
 
 
-foreach ($charts as $chart) {
+foreach ($renderables as $chart) {
 
     if (method_exists($blade, 'directive')) {
 // Laravel 5
@@ -59,7 +46,7 @@ foreach ($charts as $chart) {
         $blade->extend(
             function ($view, $compiler) use ($chart) {
                 $pattern = $compiler->createMatcher(strtolower($chart));
-                $output = '$1<?php echo \Lava::render' . $chart . '$2; ?>';
+                $output = '$1<?php echo \Lava::render(' . $chart . ', $2); ?>';
 
                 return preg_replace($pattern, $output, $view);
             }

@@ -1,26 +1,91 @@
-- 3.0.7
-  - Added support for Traversable and ArrayAccess when adding rows to datatables.
+- 3.1.9
+  - Fixing bug where using `setOptions` instead of the constructor skipped the processing of `png` and `material` attributes.
 
-- 3.0.6
-  - Refactored the LavachartsServiceProvider to use `singleton` over `share` since it was removed in Laravel 5.4
+- 3.1.8
+  - Production build of the Lava.js module.
 
-- 3.0.5
-  - Fixing bug in Blade template exension.
+- 3.1.7
+  - Added the tag lavacharts to the config publishing.
+    Use `php artisan vendor:publish --tag=lavacharts`
+    If that does not work, try to clear the cache with `php artisan config:clear` and re-publish with `--force`.
+
+- 3.1.6
+  - The event callback within lava.js was modified to pass back the chart and the datatable so users can interact with either during an event. This solves issue [#203](https://github.com/kevinkhill/lavacharts/issues/203)
+  
+- 3.1.5
+  - Adding DonutChart alias class back
+
+- 3.1.4 
+  - Chart's should resize properly on page resize.
+  
+- 3.1.3 
+  - Adding support for date columns to be null which enables support for Gantt charts to have linked sections.
+  - Adding JavascriptDate class that mimics the way the Javascript Date object is created. (I wanted to be able to copy and paste google's examples into addRows)
+  
+- 3.1.1 & 3.1.2
+  - Adding back and repairing the Symfony Bundle
+  
+- 3.1.0
+  - Public Release
+
+- 3.1.0-beta2
+  - Adjusting elementId precedence to prevent backwards compatability breaks and enable new features. The order of precedence goes as follows:
+    - An elementId string passed to the render method will override an elementId set to the chart.
+    - It is recommended to move all of the elementId strings on `render()` methods into the constructor, as an option: `['elementId' => 'render-to-div']`
+    - Setting the elementId as an option during creation is preferred, to enable the use of the new feature, `renderAll()`, that will output all defined charts to the page. 
+    
+- 3.1.0-beta1
+  - Adding setLocale() method for changing language of charts.
+  
+- 3.1.0-alpha
+  - Adding more supported chart types
+    - AnnotationChart
+    - BubbleChart
+    - CandlestickChart
+    - HistogramChart
+    - SankeyChart
+    - SteppedAreaChart
+    - TimelineChart
+    - TreemapChart
+  - Adding DataFactory with arrayToDataTable() method to try and automatically
+    create columns and rows based on an array of data with labels. This mimics how
+    Google's javascript version of the method works for creating DataTables more
+    efficiently. Currently only works with strings and numbers.
+    - Adding DataTable() method to the DataFactory as a shortcut to chaining methods.
+      - The method has three signatures:
+      - No params for an empty, default timezone DataTable
+      - String param for setting the timezone
+      - Array of columns and array of rows as 1st and 2nd for a complete DataTable in
+        one method call. (The third parameter can also be used to set the timezone.)
+    - [DataFactory Examples](https://gist.github.com/kevinkhill/0c7c5f6211c7fd8f9658)
+  - Massive overhaul of lava.js module.
+    - Refactored and using browserify to compile
+    - Added `lava.ready()` method for wrapping any lava.js interaction. When given a function
+      it will be called after all charts have rendered onto the page. Useful for delaying ajax requests
+      until the chart is ready.
+    - Added the ability to render directly as PNGs instead of SVGs
+      - Just pass into the options `['png' => true]`
+  - Created examples for each chart, available to view locally using the built in PHP server.
+    - Navigate to the Examples folder in the lavacharts package folder. If you installed with Composer, then it
+      should be at `$PROJECT_ROOT/vendor/khill/lavacharts/tests/Examples`
+    - Use the given config and router to start the examples page `php -S 127.0.0.1:8000 -c php.ini router.php`
+  - All exceptions now extend LavaException if the user wants to have a catch all
+    - Utils class removed, broken into traits, and applied to classes that needed the methods
 
 - 3.0.4
   - Fixing bug where TreeMap was not in list of chartClasses
 
 - 3.0.3
-  - Events bugfix
+  - Events Bugfix
 
 - 3.0.2
   - Blade template extension bug fixes
-  - Combining the ```customize``` method into the constructor to provide
+  - Combining the `customize` method into the constructor to provide
     restriction free option setting without the extra method call.
-
+  
 - 3.0.1
   - Bug fixes
-
+  
 - 3.0.0
   - Dropping support for PHP 5.3
     - Minimum version PHP 5.4+
@@ -153,7 +218,7 @@
   - Refactored the main Lavacharts class to not be static anymore (yay!)
   - Moved the creation of the javascript into it's own class
   - Added a new class "Volcano" to store all the charts.
-  - Modfied the charts to not staticly call the Lavacharts functions
+  - Modified the charts to not statically call the Lavacharts functions
   - DataTables are no longer magic, but applied via method chaining
   - Added render method in favor of outputInto method
   - Added blade template extensions as aliases to the render method

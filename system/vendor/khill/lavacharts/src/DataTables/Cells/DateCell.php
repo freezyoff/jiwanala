@@ -2,24 +2,25 @@
 
 namespace Khill\Lavacharts\DataTables\Cells;
 
-use \Carbon\Carbon;
+use Carbon\Carbon;
+use Khill\Lavacharts\Exceptions\CarbonParseError;
 use Khill\Lavacharts\Exceptions\InvalidDateTimeFormat;
-use \Khill\Lavacharts\Utils;
-use \Khill\Lavacharts\Exceptions\InvalidDateTimeString;
+use Khill\Lavacharts\Exceptions\InvalidDateTimeString;
+use Khill\Lavacharts\Exceptions\InvalidStringValue;
+use Khill\Lavacharts\Values\StringValue;
 
 /**
  * DateCell Class
  *
  * Wrapper object to implement JsonSerializable on the Carbon object.
  *
- * @package    Khill\Lavacharts
- * @subpackage DataTables
- * @since      3.0.0
- * @author     Kevin Hill <kevinkhill@gmail.com>
- * @copyright  (c) 2015, KHill Designs
- * @link       http://github.com/kevinkhill/lavacharts GitHub Repository Page
- * @link       http://lavacharts.com                   Official Docs Site
- * @license    http://opensource.org/licenses/MIT MIT
+ * @package   Khill\Lavacharts\DataTables\Cells
+ * @since     3.0.0
+ * @author    Kevin Hill <kevinkhill@gmail.com>
+ * @copyright (c) 2017, KHill Designs
+ * @link      http://github.com/kevinkhill/lavacharts GitHub Repository Page
+ * @link      http://lavacharts.com                   Official Docs Site
+ * @license   http://opensource.org/licenses/MIT      MIT
  */
 class DateCell extends Cell
 {
@@ -29,9 +30,8 @@ class DateCell extends Cell
      * @param  \Carbon\Carbon $carbon
      * @param  string         $format
      * @param  array          $options
-     * @throws \Khill\Lavacharts\Exceptions\InvalidFunctionParam
      */
-    public function __construct(Carbon $carbon, $format = '', $options = [])
+    public function __construct(Carbon $carbon = null, $format = '', array $options = [])
     {
         parent::__construct($carbon, $format, $options);
     }
@@ -50,21 +50,50 @@ class DateCell extends Cell
      */
     public static function parseString($dateTimeString, $dateTimeFormat = '')
     {
-        if (Utils::nonEmptyString($dateTimeString) === false) {
+        if ($dateTimeString === null) {
+            return new DateCell();
+        }
+
+        if (StringValue::isNonEmpty($dateTimeString) === false) {
             throw new InvalidDateTimeString($dateTimeString);
         }
 
-        if (gettype($dateTimeFormat) != 'string') {
-            throw new InvalidDateTimeFormat($dateTimeFormat);
-        }
-
-        if (Utils::nonEmptyString($dateTimeFormat) === false) {
-            $carbon = Carbon::parse($dateTimeString);
+        if (StringValue::isNonEmpty($dateTimeFormat)) {
+            try {
+                return self::createFromFormat($dateTimeFormat, $dateTimeString);
+            } catch (\Exception $e) {
+                throw new InvalidDateTimeFormat($dateTimeFormat);
+            }
         } else {
-            $carbon = Carbon::createFromFormat($dateTimeFormat, $dateTimeString);
-        }
+            try {
+                $carbon = Carbon::parse($dateTimeString);
 
-        return new DateCell($carbon);
+                return new DateCell($carbon);
+            } catch (\Exception $e) {
+                throw new InvalidDateTimeString($dateTimeString);
+            }
+        }
+    }
+
+    /**
+     * Create a new DateCell from a datetime string and a format.
+     *
+     * Carbon is used to validate the input.
+     *
+     * @param  string $format
+     * @param  string $datetime
+     * @return \Khill\Lavacharts\DataTables\Cells\DateCell
+     * @throws \Khill\Lavacharts\Exceptions\InvalidDateTimeFormat
+     */
+    public static function createFromFormat($format, $datetime)
+    {
+        try {
+            $carbon = Carbon::createFromFormat($format, $datetime);
+
+            return new self($carbon);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidDateTimeFormat($format);
+        }
     }
 
     /**
@@ -74,6 +103,10 @@ class DateCell extends Cell
      */
     public function __toString()
     {
+        if ($this->v === null) {
+            return 'null';
+        }
+
         return sprintf(
             'Date(%d,%d,%d,%d,%d,%d)',
             isset($this->v->year)   ? $this->v->year      : 'null',
@@ -92,6 +125,6 @@ class DateCell extends Cell
      */
     public function jsonSerialize()
     {
-        return (string) $this;
+        return ['v' => (string) $this];
     }
 }

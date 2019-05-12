@@ -1,10 +1,10 @@
-@extends('layouts.dashboard.dashboard',['sidebar'=>false,'title'=>'Dashboard'])
+@extends('layouts.dashboard.dashboard',['sidebar'=>false,'title'=>'Dashboard','sidebar'=>'dashboard'])
 
 @section('dashboard.main')
 <div class="w3-row">
 	<form action="{{route('my.dashboard.landing')}}" method="post">
 		@csrf
-		<div class="w3-col s12 m12 l4">
+		<div class="w3-col s12 m12 l5">
 			<div class="w3-teal w3-text-white"
 				style="border:1px solid #ccc; border-radius:4px; padding:8px; display:flex;">
 				<div style="font-size:2em; padding:0 8px;">
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="padding-left-16 w3-col s12 m12 l8 padding-none-small">
+		<div class="padding-left-16 w3-col s12 m12 l7 padding-none-small">
 			<div class="w3-col s12 m6 l4">
 				<div class="input-group padding-top-8">
 					<label><i class="far fa-calendar-check w3-large"></i></label>
@@ -51,7 +51,7 @@
 	</form>
 </div>
 <div class="w3-row">
-	<div id="attendanceProgress" class="w3-col s12 m12 l4 w3-light-grey">
+	<div id="attendanceProgress" class="w3-col s12 m12 l5 w3-light-grey">
 		<div class="padding-top-16 padding-bottom-16 margin-right-16 margin-none-small margin-none-medium">
 			<div class="w3-col s12 m12 l12 margin-bottom-8" style="min-width:135px">
 				<div style="display:flex;align-items:center;justify-content:space-evenly;min-width:275px">
@@ -73,7 +73,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="attendanceProgress-details" class="w3-col s12 m12 l8 margin-top-16 margin-none-large padding-left-16-large">
+	<div id="attendanceProgress-details" class="w3-col s12 m12 l7 margin-top-16 margin-none-large padding-left-16-large">
 		@include('my.dashboard.landing_attendance_details')
 	</div>
 </div>

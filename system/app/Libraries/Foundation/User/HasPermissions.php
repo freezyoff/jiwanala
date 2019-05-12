@@ -23,8 +23,8 @@ trait HasPermissions{
 	
 	public function hasPermissionContext($key){
 		foreach($this->roles()->get() as $role){
-			if ($role->permissions()->where('context', $key)->first()){
-				return true;
+			foreach($role->permissions()->get() as $permission){
+				if ($permission->context == $key) return true;
 			}
 		}
 		return false;

@@ -1,6 +1,9 @@
+<!-- @param $sidebar -->
+<!-- @param $showSidebar -->
+
 <!-- begin: Top Bar Small Screen style -->
 <div class="w3-hide-medium w3-hide-large w3-bar" style="display:flex;">
-	@if($sidebar)
+	@if($showSidebar)
 		<button class="jn-sidebar-toggle w3-bar-item w3-button w3-hover-none w3-text-light-grey w3-hover-text-white">
 			<i class="fa fa-bars"></i>
 		</button>
@@ -32,31 +35,8 @@
 				</h4>
 			</header>
 			<ul class="w3-ul">
-				@foreach(config('my.dashboardTopNav') as $key=>$item)
-					<?php
-						$isSetPermissionContext = isset($item['permission_context']);
-						$isClosure = $isSetPermissionContext && 
-											$item['permission_context'] instanceof Closure;
-						$isClosureTrue = $isClosure && $item['permission_context']()? true : false;
-						$isUserHasPermissionContext = $isSetPermissionContext && 
-														!$isClosure && 
-														Auth::user() && 
-														Auth::user()->hasPermissionContext($item['permission_context']);
-					?>
-					@if( !$isSetPermissionContext || $isClosureTrue || $isUserHasPermissionContext )
-						<li class="w3-hover-light-grey" style="cursor:pointer;">
-							<a class="w3-text-theme w3-mobile
-								@if(isset($item['display']['class']))
-									{{$item['display']['class']}}
-								@endif
-								"
-								style="text-decoration:none;"
-								href="{{$item['href']? route($item['href']) : ''}}">
-								<i class="{{$item['display']['icon']}}"></i>
-								<span style="padding-left:12px">{{ucfirst($item['display']['name'])}}</span>
-							</a>
-						</li>
-					@endif
+				@foreach(\App\Libraries\Foundation\Navigation\Factory::makeTopbar() as $item)
+					@include('layouts.dashboard.components.topbar_small')
 				@endforeach
 				<li class="w3-hover-light-grey">
 					<a class="w3-text-theme w3-mobile" style="text-decoration:none; text-decoration:none;"
@@ -72,7 +52,7 @@
 <!-- end: Top Bar Small Screen style -->
 <!-- begin: Top Bar Medium & Large Screen style -->
 <div class="w3-hide-small w3-bar" style="display:flex; padding-left:16px; padding-right:16px;">
-	@if($sidebar)
+	@if($showSidebar)
 		<button class="jn-sidebar-toggle w3-button w3-hover-none w3-hover-text-light-grey w3-large w3-hide-large"
 			style="padding-left:0;">
 			<i class="fa fa-bars"></i>
@@ -87,29 +67,11 @@
 		</div>
 	</a>
 	<div class="top-nav">
-		@foreach(config('my.dashboardTopNav') as $key=>$item)
-			<?php
-				$isSetPermissionContext = isset($item['permission_context']);
-				$isClosure = $isSetPermissionContext && 
-									$item['permission_context'] instanceof Closure;
-				$isClosureTrue = $isClosure && $item['permission_context']()? true : false;
-				$isUserHasPermissionContext = $isSetPermissionContext && 
-												!$isClosure && 
-												Auth::user() && 
-												Auth::user()->hasPermissionContext($item['permission_context']);
-			?>
-			@if( !$isSetPermissionContext || $isClosureTrue || $isUserHasPermissionContext )
-				<button class="w3-bar-item w3-button w3-hover-none 
-					@if(isset($item['display']['class']))
-						{{$item['display']['class']}}
-					@endif
-					"
-					onclick="{{$item['href']? 'document.location=\''.route($item['href']).'\'' : ''}}">
-					<i class="{{$item['display']['icon']}}"></i>
-					<span>{{ucfirst($item['display']['name'])}}</span>
-				</button>
-			@endif
+		
+		@foreach(\App\Libraries\Foundation\Navigation\Factory::makeTopbar() as $item)
+			@include('layouts.dashboard.components.topbar')
 		@endforeach
+		
 		<button class="w3-bar-item w3-button w3-hover-none" 
 			onclick="document.location='{{route('service.auth.logout')}}'">
 			<i class="fas fa-power-off"></i>

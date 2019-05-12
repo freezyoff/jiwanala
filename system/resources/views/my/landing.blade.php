@@ -1,1 +1,1 @@
-@extends('layouts.dashboard.dashboard',['sidebar'=>false])
+@extends('layouts.dashboard.dashboard',['sidebar'=>$sidebar])

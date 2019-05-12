@@ -20,6 +20,16 @@ trait HasRoles{
 		return $this->roles()->where('id',$key)->first()? true : false;
 	}
 	
+	/**
+	 *	@param (String) $roleKye - role key
+	 *	@param (Array|String) $searchOptions - array keys using dot notation
+	 */
+	public function getRoleOption($roleKey, $optionKey){
+		if (!$this->hasRoleOptions($roleKey, $optionKey)) return false;
+		
+		return $this->getRoleOptions($roleKey)->get($optionKey);
+	}
+	
 	public function getRoleOptions($roleKey) : RoleOptions {
 		return new RoleOptions($this, $roleKey);
 	}

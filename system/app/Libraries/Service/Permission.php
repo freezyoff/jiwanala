@@ -13,6 +13,6 @@ class Permission extends Model{
 	protected $fillable = ['creator', 'id','context','display_name','description'];
 	
     public function roles(){
-		return $this->belongsToMany('\App\Libraries\Service\Role', 'roles_permissions', 'permission_id', 'role_id')->withTimestamps();
+		return $this->belongsToMany('\App\Libraries\Service\Role', 'roles_permissions', 'role_id', 'permission_id')->withTimestamps();
 	}
 }

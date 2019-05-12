@@ -14,5 +14,6 @@ Route::prefix ('bauk')
 	->middleware(['permission.context:bauk'])
 	->group(base_path('routes/web/web_my_bauk.php'));
 	
-Route::name('dashboard.')
+Route::prefix('dashboard')
+	->name('dashboard.')
 	->group(base_path('routes/web/web_my_dashboard.php'));
