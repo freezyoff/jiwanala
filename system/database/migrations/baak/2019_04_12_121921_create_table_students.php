@@ -29,6 +29,7 @@ class CreateTableStudents extends Migration
 			$table->unsignedInteger('father_person_id');
 			$table->unsignedInteger('mother_person_id');
 			$table->unsignedInteger('guardian_person_id')->nullable();
+			$table->boolean('active')->default(true);
 			
 			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
 			$table->foreign('user_id')->references('id')->on('jiwanala_service.users');

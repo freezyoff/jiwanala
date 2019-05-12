@@ -81,10 +81,14 @@
 		'bauk.assignment.verifier'=>['bauk', 'Verify', 'Verify penugasan karyawan'],
 		'bauk.assignment.approver'=>['bauk', 'Approve', 'Approve penugasan karyawan'],
 		
-		/*
-		 *	Domain: Division
-		 */
-		 'division.subordinates.list'=>['division', 'List Subordinates', 'Melihat daftar rekan kerja'],
-		 
+		//divisions
+		'division.subordinates.list'=>['division', 'List Subordinates', 'Melihat daftar rekan kerja'],
+		
+
+		//
+		'baak.student.list'=>['baak', 'List Student', 'Melihat daftar Siswa'],
+		'baak.student.post'=>['baak', 'Post Student', 'Menambah data Siswa'],
+		'baak.student.patch'=>['baak', 'Patch Student', 'Merubah data Siswa'],
+		'baak.student.delete'=>['baak', 'Delete Student', 'Menghapus data Siswa'],
     ],
 ];

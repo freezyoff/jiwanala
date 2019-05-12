@@ -13,6 +13,11 @@ Route::prefix ('bauk')
 	->name('bauk.')
 	->middleware(['permission.context:bauk'])
 	->group(base_path('routes/web/web_my_bauk.php'));
+
+Route::prefix ('baak')
+	->name('baak.')
+	->middleware(['permission.context:baak'])
+	->group(base_path('routes/web/web_my_baak.php'));
 	
 Route::prefix('dashboard')
 	->name('dashboard.')
