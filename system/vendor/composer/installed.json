@@ -1304,7 +1304,7 @@
             "phpspreadsheet"
         ],
         "support": {
-            "source": "https://github.com/freezyoff/Laravel-Excel/tree/3.1"
+            "source": "https://github.com/freezyoff/Laravel-Excel/tree/freezyoff-custom-validation"
         }
     },
     {
@@ -4323,7 +4323,7 @@
             },
             {
                 "name": "Gert de Pagter",
-                "email": "backendtea@gmail.com"
+                "email": "BackEndTea@gmail.com"
             }
         ],
         "description": "Symfony polyfill for ctype functions",
