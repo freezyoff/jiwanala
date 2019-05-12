@@ -156,6 +156,33 @@
 		]
 	],
 	
+	'baak'=>[
+		'display'=>[ 'name'=>'BAAK', 'icon'=>'fas fa-graduation-cap'],
+		'href_route'=>'my.baak.landing',
+		'permission_context'=>'baak',
+		'leftNav'=>[
+			[
+				'display'=>[ 'name'=>'Siswa', 'icon'=>'fas fa-graduation-cap' ],
+				'filter_permission'=>'baak.student.list',
+				'group'=> true,
+				'items'=>[
+					[
+						'display'=>[ 				
+							'name'=>'Daftar Siswa', 
+							'icon'=>false ,
+							//'tag'=>[
+							//	'label'=>"new feature",
+							//	'color'=>'w3-green'
+							//]
+						], 
+						'href_route'=>'my.baak.student.landing',
+						'filter_permission'=>'baak.student.list',
+					]
+				]
+			]
+		]
+	],
+	
 	/*
 	'head-master'=>[
 		'display'=>['name'=>'Kepala Sekolah', 'icon'=>''],
@@ -163,19 +190,6 @@
 		'permission_context'=>function(){
 			
 		},
-	],
-	
-	'baak'=>[
-		'display'=>[ 'name'=>'BAAK', 'icon'=>'fas fa-graduation-cap'],
-		'href_route'=>'',
-		'permission_context'=>'baak',
-		'leftNav'=>[
-			[
-				'display'=>[ 'name'=>'Manajemen Siswa', 'icon'=>'fas fa-graduation-cap' ],
-				'filter_permission'=>'bauk.list.employee',
-				'href_route'=>'my.bauk.employee',
-			]
-		]
 	],
 	
 	'baku'=>[

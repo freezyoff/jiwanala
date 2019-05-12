@@ -71,4 +71,16 @@
 			'division.subordinates.list'
 		]
 	],
+	
+	'baak.admin'=>[
+		'context'=>'baak',
+		'display_name'=>'Ketua BAAK',
+		'description'=>'Pimpinan Biro Administrasi Akademik & Kesiswaan',
+		'permissions'=>[
+			'baak.student.list',
+			'baak.student.post',
+			'baak.student.patch',
+			'baak.student.delete',
+		]
+	],
 ];

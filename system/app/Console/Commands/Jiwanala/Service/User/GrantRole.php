@@ -40,7 +40,12 @@ class GrantRole extends Command
 		while (strtolower($choice) == strtolower('yes')){
 			$key = $this->ask('Option array <fg=yellow>Key</> (use dot notation if nested array)?');
 			$value = $this->ask('Option array <fg=yellow>Value</>?');
-			data_fill($roleOptions, $key, $value);
+			if (!empty($key)){
+				data_fill($roleOptions, $key, $value);				
+			}
+			else{
+				$this->line('Empty option key. Option <fg=red>not added</>');
+			}
 			$choice = $this->choice('Add more Role Option?', ['Yes', 'No'], 0);
 		}
 		

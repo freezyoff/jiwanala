@@ -37,6 +37,10 @@ Route::domain('my.'.$domain)
 		Route::get('', function() use($locale){
 			return redirect($locale);
 		});
+		
+		Route::get($locale, function(){
+			return redirect()->route('my.dashboard.landing');
+		});
 	
 		Route::prefix($locale)->group(base_path('routes/web/web_my.php'));
 			

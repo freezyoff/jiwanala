@@ -85,6 +85,9 @@
 		'division.subordinates.list'=>['division', 'List Subordinates', 'Melihat daftar rekan kerja'],
 		
 
+		/*
+		 *	Domain: My - BAAK
+		 */
 		//
 		'baak.student.list'=>['baak', 'List Student', 'Melihat daftar Siswa'],
 		'baak.student.post'=>['baak', 'Post Student', 'Menambah data Siswa'],
