@@ -75,6 +75,13 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Bauk\Employee\CreateUser::class,
 		\App\Console\Commands\Jiwanala\Bauk\Employee\DeleteUser::class,
 		\App\Console\Commands\Jiwanala\Bauk\Employee\ResetUserPwd::class,
+		
+		/*
+		 * jn-address
+		 */
+		 \App\Console\Commands\Jiwanala\Core\Address\ToUpper::class,
+		 \App\Console\Commands\Jiwanala\Core\Address\Clean::class,
+		 \App\Console\Commands\Jiwanala\Core\Address\CompactAndOptimize::class,
     ];
 
     /**

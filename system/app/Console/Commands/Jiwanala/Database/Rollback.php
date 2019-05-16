@@ -64,10 +64,10 @@ class Rollback extends Migrate
 	
 	function infoStart($dir){
 		$conf = config('database.connections.'.$dir);
-		$this->line('<fg=cyan>Start </>Install <fg=yellow>'.$conf['host'].'</>.<fg=green>'.$conf['database'].'</>');
+		$this->line('<fg=cyan>Start </>Uninstall <fg=yellow>'.$conf['host'].'</>.<fg=green>'.$conf['database'].'</>');
 	}
 	
 	function infoDone($dir){
-		$this->line('<fg=cyan>Done </>Install');
+		$this->line('<fg=cyan>Done </>Uninstall');
 	}
 }
