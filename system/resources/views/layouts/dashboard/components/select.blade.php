@@ -1,6 +1,9 @@
 <?php 
 	
 	$id = isset($id)? $id : str_replace('-','',\Illuminate\Support\Str::uuid());
+	
+	$placeholder = isset($placeholder)? $placeholder : '';
+	
 	$modal = isset($modal)? $modal : $dropdown;
 	$modalIcon = isset($modalIcon)? $modalIcon : '';
 	
@@ -11,6 +14,7 @@
 	type="text" 
 	class="w3-input" 
 	role="select"
+	placeholder="{{$placeholder}}"
 	select-dropdown="#{{ $id }}-dropdown"
 	select-modal="#{{ $id }}-modal"
 	select-modal-container="#{{ $id }}-modal-container" />

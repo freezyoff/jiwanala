@@ -3,9 +3,12 @@
 namespace App\Libraries\Baak;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Libraries\Foundation\Student\AsPerson;
 
 class Student extends Model
 {
+	use AsPerson;
+	
     protected $table="students";
 	protected $connection ="baak";
 	protected $fillable=[
@@ -13,8 +16,4 @@ class Student extends Model
 		'graduated_at',
 		'resign_at'
 	];
-	
-	public function asPerson(){
-		return $this->belongsTo('\App\Libraries\Core\Person', 'person_id', 'id');
-	}
 }

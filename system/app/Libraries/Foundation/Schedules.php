@@ -27,9 +27,15 @@ class Schedules{
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-db-export.txt");
 			
+		//fixing person address index & link
+		$schedule->command('jn-address:optimize',['--daemon','--clean','--toUpper'])
+			->daily()
+			->appendOutputTo($outputPath."scheduleLog.jn-address-optimize.txt");
+			
 		//fixing databse jiwanala_bauk.employee_attendance records 
 		$schedule->command('jn-bauk:fix_attendance_invalid_time',['--delete', '--daemon'])
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jn-bauk-fix_attendance_invalid_time.txt");
+			
 	}
 }

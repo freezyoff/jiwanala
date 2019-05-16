@@ -36,7 +36,9 @@
 			</header>
 			<ul class="w3-ul">
 				@foreach(\App\Libraries\Foundation\Navigation\Factory::makeTopbar() as $item)
-					@include('layouts.dashboard.components.topbar_small')
+					@if ($item)
+						@include('layouts.dashboard.components.topbar_small')
+					@endif
 				@endforeach
 				<li class="w3-hover-light-grey">
 					<a class="w3-text-theme w3-mobile" style="text-decoration:none; text-decoration:none;"
@@ -69,7 +71,9 @@
 	<div class="top-nav">
 		
 		@foreach(\App\Libraries\Foundation\Navigation\Factory::makeTopbar() as $item)
-			@include('layouts.dashboard.components.topbar')
+			@if ($item)
+				@include('layouts.dashboard.components.topbar')
+			@endif
 		@endforeach
 		
 		<button class="w3-bar-item w3-button w3-hover-none" 

@@ -46,7 +46,7 @@
 	'system'=>[
 		'display'=>[ 'name'=>'System', 'icon'=>'fas fa-server'],
 		'href_route'=>'my.system.landing',
-		'permission_context'=>'system',
+		'filter_permission_context'=>'system',
 		'leftNav'=>[
 			[
 				'display'=>[ 'name'=>'Akun', 'icon'=>'fas fa-users'], 
@@ -64,7 +64,7 @@
 	'bauk'=>[
 		'display'=>[ 'name'=>'BAUK', 'icon'=>'fas fa-fingerprint'],
 		'href_route'=>'my.bauk.landing',
-		'permission_context'=>'bauk',
+		'filter_permission_context'=>'bauk',
 		'leftNav'=>[
 			[
 				'display'=>[ 'name'=>'Hari Libur', 'icon'=>'fas fa-calendar-check fa-fw' ], 
@@ -159,7 +159,7 @@
 	'baak'=>[
 		'display'=>[ 'name'=>'BAAK', 'icon'=>'fas fa-graduation-cap'],
 		'href_route'=>'my.baak.landing',
-		'permission_context'=>'baak',
+		'filter_permission_context'=>'baak',
 		'leftNav'=>[
 			[
 				'display'=>[ 'name'=>'Siswa', 'icon'=>'fas fa-graduation-cap' ],
@@ -167,13 +167,13 @@
 				'group'=> true,
 				'items'=>[
 					[
-						'display'=>[ 				
+						'display'=>[
 							'name'=>'Daftar Siswa', 
 							'icon'=>false ,
-							//'tag'=>[
-							//	'label'=>"new feature",
-							//	'color'=>'w3-green'
-							//]
+							'tag'=>[
+								'label'=>"test",
+								'color'=>'w3-yellow'
+							]
 						], 
 						'href_route'=>'my.baak.student.landing',
 						'filter_permission'=>'baak.student.list',
@@ -187,7 +187,7 @@
 	'head-master'=>[
 		'display'=>['name'=>'Kepala Sekolah', 'icon'=>''],
 		'href_route'=>'my.head-master.landing',
-		'permission_context'=>function(){
+		'filter_permission_context'=>function(){
 			
 		},
 	],
@@ -195,7 +195,7 @@
 	'baku'=>[
 		'display'=>[ 'name'=>'BAKU', 'icon'=>'fas fa-donate'],
 		'href_route'=>'',
-		'permission_context'=>'baku',
+		'filter_permission_context'=>'baku',
 	],
 	*/
 ];

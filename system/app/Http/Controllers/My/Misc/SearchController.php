@@ -1,8 +1,13 @@
-<?php
+<?php 
 namespace App\Http\Controllers\My\Misc;
 
 use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
+use App\Libraries\Bauk\Employee;
+use App\Libraries\Baak\Student;
+use App\Libraries\Core\Person;
+use App\Libraries\Core\Phone;
 
 class SearchController extends Controller{
 	
@@ -11,14 +16,14 @@ class SearchController extends Controller{
 		$active = $req->input('active', false);
 		if (!$keywords) return response()->json([]);
 		
-		$schema = new \App\Libraries\Core\Person();
+		$schema = new Person();
 		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
-		$schema = new \App\Libraries\Core\Phone();
+		$schema = new Phone();
 		$phoneSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
-		$schema = new \App\Libraries\Bauk\Employee();
+		$schema = new Employee();
 		$employeeSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
 		
-		$employee = \App\Libraries\Bauk\Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
+		$employee = Employee::join($personSchema, $personSchema.'.id', '=', $employeeSchema.'.person_id')
             ->join($phoneSchema, $personSchema.'.id', '=', $phoneSchema.'.person_id')
 			->where($phoneSchema.'.default','=',1)
 			->groupBy($employeeSchema.'.nip')
@@ -47,6 +52,33 @@ class SearchController extends Controller{
 		}
 		
 		return response()->json($employee->get());
+	}
+	
+	public function searchStudent(Request $req){
+		$keywords = $req->input('keywords', false);
+		$active = $req->input('active', false);	
+		if (!$keywords) return response()->json([]);
+		
+		$schema = new Person();
+		$personSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		$schema = new Student();
+		$studentSchema = $schema->getConnection()->getDatabaseName().'.'.$schema->getTable();
+		
+		$student = Student::join($personSchema, $personSchema.'.id', '=', $studentSchema.'.person_id')
+			->groupBy($studentSchema.'.id')
+			->orderBy('nip', 'asc')
+			->orderBy('active', 'desc')
+			->select([
+				$employeeSchema.'.id as id',
+				$employeeSchema.'.nip',
+				$personSchema.'.name_front_titles',
+				$personSchema.'.name_full',
+				$personSchema.'.name_back_titles',
+			]);
+	}
+	
+	public function searchStudentParent(Request $req){
+		
 	}
 	
 }
