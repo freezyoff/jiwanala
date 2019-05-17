@@ -120,8 +120,12 @@ class Zip extends Command
 			if($file->isDir()) continue;
 			
 			//add to zip file
-			$zipPath = $this->getZipItemPath().'/'.basename($file);
-			$ZIP->addFile($file, $zipPath);
+			$zipPath = [];
+			if ($this->getZipItemPath()){
+				$zipPath[] = $this->getZipItemPath();
+			}
+			$zipPath[] = basename($file);
+			$ZIP->addFile($file, implode('/',$zipPath));
 			$this->printInfo('<fg=green>Adding to zip</> file: '. basename($file));
 		}
 		$ZIP->close();

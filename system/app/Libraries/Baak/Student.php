@@ -12,8 +12,26 @@ class Student extends Model
     protected $table="students";
 	protected $connection ="baak";
 	protected $fillable=[
+		'created_at',
+		'updated_at',
+		'creator',
+		'user_id',
+		'person_id',
+		'id',
+		'nisn',
+		'register_type',
 		'registered_at',
-		'graduated_at',
-		'resign_at'
+		'unregister_type',
+		'unregister_at',
+		'father_person_id',
+		'father_user_id',
+		'mother_person_id',
+		'mother_user_id',
+		'guardian_person_id',
+		'guardian_user_id',
+		'active',
+		
+		
 	];
+	
 }

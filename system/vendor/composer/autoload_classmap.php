@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => $baseDir . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
-    'App\\Console\\Commands\\Core\\JiwanalaWorkYear_sync' => $baseDir . '/app/Console/Commands/Core/JiwanalaWorkYear_sync.php',
     'App\\Console\\Commands\\File\\RemoveDirectory' => $baseDir . '/app/Console/Commands/File/RemoveDirectory.php',
     'App\\Console\\Commands\\File\\SearchText' => $baseDir . '/app/Console/Commands/File/SearchText.php',
     'App\\Console\\Commands\\File\\Zip\\Unzip' => $baseDir . '/app/Console/Commands/File/Zip/Unzip.php',
@@ -20,6 +19,8 @@ return array(
     'App\\Console\\Commands\\Jiwanala\\Core\\Address\\Clean' => $baseDir . '/app/Console/Commands/Jiwanala/Core/Address/Clean.php',
     'App\\Console\\Commands\\Jiwanala\\Core\\Address\\CompactAndOptimize' => $baseDir . '/app/Console/Commands/Jiwanala/Core/Address/CompactAndOptimize.php',
     'App\\Console\\Commands\\Jiwanala\\Core\\Address\\ToUpper' => $baseDir . '/app/Console/Commands/Jiwanala/Core/Address/ToUpper.php',
+    'App\\Console\\Commands\\Jiwanala\\Core\\WorkYear\\Make' => $baseDir . '/app/Console/Commands/Jiwanala/Core/WorkYear/Make.php',
+    'App\\Console\\Commands\\Jiwanala\\Core\\WorkYear\\Sync' => $baseDir . '/app/Console/Commands/Jiwanala/Core/WorkYear/Sync.php',
     'App\\Console\\Commands\\Jiwanala\\Database\\Compare' => $baseDir . '/app/Console/Commands/Jiwanala/Database/Compare.php',
     'App\\Console\\Commands\\Jiwanala\\Database\\Export' => $baseDir . '/app/Console/Commands/Jiwanala/Database/Export.php',
     'App\\Console\\Commands\\Jiwanala\\Database\\Import' => $baseDir . '/app/Console/Commands/Jiwanala/Database/Import.php',

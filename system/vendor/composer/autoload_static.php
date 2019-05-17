@@ -445,7 +445,6 @@ class ComposerStaticInitf0a990059576b1b9d5c2b44c263604b9
 
     public static $classMap = array (
         'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => __DIR__ . '/../..' . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
-        'App\\Console\\Commands\\Core\\JiwanalaWorkYear_sync' => __DIR__ . '/../..' . '/app/Console/Commands/Core/JiwanalaWorkYear_sync.php',
         'App\\Console\\Commands\\File\\RemoveDirectory' => __DIR__ . '/../..' . '/app/Console/Commands/File/RemoveDirectory.php',
         'App\\Console\\Commands\\File\\SearchText' => __DIR__ . '/../..' . '/app/Console/Commands/File/SearchText.php',
         'App\\Console\\Commands\\File\\Zip\\Unzip' => __DIR__ . '/../..' . '/app/Console/Commands/File/Zip/Unzip.php',
@@ -458,6 +457,8 @@ class ComposerStaticInitf0a990059576b1b9d5c2b44c263604b9
         'App\\Console\\Commands\\Jiwanala\\Core\\Address\\Clean' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Core/Address/Clean.php',
         'App\\Console\\Commands\\Jiwanala\\Core\\Address\\CompactAndOptimize' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Core/Address/CompactAndOptimize.php',
         'App\\Console\\Commands\\Jiwanala\\Core\\Address\\ToUpper' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Core/Address/ToUpper.php',
+        'App\\Console\\Commands\\Jiwanala\\Core\\WorkYear\\Make' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Core/WorkYear/Make.php',
+        'App\\Console\\Commands\\Jiwanala\\Core\\WorkYear\\Sync' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Core/WorkYear/Sync.php',
         'App\\Console\\Commands\\Jiwanala\\Database\\Compare' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Database/Compare.php',
         'App\\Console\\Commands\\Jiwanala\\Database\\Export' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Database/Export.php',
         'App\\Console\\Commands\\Jiwanala\\Database\\Import' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Database/Import.php',

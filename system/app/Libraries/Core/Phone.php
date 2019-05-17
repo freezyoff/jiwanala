@@ -13,8 +13,7 @@ class Phone extends Model{
 		'type',
 		'phone',
 		'extension',
-		'reachable',
-		'default'
+		//'reachable',
 	];
 	
 	public function person(){

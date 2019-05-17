@@ -8,8 +8,6 @@ class Address extends Model{
 	protected $connection = 'core';
 	protected $fillable = [
 		'creator',
-		'default',
-		'type',
 		'address',
 		'neighbourhood',
 		'hamlet',

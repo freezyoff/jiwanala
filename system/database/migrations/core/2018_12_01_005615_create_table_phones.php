@@ -19,9 +19,12 @@ class CreateTablePhones extends Migration
             $table->increments('id');
 			$table->integer('person_id')->unsigned();
 			$table->boolean('default')->default(false);
+			$table->enum('type',['m','h','w'])
+				->default('m')
+				->comment('h:home, w:work, m:mobile');
 			$table->string('phone',25)->unique();
 			$table->string('extension', 25)->nullable();
-			
+				
 			$table->foreign('person_id')->references('id')->on('persons');
 			$table->foreign('creator')->references('id')->on('jiwanala_service.users');
         });

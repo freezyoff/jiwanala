@@ -17,7 +17,6 @@ class CreateTableAddress extends Migration
             $table->timestamps();
 			$table->integer('creator')->unsigned()->nullable();
             $table->increments('id');
-			$table->boolean('default')->default(0);
 			$table->string('address', 200)->nullable();
             $table->string('neighbourhood', 3)->nullable()->comment('RT');
             $table->string('hamlet', 3)->nullable()->comment('RW');
@@ -35,6 +34,9 @@ class CreateTableAddress extends Migration
 			$table->integer('creator')->unsigned()->nullable();
 			$table->integer('person_id')->unsigned();
 			$table->integer('address_id')->unsigned();
+			$table->enum('type',['h','w'])
+				->default('h')
+				->comment('h:home, w:work');
 			
 			$table->primary(['person_id','address_id']);
 			$table->foreign('person_id')->references('id')->on('persons');

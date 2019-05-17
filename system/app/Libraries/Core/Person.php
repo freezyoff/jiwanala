@@ -50,7 +50,9 @@ class Person extends Model{
 	}
 	
 	public function addresses(){
-		return $this->belongsToMany('\App\Libraries\Core\Address', 'persons_addresses', 'person_id', 'address_id')->withTimestamps();
+		return $this->belongsToMany('\App\Libraries\Core\Address', 'persons_addresses', 'person_id', 'address_id')
+			->withPivot('type')
+			->withTimestamps();
 	}
 	
 	public function addAddress(\App\Libraries\Core\Address $addr){

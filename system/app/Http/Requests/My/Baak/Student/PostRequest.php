@@ -24,6 +24,7 @@ class PostRequest extends FormRequest
      */
     public function rules() { 
 		//dd(array_merge( $this->studentRules(), $this->parentRules() ));
+		dd($this->studentRules());
 		return array_merge( $this->studentRules(), $this->parentRules() ); 
 	}
 	
