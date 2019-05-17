@@ -9,6 +9,8 @@ class Phone extends Model{
 	protected $fillable = [
 		'creator',
 		'person_id',
+		'default',
+		'type',
 		'phone',
 		'extension',
 		'reachable',

@@ -33,15 +33,15 @@ class PostRequest extends FormRequest
 		$genderTypes = implode(',', array_keys(trans('gender.str_keys')));
 		$studentPropAssoc = implode(',', array_keys(trans($trans.'.select.property_association')));
         return [
-			'student.nis'=>				'required|numeric|digits_between:1,20|exists:baak.students,id',
+			'student.nis'=>				'required|numeric|digits_between:1,20|unique:baak.students,id',
 			'student.nisn'=>			'nullable|numeric|max:30',
 			'student.register_type'=>	'required|in:'.$registerTypes,
 			'student.register_at'=>		'required|date_format:d-m-Y',
 			'student.kk'=>				'required|numeric|digits_between:1,30',
 			'student.nik'=>				'required|numeric|digits_between:1,30',
-			'student.name_full'=>		'required|alpha',
+			'student.name_full'=>		'required|regex:/^[\pL\s\-]+$/u',
 			'student.gender'=>			'required|in:'.$genderTypes,
-			'student.birth_place'=>		'required|alpha',
+			'student.birth_place'=>		'required|regex:/^[\pL\s\-]+$/u',
 			'student.birth_date'=>		'required|date_format:d-m-Y',
 			'student.address'=>			'required|in:'.$studentPropAssoc,
 			'student.email.0'=>			'required|email',
@@ -55,29 +55,28 @@ class PostRequest extends FormRequest
 			//'gender'=>	'required|in:l,p',
 			'.kk'=>				'numeric|digits_between:1,30',
 			'.nik'=>			'numeric|digits_between:1,30',
-			'.name_full'=>		'alpha',
-			'.birth_place'=>	'alpha',
+			'.name_full'=>		'regex:/^[\pL\s\-]+$/u',
+			'.birth_place'=>	'regex:/^[\pL\s\-]+$/u',
 			'.birth_date'=>		'date_format:d-m-Y',
 		];
 		
 		$parentAddressValidations = [
-			'.address.'=>		'alpha',
+			'.address.'=>		'regex:/^[\pL\s\-]+$/u',
 			'.neighbourhood.'=>	'numeric|digits_between:1,3',
 			'.hamlet.'=>		'numeric|digits_between:1,3',
-			'.urban.'=>			'alpha',
-			'.subdistrict.'=>	'alpha',
-			'.district.'=>		'alpha',
-			'.province.'=>		'alpha',
-			'.postcode.'=>		'numeric|digits_between:10',
+			'.urban.'=>			'regex:/^[\pL\s\-]+$/u',
+			'.subdistrict.'=>	'regex:/^[\pL\s\-]+$/u',
+			'.district.'=>		'regex:/^[\pL\s\-]+$/u',
+			'.province.'=>		'regex:/^[\pL\s\-]+$/u',
+			'.postcode.'=>		'numeric|digits_between:1,10',
 		];
 		
 		$parentContactValidations = [
-			'.email.'=>			'email',
+			'.email.'=>			'email|unique:core.emails,email',
 			'.phone.'=>			'numeric|digits_between:1,20|starts_with:1,2,3,4,5,6,7,8,9|unique:core.phones,phone'
 		];
 		
 		$guardianRequired = request('student.address') == 'gu';
-		$guardianPrefix = $guardianRequired? 'required|' : 'nullable|';
 		
 		$parents = [];
 		foreach(['father','mother','guardian'] as $parentKey){
@@ -85,38 +84,51 @@ class PostRequest extends FormRequest
 			//gender
 			if ($parentKey == 'father') 	$parents[$parentKey.'.gender'] = 'required|in:l';
 			if ($parentKey == 'mother') 	$parents[$parentKey.'.gender'] = 'required|in:p';
-			if ($parentKey == 'guardian') 	$parents[$parentKey.'.gender'] = $guardianPrefix.'in:l,p';
+			if ($parentKey == 'guardian') 	$parents[$parentKey.'.gender'] = ($guardianRequired? 'required|' : 'nullable|').'in:l,p';
 			
 			//kk, nik, name_full, birth_date, birth_place
 			foreach($parentDefaultValidations as $validationKey=>$item){
-				$parents[$parentKey.$validationKey] = ($parentKey=='guardian'? $guardianPrefix : 'required|').$item;
+				if ($parentKey!='guardian'){
+					$parents[$parentKey.$validationKey] = 'required|'.$item;
+				}
+				else{
+					$rule = $guardianRequired? 'required|' : 'nullable|';
+					$parents[$parentKey.$validationKey] = $rule.$item;
+				}
 			}
 			
 			foreach([0,1] as $index){
 				
 				//address index 0:home, 1:work
 				foreach($parentAddressValidations as $validationKey=>$item){
-					if ($parentKey == 'guardian'){
-						$parents[$parentKey.$validationKey.$index] = $guardianPrefix.$item;
+					if ($parentKey != 'guardian'){
+						$rule = $index==0? 'required|' : 'nullable|';
+						$parents[$parentKey.$validationKey.$index] = $rule.$item;
 					}
 					else{
-						$parents[$parentKey.$validationKey.$index] = 'required|'.$item;
+						$rule = $index==0 && $guardianRequired? 'required|' : 'nullable|';
+						$parents[$parentKey.$validationKey.$index] = $rule.$item;
 					}
 				}
 				
 				//email & phone
 				foreach($parentContactValidations as $validationKey=>$item){
-					$prefix = [
-						'required|',
-						'nullable|required_without:'."$parentKey$validationKey".'0|'
-					];
-					
-					if ($parentKey == 'guardian'){
-						$prefix[0] = $guardianPrefix;
-						$prefix[1] = $guardianRequired? 'nullable|required_without:'."$parentKey$validationKey".'0|' : $guardianPrefix;
+					if ($parentKey != 'guardian'){
+						$rule = $index==0? 'required|' : 'nullable|required_without:'."$parentKey$validationKey".'0|';
+						$parents[$parentKey.$validationKey.$index] = $rule.$item;
 					}
-					
-					$parents[$parentKey.$validationKey.$index] = $prefix[$index].$item;
+					else{
+						if ($index==0){
+							$rule = $guardianRequired? 'required|' : 'nullable|';
+						}
+						else{
+							$rule = $guardianRequired? 
+									'nullable|required_without:'."$parentKey$validationKey".'0|' : 
+									'nullable|';
+							
+						}
+						$parents[$parentKey.$validationKey.$index] = $rule.$item;
+					}
 				}
 				
 			}

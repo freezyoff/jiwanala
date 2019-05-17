@@ -37,6 +37,10 @@ class Person extends Model{
 		return $this->hasMany('\App\Libraries\Core\Phone');
 	}
 	
+	public function addPhone(\App\Libraries\Core\Phone $phone){
+		$this->phones()->attach($phone);
+	}
+	
 	public function phoneDefault(){
 		$default = $this->phones()->where('default','=',1)->first();
 		if (!$default){
@@ -55,6 +59,10 @@ class Person extends Model{
 	
 	public function emails(){
 		return $this->hasMany('\App\Libraries\Core\Email');
+	}
+	
+	public function addEmail(\App\Libraries\Core\Email $email){
+		$this->emails()->attach($email);
 	}
 	
 	public function emailDefault(){

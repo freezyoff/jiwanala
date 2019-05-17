@@ -446,9 +446,12 @@ class ComposerStaticInitf0a990059576b1b9d5c2b44c263604b9
     public static $classMap = array (
         'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => __DIR__ . '/../..' . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
         'App\\Console\\Commands\\Core\\JiwanalaWorkYear_sync' => __DIR__ . '/../..' . '/app/Console/Commands/Core/JiwanalaWorkYear_sync.php',
+        'App\\Console\\Commands\\File\\RemoveDirectory' => __DIR__ . '/../..' . '/app/Console/Commands/File/RemoveDirectory.php',
         'App\\Console\\Commands\\File\\SearchText' => __DIR__ . '/../..' . '/app/Console/Commands/File/SearchText.php',
+        'App\\Console\\Commands\\File\\Zip\\Unzip' => __DIR__ . '/../..' . '/app/Console/Commands/File/Zip/Unzip.php',
+        'App\\Console\\Commands\\File\\Zip\\Zip' => __DIR__ . '/../..' . '/app/Console/Commands/File/Zip/Zip.php',
         'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => __DIR__ . '/../..' . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
-        'App\\Console\\Commands\\Jiwanala\\Bauk\\EmployeeAttendanceInvalidTime' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Bauk/EmployeeAttendanceInvalidTime.php',
+        'App\\Console\\Commands\\Jiwanala\\Bauk\\Attendance\\Clean' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Bauk/Attendance/Clean.php',
         'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\CreateUser' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Bauk/Employee/CreateUser.php',
         'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\DeleteUser' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Bauk/Employee/DeleteUser.php',
         'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\ResetUserPwd' => __DIR__ . '/../..' . '/app/Console/Commands/Jiwanala/Bauk/Employee/ResetUserPwd.php',

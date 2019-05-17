@@ -54,8 +54,9 @@
 			'nis'=>[
 				'required'=>			'Mohon isi Nomor Induk Siswa.',	
 				'numeric'=>				'Gunakan karakter angka.',
-				'digits_between'=>		'Maksimal 20 karakter angka.',	
-				'exists'=>				'Nomor NIS sudah terdaftar.',			
+				'digits_between'=>		'Maksimal 20 karakter angka.',
+				'exists'=>				'Nomor NIS sudah terdaftar.',
+				'Unique'=>				'Nomor NIS sudah terdaftar.',
 			],
 			'nisn'=>[
 				'numeric'=>				'Gunakan karakter angka.',
@@ -81,7 +82,7 @@
 			],
 			'name_full'=>[
 				'required'=>			'Mohon isi Nama Siswa.',
-				'alpha'=>				'Gunakan karakter huruf.',			
+				'regex'=>				'Gunakan karakter huruf.',			
 			],
 			'gender'=>[
 				'required'=>			'Mohon pilih Gender.',
@@ -89,7 +90,7 @@
 			],
 			'birth_place'=>[
 				'required'=>			'Mohon isi Tempat Lahir',			
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'birth_date'=>[
 				'required'=>			'Mohon isi Tanggal Lahir.',
@@ -127,11 +128,11 @@
 			],
 			'name_full'=>[
 				'required'=>			'Mohon isi Nama Siswa.',
-				'alpha'=>				'Gunakan karakter huruf.',			
+				'regex'=>				'Gunakan karakter huruf.',			
 			],
 			'birth_place'=>[
 				'required'=>			'Mohon isi Tempat Lahir',			
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'birth_date'=>[
 				'required'=>			'Mohon isi Tanggal Lahir.',
@@ -139,7 +140,7 @@
 			],
 			'address'=>[
 				'required'=>			'Mohon isi alamat.',
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'neighbourhood'=>[
 				'required'=>			'Mohon isi RT.',
@@ -153,19 +154,19 @@
 			],
 			'urban'=>[
 				'required'=>			'Mohon isi Kelurahan.',
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'subdistrict'=>[
 				'required'=>			'Mohon isi Kecamatan.',
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'district'=>[
 				'required'=>			'Mohon isi Kota.',
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'province'=>[
 				'required'=>			'Mohon isi Provinsi.',
-				'alpha'=>				'Gunakan karakter huruf.',
+				'regex'=>				'Gunakan karakter huruf.',
 			],
 			'postcode'=>[
 				'required'=>			'Mohon isi Kode Pos.',

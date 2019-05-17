@@ -8,9 +8,12 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Commands\\Bauk\\JiwanalaEmployeeAttendance_Lock' => $baseDir . '/app/Console/Commands/Bauk/JiwanalaEmployeeAttendance_Lock.php',
     'App\\Console\\Commands\\Core\\JiwanalaWorkYear_sync' => $baseDir . '/app/Console/Commands/Core/JiwanalaWorkYear_sync.php',
+    'App\\Console\\Commands\\File\\RemoveDirectory' => $baseDir . '/app/Console/Commands/File/RemoveDirectory.php',
     'App\\Console\\Commands\\File\\SearchText' => $baseDir . '/app/Console/Commands/File/SearchText.php',
+    'App\\Console\\Commands\\File\\Zip\\Unzip' => $baseDir . '/app/Console/Commands/File/Zip/Unzip.php',
+    'App\\Console\\Commands\\File\\Zip\\Zip' => $baseDir . '/app/Console/Commands/File/Zip/Zip.php',
     'App\\Console\\Commands\\JiwanalaEmployeeAttendance' => $baseDir . '/app/Console/Commands/JiwanalaEmployeeAttendance.php',
-    'App\\Console\\Commands\\Jiwanala\\Bauk\\EmployeeAttendanceInvalidTime' => $baseDir . '/app/Console/Commands/Jiwanala/Bauk/EmployeeAttendanceInvalidTime.php',
+    'App\\Console\\Commands\\Jiwanala\\Bauk\\Attendance\\Clean' => $baseDir . '/app/Console/Commands/Jiwanala/Bauk/Attendance/Clean.php',
     'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\CreateUser' => $baseDir . '/app/Console/Commands/Jiwanala/Bauk/Employee/CreateUser.php',
     'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\DeleteUser' => $baseDir . '/app/Console/Commands/Jiwanala/Bauk/Employee/DeleteUser.php',
     'App\\Console\\Commands\\Jiwanala\\Bauk\\Employee\\ResetUserPwd' => $baseDir . '/app/Console/Commands/Jiwanala/Bauk/Employee/ResetUserPwd.php',

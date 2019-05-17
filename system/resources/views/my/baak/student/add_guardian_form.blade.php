@@ -232,7 +232,7 @@
 <div class="w3-row">
 	@for($i=0;$i<count(old($prefix.'.email',[0,1]));$i++)
 		<div class="w3-col s12 m6 l6 @if($i>0) padding-left-8 padding-none-small @endif">
-			<div class="input-group">
+			<div class="input-group @error($prefix.'.email.'.$i) error @enderror">
 				<label><i class="far fa-address-card fa-fw"></i></label>
 				<input name="{{$prefix}}[email][{{$i}}]" type="text" value="{{old($prefix.'.email.'.$i,'')}}" 
 					placeholder="{{trans($trans.'.hints.email')}}" 
@@ -250,7 +250,7 @@
 <div class="w3-row">
 	@for($i=0;$i<count(old($prefix.'.phone',[0,1]));$i++)
 		<div class="w3-col s12 m6 l6 @if($i>0) padding-left-8 padding-none-small @endif">
-			<div class="input-group">
+			<div class="input-group @error($prefix.'.phone.'.$i) error @enderror">
 				<label>+62</label>
 				<input name="{{$prefix}}[phone][{{$i}}]" type="text" value="{{old($prefix.'.phone.'.$i,'')}}" 
 					placeholder="{{trans($trans.'.hints.phone')}}" 
