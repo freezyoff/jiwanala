@@ -23,12 +23,12 @@
 	@foreach(array_except($report,['nip','tanggal','imported']) as $key=>$value)
 		<tr>
 			<td>{{ ucwords(str_replace('_',' ',$key)) }}</td>
-			<td>{{ $value['record'] }}</td>
-			<td>{{ $value['import'] }}</td>
+			<td>{{ isset($value['record'])? $value['record'] : '' }}</td>
+			<td>{{ isset($value['import'])? $value['import'] : '' }}</td>
 			<td>
-			@if ($value['overwrite'])
+			@if (isset($value['overwrite']) && $value['overwrite'])
 				<span class="w3-tag w3-indigo">{{trans('my/bauk/attendance/hints.tags.upload_item_uploaded')}}</span>
-			@elseif (!$value['overwrite'])
+			@else
 				<span class="w3-tag w3-yellow">{{trans('my/bauk/attendance/hints.tags.upload_item_ignored')}}</span>
 			@endif
 			</td>

@@ -91,6 +91,7 @@
 		
 		//import
 		'import'=>[
+			'no.required'=>'Isi nomor baris',
 			'nip.required'=>'Isi NIP',
 			'nip.numeric'=>'Isi NIP dengan angka',
 			'nip.exists'=>'NIP tidak terdaftar',
@@ -105,6 +106,7 @@
 			'finger_keluar_2.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
 			'finger_keluar_3.regex'=>'Gunakan format Waktu 12 Jam : 00:00:00 AM/PM',
 			
+			'*.no.required'=>'Isi nomor baris',
 			'*.nip.required'=>'Isi NIP',
 			'*.nip.numeric'=>'Isi NIP dengan angka',
 			'*.nip.exists'=>'NIP tidak terdaftar',

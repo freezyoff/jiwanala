@@ -12,7 +12,7 @@
 	@foreach(array_except($report,['imported']) as $key=>$value)
 		<tr>
 			<td>{{ ucwords(str_replace('_',' ',$key)) }}</td>
-			<td>{{ $value['data'] }}</td>
+			<td>{{ isset($value['data'])? $value['data'] : '' }}</td>
 			<td>
 			@if ($value['error'])
 				<span class="w3-text-red">{{$value['error']}}</span>
