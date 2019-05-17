@@ -19,7 +19,7 @@ class CompactAndOptimize extends Command
      *
      * @var string
      */
-    protected $description = 'Compact & Optimize index of table jiwanala_core.addresses ';
+    protected $description = 'Clean & Optimize index of table jiwanala_core.addresses ';
 
     /**
      * Create a new command instance.
@@ -57,11 +57,11 @@ class CompactAndOptimize extends Command
 	}
 	
 	function getAddresses(){
-		return $this->getTable('addresses')->orderBy('id')->get();
+		return $this->getTable('addresses')->orderBy('id');
 	}
 	
 	function getPersonAddresses(){
-		return $this->getTable('persons_addresses')->orderBy('person_id')->get();
+		return $this->getTable('persons_addresses')->orderBy('person_id');
 	}
 	
 	function truncateTables($table){
@@ -75,20 +75,27 @@ class CompactAndOptimize extends Command
 	
 	function mapAddresses(){
 		$ADDRESSES = [];
-		$idCounter = 1;
-		foreach($this->getAddresses() as $rec){
-			$index = $rec->id;
-			$rec->id = $idCounter++;
-			$ADDRESSES[$index] = $rec;
-		}
+		
+		$this->getAddresses()->chunk(100, function($addresses) use($ADDRESSES){
+			$idCounter = 1;
+			foreach($addresses as $rec){
+				$index = $rec->id;
+				$rec->id = $idCounter++;
+				$ADDRESSES[$index] = $rec;
+			}
+		});
+		
 		return $ADDRESSES;
 	}
 	
 	function mapPersonsAddresses(){
 		$PERSON_ADDRESSES = [];
-		foreach($this->getPersonAddresses() as $rec){
-			$PERSON_ADDRESSES[$rec->person_id][$rec->address_id] = $rec;
-		}
+		$this->getPersonAddresses()->chunk(100, function($chunks) use($PERSON_ADDRESSES){
+			foreach($chunks as $rec){
+				$PERSON_ADDRESSES[$rec->person_id][$rec->address_id] = $rec;
+			}
+		});
+		
 		return $PERSON_ADDRESSES;
 	}
 	
@@ -119,21 +126,21 @@ class CompactAndOptimize extends Command
      */
     public function handle()
     {
-		if ($this->isClean()){
-			$this->call('jn-address:clean', [
-				'--daemon'=>$this->isDaemon(),
-				'--remote'=>$this->isRemote(),
-			]);
-		}
+		//cleaning
+		$this->line('');
+		$this->call('jn-address:clean', [
+			'--daemon'=>$this->isDaemon(),
+			'--remote'=>$this->isRemote(),
+		]);
 		
-		if ($this->isToUpper()){
-			$this->line('To Upper:');
-			$this->call('jn-address:toUpper', [
-				'--daemon'=>$this->isDaemon(),
-				'--remote'=>$this->isRemote(),
-			]);
-		}
+		//to upper
+		$this->line('');
+		$this->call('jn-address:toUpper', [
+			'--daemon'=>$this->isDaemon(),
+			'--remote'=>$this->isRemote(),
+		]);
 		
+		$this->line('');
 		$this->optimize();
     }
 	

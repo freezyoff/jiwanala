@@ -79,26 +79,25 @@ class Clean extends Command
 			$ids[] = $item->id;
 		}
 		
+		$this->line(
+			$this->isDaemon()? 
+				'Start clean unused '.$remote.' addresses' : 
+				'<fg=cyan>Start clean unused</> '.$remote.' addresses'
+		);
 		if (count($ids)>0){
 			$this->line(
 				$this->isDaemon()? 
 					'Found unused ids: '.implode(",", $ids) : 
 					'<fg=yellow>Found unused ids: </>'.implode(",", $ids)
 			);
-			$this->line(
-				$this->isDaemon()? 
-					'Start clean unused '.$remote.' addresses' : 
-					'<fg=cyan>Start clean unused</> '.$remote.' addresses'
-			);
 			
 			//delete unused
 			$notUsed = $this->getConnection()->select("DELETE FROM `addresses` WHERE id IN (".implode(",", $ids).")");
-			
-			$this->line('<fg=cyan>Done clean unused</> addresses');			
 		}
 		else{
 			$this->line($this->isDaemon()? 'No unused Address' : '<fg=red>No unused Address</>');
 		}
+		$this->line('<fg=cyan>Done clean unused</> addresses');			
     }
 	
 	function isDaemon(){

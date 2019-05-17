@@ -13,13 +13,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+		\App\Console\Commands\File\SearchText::class,
+		\App\Console\Commands\File\RemoveDirectory::class,
+		\App\Console\Commands\File\Zip\Zip::class,
+		\App\Console\Commands\File\Zip\Unzip::class,
+		
 		\App\Console\Commands\Bauk\JiwanalaEmployeeAttendance_Lock::class,
 		\App\Console\Commands\Service\JiwanalaUser_changepassword::class,
-		
-		\App\Console\Commands\Jiwanala\Bauk\EmployeeAttendanceInvalidTime::class,
 		\App\Console\Commands\Core\JiwanalaWorkYear_sync::class,
-		
-		\App\Console\Commands\File\SearchText::class,
 		
 		/*
 		 * jn-db
@@ -77,11 +78,18 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Bauk\Employee\ResetUserPwd::class,
 		
 		/*
+		 * jn-attendance
+		 */
+		 \App\Console\Commands\Jiwanala\Bauk\Attendance\Clean::class,
+		 
+		/*
 		 * jn-address
 		 */
 		 \App\Console\Commands\Jiwanala\Core\Address\ToUpper::class,
 		 \App\Console\Commands\Jiwanala\Core\Address\Clean::class,
 		 \App\Console\Commands\Jiwanala\Core\Address\CompactAndOptimize::class,
+		 
+		 
     ];
 
     /**

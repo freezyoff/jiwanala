@@ -17,7 +17,7 @@ class Import extends Command
 		{--query-limit= 		: query limit. default 1000 records}
 		{--import-version= 		: signature time for export key. Refer to directory name in storage/app/database/}
 		{--execution-time=		: time limit. @see ini_set("max_execution_time", time), @see set_time_limit(time)}
-	';
+		{--daemon				: run on background}';
 
     /**
      * The console command description.
@@ -53,9 +53,10 @@ class Import extends Command
 		//no given version		
 		//get latest version folder
 		$versions = [];
-		foreach(\Storage::disk('local')->directories($this->storagePath) as $dir){
-			$versions[] = str_replace('database/','',$dir);
+		foreach(\Storage::disk('local')->files($this->storagePath) as $file){
+			$versions[] = str_replace('.zip','',basename($file));
 		}
+		
 		return $versions[count($versions)-1];
 	}
 	
@@ -195,6 +196,9 @@ class Import extends Command
 		
 		$this->infoStart();
 		
+		//unzip files
+		$this->extractZip();
+		
 		//calc max table name length for output style
 		$database = [];
 		foreach($this->getSchemas() as $schema){
@@ -203,7 +207,7 @@ class Import extends Command
 				$this->maxTableNameLength = max($this->maxTableNameLength, strlen($schema.'.'.$table));
 			}
 		}
-		
+
 		//find max records count 
 		$recordCount = [];
 		foreach($database as $schema=>$tables){
@@ -246,9 +250,30 @@ class Import extends Command
 				}
 			}
 		}
-			
+		
+		$this->cleanZip();		
 		$this->infoEnd();
     }
+	
+	function isDaemon(){
+		return $this->option('daemon');
+	}
+	
+	function extractZip(){
+		$version = $this->getVersion();
+		\Artisan::call('file:unzip',[
+			'src'=>storage_path('app/database/'.$version.'.zip'),
+			'dst'=>storage_path('app/database/'.$version),
+			'--daemon'=>$this->isDaemon()
+		]);
+	}
+	
+	function cleanZip(){
+		\Artisan::call('file:rmdir',[
+			'dir_path'=>storage_path('app/database/'.$this->getVersion()),
+			'--daemon'=>$this->isDaemon()
+		]);
+	}
 	
 	function infoStart(){
 		$target = $this->option('remote')? 'Remote' : 'Local';

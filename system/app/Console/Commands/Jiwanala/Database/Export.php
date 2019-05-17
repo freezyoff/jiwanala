@@ -41,6 +41,14 @@ class Export extends Command
      */
     public function __construct(){ parent::__construct(); }
 	
+	function isRemote(){
+		return $this->option('remote');
+	}
+	
+	function isDaemon(){
+		return $this->option('daemon')? true : false;
+	}
+	
 	function getQueryLimit(){
 		return $this->option('query-limit')? $this->option('query-limit') : $this->maxQuery;
 	}
@@ -59,12 +67,8 @@ class Export extends Command
 		return $this->option('file-size-limit')? $this->option('file-size-limit') : $this->maxFileSize;
 	}
 	
-	function isDaemon(){
-		return $this->option('daemon')? true : false;
-	}
-	
 	function infoStart(){
-		$isRemote = $this->option('remote')? true : false;
+		$isRemote = $this->isRemote();
 		if ($this->isDaemon()){
 			$this->line('Start Export '.($isRemote?'Remote':'Localhost').' at: '.now()->format('Y/m/d H:i:s'));
 		}
@@ -98,6 +102,14 @@ class Export extends Command
 				'<fg=green>'.$table.'</>';
 			$this->getProgressbar()->setMessage($msg);
 		}
+	}
+	
+	function infoZip(){
+		$this->line(
+			$this->isDaemon()?
+			'Zipping files' : 
+			'<fg=yellow>Zipping files</>'
+		);
 	}
 	
     public function handle()
@@ -171,6 +183,8 @@ class Export extends Command
 			}
 		}
 		
+		$this->infoZip();
+		$this->zipFiles();
 		$this->infoEnd();
     }
 	
@@ -295,6 +309,15 @@ class Export extends Command
 		else{
 			file_put_contents($file, $content, FILE_APPEND);
 		}
+	}
+	
+	function zipFiles(){
+		\Artisan::call('file:zip',[
+			'src'=>storage_path('app/database/'.$this->getExportVersion()),
+			'dst'=>storage_path('app/database/'.$this->getExportVersion().'.zip'),
+			'--daemon'=>$this->isDaemon(),
+			'--remove-src'=>true,
+		]);
 	}
 	
 	function getFileSize($schema, $table, $batch){
