@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Console\Commands\Core;
+namespace App\Console\Commands\Jiwanala\Core\WorkYear;
 
 use Illuminate\Console\Command;
+use App\Libraries\Core\WorkYear;
 
-class JiwanalaWorkYear_sync extends Command
+class Sync extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'jiwanala:work-year-sync';
+    protected $signature = 'jn-workyear:sync {--daemon : run as background}';
 
     /**
      * The console command description.
@@ -29,30 +30,50 @@ class JiwanalaWorkYear_sync extends Command
     {
         parent::__construct();
     }
-
-    /**
+	
+	function isDaemon(){
+		return $this->option('daemon');
+	}
+	
+	protected $printRegex = '/(?=\<)(\<(.*)\>(?=\w)|\<\/\>)/';
+	function printInfo($str){
+		if ($this->isDaemon()){
+			$str = preg_replace($this->printRegex,'',$str);
+		}
+		$this->line($str);
+	}
+	
+	/**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        if (! \App\Libraries\Core\WorkYear::hasCurrent()) {
-			$start = $this->getStart();
-			$end = $this->getEnd();
-			$periode = new \App\Libraries\Core\WorkYear([
-				'start'=>$start, 
-				'end'=>$end, 
-				'name'=>$this->getPeriodeName($start, $end)
-			]);
-			$periode->save();
-			$this->info(
-				'['.now()->format('Y-m-d H:i:s').'] '.
-				'create Work Year: name='.$periode->name .' '.
-				'start='.$periode->start .' '.
-				'end='.$periode->start .' '
-			);
+        if (WorkYear::hasCurrent()) {
+			$this->printInfo('<bg=yellow>Work Year is up to date</>');
+			exit;
 		}
+		
+		//create work year
+		$data = [
+			'start'=>$this->getStart(), 
+			'end'=>$this->getEnd(), 
+			'name'=>$this->getPeriodeName($start, $end),
+			'--daemon'=>$this->isDaemon()
+		];
+		\Artisan::call('jn-workyear:make',$data);
+		
+		if ($this->isDaemon()){
+			$now = now();
+			$this->printInfo('Start on: '.$now);
+		}
+		$this->printInfo(
+			'<fg=yellow>Work Year Created</> '.
+			'Name: '.$data['name'].' '.
+			'Start: '.$data['start'].' '.
+			'End: '.$data['end'].' '
+		);
     }
 	
 	public function getStart(){

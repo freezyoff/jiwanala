@@ -57,6 +57,11 @@ class RemoveDirectory extends Command
 			$this->printInfo('<bg=red>Given directory path is not a folder</>');
 		}
 		
+		if ($this->isDaemon()){
+			$now = now();
+			$this->printInfo('Start on: '.$now);
+		}
+		
 		$this->printInfo('<fg=yellow>Start remove</> directory : '.$this->getDirPath());
 		foreach($this->getFiles() as $file){
 			//continue loop if is directory

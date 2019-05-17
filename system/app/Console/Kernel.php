@@ -69,7 +69,7 @@ class Kernel extends ConsoleKernel
 		\App\Console\Commands\Jiwanala\Service\Role\ListRole::class,
 		\App\Console\Commands\Jiwanala\Service\Role\Install::class,
 		\App\Console\Commands\Jiwanala\Service\Role\Sync::class,
-		
+		 
 		/*
 		 * jn-employee
 		 */
@@ -89,7 +89,11 @@ class Kernel extends ConsoleKernel
 		 \App\Console\Commands\Jiwanala\Core\Address\Clean::class,
 		 \App\Console\Commands\Jiwanala\Core\Address\CompactAndOptimize::class,
 		 
-		 
+		 /*
+		 * jn-workyear
+		 */
+		 \App\Console\Commands\Jiwanala\Core\WorkYear\Make::class,
+		 \App\Console\Commands\Jiwanala\Core\WorkYear\Sync::class,
     ];
 
     /**

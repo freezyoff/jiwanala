@@ -18,9 +18,9 @@ class Schedules{
 			->daily()
 			->appendOutputTo($outputPath."scheduleLog.jiwanala-employee-attendance-lock.txt");
 			
-		$schedule->command('jiwanala:work-year-sync')
+		$schedule->command('jn-workyear:sync')
 			->daily()
-			->appendOutputTo($outputPath."scheduleLog.jiwanala-work-year-sync.txt");
+			->appendOutputTo($outputPath."scheduleLog.jn-workyear-sync.txt");
 			
 		//dump export table
 		$schedule->command('jn-db:export',['--daemon'])
