@@ -56,9 +56,11 @@ class Sync extends Command
 		}
 		
 		//create work year
+		$start = $this->getStart();
+		$end = $this->getEnd()
 		$data = [
-			'start'=>$this->getStart(), 
-			'end'=>$this->getEnd(), 
+			'start'=>$start, 
+			'end'=>$end, 
 			'name'=>$this->getPeriodeName($start, $end),
 			'--daemon'=>$this->isDaemon()
 		];
